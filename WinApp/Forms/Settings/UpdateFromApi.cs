@@ -20,10 +20,10 @@ namespace WinApp.Forms
 			_autoRun = autoRun; 
 		}
 
-		private void UpdateFromApi_Shown(object sender, EventArgs e)
+		private async void UpdateFromApi_Shown(object sender, EventArgs e)
 		{
 			if (_autoRun)
-				RunNow();
+				await RunNow();
 		}
 
 		private void UpdateProgressBar(string statusText)
@@ -34,10 +34,9 @@ namespace WinApp.Forms
 			else
 				badProgressBar.Value++;
 			Refresh();
-			Application.DoEvents();
 		}
 
-		private void RunNow()
+		private async Task RunNow()
 		{
 			this.Cursor = Cursors.WaitCursor;
 			UpdateFromApiTheme.Cursor = Cursors.WaitCursor;
@@ -52,11 +51,11 @@ namespace WinApp.Forms
 
             // old method
             TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
-            ImportWotApi2DB.ImportTankList(this, overwriteCustom);
+            await ImportWotApi2DB.ImportTankList(this, overwriteCustom);
 
             // New method
             TankHelper.GetTankList();
-            ImportWotApi2DB.ImportTanks(this, overwriteCustom);
+            await ImportWotApi2DB.ImportTanks(this, overwriteCustom);
             
             // Init after getting tanks and other basic data import
             TankHelper.GetTankList();
@@ -76,21 +75,21 @@ namespace WinApp.Forms
 
 			// Get achievements
 			UpdateProgressBar("Retrieves achievements from Wargaming API");
-			ImportWotApi2DB.ImportAchievements(this);
+			await ImportWotApi2DB.ImportAchievements(this);
 			TankHelper.GetAchList();
 
 			// Get achievements
 			UpdateProgressBar("Retrieves maps from Wargaming API");
-			ImportWotApi2DB.ImportMaps(this);
+			await ImportWotApi2DB.ImportMaps(this);
 			
 			// Get WN8 ratings
 			UpdateProgressBar("Retrieves WN8 expected values from API");
-			ImportWN8Api2DB.UpdateWN8(this);
-            ImportWN8Api2DB.FixMissingWN8(this);
+			await ImportWN8Api2DB.UpdateWN8(this);
+            await ImportWN8Api2DB.FixMissingWN8(this);
 
             // Get WN9 ratings
             UpdateProgressBar("Retrieves WN9 expected values from API");
-            ImportWN9Api2DB.UpdateWN9(this);
+            await ImportWN9Api2DB.UpdateWN9(this);
 
             // New Init after upgrade db
             TankHelper.GetAllLists();
@@ -103,17 +102,16 @@ namespace WinApp.Forms
 
 			// Save to settings
 			Config.Settings.doneRunWotApi = DateTime.Now;
-			string msg = "";
-			Config.SaveConfig(out msg);
+            Config.SaveConfig(out string msg);
 
-			// Done
-			this.Cursor = Cursors.Default;
+            // Done
+            this.Cursor = Cursors.Default;
 			this.Close();
 		}
 
-		private void btnStart_Click(object sender, EventArgs e)
+		private async void btnStart_Click(object sender, EventArgs e)
 		{
-			RunNow();
+            await RunNow();
 		}
 
 		

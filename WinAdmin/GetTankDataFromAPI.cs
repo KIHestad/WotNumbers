@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using Common;
 using System.Data.SQLite;
+using System.Net.Http;
 
 namespace WinAdmin
 {
@@ -47,19 +48,19 @@ namespace WinAdmin
 			
 		}
 
-		private void cmdStart_Click(object sender, EventArgs e)
+		private async void cmdStart_Click(object sender, EventArgs e)
 		{
 			pbStatus.Value = 0;
 			pbStatus.Maximum = 100;
 			Refresh();
 			if (chkFetchNewTanks.Checked)
-				ImportTanks();
+				await ImportTanks();
 			ImportTankImg();
 		}
 
 		#region fetchFromAPI
 
-		private static string FetchFromAPI(WotApiType WotAPi, int tankId, string server)
+		private async static Task<string> FetchFromAPI(WotApiType WotAPi, int tankId, string server)
 		{
 			try
 			{
@@ -84,7 +85,7 @@ namespace WinAdmin
                     url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=short_name%2Cimages";
 
                 }
-                
+
                 // NOT IN USE
 
                 //else if (WotAPi == WotApiType.TankDetails)
@@ -92,7 +93,7 @@ namespace WinAdmin
                 //    // OLD
                 //    url = "/wot/encyclopedia/tankinfo/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530&tank_id=" + tankId;
                 //}
-                
+
                 //else if (WotAPi == WotApiType.Turret)
                 //{
                 //    url = "https://api.worldoftanks.eu/wot/encyclopedia/tankturrets/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
@@ -112,17 +113,15 @@ namespace WinAdmin
                 //{
                 //    url = "https://api.worldoftanks.eu/wot/encyclopedia/achievements/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
                 //}
-				
-                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-				httpRequest.Timeout = 10000;     // 10 secs
-				httpRequest.UserAgent = "Wot Numbers Admin";
-				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
-				HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
-				StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
-				string s = responseStream.ReadToEnd();
-				responseStream.Close();
-				webResponse.Close();
-				return s;
+
+                HttpClient client = new HttpClient()
+                {
+                    Timeout = new TimeSpan(0, 0, 10) // 10 seconds
+                };
+                client.DefaultRequestHeaders.Add("User-Agent", "Wot Numbers Admin");
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
 			}
 			catch (Exception ex)
 			{
@@ -137,7 +136,7 @@ namespace WinAdmin
 
 		#region importTanks
 
-		private void ImportTanks()
+		private async Task ImportTanks()
 		{
 			int itemCount;
 			JToken rootToken;
@@ -147,10 +146,9 @@ namespace WinAdmin
 			string updateSql;
 
 			lblStatus.Text = "Getting json data from Wot API (" + DateTime.Now.ToString() + ")";
-			Application.DoEvents();
 			string server = "EU";
 			if (rbNA.Checked) server = "NA";
-			string json = FetchFromAPI(WotApiType.Vehicles, 0, server);
+			string json = await FetchFromAPI(WotApiType.Vehicles, 0, server);
 			if (json == "")
 			{
 				MessageBox.Show("No data imported, no json result from WoT API.","Error");
@@ -159,7 +157,7 @@ namespace WinAdmin
 			{
 				bool tankExists = false;
 				lblStatus.Text = "Start checking tanks (" + DateTime.Now.ToString() + ")";
-				Application.DoEvents();
+				Refresh();
 				try
 				{
 					JObject allTokens = JObject.Parse(json);
@@ -219,12 +217,12 @@ namespace WinAdmin
 							}
 						}
 						lblStatus.Text = "Saving to DB";
-						Application.DoEvents();
+                        Refresh();
 						DB.ExecuteNonQuery(sqlTotal, Settings.Config, out result, true); // Run all SQL in batch
 					}
 
 					lblStatus.Text = "Tank import complete";
-					Application.DoEvents();
+                    Refresh();
 				}
 
 				catch (Exception ex)
@@ -234,7 +232,7 @@ namespace WinAdmin
 			}
 		}
 
-        private void ImportTanksOLD()
+        private async Task ImportTanksOLD()
         {
             int itemCount;
             JToken rootToken;
@@ -244,10 +242,9 @@ namespace WinAdmin
             string updateSql;
 
             lblStatus.Text = "Getting json data from Wot (OLD) API (" + DateTime.Now.ToString() + ")";
-            Application.DoEvents();
             string server = "EU";
             if (rbNA.Checked) server = "NA";
-            string json = FetchFromAPI(WotApiType.Tank, 0, server);
+            string json = await FetchFromAPI(WotApiType.Tank, 0, server);
             if (json == "")
             {
                 MessageBox.Show("No data imported, no json result from WoT API.", "Error");
@@ -256,7 +253,7 @@ namespace WinAdmin
             {
                 bool tankExists = false;
                 lblStatus.Text = "Start checking tanks (" + DateTime.Now.ToString() + ")";
-                Application.DoEvents();
+                Refresh();
                 try
                 {
                     JObject allTokens = JObject.Parse(json);
@@ -315,12 +312,12 @@ namespace WinAdmin
                             }
                         }
                         lblStatus.Text = "Saving to DB";
-                        Application.DoEvents();
+                        Refresh();
                         DB.ExecuteNonQuery(sqlTotal, Settings.Config, out result, true); // Run all SQL in batch
                     }
 
                     lblStatus.Text = "Tank import complete";
-                    Application.DoEvents();
+                    Refresh();
                 }
 
                 catch (Exception ex)
@@ -337,7 +334,7 @@ namespace WinAdmin
 		private void ImportTankImg()  
 		{
 			lblStatus.Text = "Getting images (" + DateTime.Now.ToString() + ")";
-			Application.DoEvents();
+            Refresh();
 			DB.DBResult result = new DB.DBResult();
             string sql = "select * from tank ";
             if (txtTankId.Text != "")
@@ -350,7 +347,7 @@ namespace WinAdmin
 			{
 				pbStatus.Value++;
                 int tankId = Convert.ToInt32(dr["id"]);
-                Application.DoEvents();
+                Refresh();
 				bool imgExist = (dr["img"] != DBNull.Value && dr["smallImg"] != DBNull.Value && dr["contourImg"] != DBNull.Value);
 				if (!imgExist || !chkKeepExistingImg.Checked || tankId.ToString() == txtTankId.Text)
 				{
@@ -437,13 +434,13 @@ namespace WinAdmin
 
 		#endregion
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             pbStatus.Value = 0;
             pbStatus.Maximum = 100;
             Refresh();
             if (chkFetchNewTanks.Checked)
-                ImportTanksOLD();
+                await ImportTanksOLD();
             ImportTankImg();
         }
 

@@ -215,7 +215,7 @@ namespace WinApp.Gadget
 			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, BattleMode.GetDropDownList(true));
 		}
 
-		private void btnSelect_Click(object sender, EventArgs e)
+		private async void btnSelect_Click(object sender, EventArgs e)
 		{
             string headerList = "";
             bool headerListOK = true;
@@ -277,7 +277,7 @@ namespace WinApp.Gadget
                     }
                 }
 				GadgetHelper.newParametersOK = true;
-                GadgetHelper.DeleteGadgetParameter(_gadgetId);
+                await GadgetHelper.DeleteGadgetParameter(_gadgetId);
                 _saveOk = true;
 				this.Close();
 			}

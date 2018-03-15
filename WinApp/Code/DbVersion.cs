@@ -30,7 +30,7 @@ namespace WinApp.Code
         public static int ExpectedNumber = 466; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
-		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
+		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
 		{
 			// first define sqlscript for both mssql and sqlite for all versions
 			string mssql = "";
@@ -1981,7 +1981,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 223:
-					CalcPlayerTeam();
+                    await CalcPlayerTeam();
 					break;
 				case 224:
 					mssql = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
@@ -2348,7 +2348,7 @@ namespace WinApp.Code
                 case 288:
                     temp = ReplayHelper.GetWoTDefaultReplayFolder();
                     if (temp != "")
-                        ReplayHelper.AddReplayFolder(temp, false);
+                        await ReplayHelper.AddReplayFolder(temp, false);
                     break;
                 case 290:
                     mssql = "ALTER TABLE battle ADD uploadedvBAddict datetime NULL; ";
@@ -2751,10 +2751,10 @@ namespace WinApp.Code
                     RunRecalcBattleWN9 = true;
                     break;
                 case 383:
-                    ColListSystemDefault.NewSystemTankColList();
+                    await ColListSystemDefault.NewSystemTankColList();
                     break;
                 case 384:
-                    ColListSystemDefault.NewSystemBattleColList();
+                    await ColListSystemDefault.NewSystemBattleColList();
                     break;
                 case 385:
                     mssql = "ALTER TABLE playerTankBattle ADD wn9maxhist FLOAT NOT NULL default 0; ";
@@ -2831,7 +2831,7 @@ namespace WinApp.Code
                             filename = filename + " " + i.ToString();
                         }
                         GadgetHelper.HomeViewSaveToFile(Config.AppDataHomeViewFolder + filename + ".json");
-                        GadgetHelper.UpdateRecentHomeView(Config.AppDataHomeViewFolder + filename + ".json");
+                        await GadgetHelper.UpdateRecentHomeView(Config.AppDataHomeViewFolder + filename + ".json");
                         Config.Settings.currentHomeView = filename;
                         Config.SaveConfig(out msg);
                     }
@@ -3009,7 +3009,7 @@ namespace WinApp.Code
                         "foreign key (chartFavId) references chartFav (id) ); ";
                     break;
                 case 431:
-                    ConvertChartFavourites();
+                    await ConvertChartFavourites();
                     break;
                 case 432:
                     Config.Settings.currentChartFavourite = "";
@@ -3116,7 +3116,7 @@ namespace WinApp.Code
                     sqlite = mssql.Replace("int", "integer");
                     break;
                 case 460:
-                    FixPlayerTable();
+                    await FixPlayerTable();
                     break;
                 case 461:
                     mssql = "UPDATE battle SET markOfMastery = NULL WHERE markOfMastery > 4;";
@@ -3171,7 +3171,7 @@ namespace WinApp.Code
 		}
 
         // Procedure upgrading DB to latest version
-        public static bool CheckForDbUpgrade(Form parentForm, bool newDatabase = false)
+        public async static Task<bool> CheckForDbUpgrade(Form parentForm, bool newDatabase = false)
 		{
 			bool upgradeOK = true;
 			int DBVersionCurrentNumber = GetDBVersion(); // Get current DB version
@@ -3186,15 +3186,14 @@ namespace WinApp.Code
 					// Move to next upgrade number
 					DBVersionCurrentNumber++;
 					// Upgrade to next db version now
-					string sql = UpgradeSQL(DBVersionCurrentNumber, Config.Settings.databaseType, parentForm, newDatabase); // Get upgrade script for this version and dbType 
+					string sql = await UpgradeSQL(DBVersionCurrentNumber, Config.Settings.databaseType, parentForm, newDatabase); // Get upgrade script for this version and dbType 
 					if (sql != "")
-						continueNext = DB.ExecuteNonQuery(sql); // Run upgrade script
-					Application.DoEvents(); // To avoid freeze
+						continueNext = await DB.ExecuteNonQueryAsync(sql); // Run upgrade script
 					// Update db _version_ if success
 					if (continueNext)
 					{
 						sql = "update _version_ set version=" + DBVersionCurrentNumber.ToString() + " where id=1";
-						continueNext = DB.ExecuteNonQuery(sql);
+						continueNext = await DB.ExecuteNonQueryAsync(sql);
 					}
 					// Perform new list update
 					TankHelper.GetAllLists();
@@ -3258,7 +3257,7 @@ namespace WinApp.Code
             return version;
 		}
 
-		private static void CalcPlayerTeam()
+		private async static Task CalcPlayerTeam()
 		{
 			string sql = "";
 			//sql = "UPDATE battlePlayer SET playerTeam = 0";
@@ -3292,11 +3291,11 @@ namespace WinApp.Code
 					"WHERE        (player.id = @playerId) AND (battlePlayer.name = @playerName) AND battlePlayer.team=2); ";
 				DB.AddWithValue(ref sql, "@playerId", playerId, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
-				DB.ExecuteNonQuery(sql);
+                await DB.ExecuteNonQueryAsync(sql);
 			}
 		}
 
-        private static void ConvertChartFavourites()
+        private async static Task ConvertChartFavourites()
         {
             // Create chartFav from chartFavourite
             string sql = "SELECT favouriteName FROM chartFavourite GROUP BY favouriteName;";
@@ -3312,7 +3311,7 @@ namespace WinApp.Code
                     DB.AddWithValue(ref insert, "@favouriteName", dr["favouriteName"].ToString(), DB.SqlDataType.VarChar);
                     sql += insert;
                 }
-                DB.ExecuteNonQuery(sql, false, true);
+                await DB.ExecuteNonQueryAsync(sql, false, true);
             }
             // Create chartFavLine from chartFavourite
             sql = 
@@ -3330,10 +3329,10 @@ namespace WinApp.Code
                 DB.AddWithValue(ref insert, "@use2ndYaxis", Convert.ToBoolean(dr["use2ndYaxis"]), DB.SqlDataType.Boolean);
                 sql += insert;
             }
-            DB.ExecuteNonQuery(sql, false, true);
+            await DB.ExecuteNonQueryAsync(sql, false, true);
         }
 
-        private static void FixPlayerTable()
+        private async static Task FixPlayerTable()
         {
             DataTable dt = DB.FetchData("SELECT * FROM player");
             foreach (DataRow dr in dt.Rows)
@@ -3358,7 +3357,7 @@ namespace WinApp.Code
                 DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@playerServer", playerServer, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
-                DB.ExecuteNonQuery(sql);
+                await DB.ExecuteNonQueryAsync(sql);
             }
         }
 

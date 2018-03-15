@@ -36,7 +36,6 @@ namespace WinApp.Forms.Settings
         {
             // prepare to get data
             lblProgressStatus.Text = "Looking for battles for player...";
-            Application.DoEvents();
             // read battles
             string sql = @"
                 SELECT  COUNT(battle.id) AS battleCount
@@ -56,7 +55,7 @@ namespace WinApp.Forms.Settings
             lblProgressStatus.Text = "Found " + battleCount.ToString() + " battles for player " + ddPlayerMergeFrom.Text;
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
+        private async void btnStart_Click(object sender, EventArgs e)
         {
             if (battleCount == 0)
             {
@@ -104,18 +103,16 @@ namespace WinApp.Forms.Settings
                     badProgressBar.ValueMin = 0;
                     badProgressBar.Value = 0;
                     lblProgressStatus.Text = "Prepared merging battle data for " + badProgressBar.ValueMax + " tanks";
-                    Application.DoEvents();
                     int errorCount = 0;
                     foreach (DataRow dr in dt.Rows)
                     {
                         sql = "UPDATE battle SET playerTankId = @playerTankIdTo WHERE playerTankId = @playerTankIdFrom;";
                         DB.AddWithValue(ref sql, "@playerTankIdFrom", dr["FROM_playerTankId"], DB.SqlDataType.Int);
                         DB.AddWithValue(ref sql, "@playerTankIdTo", dr["TO_playerTankId"], DB.SqlDataType.Int);
-                        if (!DB.ExecuteNonQuery(sql,false))
+                        if (!await DB.ExecuteNonQueryAsync(sql,false))
                             errorCount++;
                         badProgressBar.Value++;
                         lblProgressStatus.Text = "Merging battle data for tank ID: " + dr["FROM_tankId"].ToString();
-                        Application.DoEvents();
                     }
                     if (errorCount == 0)
                     {

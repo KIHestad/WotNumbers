@@ -151,13 +151,13 @@ namespace WinApp.Forms
 			txtComment.Text = lastBattleComment;
 		}
 
-		private void btnCommentSave_Click(object sender, EventArgs e)
+		private async void btnCommentSave_Click(object sender, EventArgs e)
 		{
 			lastBattleComment = txtComment.Text;
 			string sql = "update battle set comment=@comment where id=@id";
 			DB.AddWithValue(ref sql, "@comment", lastBattleComment, DB.SqlDataType.VarChar);
 			DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
 		}
 
 		private void BattleReview_Resize(object sender, EventArgs e)
@@ -291,7 +291,7 @@ namespace WinApp.Forms
 			paintMode = false;
 			ToolStripButton btn = (ToolStripButton)sender;
 			btn.Checked = true;
-			Application.DoEvents();
+			Refresh();
 			if (mEraser.Checked)
 			{
 				paintMode = false;
@@ -339,11 +339,11 @@ namespace WinApp.Forms
 			paintingExists = false;
 		}
 
-		private void mSave_Click(object sender, EventArgs e)
+		private async void mSave_Click(object sender, EventArgs e)
 		{
 			// Delete previous painting
 			string sql = "DELETE FROM battleMapPaint WHERE battleId=" + battleId;
-			DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
 			// Save new painting if exists
 			if (paintingExists)
 			{

@@ -76,13 +76,13 @@ namespace WinApp.Code
             return progress;
         }
 
-        public static bool CheckForDailyRecalculateGrindingProgress()
+        public async static Task<bool> CheckForDailyRecalculateGrindingProgress()
         {
             bool grindingRecalcPerformed = false;
             DateTime today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
             if (today != Config.Settings.lastGrindingProgressRecalc)
             {
-                RecalculateGrindingProgress();
+                await RecalculateGrindingProgress();
                 Config.Settings.lastGrindingProgressRecalc = today;
                 string msg = "";
                 Config.SaveConfig(out msg);
@@ -91,7 +91,7 @@ namespace WinApp.Code
             return grindingRecalcPerformed;
         }
 
-        public static void RecalculateGrindingProgress()
+        public async static Task RecalculateGrindingProgress()
         {
             // Get grinding data
             string sql =
@@ -142,7 +142,7 @@ namespace WinApp.Code
                 int playerTankId = Convert.ToInt32(grinding["playerTankId"]);
                 DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
             }
-            DB.ExecuteNonQuery(sql, RunInBatch: true);
+            await DB.ExecuteNonQueryAsync(sql, RunInBatch: true);
         }
 
         public static int CalcRealAvgXP(string Battles, string Wins, string TotalXP, string AvgXP, string BtlDay)

@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WinApp.Code
 {
@@ -21,7 +22,7 @@ namespace WinApp.Code
             return defaultFolder;
         }
 
-        public static void AddReplayFolder(string path, bool subfolder)
+        public async static Task AddReplayFolder(string path, bool subfolder)
         {
             // First remove if existing
             string sql = "DELETE FROM replayFolder where path=@path;";
@@ -30,17 +31,17 @@ namespace WinApp.Code
             sql += "INSERT INTO replayFolder (path, subfolder) VALUES (@path, @subfolder);";
             DB.AddWithValue(ref sql, "@path", path, DB.SqlDataType.VarChar);
             DB.AddWithValue(ref sql, "@subfolder", subfolder, DB.SqlDataType.Boolean);
-            DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
         }
 
-        public static void RemoveReplayFolder(int id)
+        public async static Task RemoveReplayFolder(int id)
         {
             string sql = "DELETE FROM replayFolder WHERE id=@id";
             DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
-            DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
         }
 
-        public static FileInfo GetReplayFile(int battleId)
+        public async static Task<FileInfo> GetReplayFile(int battleId)
         {
             // Get Battle info
             string sql =
@@ -70,12 +71,12 @@ namespace WinApp.Code
                 // Only use nation name from icon file name
                 string nationName = tankFileName.Substring(0, tankFileName.IndexOf("-"));
                 string replayFileName = "_" + nationName + "-*_" + mapArenaId + ".wotreplay";
-                fi = GetReplayFile(battleApproxStartTime, replayFileName);
+                fi = await GetReplayFile(battleApproxStartTime, replayFileName);
             }
             return fi;
         }
 
-        public static FileInfo GetReplayFile(DateTime battleApproxStartTime, string fileName)
+        public async static Task<FileInfo> GetReplayFile(DateTime battleApproxStartTime, string fileName)
         {
             // Create file prefix according to approx start time
             DateTime battleEarliestStartTime = battleApproxStartTime.AddMinutes(-10);
@@ -92,7 +93,7 @@ namespace WinApp.Code
                 // Check that folder still exists, if not remove it for folder to search
                 if (!Directory.Exists(dr["path"].ToString()))
                 {
-                    RemoveReplayFolder(Convert.ToInt32(dr["id"]));
+                    await RemoveReplayFolder(Convert.ToInt32(dr["id"]));
                 }
                 else
                 {

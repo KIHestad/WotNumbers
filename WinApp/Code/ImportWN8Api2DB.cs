@@ -13,6 +13,7 @@ using System.Data.Sql;
 using System.Net;
 using System.Net.Cache;
 using System.Data;
+using System.Net.Http;
 
 namespace WinApp.Code
 {
@@ -24,23 +25,8 @@ namespace WinApp.Code
 			return DateTime.Now + " " + logtext;
 		}
 
-        public static WebResponse GetResponseNoCache(Uri uri)
-        {
-            // Set a default policy level for the "http:" and "https" schemes.
-            HttpRequestCachePolicy policy = new HttpRequestCachePolicy(HttpRequestCacheLevel.Default);
-            HttpWebRequest.DefaultCachePolicy = policy;
-            // Create the request.
-            WebRequest request = WebRequest.Create(uri);
-            // Define a cache policy for this request only. 
-            HttpRequestCachePolicy noCachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
-            request.CachePolicy = noCachePolicy;
-            WebResponse response = request.GetResponse();
-            Console.WriteLine("IsFromCache? {0}", response.IsFromCache);
-            return response;
-        }
-        
         // updates all WN8 expected values, or only for one tank if added
-        public static String UpdateWN8(Form parentForm, int updateOnlyTankId = 0)
+        public async static Task<String> UpdateWN8(Form parentForm, int updateOnlyTankId = 0)
 		{
 			string sql = "";
 			int tankId = 0;
@@ -55,32 +41,21 @@ namespace WinApp.Code
             try
             {
                 // First reset flag for fetched from api
-                DB.ExecuteNonQuery("UPDATE tank SET wn8ExpApiFetch=0;");
+                await DB.ExecuteNonQueryAsync("UPDATE tank SET wn8ExpApiFetch=0;");
                 // Get data from API
-                string url = urlBase + "?GUID=" + Convert.ToBase64String(Guid.NewGuid().ToByteArray()); 
-                // Set a default policy level for the "http:" and "https" schemes.
-                HttpRequestCachePolicy policy = new HttpRequestCachePolicy(HttpRequestCacheLevel.Default);
-                HttpWebRequest.DefaultCachePolicy = policy;
-                // Create request
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-				request.Timeout = 10000;     // 10 secs
-                request.KeepAlive = true;
-                // Set security
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                // Define a cache policy for this request only. 
-                HttpRequestCachePolicy noCachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
-                request.CachePolicy = noCachePolicy;
-                WebResponse webResponse = request.GetResponse();
-				StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
-				string json = responseStream.ReadToEnd();
-				responseStream.Close();
-				// Get ready to parse through WN8 exp values
-				JObject allTokens = JObject.Parse(json);
-			
-				//JToken headerToken = allTokens.First;
-				//JToken versionToken = headerToken.First;
-				//WN8Version = (int)versionToken.First;
+                string url = urlBase + "?GUID=" + Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+                HttpClient client = new HttpClient()
+                {
+                    Timeout = new TimeSpan(0, 0, 10), // 10 seconds
+                };
+                client.DefaultRequestHeaders.Add("User-Agent", "Wot Numbers " + AppVersion.AssemblyVersion);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12; //specify to use TLS as default connection
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                string json = await response.Content.ReadAsStringAsync();
 
+                // Get ready to parse through WN8 exp values
+				JObject allTokens = JObject.Parse(json);
 				JArray items = (JArray)allTokens["data"];
 				JObject item;
 				JToken jtoken;
@@ -138,10 +113,10 @@ namespace WinApp.Code
 			// Execute update statements
 			try
 			{
-				DB.ExecuteNonQuery(sql, true, true);
+                await DB.ExecuteNonQueryAsync(sql, true, true);
                 int wn8LastUpdated = DateTime.Now.Year * 10000 + DateTime.Now.Month * 100 + DateTime.Now.Day;
 				sql = "update _version_ set version=" + wn8LastUpdated + " where id=2;";
-				DB.ExecuteNonQuery(sql, true, true);
+                await DB.ExecuteNonQueryAsync(sql, true, true);
 			}
 			catch (Exception ex)
 			{
@@ -159,7 +134,7 @@ namespace WinApp.Code
 
         }
 
-        public static String FixMissingWN8(Form parentForm)
+        public async static Task<String> FixMissingWN8(Form parentForm)
         {
             DataTable dtMissing = DB.FetchData(@"
                 SELECT tier, tankTypeId
@@ -194,7 +169,7 @@ namespace WinApp.Code
                     DB.AddWithValue(ref newsql, "@tankTypeId", drMissing["tankTypeId"], DB.SqlDataType.Int);
                     updateSQL += newsql;
                 }
-                DB.ExecuteNonQuery(updateSQL, true, true);
+                await DB.ExecuteNonQueryAsync(updateSQL, true, true);
             }
             return "Done adding WN8 exp values for tanks with missing values";
         }

@@ -133,7 +133,7 @@ namespace WinApp.Forms
 			saveOk = Config.SaveConfig(out msg);
 		}
 
-		private void btnSave_Click_1(object sender, EventArgs e)
+		private async void btnSave_Click_1(object sender, EventArgs e)
 		{
 			SaveConfig();
 			// Check if Connection to DB is OK, and get base data
@@ -157,8 +157,8 @@ namespace WinApp.Forms
 				Config.SaveConfig(out msg);
 				// Init
 				TankHelper.GetAllLists();
-				// Check for upgrade
-				DBVersion.CheckForDbUpgrade(this);
+                // Check for upgrade
+                await DBVersion.CheckForDbUpgrade(this);
 				// Startup with default settings
 				MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
 				MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);

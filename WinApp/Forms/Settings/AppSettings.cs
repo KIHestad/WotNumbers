@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -17,27 +18,27 @@ namespace WinApp.Forms.Settings
         public AppSettings(AppSettingsHelper.Tabs showTab)
         {
             InitializeComponent();
+            tab = showTab;
             AppSettingsHelper.ChangesApplied = false;
             lastSelectedTab = AppSettingsHelper.Tabs.NotSelected;
-            SelectTab(showTab);
         }
 
-        private void AppSettings_Load(object sender, EventArgs e)
+        private async void AppSettings_Load(object sender, EventArgs e)
         {
-            
+            await SelectTab(tab);
         }
 
-        private void SelectTab_Click(object sender, EventArgs e)
+        private async void SelectTab_Click(object sender, EventArgs e)
         {
             BadButton bb = (BadButton)sender;
             // Get Enum from value
             AppSettingsHelper.Tabs selectedTab = (AppSettingsHelper.Tabs)Enum.Parse(typeof(AppSettingsHelper.Tabs), bb.Tag.ToString());
-            SelectTab(selectedTab);
+            await SelectTab(selectedTab);
         }
 
         private static AppSettingsHelper.Tabs lastSelectedTab = AppSettingsHelper.Tabs.NotSelected;
         private static Control lastSelectedControl = null;
-        private void SelectTab(AppSettingsHelper.Tabs showTab)
+        private async Task SelectTab(AppSettingsHelper.Tabs showTab)
         {
             if (lastSelectedTab != showTab)
             {
@@ -46,7 +47,7 @@ namespace WinApp.Forms.Settings
                 {
                     if (MsgBox.Show("Changes are made, save before changing tab?","Save changes?", MsgBox.Type.YesNo) == MsgBox.Button.Yes)
                     {
-                        SaveLastChanges();
+                        await SaveLastChanges();
                     }
                     AppSettingsHelper.ChangesApplied = false;
                 }
@@ -116,20 +117,20 @@ namespace WinApp.Forms.Settings
             }
         }
 
-        private void AppSettings_FormClosing(object sender, FormClosingEventArgs e)
+        private async void AppSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Check first if changes is done to trigger save now msgbox
             if (AppSettingsHelper.ChangesApplied)
             {
                 if (MsgBox.Show("Changes are made, save before closing form?", "Save changes?", MsgBox.Type.YesNo) == MsgBox.Button.Yes)
                 {
-                    SaveLastChanges();
+                    await SaveLastChanges();
                 }
                 AppSettingsHelper.ChangesApplied = false;
             }
         }
 
-        private void SaveLastChanges()
+        private async Task SaveLastChanges()
         {
             switch (lastSelectedTab)
             {
@@ -147,7 +148,7 @@ namespace WinApp.Forms.Settings
                     break;
                 case AppSettingsHelper.Tabs.vBAddict:
                     Forms.Settings.AppSettingsvBAddict controlAppSettingsvBAddict = (Forms.Settings.AppSettingsvBAddict)lastSelectedControl;
-                    controlAppSettingsvBAddict.SaveChanges();
+                    await controlAppSettingsvBAddict.SaveChanges();
                     break;
                 case AppSettingsHelper.Tabs.Import:
                     break;

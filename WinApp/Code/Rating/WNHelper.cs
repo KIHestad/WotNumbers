@@ -299,7 +299,7 @@ namespace WinApp.Code.Rating
             return value;
         }
 
-        public static void RecalculateRatingForTank(int playerTankId, string battleMode)
+        public async static Task RecalculateRatingForTank(int playerTankId, string battleMode)
         {
             // Update playerTankBattle
             string sqlFields = "";
@@ -321,7 +321,7 @@ namespace WinApp.Code.Rating
             sqlFields += ", rwr=" + RWR.RWRtank(tankId, rp);
             // Save
             string sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE PlayerTankId = " + playerTankId.ToString() + " AND battleMode = '" + battleMode + "'";
-            DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
         }
 
 

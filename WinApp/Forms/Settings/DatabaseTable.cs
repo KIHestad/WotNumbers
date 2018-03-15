@@ -293,7 +293,7 @@ namespace WinApp.Forms
 			FormHelper.ClosedOne();
 		}
 
-        private void btnRunSQL_Click(object sender, EventArgs e)
+        private async void btnRunSQL_Click(object sender, EventArgs e)
         {
             MsgBox.Button warninganswer = MsgBox.Show(
                 "This feature should only be used if you have database and SQL knowlede." + Environment.NewLine + Environment.NewLine +
@@ -319,7 +319,7 @@ namespace WinApp.Forms
                             sql + Environment.NewLine + Environment.NewLine, "Confirm running SQL", MsgBox.Type.YesNo);
                         if (answer == MsgBox.Button.Yes)
                         {
-                            bool sqlResult = DB.ExecuteNonQuery(sql, true);
+                            bool sqlResult = await DB.ExecuteNonQueryAsync(sql, true);
                             if (sqlResult)
                             {
                                 MsgBox.Show("Sql query has run successfully");

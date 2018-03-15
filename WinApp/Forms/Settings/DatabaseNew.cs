@@ -96,7 +96,6 @@ namespace WinApp.Forms
 			lblStatusText.Text = statusText;
 			badProgressBar.Value++;
 			Refresh();
-			Application.DoEvents();
 		}
 
 		private void btnCreateDB_Click(object sender, EventArgs e)
@@ -105,7 +104,7 @@ namespace WinApp.Forms
 			this.Close();
 		}
 		
-		private void CreateNewDb()
+		private async void CreateNewDb()
 		{
 			// Wait cursor
 			this.Cursor = Cursors.WaitCursor;
@@ -138,29 +137,29 @@ namespace WinApp.Forms
 					filename = "createTableSQLite.txt";
 				StreamReader streamReader = new StreamReader(path + filename, Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = DB.ExecuteNonQuery(sql);
+				ok = await DB.ExecuteNonQueryAsync(sql);
 				if (ok)
 				{
 					// Insert default data
 					UpdateProgressBar("Inserting data into database");
 					streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
 					sql = streamReader.ReadToEnd();
-					ok = DB.ExecuteNonQuery(sql);
+					ok = await DB.ExecuteNonQueryAsync(sql);
 					if (ok)
 					{
 						// Upgrade to latest version
 						UpdateProgressBar("Upgrading database");
-						DBVersion.CheckForDbUpgrade(this, true);
+						await DBVersion.CheckForDbUpgrade(this, true);
 						
 						// Get tanks, remember to init tankList first
 						UpdateProgressBar("Retrieves tanks from Wargaming API");
 						TankHelper.GetTankList();
 
                         // OLD METHOD, still in use because some tanks are missing from the new method
-                        ImportWotApi2DB.ImportTankList(this);
+                        await ImportWotApi2DB.ImportTankList(this);
                         TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
                         // NEW METHOD
-                        ImportWotApi2DB.ImportTanks(this);
+                        await ImportWotApi2DB.ImportTanks(this);
                         
                         
                         // Init after getting tanks and other basic data import
@@ -181,16 +180,16 @@ namespace WinApp.Forms
 
 						// Get achievements
 						UpdateProgressBar("Retrieves achievements from Wargaming API");
-						ImportWotApi2DB.ImportAchievements(this);
+						await ImportWotApi2DB.ImportAchievements(this);
 						TankHelper.GetAchList();
 
 						// Get WN8 ratings
 						UpdateProgressBar("Retrieves WN8 expected values from API");
-						ImportWN8Api2DB.UpdateWN8(this);
+						await ImportWN8Api2DB.UpdateWN8(this);
 
                         // Get WN8 ratings
                         UpdateProgressBar("Retrieves WN9 expected values from API");
-                        ImportWN9Api2DB.UpdateWN9(this);
+                        await ImportWN9Api2DB.UpdateWN9(this);
 
                         // Update settings for API update runned
                         DBVersion.RunDownloadAndUpdateTanks = false;
@@ -214,7 +213,6 @@ namespace WinApp.Forms
 			// Done
 			Cursor.Current = Cursors.Default;
 			badProgressBar.Visible = false;
-			Application.DoEvents();
 			string result = "";
 			if (ok)
 			{

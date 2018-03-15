@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 using WinApp.Code.Rating;
@@ -117,7 +118,7 @@ namespace WinApp.Forms
             return nationId;
         }
 
-        private bool TankDetailsSave()
+        private async Task<bool> TankDetailsSave()
         {
             try
             {
@@ -152,7 +153,7 @@ namespace WinApp.Forms
                 DB.AddWithValue(ref sql, "@tankTypeId", GetIdFromName("tankType", _defaultTankDetails.tankType), DB.SqlDataType.Int);
                 DB.AddWithValue(ref sql, "@customTankInfo", _defaultTankDetails.customTankInfo, DB.SqlDataType.Boolean);
                 DB.AddWithValue(ref sql, "@id", _tankId, DB.SqlDataType.Int);
-                DB.ExecuteNonQuery(sql);
+                await DB.ExecuteNonQueryAsync(sql);
                 // Update tankinfo
                 TankHelper.GetTankList();
                 return true;
@@ -164,7 +165,7 @@ namespace WinApp.Forms
             } 
         }
 
-        private bool TankRatingsSave()
+        private async Task<bool> TankRatingsSave()
         {
             try
             {
@@ -211,7 +212,7 @@ namespace WinApp.Forms
                 DB.AddWithValue(ref sql, "@wn9nerf", txtWN9nerf.Text.Trim(), DB.SqlDataType.Float);
                 // id
                 DB.AddWithValue(ref sql, "@id", _tankId, DB.SqlDataType.Int);
-                DB.ExecuteNonQuery(sql);
+                await DB.ExecuteNonQueryAsync(sql);
                 // Update tankinfo
                 TankHelper.GetTankList();
                 return true;
@@ -236,7 +237,7 @@ namespace WinApp.Forms
             this.Close();
         }
 
-        private void TankInfoEdit_FormClosing(object sender, FormClosingEventArgs e)
+        private async void TankInfoEdit_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Check if tank details are changed
             _defaultTankDetails.customTankInfo = CheckIfEditedTankDetails();
@@ -253,9 +254,9 @@ namespace WinApp.Forms
             {
                 bool saveOK = true;
                 if (_defaultTankDetails.customTankInfo)
-                    saveOK = TankDetailsSave();
+                    saveOK = await TankDetailsSave();
                 if (saveOK && (_WN8Changed || _WN9Changed))
-                    saveOK = TankRatingsSave();
+                    saveOK = await TankRatingsSave();
                 e.Cancel = !saveOK; // Cancel closing form if any saving has failed
             }
         }
@@ -271,13 +272,12 @@ namespace WinApp.Forms
         }
        
 
-        private void btnReset_Click(object sender, EventArgs e)
+        private async void btnReset_Click(object sender, EventArgs e)
         {
-            string message = "";
-            TankHelper.BasicTankInfo getTankInfoFromApi = ImportWotApi2DB.ImportTanksDetails(this, _tankId, out message);
-            if (getTankInfoFromApi == null)
+            TankHelper.BasicTankInfo getTankInfoFromApi = await ImportWotApi2DB.ImportTanksDetails(this, _tankId);
+            if (getTankInfoFromApi.message != null)
             {
-                MsgBox.Show(message + Environment.NewLine, "Tank not found using Wargaming API");
+                MsgBox.Show(getTankInfoFromApi.message + Environment.NewLine, "Tank not found using Wargaming API");
             }
             else
             {
@@ -286,7 +286,7 @@ namespace WinApp.Forms
                 {
                     _defaultTankDetails = getTankInfoFromApi;
                     ShowTankDetails();
-                    if (TankDetailsSave())
+                    if (await TankDetailsSave())
                         MsgBox.Show("Default tank info retrieved from Wargaming API", "Get Default Values");
                 }
             }
@@ -314,9 +314,9 @@ namespace WinApp.Forms
         }
 
 
-        private void btnResetWN8_Click(object sender, EventArgs e)
+        private async void btnResetWN8_Click(object sender, EventArgs e)
         {
-            string result = ImportWN8Api2DB.UpdateWN8(this, _tankId); // result is empty if any error
+            string result = await ImportWN8Api2DB.UpdateWN8(this, _tankId); // result is empty if any error
             if (result != "")
             {
                 TankHelper.GetTankList();
@@ -328,9 +328,9 @@ namespace WinApp.Forms
             
         }
 
-        private void btnResetWN9_Click(object sender, EventArgs e)
+        private async void btnResetWN9_Click(object sender, EventArgs e)
         {
-            string result = ImportWN9Api2DB.UpdateWN9(this, _tankId); // result is empty if any error
+            string result = await ImportWN9Api2DB.UpdateWN9(this, _tankId); // result is empty if any error
             if (result != "")
             {
                 TankHelper.GetTankList();

@@ -61,7 +61,7 @@ namespace WinApp.Forms
 				}
 			}
 		}
-		private void btnSave_Click(object sender, EventArgs e)
+		private async void btnSave_Click(object sender, EventArgs e)
 		{
 			string newName = txtName.Text.Trim();
 			if (newName.Length == 0)
@@ -89,7 +89,7 @@ namespace WinApp.Forms
 					// Save now
 					DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
 					DB.AddWithValue(ref sql, "@id", _favListId, DB.SqlDataType.Int);
-					DB.ExecuteNonQuery(sql);
+                    await DB.ExecuteNonQueryAsync(sql);
 					// Add tanks if new colList and seleced colList in copy to DD
 					if (_favListId == 0 && ddCopyFrom.Text != "(None)")
 					{
@@ -109,7 +109,7 @@ namespace WinApp.Forms
 																					"   where favListId=@copyFromFavListId; ";
 						DB.AddWithValue(ref sql, "@copyToFavListId", copyToId, DB.SqlDataType.Int);
 						DB.AddWithValue(ref sql, "@copyFromFavListId", copyFromId, DB.SqlDataType.Int);
-						DB.ExecuteNonQuery(sql);
+                        await DB.ExecuteNonQueryAsync(sql);
 					}
 					// Set as default for right click menu
 					// find last favlist
@@ -129,12 +129,12 @@ namespace WinApp.Forms
 							sql = "insert into favListTank (favListId, tankId, sortorder) values (@favListId, @tankId, 999999) ";
 							DB.AddWithValue(ref sql, "@favListId", favListId, DB.SqlDataType.Int);
 							DB.AddWithValue(ref sql, "@tankId", _tankId, DB.SqlDataType.Int);
-							DB.ExecuteNonQuery(sql);
-							FavListHelper.TankSort(favListId);
+                            await DB.ExecuteNonQueryAsync(sql);
+                            await FavListHelper.TankSort(favListId);
 						}
 					}
 					this.Close();
-					FavListHelper.FavListSort();
+                    await FavListHelper.FavListSort();
 				}
 			}
 		}

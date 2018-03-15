@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using IronPython.Hosting;
 using Microsoft.Scripting;
@@ -81,9 +82,9 @@ namespace WinApp.Code
 			}
 		}
 
-		private void bwDossierProcess_DoWork(object sender, DoWorkEventArgs e)
+		private async void bwDossierProcess_DoWork(object sender, DoWorkEventArgs e)
 		{
-			string result = ManualRun(_ForceUpdate);
+			string result = await ManualRun(_ForceUpdate);
 			StatusBarHelper.ClearAfterNextShow = true;
 			StatusBarHelper.Message = result;
 			// Update config if force update is run
@@ -96,7 +97,7 @@ namespace WinApp.Code
 		}
 
 		// Always run in separate thread to avoid Main form application hang
-		public static string ManualRun(bool ForceUpdate = false)
+		public async static Task<string> ManualRun(bool ForceUpdate = false)
 		{
 			string returVal = "Manual battle check started...";
 			Log.CheckLogFileSize();
@@ -116,12 +117,12 @@ namespace WinApp.Code
 			}
 			if (ok)
 			{
-				returVal = RunDossierRead(dossierFile, ForceUpdate);
+				returVal = await RunDossierRead(dossierFile, ForceUpdate);
 			}
 			return returVal;
 		}
 
-		private static void DossierFileChanged(object source, FileSystemEventArgs e)
+		private async static void DossierFileChanged(object source, FileSystemEventArgs e)
 		{
 			Log.CheckLogFileSize();
 			Log.AddToLogBuffer("// Dossier file listener detected updated dossier file");
@@ -135,11 +136,11 @@ namespace WinApp.Code
 			// Wait until file is ready to read, 
 			WaitUntilFileReadyToRead(dossierFile, 4000);
 			// Perform file conversion from picle to json
-			string statusResult = RunDossierRead(dossierFile);
+			string statusResult = await RunDossierRead(dossierFile);
 			// Continue listening to dossier file
 			dossierFileWatcher.EnableRaisingEvents = true;
             // Check for recalc grinding progress
-            GrindingHelper.CheckForDailyRecalculateGrindingProgress();
+            await GrindingHelper.CheckForDailyRecalculateGrindingProgress();
         }
 
         private static void WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
@@ -170,7 +171,7 @@ namespace WinApp.Code
 			stopWatch.Stop();
 		}
 
-		private static string RunDossierRead(string dossierFile, bool forceUpdate = false)
+		private async static Task<string> RunDossierRead(string dossierFile, bool forceUpdate = false)
 		{
 			string returVal = "";
 			if (!Dossier2db.Running)
@@ -270,7 +271,7 @@ namespace WinApp.Code
 					{
 						if (File.Exists(dossierJsonFile))
 						{
-							returVal = Dossier2db.ReadJson(dossierJsonFile, forceUpdate);
+							returVal = await Dossier2db.ReadJson(dossierJsonFile, forceUpdate);
 							Log.AddToLogBuffer(" > > " + returVal);
 						}
 						else

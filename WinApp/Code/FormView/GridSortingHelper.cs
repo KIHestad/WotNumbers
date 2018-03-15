@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WinApp.Code
 {
@@ -44,13 +45,13 @@ namespace WinApp.Code
 			return sorting;
 		}
 
-		public static void SaveSorting(int colListId, Sorting sorting)
+		public async static Task SaveSorting(int colListId, Sorting sorting)
 		{
 			string sql = "update columnList set lastSortColumn=@lastSortColumn, lastSortDirectionAsc=@lastSortDirectionAsc where id=@id;";
 			DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@lastSortColumn", sorting.ColumnHeader, DB.SqlDataType.VarChar);
 			DB.AddWithValue(ref sql, "@lastSortDirectionAsc", sorting.SortDirectionAsc, DB.SqlDataType.Boolean);
-			DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
 		}
 
 	}

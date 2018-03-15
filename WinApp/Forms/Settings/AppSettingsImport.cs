@@ -32,7 +32,7 @@ namespace WinApp.Forms.Settings
             txtWotStatDb.Text = openFileWotStatDbFile.FileName;
         }
 
-        private void btnStartImport_Click(object sender, EventArgs e)
+        private async void btnStartImport_Click(object sender, EventArgs e)
         {
             DateTime toDate = DateTime.Now;
             string s = txtToDate.Text.Trim();
@@ -65,7 +65,7 @@ namespace WinApp.Forms.Settings
                     }
                     progressBarImport.ValueMax = rowcount;
                     progressBarImport.Value = 0;
-                    ImportNow(toDate);
+                    await ImportNow(toDate);
 
                     // Done
                     cnn.Close();
@@ -83,7 +83,7 @@ namespace WinApp.Forms.Settings
             }
         }
 
-        private void ImportNow(DateTime toDate)
+        private async Task ImportNow(DateTime toDate)
         {
             // Prepare
             btnOpenWotStatDbFile.Enabled = false;
@@ -117,7 +117,6 @@ namespace WinApp.Forms.Settings
                 while (i < recentBattles.Rows.Count)
                 {
                     progressBarImport.Value++;
-                    Application.DoEvents();
                     Refresh();
                     // Get battles first
                     int battlesCount = Convert.ToInt32(recentBattles.Rows[i]["rbBattles"]) / 100;
@@ -225,7 +224,7 @@ namespace WinApp.Forms.Settings
                                 DB.AddWithValue(ref sqlInsertBattle, "@wn8", wn8, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sqlInsertBattle, "@wn9", wn9, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sqlInsertBattle, "@eff", eff, DB.SqlDataType.Int);
-                                DB.ExecuteNonQuery(sqlInsertBattle);
+                                await DB.ExecuteNonQueryAsync(sqlInsertBattle);
 
                                 // Get the last battleId if inserted
                                 if (battleId == 0)
@@ -280,7 +279,7 @@ namespace WinApp.Forms.Settings
                                                 battleId.ToString() + ", " + battleFragItem.tankId + ", " + battleFragItem.fragCount + "); " + Environment.NewLine;
                                         }
                                     }
-                                    DB.ExecuteNonQuery(sqlInsertBattleFrag);
+                                    await DB.ExecuteNonQueryAsync(sqlInsertBattleFrag);
                                 }
                             }
                         }
@@ -311,7 +310,7 @@ namespace WinApp.Forms.Settings
 
         }
 
-        private void btnRemove_Click(object sender, EventArgs e)
+        private async void btnRemove_Click(object sender, EventArgs e)
         {
             Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to remove previously imported battles from WoT Statistics?", "Remove previously imported battles", MsgBox.Type.OKCancel, (Form)this.TopLevelControl);
             if (answer == MsgBox.Button.OK)
@@ -320,7 +319,7 @@ namespace WinApp.Forms.Settings
                     "delete from battleAch where battleId IN (select id from battle where wsId is not null); " +
                     "delete from battleFrag where battleId IN (select id from battle where wsId is not null); " +
                     "delete from battle where wsId is not null; ";
-                DB.ExecuteNonQuery(sql);
+                await DB.ExecuteNonQueryAsync(sql);
                 Code.MsgBox.Show("Previously imported battles from WoT Statistics is now removed", "Removed successfully", (Form)this.TopLevelControl);
             }
         }

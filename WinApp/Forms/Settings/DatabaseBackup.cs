@@ -48,12 +48,12 @@ namespace WinApp.Forms
             }
         }
         
-        private void UpdateFromApi_Shown(object sender, EventArgs e)
+        private async void UpdateFromApi_Shown(object sender, EventArgs e)
 		{
 			if (_autoRun)
             {
                 btnStart.Text = "Cancel";
-                RunNow();
+                await RunNow();
             }
 				
 		}
@@ -63,10 +63,9 @@ namespace WinApp.Forms
 			lblProgressStatus.Text = statusText;
     		badProgressBar.Value = value;
 			Refresh();
-			Application.DoEvents();
 		}
 
-		private void RunNow()
+		private async Task RunNow()
 		{
 			// Init
             this.Cursor = Cursors.WaitCursor;
@@ -81,7 +80,7 @@ namespace WinApp.Forms
             DateTime backupTime = DateTime.Now;
             
             // Copy Database
-            bool ok = Copy(backupTime);
+            bool ok = await Copy(backupTime);
 
 			// Done
 			if (cancelFlag) 
@@ -107,12 +106,12 @@ namespace WinApp.Forms
                 this.Close();
 		}
 
-		private void btnStart_Click(object sender, EventArgs e)
+		private async void btnStart_Click(object sender, EventArgs e)
 		{
 			if (btnStart.Text == "Start")
             {
                 btnStart.Text = "Cancel";
-                RunNow();
+                await RunNow();
             }
             else
             {
@@ -160,7 +159,7 @@ namespace WinApp.Forms
 
         }
 
-        private bool Copy(DateTime backupTime)
+        private async Task<bool> Copy(DateTime backupTime)
         {
             byte[] buffer = new byte[1024 * 512]; // 0.5MB buffer
             string backupFile = Config.Settings.databaseBackupFilePath;
@@ -209,7 +208,7 @@ namespace WinApp.Forms
                     {
                         totalBytes += currentBlockSize;
                         double persentage = (double)totalBytes * 100.0 / fileLength;
-                        dest.Write(buffer, 0, currentBlockSize);
+                        await dest.WriteAsync(buffer, 0, currentBlockSize);
                         UpdateProgressBar(Convert.ToInt32(persentage), "File copy in progress...");
                         if (cancelFlag)
                             break;

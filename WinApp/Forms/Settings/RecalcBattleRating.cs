@@ -31,7 +31,7 @@ namespace WinApp.Forms
             _forBattleId = forBattleId;
 		}
 
-		private void UpdateFromApi_Shown(object sender, EventArgs e)
+		private async void UpdateFromApi_Shown(object sender, EventArgs e)
 		{
             string ratings = "";
             if (_forWN9)
@@ -45,7 +45,7 @@ namespace WinApp.Forms
             ratings = ratings.Substring(0, ratings.Length - 2);
             RecalcBattleWN8Theme.Text = "Recalculate battle " + ratings;
             if (_autoRun)
-				RunNow();
+                await RunNow();
 		}
 
 		private void UpdateProgressBar(string statusText)
@@ -56,10 +56,9 @@ namespace WinApp.Forms
 			else
 				badProgressBar.Value++;
 			Refresh();
-			Application.DoEvents();
 		}
 
-		private void RunNow()
+		private async Task RunNow()
 		{
 			this.Cursor = Cursors.WaitCursor;
 			RecalcBattleWN8Theme.Cursor = Cursors.WaitCursor;
@@ -132,14 +131,13 @@ namespace WinApp.Forms
 				if (sql.Length >= 4000) // Approx 100 updates
 				{
 					lblProgressStatus.Text = "Saving to database...";
-					Application.DoEvents();
-					DB.ExecuteNonQuery(sql,Config.Settings.showDBErrors,true);
+                    await DB.ExecuteNonQueryAsync(sql,Config.Settings.showDBErrors,true);
 					sql = "";
 				}
 			}
 			if (sql != "") // Update last batch of sql's
 			{
-				DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+                await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
 				sql = "";
 			}
 
@@ -153,9 +151,9 @@ namespace WinApp.Forms
 			this.Close();
 		}
 
-		private void btnStart_Click(object sender, EventArgs e)
+		private async void btnStart_Click(object sender, EventArgs e)
 		{
-			RunNow();
+            await RunNow();
 		}
 
 		

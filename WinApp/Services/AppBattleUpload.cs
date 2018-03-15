@@ -154,7 +154,7 @@ namespace WinApp.Services
                         if (value == DBNull.Value)
                             value = "NULL";
                         Log.LogToFile(ex, " ### Error reading battle: " + battleId.ToString() + " field: " + debugField + " with value: " + value.ToString() + " for upload to web.");
-                        DB.ExecuteNonQuery($"UPDATE battle SET transferred=1 WHERE id={battleId}");
+                        await DB.ExecuteNonQueryAsync($"UPDATE battle SET transferred=1 WHERE id={battleId}");
                     }
                     
                     // Upload for each 1000 battles
@@ -210,7 +210,7 @@ namespace WinApp.Services
                     sql += $"UPDATE battle SET transferred=1 WHERE id={item.ToString()}; ";
                 }
             }
-            DB.ExecuteNonQuery(sql, false, true);
+            await DB.ExecuteNonQueryAsync(sql, false, true);
             return result.BattleIdSuccessTransfer.Count;
         }
 

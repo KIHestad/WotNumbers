@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using WinApp.Code;
@@ -45,13 +46,13 @@ namespace WinApp.Forms.Settings
                 this.Cursor = Cursors.WaitCursor;
             else
                 this.Cursor = Cursors.Default;
-            Application.DoEvents();
+            Refresh();
         }
 
-        private void btnTestConnection_Click(object sender, EventArgs e)
+        private async void btnTestConnection_Click(object sender, EventArgs e)
         {
             TestStatus();
-            MsgBox.Show(vBAddictHelper.TestConnection(), "vBAddict connection test result");
+            MsgBox.Show(await vBAddictHelper.TestConnection(), "vBAddict connection test result");
             TestStatus(false);
         }
 
@@ -75,17 +76,17 @@ namespace WinApp.Forms.Settings
         }
 
 
-        private void btnSaveSettings_Click(object sender, EventArgs e)
+        private async void btnSaveSettings_Click(object sender, EventArgs e)
         {
-            SaveChanges();
+            await SaveChanges();
         }
 
-        public void SaveChanges()
+        public async Task SaveChanges()
         {
             vBAddictHelper.Settings.Token = txtToken.Text;
             vBAddictHelper.Settings.UploadActive = chkActivateAutoUpload.Checked;
             vBAddictHelper.Settings.UploadReplayActive = chkActivateAutoReplayUpload.Checked;
-            vBAddictHelper.SaveSettings();
+            await vBAddictHelper.SaveSettings();
             Config.Settings.vBAddictShowToolBarMenu = chkShowvbAddictIcon.Checked;
             string msg = "";
             if (!Config.SaveConfig(out msg))

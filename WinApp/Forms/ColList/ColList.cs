@@ -264,18 +264,18 @@ namespace WinApp.Forms
 			SelectColumnList();
 		}
 
-		private void btnSelectedColumnListSave_Click(object sender, EventArgs e)
+		private async void btnSelectedColumnListSave_Click(object sender, EventArgs e)
 		{
 			string ColumnSetupListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
 			string message = "You are about to save the selected columns to column setup list: " + ColumnSetupListName;
             Code.MsgBox.Button answer = MsgBox.Show(message, "Save selected columns to column setup list", MsgBox.Type.OKCancel, this);
 			if (answer == MsgBox.Button.OK)
 			{
-				SaveSelectedColumnList();
+                await SaveSelectedColumnList();
 			}
 		}
 
-		private void SaveSelectedColumnList()
+		private async Task SaveSelectedColumnList()
 		{
 			// Save Selected Tank List
 			string sql = "delete from columnListSelection where columnListId=@columnListId; "; // Delete all old tanks
@@ -290,7 +290,7 @@ namespace WinApp.Forms
 				sql += insertsql;
 			}
 			DB.AddWithValue(ref sql, "@columnListId", SelectedColListId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
 			// Refresh Grid
 			ShowColumnSetupList();
 		}
@@ -783,7 +783,7 @@ namespace WinApp.Forms
 
 		#endregion
 
-		private void toolColListDelete_Click(object sender, EventArgs e)
+		private async void toolColListDelete_Click(object sender, EventArgs e)
 		{
 			string ColListName = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
 			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete selected column list: " + ColListName,
@@ -793,7 +793,7 @@ namespace WinApp.Forms
 
 				string sql = "delete from columnListSelection where columnListId=@id; delete from columnList where id=@id;";
 				DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(sql);
+                await DB.ExecuteNonQueryAsync(sql);
 				SelectedColListId = 0;
 				if (dataGridColumnList.RowCount > 0)
 					SelectedColListId = Convert.ToInt32(dataGridColumnList.Rows[0].Cells["id"].Value);
@@ -801,17 +801,17 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void toolColListUp_Click(object sender, EventArgs e)
+		private async void toolColListUp_Click(object sender, EventArgs e)
 		{
-			ColListMoveItem(-1);
+            await ColListMoveItem(-1);
 		}
 
-		private void toolColListDown_Click(object sender, EventArgs e)
+		private async void toolColListDown_Click(object sender, EventArgs e)
 		{
-			ColListMoveItem(1);
+            await ColListMoveItem(1);
 		}
 
-		private void ColListMoveItem(int move)
+		private async Task ColListMoveItem(int move)
 		{
 			var ColListSelectedListPos = dataGridColumnList.SelectedRows[0].Cells["#"].Value;
 			if (ColListSelectedListPos != DBNull.Value)
@@ -842,13 +842,13 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@position",  Convert.ToInt32(ColListSelectedListPos), DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToId", rowNextToId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
-					DB.ExecuteNonQuery(sql);
+                    await DB.ExecuteNonQueryAsync(sql);
 				}
-				ColListSort();
+                await ColListSort();
 			}
 		}
 
-		private void ColListSort(bool selectNewestColList = false)
+		private async Task ColListSort(bool selectNewestColList = false)
 		{
 			string sql = "select * from columnList where colType=@colType and position is not null order by position;";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
@@ -864,38 +864,38 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@pos", pos, DB.SqlDataType.Int);
 					pos++;
 				}
-				DB.ExecuteNonQuery(sql);
+                await DB.ExecuteNonQueryAsync(sql);
 				ShowColumnSetupList(selectNewestColList);
 			}
 		}
 
-		private void toolColListDefault_Click(object sender, EventArgs e)
+		private async void toolColListDefault_Click(object sender, EventArgs e)
 		{
 			string sql = "update columnList set colDefault=0 where colType=@colType; " +
 						 "update columnList set colDefault=1 where colType=@colType and id=@id;";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
 			ShowColumnSetupList();
 		}
 
-		private void toolColListVisible_Click(object sender, EventArgs e)
+		private async void toolColListVisible_Click(object sender, EventArgs e)
 		{
 			string sql = "update columnList set position=99999 where id=@id";
 			if (toolColListVisible.Text == "Hide")
 				sql = "update columnList set position=NULL where id=@id";
 			DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
-			ColListSort();
+            await DB.ExecuteNonQueryAsync(sql);
+            await ColListSort();
 		}
 
 		public bool isHidden { get; set; }
 
-		private void toolColListAdd_Click(object sender, EventArgs e)
+		private async void toolColListAdd_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.ColListNewEdit(0);
 			frm.ShowDialog();
-			ColListSort(true);
+            await ColListSort(true);
 		}
 
 		private void toolColListModify_Click(object sender, EventArgs e)
@@ -1021,7 +1021,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void toolSelectedTanks_Sep_Size_Click(object sender, EventArgs e)
+		private async void toolSelectedTanks_Sep_Size_Click(object sender, EventArgs e)
 		{
 			string sql =
 				"update columnListSelection SET colWidth=@colWidth WHERE columnSelectionId IN " +
@@ -1030,11 +1030,11 @@ namespace WinApp.Forms
 			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
 			separatorDefaultColWidth = Convert.ToInt32(menu.Name.Substring(22, 2));
 			DB.AddWithValue(ref sql, "@colWidth", separatorDefaultColWidth, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
-			ColListSort();
+            await DB.ExecuteNonQueryAsync(sql);
+            await ColListSort();
 		}
 
-		private void btnReset_Click(object sender, EventArgs e)
+		private async void btnReset_Click(object sender, EventArgs e)
 		{
             MsgBox.Button answer = MsgBox.Show("This will delete all system views, recreate them and move them to top.", "Reset system views", MsgBox.Type.OKCancel, this);
 			if (answer == MsgBox.Button.OK)
@@ -1044,12 +1044,12 @@ namespace WinApp.Forms
 					case GridView.Views.Overall:
 						break;
 					case GridView.Views.Tank:
-						ColListSystemDefault.NewSystemTankColList();
+                        await ColListSystemDefault.NewSystemTankColList();
 
 						this.Close();
 						break;
 					case GridView.Views.Battle:
-						ColListSystemDefault.NewSystemBattleColList();
+                        await ColListSystemDefault.NewSystemBattleColList();
 						this.Close();
 						break;
 					default:

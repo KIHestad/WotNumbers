@@ -137,7 +137,6 @@ namespace WinApp.Code
                                         continue;
                                     }
                                     fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
-                                    Application.DoEvents();
                                     // if successful copy remember it
                                     if (File.Exists(Config.AppDataBattleResultFolder + filename))
                                     {
@@ -198,7 +197,6 @@ namespace WinApp.Code
                                         Log.AddToLogBuffer(" > > > Deleted successfully converted battle DAT-file: " + file);
                                     else
                                         Log.AddToLogBuffer(" > > > Deleted faulty battle DAT-file: " + file);
-                                    Application.DoEvents();
                                 }
                             }
                             catch (Exception ex)
@@ -326,11 +324,9 @@ namespace WinApp.Code
                     lastFile = file;
                     processed++;
                     // Read content
-                    Application.DoEvents();
                     StreamReader sr = new StreamReader(file, Encoding.UTF8);
                     string json = sr.ReadToEnd();
                     sr.Close();
-                    Application.DoEvents();
                     // Root token
                     JToken token_root = JObject.Parse(json);
                     // Get version
@@ -391,7 +387,7 @@ namespace WinApp.Code
                                 DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sql, "@battleTime", battleTime, DB.SqlDataType.DateTime);
                                 DB.AddWithValue(ref sql, "@battleTimeStart", battleTimeStart, DB.SqlDataType.DateTime);
-                                DB.ExecuteNonQuery(sql);
+                                await DB.ExecuteNonQueryAsync(sql);
                             }
                         }
                         // Fetch battle
@@ -633,7 +629,7 @@ namespace WinApp.Code
                                 sql = "update battle set " + fields + " arenaUniqueID=@arenaUniqueID where id=@battleId";
                                 DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Float);
-                                DB.ExecuteNonQuery(sql);
+                                await DB.ExecuteNonQueryAsync(sql);
 
                                 // Add Battle Players *******************************
 
@@ -859,15 +855,15 @@ namespace WinApp.Code
                                         teamFortResources[player.team] += fortResourceValue;
                                         // Create SQL and update db
                                         sql = "insert into battlePlayer (" + fields + ") values (" + values + ")";
-                                        bool success = DB.ExecuteNonQuery(sql,false);
+                                        bool success = await DB.ExecuteNonQueryAsync(sql,false);
                                         if (!success)
                                         {
                                             // Add tank if missing
                                             // TODO : Not sure if working
                                             if (!TankHelper.TankExists(tankId))
                                             {
-                                                TankHelper.CreateUnknownTank(tankId, "Unknown");
-                                                DB.ExecuteNonQuery(sql, false);
+                                                await TankHelper.CreateUnknownTank(tankId, "Unknown");
+                                                await DB.ExecuteNonQueryAsync(sql, false);
                                             }
                                         }
                                     }
@@ -967,12 +963,12 @@ namespace WinApp.Code
                                 DB.AddWithValue(ref sql, "@fragsenemy", fragsCount[enemyTeam], DB.SqlDataType.Int);
                                 // Add Battle ID and run sql if any values
                                 DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-                                DB.ExecuteNonQuery(sql);
+                                await DB.ExecuteNonQueryAsync(sql);
                                 // If grinding, adjust grogress
                                 if (grindXP > 0)
-                                    GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));
+                                    await GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));
                                 // Update Tank Credits
-                                TankCreditCalculation.RecalculateForTank(playerTankId);
+                                await TankCreditCalculation.RecalculateForTank(playerTankId);
                                 // Done
                                 deleteFileAfterRead = true;
                                 GridView.scheduleGridRefresh = true;
@@ -985,7 +981,7 @@ namespace WinApp.Code
                                 // Check for upload replay file to vBAddict
                                 if (vBAddictHelper.Settings.UploadReplayActive)
                                 {
-                                    FileInfo fi = ReplayHelper.GetReplayFile(battleId);
+                                    FileInfo fi = await ReplayHelper.GetReplayFile(battleId);
                                     if (fi != null)
                                     {
                                         string replayFilename = fi.FullName;
@@ -1076,7 +1072,7 @@ namespace WinApp.Code
             }
         }
 
-        private static void GrindingProgress(int playerTankId, int XP)
+        private async static Task GrindingProgress(int playerTankId, int XP)
         {
             // Yes, apply grinding progress to playerTank now
             // Get grinding data
@@ -1123,7 +1119,7 @@ namespace WinApp.Code
             DB.AddWithValue(ref sql, "@CompleationDate", new DateTime(date.Year, date.Month, date.Day), DB.SqlDataType.DateTime);
             DB.AddWithValue(ref sql, "@BattlesDay", progress.BtlPerDay, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
-            DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
         }
 
         private static bool ConvertBattleUsingPython(string filename, out bool deleteFile)
@@ -1165,7 +1161,6 @@ namespace WinApp.Code
                         //ScriptScope scope = engine.CreateScope();
                         //script.Execute(scope);
 
-                        Application.DoEvents();
                         Log.AddToLogBuffer(" > > > Converted battle DAT-file to JSON file: " + filename);
                         ok = true;
                         deleteFile = true;

@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -74,7 +75,7 @@ namespace WinApp.Code
 			return applicationId;
 		}
 
-		private static string FetchFromAPI(WotApiType WotAPi, int tankId, Form parentForm)
+		private static async Task<string> FetchFromAPI(WotApiType WotAPi, int tankId, Form parentForm)
 		{
 			try
 			{
@@ -118,29 +119,23 @@ namespace WinApp.Code
                     default:
                         break;
 				}
-				Application.DoEvents(); // TODO: testing freeze-problem running API requests
-				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-				httpRequest.Timeout = 10000;     // 10 secs
-				httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
-				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
-				HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
-				Application.DoEvents(); // TODO: testing freeze-problem running API requests
-				StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
-				Application.DoEvents(); // TODO: testing freeze-problem running API requests
-				string s = responseStream.ReadToEnd();
-				responseStream.Close();
-				webResponse.Close();
-				Log.WriteLogBuffer();
-				return s;
+                HttpClient client = new HttpClient()
+                {
+                    Timeout = new TimeSpan(0,0,10) // 10 seconds
+                };
+                client.DefaultRequestHeaders.Add("User-Agent", "Wot Numbers " + AppVersion.AssemblyVersion);
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
 			}
 			catch (Exception ex)
 			{
 				Log.LogToFile(ex);
 				string msg = 
-					"Could not connect to WoT API, please check your Internet access." + Environment.NewLine + Environment.NewLine +
+					"Could not connect to WoT API within timeout period (10 seconds), please try again later." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
 					ex.InnerException + Environment.NewLine + Environment.NewLine;
-				Code.MsgBox.Show(msg, "Problem connecting to WoT API", parentForm);
+				MsgBox.Show(msg, "Problem connecting to WoT API", parentForm);
 				return "";
 			}
 			
@@ -182,9 +177,9 @@ namespace WinApp.Code
         #region importTanks
 
         // New method: "Vehicles" gets enhanced tank data, problem not as updated as old "List of vehicles"
-        public static String ImportTanks(Form parentForm, bool overwriteCustomTankDetails = false)
+        public async static Task<String> ImportTanks(Form parentForm, bool overwriteCustomTankDetails = false)
 		{
-            string json = FetchFromAPI(WotApiType.Tank, 0, parentForm);
+            string json = await FetchFromAPI(WotApiType.Tank, 0, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -215,7 +210,6 @@ namespace WinApp.Code
 						string sqlTotal = "";
                         foreach (JProperty tank in tanks)   // tank = tankId + child tokens
                         {
-                            Application.DoEvents(); // TODO: testing freeze-problem running API requests
                             JToken itemToken = tank.First();   // First() returns only child tokens of tank
 
                             // ID
@@ -323,7 +317,7 @@ namespace WinApp.Code
                                 sqlTotal += sql + Environment.NewLine;
                             }
                         }
-                        DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
+                        await DB.ExecuteNonQueryAsync(sqlTotal, true, true); // Run all SQL in batch
                         // Update log file after import
                         WriteApiLog("Tanks", logItems);
                     }
@@ -342,9 +336,9 @@ namespace WinApp.Code
         }
 
         // Old method "List of vehicles", only get if tank is missing
-        public static String ImportTankList(Form parentForm, bool overwriteCustomTankDetails = false)
+        public async static Task<String> ImportTankList(Form parentForm, bool overwriteCustomTankDetails = false)
         {
-            string json = FetchFromAPI(WotApiType.TankList, 0, parentForm);
+            string json = await FetchFromAPI(WotApiType.TankList, 0, parentForm);
             if (json == "")
             {
                 return "No data imported.";
@@ -375,7 +369,6 @@ namespace WinApp.Code
                         string sqlTotal = "";
                         foreach (JProperty tank in tanks)   // tank = tankId + child tokens
                         {
-                            Application.DoEvents(); // TODO: testing freeze-problem running API requests
                             JToken itemToken = tank.First();   // First() returns only child tokens of tank
 
                             // ID
@@ -470,7 +463,7 @@ namespace WinApp.Code
                                 sqlTotal += sql + Environment.NewLine;
                             }
                         }
-                        DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
+                        await DB.ExecuteNonQueryAsync(sqlTotal, true, true); // Run all SQL in batch
                         // Update log file after import
                         WriteApiLog("Tank list", logItems);
                     }
@@ -489,14 +482,13 @@ namespace WinApp.Code
         }
 
         // Tank Details, returned as TankHelper.BasicTankInfo
-        public static TankHelper.BasicTankInfo ImportTanksDetails(Form parentForm, int tankId, out string message)
+        public async static Task<TankHelper.BasicTankInfo> ImportTanksDetails(Form parentForm, int tankId)
         {
-            message = "";
             TankHelper.BasicTankInfo foundTankInfo = new TankHelper.BasicTankInfo();
-            string json = FetchFromAPI(WotApiType.Tank, tankId, parentForm);
+            string json = await FetchFromAPI(WotApiType.Tank, tankId, parentForm);
             if (json == "")
             {
-                message =  "No data imported, no tank details found at Wargaming API for download for tank ID: " + tankId.ToString();
+                foundTankInfo.message =  "No data imported, no tank details found at Wargaming API for download for tank ID: " + tankId.ToString();
                 return null;
             }
             else
@@ -516,12 +508,11 @@ namespace WinApp.Code
 
                         foreach (JProperty tank in tanks)   // tank = tankId + child tokens
                         {
-                            Application.DoEvents(); // TODO: testing freeze-problem running API requests
                             JToken itemToken = tank.First();   // First() returns only child tokens of tank
 
                             if (itemToken.HasValues == false)
                             {
-                                message = "No data found for this tank using Wargaming API";
+                                foundTankInfo.message = "No data found for this tank using Wargaming API";
                                 return null;
                             }
                             else
@@ -571,8 +562,8 @@ namespace WinApp.Code
                 catch (Exception ex)
                 {
                     Log.LogToFile(ex);
-                    message = "Error in running Wargaming API for tank detals." + Environment.NewLine + Environment.NewLine + ex.Message;
-                    return null; 
+                    foundTankInfo.message = "Error in running Wargaming API for tank detals." + Environment.NewLine + Environment.NewLine + ex.Message;
+                    return foundTankInfo; 
                 }
             }
         }
@@ -581,9 +572,9 @@ namespace WinApp.Code
 
         #region importTurrets
 
-        public static String ImportTurrets(Form parentForm)
+        public async static Task<String> ImportTurrets(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Turret, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Turret, 0, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -608,7 +599,6 @@ namespace WinApp.Code
 						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 						foreach (JProperty turret in turrets)   // turret = turretId + child tokens
 						{
-							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							JToken itemToken = turret.First();   // First() returns only child tokens of turret
 
 							int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated turretId
@@ -660,7 +650,7 @@ namespace WinApp.Code
 								logItems.UpdatedCount++;
 							}
 						}
-						DB.ExecuteNonQuery(sqlTotal, true, true);
+						await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
 						// Update log file after import
 						WriteApiLog("Turrets", logItems);
 					}
@@ -683,9 +673,9 @@ namespace WinApp.Code
 
 		#region importGuns
 
-		public static String ImportGuns(Form parentForm)
+		public async static Task<String> ImportGuns(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Gun, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Gun, 0, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -709,13 +699,12 @@ namespace WinApp.Code
 
 						// Drop relations to turret and tank before import (new relations will be added)
 						string sql = "DELETE FROM modTankGun; DELETE FROM modTurretGun; ";
-						DB.ExecuteNonQuery(sql);
+                        await DB.ExecuteNonQueryAsync(sql);
 
 						DataTable itemsInDB = DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
 						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 						foreach (JProperty gun in guns)
 						{
-							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							JToken itemToken = gun.First();
 
 							int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);
@@ -810,7 +799,7 @@ namespace WinApp.Code
 						WriteApiLog("Guns", logItems);
 
 					}
-					DB.ExecuteNonQuery(sqlTotal, true, true);
+                    await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
 					//Code.MsgBox.Show("Gun import complete");
 					return ("Gun import Complete");
 				}
@@ -828,9 +817,9 @@ namespace WinApp.Code
 
 		#region importRadios
 
-		public static String ImportRadios(Form parentForm)
+		public async static Task<String> ImportRadios(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Radio, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Radio, 0, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -854,14 +843,13 @@ namespace WinApp.Code
 
 						// Drop relations to tank before import (new relations will be added)
 						string sql = "DELETE FROM modTankRadio;";
-						DB.ExecuteNonQuery(sql);
+                        await DB.ExecuteNonQueryAsync(sql);
 
 						DataTable itemsInDB = DB.FetchData("select id from modRadio");   // Fetch id of radios already existing in db
 						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 
 						foreach (JProperty radio in radios)
 						{
-							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							JToken itemToken = radio.First();
 
 							int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);
@@ -914,7 +902,7 @@ namespace WinApp.Code
 						// Update log file after import
 						WriteApiLog("Radios", logItems);
 					}
-					DB.ExecuteNonQuery(sqlTotal, true, true);
+                    await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
 					//Code.MsgBox.Show("Radio import complete");
 					return ("Import Complete");
 				}
@@ -932,9 +920,9 @@ namespace WinApp.Code
 
 		#region importMaps
 
-		public static String ImportMaps(Form parentForm)
+		public async static Task<String> ImportMaps(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Maps, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Maps, 0, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -960,7 +948,6 @@ namespace WinApp.Code
                         DataTable currentMaps = DB.FetchData("SELECT * FROM map");
 						foreach (JProperty map in maps)
 						{
-							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							JToken itemToken = map.First();
 							string name = itemToken["name_i18n"].ToString();
 							name = name.Replace("'","");
@@ -1005,7 +992,7 @@ namespace WinApp.Code
                     if (sqlTotal.Length > 0)
                     {
                         sqlTotal = "UPDATE map SET active=0;" + sqlTotal; // Remove active flag before updates
-                        DB.ExecuteNonQuery(sqlTotal, true, true);
+                        await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
                     }
                     // Add new maps
                     if (newMaps.Count > 0)
@@ -1023,7 +1010,7 @@ namespace WinApp.Code
                             sqlTotal += newSQL + "\n" + Environment.NewLine;
                         }
                         if (sqlTotal.Length > 0)
-                            DB.ExecuteNonQuery(sqlTotal, true, true);
+                            await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
                     }
 					return ("Import Complete");
 				}
@@ -1040,9 +1027,9 @@ namespace WinApp.Code
 
 		#region importAchievements
 
-		public static void ImportAchievements(Form parentForm)
+		public async static Task ImportAchievements(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Achievement, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Achievement, 0, parentForm);
 			if (json == "")
 			{
 				// no action, no data found
@@ -1066,7 +1053,6 @@ namespace WinApp.Code
 						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 						foreach (JProperty ach in achList)
 						{
-							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							JToken itemToken = ach.First();
                             // Get description and crop at 255 chars
                             string description = itemToken["description"].ToString();
@@ -1196,7 +1182,7 @@ namespace WinApp.Code
 								logItems.UpdatedCount++;
 							}
 						}
-						DB.ExecuteNonQuery(sqlTotal, true, true);
+						await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
 						// Update log file after import
 						WriteApiLog("Achievements", logItems);
 					}
@@ -1217,10 +1203,10 @@ namespace WinApp.Code
 
 		#region importPlayersInGarageVehicles
 
-		public static List<int> ImportPlayersInGarageVehicles(Form parentForm)
+		public async static Task<List<int>> ImportPlayersInGarageVehicles(Form parentForm)
 		{
 			List<int> tanksInGarage = new List<int>();
-			string json = FetchFromAPI(WotApiType.PlayersInGarageVehicles, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.PlayersInGarageVehicles, 0, parentForm);
 			if (json != "")
 			{
 				Log.AddToLogBuffer("// Start checking players tanks in garage (" + DateTime.Now.ToString() + ")");

@@ -54,7 +54,7 @@ namespace WinApp.Forms
 			mainFormPosSize = Config.Settings.posSize;
 		}
 
-		private void Main_Load(object sender, EventArgs e)
+		private async void Main_Load(object sender, EventArgs e)
 		{
             // Style toolbar
             //toolMain.Renderer = new StripRenderer();
@@ -72,7 +72,7 @@ namespace WinApp.Forms
             {
                 TankHelper.GetAllLists();
                 // Check DB Version an dupgrade if needed
-                bool versionOK = DBVersion.CheckForDbUpgrade(this);
+                bool versionOK = await DBVersion.CheckForDbUpgrade(this);
             }
             // Check for missing or new admin db
             if (DBVersion.CopyAdminDB || !File.Exists(Config.AppDataBaseFolder + "Admin.db"))
@@ -160,7 +160,7 @@ namespace WinApp.Forms
             ColorRangeScheme.SetRatingColors();
 		}
 
-        private void Main_Shown(object sender, EventArgs e)
+        private async void Main_Shown(object sender, EventArgs e)
         {
             try
             {
@@ -242,7 +242,7 @@ namespace WinApp.Forms
                     if (dtHomeView == null || dtHomeView.Rows.Count == 0)
                     {
                         string file = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\New_Default_Setup.json";
-                        bool ok = GadgetHelper.HomeViewLoadFromFile(file, false);
+                        bool ok = await GadgetHelper.HomeViewLoadFromFile(file, false);
                         if (ok)
                         {
                             mHomeView.Text = "Default";
@@ -252,7 +252,7 @@ namespace WinApp.Forms
                         }
                         else
                         {
-                            GadgetHelper.RemoveGadgetAll();
+                            await GadgetHelper.RemoveGadgetAll();
                             HomeViewCreate("Could not load Home View");
                             HomeViewRefresh("Refresh Home View");
                         }
@@ -261,7 +261,7 @@ namespace WinApp.Forms
                     CheckCurrentHomeViewSubMenu();
 
                     // Show view
-                    ChangeView(GridView.Views.Overall, true);
+                    await ChangeView(GridView.Views.Overall, true);
                     // Check BRR
                     if (Config.Settings.CheckForBrrOnStartup)
                     {
@@ -303,10 +303,10 @@ namespace WinApp.Forms
                         }
                     }
                     // Check for recalc grinding progress
-                    GrindingHelper.CheckForDailyRecalculateGrindingProgress();
+                    await GrindingHelper.CheckForDailyRecalculateGrindingProgress();
 
                     // Run app statup webservice api, check for new version and more
-                    RunAppStartupAPI(false);
+                    await RunAppStartupAPI(false);
 
                     // Show status message
                     SetStatus2("Application started");
@@ -571,7 +571,7 @@ namespace WinApp.Forms
 
 		#region Check For New Version and Download
 
-		private async void RunAppStartupAPI(bool manualVersionCheck)
+		private async Task RunAppStartupAPI(bool manualVersionCheck)
 		{
             // Run appstart procedure, webservice to wot numbers website, log app usage + get playerId/token for posting data to website + check for new version
             Services.AppStartup appStartup = new Services.AppStartup();
@@ -592,7 +592,7 @@ namespace WinApp.Forms
                 // Normal startup, continue with startup actions, show notification in status bar
                 if (!manualVersionCheck)
                 {
-                    RunAppStartupActions("Could not access webservice to check for new version.");
+                    await RunAppStartupActions("Could not access webservice to check for new version.");
                 }
             }
             // Success getting appstart data
@@ -627,7 +627,7 @@ namespace WinApp.Forms
                     }
                     if (!manualVersionCheck)
                     {
-                        RunAppStartupActions("Wot Numbers website in maintenance mode, version check skipped");
+                        await RunAppStartupActions("Wot Numbers website in maintenance mode, version check skipped");
                     }
                 }
                 // Site not in maintance mode
@@ -725,7 +725,7 @@ namespace WinApp.Forms
                         }
                     }
                     // Check for triggered actions
-                    RunAppStartupActions("You are running the latest version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
+                    await RunAppStartupActions("You are running the latest version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
                 }
             }
             // Enable Settings menues
@@ -744,21 +744,21 @@ namespace WinApp.Forms
             mAdminTools.Enabled = true;
         }
 		
-		private async void RunAppStartupActions(string message)
+		private async Task RunAppStartupActions(string message)
 		{
 			// Debug option - avoid init dossier file check after startup
 			// if (false)
 			{
                 if (DBVersion.RunDownloadAndUpdateTanks)
-					RunWotApi(true);
+                    await RunWotApi(true);
 				if (DBVersion.RunRecalcBattleWN8 || DBVersion.RunRecalcBattleWN9)
-					RunRecalcBattleWN8or9(true, DBVersion.RunRecalcBattleWN8, DBVersion.RunRecalcBattleWN9);
+					await RunRecalcBattleWN8or9(true, DBVersion.RunRecalcBattleWN8, DBVersion.RunRecalcBattleWN9);
                 if (DBVersion.RunRecalcBattleCreditPerTank)
-                    RunRecalcBattleCreditsPerTank(true);
+                    await RunRecalcBattleCreditsPerTank(true);
                 if (DBVersion.RunRecalcBattleKDratioCRdmg)
-					RunRecalcBattleKDratioCRdmg(true);
+                    await RunRecalcBattleKDratioCRdmg(true);
                 if (DBVersion.RunRecalcBattleMaxTier)
-                    RunRecalcBattleMaxTier();
+                    await RunRecalcBattleMaxTier();
 
 				// Check for dossier update
 				StatusBarHelper.Message = message;
@@ -820,13 +820,13 @@ namespace WinApp.Forms
 		private int status2fadeColor = 200;
 		
 
-		private void NewBattleFileChanged(object source, FileSystemEventArgs e)
+		private async void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
 			// New battle saved
 			if (!GridView.refreshRunning)
 			{
 				GridView.refreshRunning = true;
-				ShowView("New battle data fetched, view refreshed");
+                await ShowView("New battle data fetched, view refreshed");
 				if (notifyIcon.Visible)
 					notifyIcon.ShowBalloonTip(1000);
 				GridView.refreshRunning = false;
@@ -1041,39 +1041,39 @@ namespace WinApp.Forms
 
 		#region Main Navigation
 
-		private void toolItemRefresh_Click(object sender, EventArgs e)
+		private async  void toolItemRefresh_Click(object sender, EventArgs e)
 		{
 			if (!GridView.refreshRunning)
 			{
 				GridView.refreshRunning = true;
 				SetFormTitle();
 				SetStatus2("Refreshing view...");
-				ShowView("View refreshed");
+                await ShowView("View refreshed");
 				GridView.refreshRunning = false;
 			}
 		}
 
-		private void mViewOverall_Click(object sender, EventArgs e)
+		private async void mViewOverall_Click(object sender, EventArgs e)
 		{
-			ChangeView(GridView.Views.Overall);
+			await ChangeView(GridView.Views.Overall);
 		}
 
-        private void mViewTankInfo_Click(object sender, EventArgs e)
+        private async void mViewTankInfo_Click(object sender, EventArgs e)
 		{
-			ChangeView(GridView.Views.Tank);
+            await ChangeView(GridView.Views.Tank);
 		}
 
-        private void mViewBattles_Click(object sender, EventArgs e)
+        private async void mViewBattles_Click(object sender, EventArgs e)
 		{
-			ChangeView(GridView.Views.Battle);
+            await ChangeView(GridView.Views.Battle);
 		}
 
-        private void mViewMaps_Click(object sender, EventArgs e)
+        private async void mViewMaps_Click(object sender, EventArgs e)
         {
-            ChangeView(GridView.Views.Map);
+            await ChangeView(GridView.Views.Map);
         }
 
-       	private void ChangeView(GridView.Views newGridView, bool forceUpdate = false)
+       	private async Task ChangeView(GridView.Views newGridView, bool forceUpdate = false)
 		{
 			if (newGridView != MainSettings.View || forceUpdate) // Only do action if changed view or selected force update
 			{
@@ -1106,7 +1106,7 @@ namespace WinApp.Forms
 				if (mHomeViewEditMode.Checked)
 				{
 					mHomeViewEditMode.Checked = false;
-					GadgetEditModeChange();
+					await GadgetEditModeChange();
 				}
 				// Set new values according to new selected view
 				switch (MainSettings.View)
@@ -1115,8 +1115,7 @@ namespace WinApp.Forms
 						// Select view
 						mViewOverall.Checked = true;
                         dataGridMain.Visible = false;
-                        Application.DoEvents();
-						scrollX.Visible = false;
+                        scrollX.Visible = false;
 						scrollY.Visible = false;
 						scrollCorner.Visible = false;
                         lblStatusRowCount.Visible = false;
@@ -1137,7 +1136,6 @@ namespace WinApp.Forms
 						mViewTankInfo.Checked = true;
 						// Show grid
 						dataGridMain.Visible = true;
-                        Application.DoEvents();
                         scrollX.Visible = true;
 						scrollY.Visible = true;
 						scrollCorner.Visible = true;
@@ -1175,8 +1173,7 @@ namespace WinApp.Forms
 						mViewBattles.Checked = true;
 						// Show grid
 						dataGridMain.Visible = true;
-                        Application.DoEvents();
-						scrollX.Visible = true;
+                        scrollX.Visible = true;
 						scrollY.Visible = true;
 						scrollCorner.Visible = true;
 						dataGridMain.RowHeadersWidth = Config.Settings.mainGridBattleRowWidht;
@@ -1213,7 +1210,6 @@ namespace WinApp.Forms
                         mViewMaps.Checked = true;
                         // Show grid
                         dataGridMain.Visible = true;
-                        Application.DoEvents();
                         scrollX.Visible = true;
                         scrollY.Visible = true;
                         scrollCorner.Visible = true;
@@ -1248,12 +1244,12 @@ namespace WinApp.Forms
                         break;
 				}
 				toolMain.Renderer = new StripRenderer();
-				ShowView(); // Changed view, no status message applied, sets in GridShow
+                await ShowView(); // Changed view, no status message applied, sets in GridShow
 			}
 		}
 
 		private bool homeViewCreated = false;
-		private void ShowView(string Status2Message = "", bool ShowDefaultStatus2Message = true)
+		private async Task ShowView(string Status2Message = "", bool ShowDefaultStatus2Message = true)
 		{
 			try
 			{
@@ -1303,11 +1299,11 @@ namespace WinApp.Forms
 							break;
 						case GridView.Views.Battle:
 							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Battle view selected";
-							GridShowBattle(Status2Message);
+                            await GridShowBattle(Status2Message);
 							break;
                         case GridView.Views.Map:
                             if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Map view selected";
-                            GridShowMap(Status2Message);
+                            await GridShowMap(Status2Message);
                             break;
 						default:
 							break;
@@ -1365,7 +1361,7 @@ namespace WinApp.Forms
 			SelectFavMenuItem();
 		}
 
-		private void toolItemColumnSelect_Click(object sender, EventArgs e)
+		private async void toolItemColumnSelect_Click(object sender, EventArgs e)
 		{
 			// Selected a colList from toolbar
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
@@ -1400,24 +1396,24 @@ namespace WinApp.Forms
 				MainSettings.UpdateCurrentGridFilter(currentColListSettings);
 				CreateDataGridContextMenu(); // Recreate context menu
 				SelectFavMenuItem();
-				// Show grid
-				ShowView("Selected column setup: " + selectedMenu.Text);
+                // Show grid
+                await ShowView("Selected column setup: " + selectedMenu.Text);
 			}
 		}
 
-		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
+		private async void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.ColList();
 			frm.ShowDialog();
 			SetColListMenu(); // Refresh column setup list now
-			ShowView("Refreshed grid after column setup change"); // Refresh grid now
+            await ShowView("Refreshed grid after column setup change"); // Refresh grid now
 		}
 
 		#endregion
 
         #region Menu Items: Map View Alternatives
 
-        private void mMapViewType_Click(object sender, EventArgs e)
+        private async void mMapViewType_Click(object sender, EventArgs e)
         {
             // Selected a colList from toolbar
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
@@ -1436,12 +1432,12 @@ namespace WinApp.Forms
                 mapSorting.ColumnHeader = "Map";
                 mapSorting.SortDirectionAsc = true;
                 // Show grid
-                ShowView("Selected map view: " + selectedMenu.Text);
+                await ShowView("Selected map view: " + selectedMenu.Text);
             }
 
         }
 
-        private void mMapShowAll_Click(object sender, EventArgs e)
+        private async void mMapShowAll_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
             // Toggle
@@ -1449,10 +1445,10 @@ namespace WinApp.Forms
             string s = "only maps with recorded battles";
             if (selectedMenu.Checked)
                 s = "maps without recorded battles";
-            ShowView("Changed map view to show " + s);
+            await ShowView("Changed map view to show " + s);
         }
 
-        private void mMapShowOld_Click(object sender, EventArgs e)
+        private async void mMapShowOld_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
             // Toggle
@@ -1460,7 +1456,7 @@ namespace WinApp.Forms
             string s = "only maps currently in play";
             if (selectedMenu.Checked)
                 s = "maps that are old / obsolete and no longer in play";
-            ShowView("Changed map view to show " + s);
+            await ShowView("Changed map view to show " + s);
         }
 
         #endregion
@@ -1550,7 +1546,7 @@ namespace WinApp.Forms
             
 		}
 
-		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
+		private async void toolItemTankFilter_All_Click(object sender, EventArgs e)
 		{
 			// Changed FavList
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
@@ -1560,11 +1556,11 @@ namespace WinApp.Forms
 			FavListMenuUncheck();
 			mTankFilter_All.Checked = true;
 			SetTankFilterMenuName();
-			// Set menu item and show grid
-			ShowView("Selected all tanks owned");
+            // Set menu item and show grid
+            await ShowView("Selected all tanks owned");
 		}
 
-		private void mTankFilter_All_NotOwned_Click(object sender, EventArgs e)
+		private async void mTankFilter_All_NotOwned_Click(object sender, EventArgs e)
 		{
 			// Changed FavList
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
@@ -1576,11 +1572,11 @@ namespace WinApp.Forms
 			mTankFilter_All_NotOwned.Checked = true;
 			SetTankFilterMenuName();
 			SetBattleModeMenu();
-			// Set menu item and show grid
-			ShowView("Selected all tanks");
+            // Set menu item and show grid
+            await ShowView("Selected all tanks");
 		}
 
-		private void toolItem_Fav_Clicked(object sender, EventArgs e)
+		private async void toolItem_Fav_Clicked(object sender, EventArgs e)
 		{
 			// Selected favList from toolbar
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
@@ -1597,8 +1593,8 @@ namespace WinApp.Forms
 			selectedMenu.Checked = true;
 			tankFilterFavListName = selectedMenu.Text;
 			SetTankFilterMenuName();
-			// Set menu item and show grid
-			ShowView("Selected favourite tank list: " + selectedMenu.Text);
+            // Set menu item and show grid
+            await ShowView("Selected favourite tank list: " + selectedMenu.Text);
 		}
 
 		private void SelectFavMenuItem()
@@ -1716,7 +1712,7 @@ namespace WinApp.Forms
 			if (reopenMenu) this.mTankFilter.ShowDropDown();
 		}
 
-		private void TankFilterMenuSelect(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem)
+		private async Task TankFilterMenuSelect(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem)
 		{
 			string status2message = "";
 			// Update selected tankfilter type
@@ -1732,23 +1728,23 @@ namespace WinApp.Forms
 			status2message = "Selected tank filter: " + tankFilterMessage;
 			mTankFilter.ShowDropDown();
 			parentMenuItem.ShowDropDown();
-			// Done
-			ShowView(status2message);
+            // Done
+            await ShowView(status2message);
 		}
 		
-		private void mTankFilter_Clear_Click(object sender, EventArgs e)
+		private async void mTankFilter_Clear_Click(object sender, EventArgs e)
 		{
 			TankFilterMenuUncheck(true, true, true, false);
 			// Update selected tankfilter 
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 			gf.TankId = -1; // Remove tank filter
 			MainSettings.UpdateCurrentGridFilter(gf);
-			// Done
-			ShowView("Tank filter cleared");
+            // Done
+            await ShowView("Tank filter cleared");
 			CreateDataGridContextMenu(); // Recreate context menu
 		}
 
-		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
+		private async void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 			// Update menu item
@@ -1761,10 +1757,10 @@ namespace WinApp.Forms
 				mTankFilter_Tier.Text = "Tier (filtered: " + tankFilterTier + ")";
 			else
 				mTankFilter_Tier.Text = "Tier";
-			TankFilterMenuSelect(menuItem, mTankFilter_Tier);
+            await TankFilterMenuSelect(menuItem, mTankFilter_Tier);
 		}
 
-		private void toolItemTankFilter_Type_Click(object sender, EventArgs e)
+		private async void toolItemTankFilter_Type_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 			// Update menu item
@@ -1777,10 +1773,10 @@ namespace WinApp.Forms
 				mTankFilter_Type.Text = "Tank Type (filtered: " + tankFilterType + ")";
 			else
 				mTankFilter_Type.Text = "Tank Type";
-			TankFilterMenuSelect(menuItem, mTankFilter_Type);
+            await TankFilterMenuSelect(menuItem, mTankFilter_Type);
 		}
 
-		private void toolItemTankFilter_Country_Click(object sender, EventArgs e)
+		private async void toolItemTankFilter_Country_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 			// Update menu item
@@ -1793,36 +1789,36 @@ namespace WinApp.Forms
 				mTankFilter_Country.Text = "Nation (filtered: " + tankFilterNation + ")";
 			else
 				mTankFilter_Country.Text = "Nation";
-			TankFilterMenuSelect(menuItem, mTankFilter_Country);
+            await TankFilterMenuSelect(menuItem, mTankFilter_Country);
 		}
 
-		private void toolItemTankFilter_Country_MouseDown(object sender, MouseEventArgs e)
+		private async void toolItemTankFilter_Country_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
 				TankFilterMenuUncheck(false, true, false, false);
 				ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-				TankFilterMenuSelect(menuItem, mTankFilter_Country);
+                await TankFilterMenuSelect(menuItem, mTankFilter_Country);
 			}
 		}
 
-		private void toolItemTankFilter_Type_MouseDown(object sender, MouseEventArgs e)
+		private async void toolItemTankFilter_Type_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
 				TankFilterMenuUncheck(false, false, true, false);
 				ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-				TankFilterMenuSelect(menuItem, mTankFilter_Type);
+                await TankFilterMenuSelect(menuItem, mTankFilter_Type);
 			}
 		}
 
-		private void toolItemTankFilter_Tier_MouseDown(object sender, MouseEventArgs e)
+		private async void toolItemTankFilter_Tier_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
 				TankFilterMenuUncheck(true, false, false, false);
 				ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-				TankFilterMenuSelect(menuItem, mTankFilter_Tier);
+                await TankFilterMenuSelect(menuItem, mTankFilter_Tier);
 			}
 		}
 
@@ -1831,22 +1827,19 @@ namespace WinApp.Forms
 			// On right mouse click just display status message for current filter
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				string where = "";
-				string join = "";
-				string message = "";
-				Tankfilter(out where, out join, out message);
-				SetStatus2("Current selected tank filter: " + message);
+                Tankfilter(out string where, out string join, out string message);
+                SetStatus2("Current selected tank filter: " + message);
 			}
 		}
 
-		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
+		private async void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
 		{
 			// Show fal list editor
 			Form frm = new Forms.FavList();
 			frm.ShowDialog();
 			// After fav list changes reload menu
 			SetFavListMenu(); // Reload fav list items
-			ShowView("Refreshed grid after fovourite tank list change"); // Refresh grid now
+            await ShowView("Refreshed grid after fovourite tank list change"); // Refresh grid now
 		}
 
         #endregion
@@ -1902,16 +1895,16 @@ namespace WinApp.Forms
             BattleCountSelectMenu();
         }
 
-        private void BattleCountSelectMenu()
+        private async void BattleCountSelectMenu()
         {
             BattleTimeMenuReset();
             mBattlesCountSelected.Checked = true;
             mBattles.Text = mBattlesCountSelected.Text;
-            ShowView("Selected battle count filter: " + mBattlesCountSelected.Text);
+            await ShowView("Selected battle count filter: " + mBattlesCountSelected.Text);
 
         }
 
-        private void mBattlesCountSelectEdit_Click(object sender, EventArgs e)
+        private async void mBattlesCountSelectEdit_Click(object sender, EventArgs e)
         {
             string id = mBattlesCountSelected.Tag.ToString();
             if (id == "0")
@@ -1927,9 +1920,9 @@ namespace WinApp.Forms
                 int newCount = 0;
                 if (Int32.TryParse(answer.InputText, out newCount))
                 {
-                    BattleCountFilterHelper.Save(id, newCount);
+                    await BattleCountFilterHelper.Save(id, newCount);
                     BattleCountFilterSet(id);
-                    ShowView("Edited battle count filter: " + mBattlesCountSelected.Text);
+                    await ShowView("Edited battle count filter: " + mBattlesCountSelected.Text);
                 }
                 else
                 {
@@ -1967,7 +1960,7 @@ namespace WinApp.Forms
 
         #region Menu Items: Battle Grouping
 
-        private void toolItemGroupingSelected_Click(object sender, EventArgs e)
+        private async void toolItemGroupingSelected_Click(object sender, EventArgs e)
 		{
 			mBattleGroup_No.Checked = false;
 			mBattleGroup_TankAverage.Checked = false;
@@ -1975,7 +1968,7 @@ namespace WinApp.Forms
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 			menuItem.Checked = true;
 			mBattleGroup.Text = menuItem.Text;
-			GridShowBattle("Selected grouping: " + menuItem.Text);
+            await GridShowBattle("Selected grouping: " + menuItem.Text);
 		}
 
 		#endregion
@@ -2015,7 +2008,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void SelectBattleTimeMenu(ToolStripMenuItem menuItem)
+		private async void SelectBattleTimeMenu(ToolStripMenuItem menuItem)
 		{
             BattleTimeMenuReset();
             BattleCountMenuReset();
@@ -2024,7 +2017,7 @@ namespace WinApp.Forms
 				mBattles.Text = menuItem.Tag.ToString(); // Different name on main tool item then menu name for battle time filter button
 			else
 				mBattles.Text = menuItem.Text; // Use menu name as main tool item name for battle time filter button
-			ShowView("Selected battle time: " + menuItem.Text);
+            await ShowView("Selected battle time: " + menuItem.Text);
 		}
 
         private void BattleTimeMenuReset()
@@ -2048,7 +2041,7 @@ namespace WinApp.Forms
 
         #region Menu Items: Battle Mode
 
-        private void toolItemMode_Click(object sender, EventArgs e)
+        private async void toolItemMode_Click(object sender, EventArgs e)
 		{
 			// Selected battle mode from toolbar
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
@@ -2086,8 +2079,8 @@ namespace WinApp.Forms
 			string mainToolItemMenuText = selectedMenu.Text;
 			
 			mMode.Text = mainToolItemMenuText;
-			// Set menu item and show grid
-			ShowView("Selected battle mode: " + selectedMenu.Text);
+            // Set menu item and show grid
+            await ShowView("Selected battle mode: " + selectedMenu.Text);
 		}
 
 		private void SetBattleModeMenu()
@@ -2756,7 +2749,7 @@ namespace WinApp.Forms
 		
 		#region Data Grid - BATTLE VIEW                                    ***********************************************************************
 
-		private void GridShowBattle(string Status2Message)
+		private async Task GridShowBattle(string Status2Message)
 		{
 			try
 			{
@@ -2870,7 +2863,7 @@ namespace WinApp.Forms
                 DB.AddWithValue(ref where, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
                 if (battleCountFilter)
                 {
-                    BattleCountFilterHelper.SetBattleFilter(from, where, BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
+                    await BattleCountFilterHelper.SetBattleFilter(from, where, BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
                     where = " WHERE battlesCountTotal = 1 ";
                 }
 
@@ -3279,7 +3272,7 @@ namespace WinApp.Forms
             ColumnName = "Map",
             SortDirectionAsc = true
         };
-        private void GridShowMap(string Status2Message)
+        private async Task GridShowMap(string Status2Message)
         {
             try
             {
@@ -3382,7 +3375,7 @@ namespace WinApp.Forms
                 DB.AddWithValue(ref from, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
                 if (battleCountFilter)
                 {
-                    BattleCountFilterHelper.SetBattleFilter(from, where, BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
+                    await BattleCountFilterHelper.SetBattleFilter(from, where, BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
                     from =
                     " FROM    map " +
                     "  INNER JOIN battle ON map.id = battle.mapId AND battle.battlesCountTotal = 1 " +
@@ -3636,7 +3629,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void dataGridMain_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+		private async void dataGridMain_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
 			try
 			{
@@ -3669,10 +3662,10 @@ namespace WinApp.Forms
 							sortDirectionAsc = true;
 						sorting.SortDirectionAsc = sortDirectionAsc;
 					}
-					// Save new sorting
-					GridSortingHelper.SaveSorting(MainSettings.GetCurrentGridFilter().ColListId, sorting);
+                    // Save new sorting
+                    await GridSortingHelper.SaveSorting(MainSettings.GetCurrentGridFilter().ColListId, sorting);
                     // Show grid
-                    ShowView("Datagrid refreshed after sorting");
+                    await ShowView("Datagrid refreshed after sorting");
 				}
                 // Special sorting for map, just remember latest
                 else if (MainSettings.View == GridView.Views.Map)
@@ -3692,7 +3685,7 @@ namespace WinApp.Forms
                             mapSorting.SortDirectionAsc = false;
                     }
                     // Show grid
-                    ShowView("Datagrid refreshed after sorting");
+                    await ShowView("Datagrid refreshed after sorting");
                 }
 			}
 			catch (Exception ex)
@@ -3967,7 +3960,7 @@ namespace WinApp.Forms
 		}
 		
 
-		private void dataGridMainPopup_GrindingSetup_Click(object sender, EventArgs e)
+		private async void dataGridMainPopup_GrindingSetup_Click(object sender, EventArgs e)
 		{
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
@@ -3975,15 +3968,15 @@ namespace WinApp.Forms
 				Form frm = new Forms.GrindingSetup(playerTankId);
 				frm.ShowDialog();
 				if (MainSettings.View == GridView.Views.Tank)
-					ShowView("Refreshed grid");
+                    await ShowView("Refreshed grid");
 			}
 		}
 
-        private void dataGridMainPopup_GrindingSetupRecalculate_Click(object sender, EventArgs e)
+        private async void dataGridMainPopup_GrindingSetupRecalculate_Click(object sender, EventArgs e)
         {
-            GrindingHelper.RecalculateGrindingProgress();
+            await GrindingHelper.RecalculateGrindingProgress();
             if (MainSettings.View == GridView.Views.Tank)
-                ShowView("Recalculated Grinding Progress, refreshed grid");
+                await ShowView("Recalculated Grinding Progress, refreshed grid");
             else
                 SetStatus2("Recalculated Grinding Progress");                
         }
@@ -3999,12 +3992,12 @@ namespace WinApp.Forms
 			}
 		}
 
-        private void dataGridMainPopup_RecalculateBattleRating_Click(object sender, EventArgs e)
+        private async void dataGridMainPopup_RecalculateBattleRating_Click(object sender, EventArgs e)
 		{
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
 			Form frm = new Forms.RecalcBattleRating(true, true, true, true, true, battleId);
 			frm.ShowDialog(this);
-            ShowView("Refreshed grid");
+            await ShowView("Refreshed grid");
         }
 
 		private void dataGridMainPopup_BattleDetails_Click(object sender, EventArgs e)
@@ -4046,16 +4039,16 @@ namespace WinApp.Forms
 			FormHelper.OpenFormToRightOfParent(this, frm);
 		}
 
-        private void dataGridMainPopup_EditTankInfo_Click(object sender, EventArgs e)
+        private async void dataGridMainPopup_EditTankInfo_Click(object sender, EventArgs e)
         {
             int tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value);
             Form frm = new Forms.TankInfoEdit(tankId);
             frm.ShowDialog(this);
-            ShowView("Refresh view");
+            await ShowView("Refresh view");
         }
 
 
-        private void dataGridMainPopup_DeleteBattle_Click(object sender, EventArgs e)
+        private async void dataGridMainPopup_DeleteBattle_Click(object sender, EventArgs e)
 		{
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
 			string sql = "select battle.battleTime, tank.name " +
@@ -4079,8 +4072,8 @@ namespace WinApp.Forms
 						"delete from battleplayer where battleId=@battleId; " +
 						"delete from battle where id=@battleId; ";
 					DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.VarChar);
-					DB.ExecuteNonQuery(sql);
-					ShowView("Deleted battle, grid refreshed");
+					await DB.ExecuteNonQueryAsync(sql);
+                    await ShowView("Deleted battle, grid refreshed");
 				}
 			}
 		}
@@ -4101,21 +4094,19 @@ namespace WinApp.Forms
 			System.Windows.Forms.Clipboard.SetText(s);
 		}
 
-        private void dataGridMainPopup_RecalculateTankCredit_Click(object sender, EventArgs e)
+        private async void dataGridMainPopup_RecalculateTankCredit_Click(object sender, EventArgs e)
 		{
             int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-            TankCreditCalculation.RecalculateForTank(playerTankId);
-            ShowView("Refreshed grid");
+            await TankCreditCalculation.RecalculateForTank(playerTankId);
+            await ShowView("Refreshed grid");
 		}
 
-        private void dataGridMainPopup_RecalculateTankRating_Click(object sender, EventArgs e)
+        private async void dataGridMainPopup_RecalculateTankRating_Click(object sender, EventArgs e)
         {
             int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-            string battleMode = "";
-            string temp = "";
-            GetTankBattleMode(out battleMode, out temp);
-            Code.Rating.WNHelper.RecalculateRatingForTank(playerTankId, battleMode);
-            ShowView("Refreshed grid");
+            GetTankBattleMode(out string battleMode, out string temp);
+            await Code.Rating.WNHelper.RecalculateRatingForTank(playerTankId, battleMode);
+            await ShowView("Refreshed grid");
         }
 
         private void dataGridMainPopup_Replay_Click(object sender, EventArgs e)
@@ -4184,7 +4175,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void dataGridMainPopup_FilterOnTank_Click(object sender, EventArgs e)
+		private async void dataGridMainPopup_FilterOnTank_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 			int tankId = TankHelper.GetTankID(playerTankId);
@@ -4192,36 +4183,36 @@ namespace WinApp.Forms
 			{
 				//TankFilterMenuUncheck(true, true, true, false);
 				MainSettings.GetCurrentGridFilter().TankId = tankId;
-				ShowView("Filtered on tank: " + TankHelper.GetTankName(tankId));
+                await ShowView("Filtered on tank: " + TankHelper.GetTankName(tankId));
       			CreateDataGridContextMenu(); // Recreate context menu
 			}
 		}
 
-        private void dataGridMainPopup_FilterOnTankSearch_Click(object sender, EventArgs e)
+        private async void dataGridMainPopup_FilterOnTankSearch_Click(object sender, EventArgs e)
         {
-            SearchForTank();
+            await SearchForTank();
         }
 
-        private void mTankFilter_Search_Click(object sender, EventArgs e)
+        private async void mTankFilter_Search_Click(object sender, EventArgs e)
         {
-            SearchForTank();
+            await SearchForTank();
         }
 
-        private void SearchForTank()
+        private async Task SearchForTank()
         {
             TankSearchHelper.OpenTankSearch(this);
             if (TankSearchHelper.Result == MsgBox.Button.OK && TankSearchHelper.SelectedTankId > 0)
             {
                 MainSettings.GetCurrentGridFilter().TankId = TankSearchHelper.SelectedTankId;
-                ShowView("Filtered on tank: " + TankHelper.GetTankName(MainSettings.GetCurrentGridFilter().TankId));
+                await ShowView("Filtered on tank: " + TankHelper.GetTankName(MainSettings.GetCurrentGridFilter().TankId));
                 CreateDataGridContextMenu(); // Recreate context menu
             }
         }
 
-		private void dataGridMainPopup_FilterOnTankClear_Click(object sender, EventArgs e)
+		private async void dataGridMainPopup_FilterOnTankClear_Click(object sender, EventArgs e)
 		{
 			MainSettings.GetCurrentGridFilter().TankId = -1;
-			ShowView("Filtered on tank removed");
+            await ShowView("Filtered on tank removed");
 			CreateDataGridContextMenu(); // Recreate context menu
 		}
 
@@ -4252,7 +4243,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void dataGridMainPopup_FavListRemoveTank_Click(object sender, EventArgs e)
+		private async void dataGridMainPopup_FavListRemoveTank_Click(object sender, EventArgs e)
 		{
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
@@ -4269,7 +4260,7 @@ namespace WinApp.Forms
 						{
 							int pos = dataGridMain.FirstDisplayedScrollingRowIndex;
 							dataGridMain.Visible = false;
-							ShowView("Refresh after removed tank from favourite tank list");
+                            await ShowView("Refresh after removed tank from favourite tank list");
 							dataGridMain.FirstDisplayedScrollingRowIndex = pos;
 							MoveScrollBar();
 							dataGridMain.Visible = true;
@@ -4291,7 +4282,7 @@ namespace WinApp.Forms
 
 		#region Grid Col Widht Changed
 
-		private void dataGridMain_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+		private async void dataGridMain_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
 		{
 			string colName = "";
 			try
@@ -4301,7 +4292,7 @@ namespace WinApp.Forms
 					colName = dataGridMain.Columns[e.Column.HeaderText].HeaderText;
 					int newWidth = e.Column.Width;
 					dataGridMain.Columns[e.Column.HeaderText].Width = newWidth;
-					ColListHelper.SaveColWidth(e.Column.HeaderText, newWidth);
+					await ColListHelper.SaveColWidth(e.Column.HeaderText, newWidth);
 				}
 			}
 			catch (Exception ex)
@@ -4518,7 +4509,7 @@ namespace WinApp.Forms
 
             // Check for api update
             if (DBVersion.RunDownloadAndUpdateTanks)
-                RunWotApi(true);
+                await RunWotApi(true);
 
             // Check if new database is created, database should be present but no player should exist
             if (DB.CheckConnection(true))
@@ -4539,7 +4530,7 @@ namespace WinApp.Forms
                     MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBox.Type.OKCancel, this);
                     if (result == MsgBox.Button.OK)
                     {
-                        RunAppStartupActions("Running initial battle fetch for new database...");
+                        await RunAppStartupActions("Running initial battle fetch for new database...");
                     }
                 }
             }
@@ -4568,7 +4559,7 @@ namespace WinApp.Forms
 
             // Refresh data
             SetStatus2("Refreshed grid");
-            ChangeView(MainSettings.View, true);
+            await ChangeView(MainSettings.View, true);
         }
         
         private void toolItemViewChart_Click(object sender, EventArgs e)
@@ -4577,12 +4568,12 @@ namespace WinApp.Forms
 			FormHelper.OpenFormToRightOfParent(this, frm);
 		}
 	
-		private void toolItemUpdateDataFromAPI_Click(object sender, EventArgs e)
+		private async void toolItemUpdateDataFromAPI_Click(object sender, EventArgs e)
 		{
-			RunWotApi();
+            await RunWotApi();
 		}
 
-		private void RunWotApi(bool autoRun = false)
+		private async Task RunWotApi(bool autoRun = false)
 		{
             double WNcurrentVer8 = DBVersion.GetWNVersion(8);
             double WNcurrentVer9 = DBVersion.GetWNVersion(9);
@@ -4592,13 +4583,13 @@ namespace WinApp.Forms
             bool WNnewVer9 = (DBVersion.GetWNVersion(9) > WNcurrentVer9);
             if (WNnewVer9) //
             {
-                RunRecalcBattleWN8or9(true, false, WNnewVer9); // Disabled auto update WN8 because new version is set per day
+                await RunRecalcBattleWN8or9(true, false, WNnewVer9); // Disabled auto update WN8 because new version is set per day
                 DBVersion.RunDossierFileCheckWithForceUpdate = true;
             }
-            ShowView("Refreshed view");
+            await ShowView("Refreshed view");
 		}
 
-		private void mRecalcBattleRatings_Click(object sender, EventArgs e)
+		private async void mRecalcBattleRatings_Click(object sender, EventArgs e)
 		{
 			// Stop file watchers if running
 			int runState = Config.Settings.dossierFileWathcherRun;
@@ -4622,10 +4613,10 @@ namespace WinApp.Forms
 				Config.Settings.dossierFileWathcherRun = runState;
 				SetListener();
 			}
-            ShowView("Refreshed grid");
+            await ShowView("Refreshed grid");
         }
 
-        private void mRecalcBattleCreditsPerTank_Click(object sender, EventArgs e)
+        private async void mRecalcBattleCreditsPerTank_Click(object sender, EventArgs e)
         {
             // Stop file watchers if running
             int runState = Config.Settings.dossierFileWathcherRun;
@@ -4643,35 +4634,35 @@ namespace WinApp.Forms
                 Config.Settings.dossierFileWathcherRun = runState;
                 SetListener();
             }
-            ShowView("Refreshed grid");
+            await ShowView("Refreshed grid");
         }
 
-		private void RunRecalcBattleWN8or9(bool autoRun, bool wn8, bool wn9)
+		private async Task RunRecalcBattleWN8or9(bool autoRun, bool wn8, bool wn9)
 		{
 			Form frm = new Forms.RecalcBattleRating(autoRun, wn9, wn8, false, false);
 			frm.ShowDialog(this);
-            ShowView("Refreshed grid");
+            await ShowView("Refreshed grid");
         }
 
-        private void RunRecalcBattleCreditsPerTank(bool autoRun = false)
+        private async Task RunRecalcBattleCreditsPerTank(bool autoRun = false)
         {
             Form frm = new Forms.RecalcBattleCreditPerTank(autoRun);
             frm.ShowDialog(this);
-            ShowView("Refreshed grid");
+            await ShowView("Refreshed grid");
         }
 
-		private void RunRecalcBattleKDratioCRdmg(bool autoRun = false)
+		private async Task RunRecalcBattleKDratioCRdmg(bool autoRun = false)
 		{
 			Form frm = new Forms.RecalcBattleKDratioCRdmg(autoRun);
 			frm.ShowDialog(this);
-            ShowView("Refreshed grid");
+            await ShowView("Refreshed grid");
         }
 
-        private void RunRecalcBattleMaxTier()
+        private async Task RunRecalcBattleMaxTier()
         {
             Form frm = new Forms.RecalcBattleMaxTier(true);
             frm.ShowDialog(this);
-            ShowView("Refreshed grid");
+            await ShowView("Refreshed grid");
         }
 
 
@@ -4741,9 +4732,9 @@ namespace WinApp.Forms
 			frm.ShowDialog();
 		}
 
-		private void mHelpCheckVersion_Click(object sender, EventArgs e)
+		private async void mHelpCheckVersion_Click(object sender, EventArgs e)
 		{
-			RunAppStartupAPI(true);
+            await RunAppStartupAPI(true);
 		}
 
 		private async void mHelpMessage_Click(object sender, EventArgs e)
@@ -4789,7 +4780,7 @@ namespace WinApp.Forms
             } 
 		}
 
-		private void mTankFilter_GetInGarage_Click(object sender, EventArgs e)
+		private async void mTankFilter_GetInGarage_Click(object sender, EventArgs e)
 		{
 			InGarageApiResult.status = "";
 			Form frm = new Forms.InGarageApi();
@@ -4802,7 +4793,7 @@ namespace WinApp.Forms
 				{
 					// After fav list changes reload menu
 					SetFavListMenu(); // Reload fav list items
-					ShowView("Refreshed grid after 'In Garage' tank list updated"); // Refresh grid now
+                    await ShowView("Refreshed grid after 'In Garage' tank list updated"); // Refresh grid now
 				}
 			}
 		}
@@ -5075,35 +5066,34 @@ namespace WinApp.Forms
 			SetStatus2(Status2Message);
 		}
 
-		private void mGadgetAdd(object sender, EventArgs e)
+		private async void mGadgetAdd(object sender, EventArgs e)
 		{
 			// Enable edit mode if not
 			if (!mHomeViewEditMode.Checked)
 			{
 				mHomeViewEditMode.Checked = true;
-				GadgetEditModeChange();
+				await GadgetEditModeChange();
 			}
 			// Get gadget
 			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
 			string controlName = menu.Tag.ToString();
-			// Create new gadget
-			GadgetCreateOrEdit(controlName);
+            // Create new gadget
+            await GadgetCreateOrEdit(controlName);
 		}
 
-		private void mHomeEdit_Click(object sender, EventArgs e)
+		private async void mHomeEdit_Click(object sender, EventArgs e)
 		{
 			mHomeViewEditMode.Checked = !mHomeViewEditMode.Checked;
-			GadgetEditModeChange();
+			await GadgetEditModeChange();
 		}
 
-		private void GadgetEditModeChange()
+		private async Task GadgetEditModeChange()
 		{
 			if (mHomeViewEditMode.Checked)
 			{
 				// Enable edit style
 				Status2AutoEnabled = false;
 				timerStatus2.Enabled = false;
-				Application.DoEvents();
 				lblStatus2.ForeColor = ColorTheme.FormBorderBlue;
 				lblStatus2.Text = "Enabled Home View Edit Mode";
 				// Add mouse move event for main panel
@@ -5145,7 +5135,7 @@ namespace WinApp.Forms
 				// Enable default style
 				Status2AutoEnabled = true;
 				SetStatus2("Disabled Home View Edit Mode");
-				GadgetHelper.SortGadgets();
+				await GadgetHelper.SortGadgets();
 			}
 		}
 
@@ -5294,14 +5284,14 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void panelEditor_MouseUp(object sender, MouseEventArgs e)
+		private async void panelEditor_MouseUp(object sender, MouseEventArgs e)
 		{
 			if (gadgetPontedAt != null)
 			{
 				// Save new location if moved 
 				if (gadgetPontedAt.posY != gadgetPontedAt.control.Top || gadgetPontedAt.posX != gadgetPontedAt.control.Left)
 				{
-					GadgetHelper.SaveGadgetPosition(gadgetPontedAt.id, gadgetPontedAt.control.Left, gadgetPontedAt.control.Top);
+					await GadgetHelper.SaveGadgetPosition(gadgetPontedAt.id, gadgetPontedAt.control.Left, gadgetPontedAt.control.Top);
 					gadgetPontedAt.posY = gadgetPontedAt.control.Top;
 					gadgetPontedAt.posX = gadgetPontedAt.control.Left;
 				}
@@ -5310,7 +5300,7 @@ namespace WinApp.Forms
 				{
 					gadgetPontedAt.height = gadgetPontedAt.control.Height;
 					gadgetPontedAt.width = gadgetPontedAt.control.Width;
-					GadgetHelper.SaveGadgetSize(gadgetPontedAt);
+                    await GadgetHelper.SaveGadgetSize(gadgetPontedAt);
 				}
 			}
 			// move mode off
@@ -5318,11 +5308,11 @@ namespace WinApp.Forms
 		}
 		
 
-		private void mHomeViewRefresh_Click(object sender, EventArgs e)
+		private async void mHomeViewRefresh_Click(object sender, EventArgs e)
 		{
 			HomeViewCreate("Redrawn gadgets");
             HomeViewRefresh("Refresh redrawn gadgets");
-			GadgetEditModeChange();
+			await GadgetEditModeChange();
 		}
 
 		private void CreateGadgetContextMenu(bool customizeAvailable)
@@ -5380,13 +5370,13 @@ namespace WinApp.Forms
             gadgetLockMode = false; // free selected gadget after popup closed
 		}
         
-		private void gadgetMainPopup_Remove_Click(object sender, EventArgs e)
+		private async void gadgetMainPopup_Remove_Click(object sender, EventArgs e)
 		{
             try
             {
                 if (gadgetSelected != null)
                 {
-                    GadgetHelper.RemoveGadget(gadgetSelected);
+                    await GadgetHelper.RemoveGadget(gadgetSelected);
                     panelMainArea.Controls.Remove(gadgetSelected.control);
                     gadgetSelected = null;
                 }
@@ -5398,16 +5388,16 @@ namespace WinApp.Forms
             
 		}
 
-		private void gadgetMainPopup_Customize_Click(object sender, EventArgs e)
+		private async void gadgetMainPopup_Customize_Click(object sender, EventArgs e)
 		{
             if (gadgetSelected != null)
             {
                 // Edit gadget
-                GadgetCreateOrEdit(gadgetSelected.controlName, gadgetSelected.id);
+                await GadgetCreateOrEdit(gadgetSelected.controlName, gadgetSelected.id);
             }
 		}
 
-		private void GadgetCreateOrEdit(string controlName, int gadgetId = -1) // if gadgetId == -1 then create new
+		private async Task GadgetCreateOrEdit(string controlName, int gadgetId = -1) // if gadgetId == -1 then create new
 		{
 			GadgetHelper.newParameters = new object[20];
 			GadgetHelper.newParametersOK = true;
@@ -5492,7 +5482,7 @@ namespace WinApp.Forms
                     gadget.visible = true;
                     gadget.resizable = GadgetHelper.IsGadgetRezisable(controlName);
                     gadget.name = GadgetHelper.GetGadgetName(controlName);
-                    gadgetId = GadgetHelper.InsertNewGadget(gadget);
+                    gadgetId = await GadgetHelper.InsertNewGadget(gadget);
                     gadget.id = gadgetId;
                     gadgetControl.Name = "uc" + gadgetId.ToString();
                 }
@@ -5514,14 +5504,14 @@ namespace WinApp.Forms
                     gadget.control = gadgetControl;
                 }
                 // Save gadget parameters
-                GadgetHelper.SaveGadgetParameter(gadget);
+                await GadgetHelper.SaveGadgetParameter(gadget);
                 // Special gadgets customization
                 switch (gadget.controlName)
                 {
                     case "ucBattleListLargeImages":
                         gadget.width = (Convert.ToInt32(GadgetHelper.newParameters[0]) * 170) - 10;
                         gadget.height = (Convert.ToInt32(GadgetHelper.newParameters[1]) * 120) - 10;
-                        GadgetHelper.SaveGadgetSize(gadget);
+                        await GadgetHelper.SaveGadgetSize(gadget);
                         break;
                     case "ucTotalStats":
                         // calc new width = each col = 200px + separators = 40 if more than one col
@@ -5548,7 +5538,7 @@ namespace WinApp.Forms
                         }
                         // Save
                         if (save)
-                            GadgetHelper.SaveGadgetSize(gadget);
+                            await GadgetHelper.SaveGadgetSize(gadget);
                         break;
                 }
                 // Add to panel and resize
@@ -5566,24 +5556,24 @@ namespace WinApp.Forms
             gadgetSelected = null;
 		}
 
-		private void mGadgetRemoveAll_Click(object sender, EventArgs e)
+		private async void mGadgetRemoveAll_Click(object sender, EventArgs e)
 		{
             MsgBox.Button answer = MsgBox.Show("This will remove all gadgets.", "Remove all gadgets", MsgBox.Type.OKCancel, this);
 			if (answer == MsgBox.Button.OK)
 			{
-				GadgetHelper.RemoveGadgetAll();
+                await GadgetHelper.RemoveGadgetAll();
 				HomeViewCreate("Removed all gadgets");
                 HomeViewRefresh("Refresh Home View");
 			}
 		}
         
-        private void mHomeViewDefaults_Click(object sender, EventArgs e)
+        private async void mHomeViewDefaults_Click(object sender, EventArgs e)
 		{
             ToolStripMenuItem menuitem = (ToolStripMenuItem)sender;
             string file = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\" + menuitem.Tag.ToString();
             if (File.Exists(file))
             {
-                LoadHomeViewFile(menuitem, file);
+                await LoadHomeViewFile(menuitem, file);
             }
             else
             {
@@ -5591,23 +5581,23 @@ namespace WinApp.Forms
             }
         }
 
-        private void mHomeViewRecent_Click(object sender, EventArgs e)
+        private async void mHomeViewRecent_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuitem = (ToolStripMenuItem)sender;
             string file = menuitem.Tag.ToString();
             if (File.Exists(file))
             {
-                LoadHomeViewFile(menuitem, file);
+                await LoadHomeViewFile(menuitem, file);
             }
             else
             {
                 MsgBox.Show("Cannot locate file: " + file + Environment.NewLine + Environment.NewLine + "The menu item will be removed." + Environment.NewLine + Environment.NewLine, "Missing file", this);
-                GadgetHelper.RemoveRecentHomeView(file);
+                await GadgetHelper.RemoveRecentHomeView(file);
                 GetHomeViewRecentList();
             }
         }
 
-        private void LoadHomeViewFile(ToolStripMenuItem menuitem, string file)
+        private async Task LoadHomeViewFile(ToolStripMenuItem menuitem, string file)
         {
             bool changeHomeView = true;
             if (!GadgetHelper.HomeViewSaved)
@@ -5615,15 +5605,15 @@ namespace WinApp.Forms
                 MsgBox.Button answer = MsgBox.Show("Du you want to save current home view before changing to: '" + menuitem.Text + "' home view?", "Save home view", MsgBox.Type.YesNo, this);
                 if (answer == MsgBox.Button.Yes)
                 {
-                    changeHomeView = SaveHomeView();
+                    changeHomeView = await SaveHomeView();
                 }
             }
             if (changeHomeView)
             {
-                if (GadgetHelper.HomeViewLoadFromFile(file, true))
+                if (await GadgetHelper.HomeViewLoadFromFile(file, true))
                 {
                     mHomeViewEditMode.Checked = false;
-                    GadgetEditModeChange();
+                    await GadgetEditModeChange();
                     RemoveHomeViewSelectedMenuItems();
                     menuitem.Checked = true;
                     mHomeView.Text = menuitem.Text;
@@ -5637,12 +5627,12 @@ namespace WinApp.Forms
             }
         }
 
-        private void mHomeViewFileSave_Click(object sender, EventArgs e)
+        private async void mHomeViewFileSave_Click(object sender, EventArgs e)
         {
-            SaveHomeView();
+            await SaveHomeView();
         }
 
-        private bool SaveHomeView()
+        private async Task<bool> SaveHomeView()
         {
 
             saveFileDialog1.FileName = "";
@@ -5654,7 +5644,7 @@ namespace WinApp.Forms
             {
                 string fileName = Path.GetFileName(saveFileDialog1.FileName);
                 GadgetHelper.HomeViewSaveToFile(saveFileDialog1.FileName);
-                bool updatedRecentList = GadgetHelper.UpdateRecentHomeView(saveFileDialog1.FileName);
+                bool updatedRecentList = await GadgetHelper.UpdateRecentHomeView(saveFileDialog1.FileName);
                 if (updatedRecentList)
                     GetHomeViewRecentList();
                 mHomeView.Text = fileName.Replace(".json", "");
@@ -5667,7 +5657,7 @@ namespace WinApp.Forms
             return false;
         }
 
-        private void mHomeViewFileLoad_Click(object sender, EventArgs e)
+        private async void mHomeViewFileLoad_Click(object sender, EventArgs e)
         {
             bool changeHomeView = true;
             if (!GadgetHelper.HomeViewSaved)
@@ -5675,7 +5665,7 @@ namespace WinApp.Forms
                 MsgBox.Button answer = MsgBox.Show("Du you want to save current home view loading new home view from file?", "Save home view", MsgBox.Type.YesNo, this);
                 if (answer == MsgBox.Button.Yes)
                 {
-                    changeHomeView = SaveHomeView();
+                    changeHomeView = await SaveHomeView();
                 }
             }
             if (changeHomeView)
@@ -5686,8 +5676,8 @@ namespace WinApp.Forms
                 DialogResult result = openFileDialog1.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    GadgetHelper.HomeViewLoadFromFile(openFileDialog1.FileName, true);
-                    bool updatedRecentList = GadgetHelper.UpdateRecentHomeView(openFileDialog1.FileName);
+                    await GadgetHelper.HomeViewLoadFromFile(openFileDialog1.FileName, true);
+                    bool updatedRecentList = await GadgetHelper.UpdateRecentHomeView(openFileDialog1.FileName);
                     if (updatedRecentList)
                         GetHomeViewRecentList();
                     string fileName = Path.GetFileName(openFileDialog1.FileName);
@@ -5703,9 +5693,9 @@ namespace WinApp.Forms
             
         }
 
-        private void mHomeViewClearRecentList_Click(object sender, EventArgs e)
+        private async void mHomeViewClearRecentList_Click(object sender, EventArgs e)
         {
-            GadgetHelper.RemoveRecentHomeView("");
+            await GadgetHelper.RemoveRecentHomeView("");
             GetHomeViewRecentList();
         }
 

@@ -41,7 +41,7 @@ namespace WinApp.Services
                     DB.AddWithValue(ref sql, "@playerToken", result.PlayerToken, DB.SqlDataType.VarChar);
                     DB.AddWithValue(ref sql, "@playerName", Config.Settings.playerName, DB.SqlDataType.VarChar);
                     DB.AddWithValue(ref sql, "@playerServer", Config.Settings.playerServer, DB.SqlDataType.VarChar);
-                    DB.ExecuteNonQuery(sql);
+                    await DB.ExecuteNonQueryAsync(sql);
                 }
                 return result;
 			}

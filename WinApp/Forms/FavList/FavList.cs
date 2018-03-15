@@ -172,19 +172,19 @@ namespace WinApp.Forms
 			SelectFavList();
 		}
 
-		private void btnFavListSave_Click(object sender, EventArgs e)
+		private async void btnFavListSave_Click(object sender, EventArgs e)
 		{
 			string FavListName = dataGridFavList.SelectedRows[0].Cells["Name"].Value.ToString();
 			string message = "You are about to save selected tanks to favourite tank list: " + FavListName;
             Code.MsgBox.Button answer = MsgBox.Show(message, "Save selected tanks to favourite tank list", MsgBox.Type.OKCancel, this);
 			if (answer == MsgBox.Button.OK)
 			{
-				SaveFavList();
+                await SaveFavList();
 			}
 		}
 
 
-		private void SaveFavList()
+		private async Task SaveFavList()
 		{
 			// Save Selected Tank List
 			string sql = "delete from favListTank where favListId=@favListId; "; // Delete all old tanks
@@ -197,7 +197,7 @@ namespace WinApp.Forms
 				sql += insertsql;
 			}
 			DB.AddWithValue(ref sql, "@favListId", SelectedFavListId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
 
 			// Refresh Grid
 			ShowFavList();
@@ -843,7 +843,7 @@ namespace WinApp.Forms
 			FavListMoveItem(1);
 		}
 
-		private void FavListMoveItem(int move)
+		private async void FavListMoveItem(int move)
 		{
 			var FavListSelectedListPos = dataGridFavList.SelectedRows[0].Cells["#"].Value;
 			if (FavListSelectedListPos != DBNull.Value)
@@ -873,23 +873,23 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@position", Convert.ToInt32(FavListSelectedListPos), DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToId", rowNextToId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
-					DB.ExecuteNonQuery(sql);
+                    await DB.ExecuteNonQueryAsync(sql);
 				}
-				FavListHelper.FavListSort();
+                await FavListHelper.FavListSort();
 				ShowFavList();
 			}
 		}
 
 		
 
-		private void toolFavListVisible_Click(object sender, EventArgs e)
+		private async void toolFavListVisible_Click(object sender, EventArgs e)
 		{
 			string sql = "update favList set position=99999 where id=@id";
 			if (toolFavListVisible.Text == "Hide")
 				sql = "update favList set position=NULL where id=@id";
 			DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
-			FavListHelper.FavListSort();
+            await DB.ExecuteNonQueryAsync(sql);
+            await FavListHelper.FavListSort();
 			ShowFavList();
 		}
 
@@ -907,7 +907,7 @@ namespace WinApp.Forms
 			ShowFavList();
 		}
 
-		private void toolFavListDelete_Click(object sender, EventArgs e)
+		private async void toolFavListDelete_Click(object sender, EventArgs e)
 		{
 			string FavListName = dataGridFavList.SelectedRows[0].Cells["Name"].Value.ToString();
 			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete favourite tank list: " + FavListName,
@@ -917,7 +917,7 @@ namespace WinApp.Forms
 
 				string sql = "delete from favListTank where favListId=@id; delete from favList where id=@id;";
 				DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(sql);
+                await DB.ExecuteNonQueryAsync(sql);
 				SelectedFavListId = 0;
 				if (dataGridFavList.RowCount > 0)
 					SelectedFavListId = Convert.ToInt32(dataGridFavList.Rows[0].Cells["id"].Value);

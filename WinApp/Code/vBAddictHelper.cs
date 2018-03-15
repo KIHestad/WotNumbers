@@ -4,8 +4,10 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
@@ -49,7 +51,7 @@ namespace WinApp.Code
             Settings.UploadReplayActive = uploadReplayActive;
         }
 
-        public static void SaveSettings()
+        public async static Task SaveSettings()
         {
             string sql =
                 "UPDATE player " +
@@ -59,22 +61,24 @@ namespace WinApp.Code
             DB.AddWithValue(ref sql, "@vbaddictToken", Settings.Token, DB.SqlDataType.VarChar);
             DB.AddWithValue(ref sql, "@vbaddictUploadActive", Settings.UploadActive, DB.SqlDataType.Boolean);
             DB.AddWithValue(ref sql, "@vbaddictUploadReplayActive", Settings.UploadReplayActive, DB.SqlDataType.Boolean);
-            DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
         }
 
-		public static string TestConnection()
+		public async static Task<string> TestConnection()
 		{
 			try
 			{
 				string url = "http://carius.vbaddict.net:82/upload_check/xml/";
-				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-				httpRequest.Timeout = timeout;    
-				httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
-				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
-				HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
-				StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
-				string xmlResult = responseStream.ReadToEnd(); // Read result into string
-				XmlDocument xmlDoc = new XmlDocument();
+                HttpClient client = new HttpClient()
+                {
+                    Timeout = new TimeSpan(0, 0, 10) // 10 seconds
+                };
+                client.DefaultRequestHeaders.Add("User-Agent", "Wot Numbers " + AppVersion.AssemblyVersion);
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                string xmlResult = await response.Content.ReadAsStringAsync();
+
+                XmlDocument xmlDoc = new XmlDocument();
 				xmlDoc.LoadXml(xmlResult); // Load string into xml doc
 				string result = XmlHelper.XmlToString(xmlDoc);
 				

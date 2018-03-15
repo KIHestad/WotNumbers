@@ -20,10 +20,10 @@ namespace WinApp.Forms
 			_autoRun = autoRun; 
 		}
 
-		private void RecalcBattleKDratioCRdmg_Shown(object sender, EventArgs e)
+		private async void RecalcBattleKDratioCRdmg_Shown(object sender, EventArgs e)
 		{
 			if (_autoRun)
-				RunNow();
+                await RunNow();
 		}
 
 		private void UpdateProgressBar(string statusText)
@@ -34,10 +34,9 @@ namespace WinApp.Forms
 			else
 				badProgressBar.Value++;
 			Refresh();
-			Application.DoEvents();
 		}
 
-		private void RunNow()
+		private async Task RunNow()
 		{
 			this.Cursor = Cursors.WaitCursor;
 			UpdateFromApiTheme.Cursor = Cursors.WaitCursor;
@@ -46,19 +45,19 @@ namespace WinApp.Forms
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
 
-			RecalcNow();
+            await RecalcNow();
 
 			// Done
 			this.Cursor = Cursors.Default;
 			this.Close();
 		}
 
-		private void btnStart_Click(object sender, EventArgs e)
+		private async void btnStart_Click(object sender, EventArgs e)
 		{
-			RunNow();
+            await RunNow();
 		}
 
-		private void RecalcNow()
+		private async Task RecalcNow()
 		{
 			// Loop through all existing battles with battle players
 			string sql =
@@ -113,7 +112,7 @@ namespace WinApp.Forms
 					"WHERE id = " + dr["battleId"].ToString() + ";";
 			}
 			if (updatesql != "")
-				DB.ExecuteNonQuery(updatesql, RunInBatch: true);
+                await DB.ExecuteNonQueryAsync(updatesql, RunInBatch: true);
 		}
 	}
 }

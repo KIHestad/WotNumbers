@@ -18,9 +18,10 @@ namespace WinApp.Code
             public string nation { get; set; }
             public string tankType { get; set; }
             public bool customTankInfo { get; set; }
+            public string message { get; set; }
         }
                 
-        public static void CreateUnknownTank(int tankId, string tankName)
+        public async static Task CreateUnknownTank(int tankId, string tankName)
         {
             int tier = 0;
             int countryId = -1; // Unknown nation
@@ -40,7 +41,7 @@ namespace WinApp.Code
             DB.AddWithValue(ref insertSql, "@name", tankName, DB.SqlDataType.VarChar);
             DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
             DB.AddWithValue(ref insertSql, "@premium", premium, DB.SqlDataType.Int);
-            DB.ExecuteNonQuery(insertSql);
+            await DB.ExecuteNonQueryAsync(insertSql);
         }
         
         #region DatabaseLookup
@@ -120,7 +121,7 @@ namespace WinApp.Code
 			return DB.FetchData(sql);
 		}
 
-        public static DataTable GetPlayerTankBattle(int playerTankId, BattleMode.TypeEnum dossierBattleMode, bool CreateNewIfNotExists)
+        public async static Task<DataTable> GetPlayerTankBattle(int playerTankId, BattleMode.TypeEnum dossierBattleMode, bool CreateNewIfNotExists)
 		{
             BattleMode.Item battleMode = BattleMode.GetItemFromType(dossierBattleMode);
 			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
@@ -129,7 +130,7 @@ namespace WinApp.Code
 			DataTable dt = DB.FetchData(sql);
 			if (CreateNewIfNotExists && dt.Rows.Count == 0) // No battle recorded for this tank in this mode, create now and fetch once more
 			{
-				AddPlayerTankBattle(playerTankId, battleMode.SqlName);
+                await AddPlayerTankBattle(playerTankId, battleMode.SqlName);
 				dt = DB.FetchData(sql);
 			}
 			return dt;
@@ -157,12 +158,12 @@ namespace WinApp.Code
 		}
 		
 
-		private static void AddPlayerTankBattle(int playerTankId, string battleMode)
+		private async static Task AddPlayerTankBattle(int playerTankId, string battleMode)
 		{
 			string sql = "INSERT INTO PlayerTankBattle (playerTankId, battleMode, battles) VALUES (@playerTankId, @battleMode, 0); ";
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
 		}
 
 		public static int GetPlayerTankCount()

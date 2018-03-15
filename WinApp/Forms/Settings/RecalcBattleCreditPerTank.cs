@@ -20,10 +20,10 @@ namespace WinApp.Forms
 			_autoRun = autoRun; 
 		}
 
-		private void UpdateFromApi_Shown(object sender, EventArgs e)
+		private async void UpdateFromApi_Shown(object sender, EventArgs e)
 		{
 			if (_autoRun)
-				RunNow();
+                await RunNow();
 		}
 
 		private void UpdateProgressBar(string statusText)
@@ -34,10 +34,9 @@ namespace WinApp.Forms
 			else
 				badProgressBar.Value++;
 			Refresh();
-			Application.DoEvents();
 		}
 
-		private void RunNow()
+		private async Task RunNow()
 		{
 			this.Cursor = Cursors.WaitCursor;
 			RecalcBattleCreditsPerTheme.Cursor = Cursors.WaitCursor;
@@ -59,7 +58,7 @@ namespace WinApp.Forms
                 "  credTotCost=null, " +
                 "  credTotResult=null, " +
                 "  credBtlLifetime=null ";
-            DB.ExecuteNonQuery(resetSQL);
+            await DB.ExecuteNonQueryAsync(resetSQL);
 			// Get battles
 			UpdateProgressBar("Getting battle count");
             // Credits = total income
@@ -101,15 +100,14 @@ namespace WinApp.Forms
                     if (sql.Length >= 5000) // Approx 50 updates
                     {
                         lblProgressStatus.Text = "Saving to database...";
-                        Application.DoEvents();
-                        DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+                        await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
                         sql = "";
                     }
                 }
 			}
 			if (sql != "") // Update last batch of sql's
 			{
-				DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+                await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
 				sql = "";
 			}
 
@@ -123,9 +121,9 @@ namespace WinApp.Forms
 			this.Close();
 		}
 
-		private void btnStart_Click(object sender, EventArgs e)
+		private async void btnStart_Click(object sender, EventArgs e)
 		{
-			RunNow();
+            await RunNow();
 		}
 
 		

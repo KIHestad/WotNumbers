@@ -51,7 +51,7 @@ namespace WinApp.Forms.Settings
             scrollY.ScrollElementsVisible = dataGridReplayFolder.DisplayedRowCount(false);
         }
 
-        private void btnAdd_Click(object sender, EventArgs e)
+        private async void btnAdd_Click(object sender, EventArgs e)
         {
             folderBrowserDialogDBPath.ShowNewFolderButton = false;
             // Select WoT Game folder as default if it exists
@@ -70,17 +70,17 @@ namespace WinApp.Forms.Settings
                 string path = folderBrowserDialogDBPath.SelectedPath;
                 MsgBox.Button answer = MsgBox.Show("Does subfolders with replay files exists?", "Include subfolders?", MsgBox.Type.YesNo);
                 bool subfolder = (answer == MsgBox.Button.Yes);
-                ReplayHelper.AddReplayFolder(path, subfolder);
+                await ReplayHelper.AddReplayFolder(path, subfolder);
                 ShowReplayFolders();
             }
         }
 
-        private void btnRemove_Click(object sender, EventArgs e)
+        private async void btnRemove_Click(object sender, EventArgs e)
         {
             if (dataGridReplayFolder.SelectedRows.Count == 1)
             {
                 int id = Convert.ToInt32(dataGridReplayFolder.SelectedRows[0].Cells["id"].Value);
-                ReplayHelper.RemoveReplayFolder(id);
+                await ReplayHelper.RemoveReplayFolder(id);
                 ShowReplayFolders();
             }
         }

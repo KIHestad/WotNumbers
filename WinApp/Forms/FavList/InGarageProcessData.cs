@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -20,20 +21,19 @@ namespace WinApp.Forms
 			InitializeComponent();
 			txtTanksInGarage.Text = "Please wait...";
 			this.Cursor = Cursors.WaitCursor;
-			Application.DoEvents();
+			Refresh();
 		}
 
-		private void InGarageProcessData_Load(object sender, EventArgs e)
+		private async void InGarageProcessData_Load(object sender, EventArgs e)
 		{
 			this.Cursor = Cursors.WaitCursor;
-			Application.DoEvents();
 			txtNickname.Text = InGarageApiResult.nickname;
 			GetFavList();
 			string sql = "select * from favList where name = 'In Garage';";
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 				ddFavList.Text = "In Garage";
-			tanksInGarage = Code.ImportWotApi2DB.ImportPlayersInGarageVehicles(this);
+			tanksInGarage = await ImportWotApi2DB.ImportPlayersInGarageVehicles(this);
 			txtTanksInGarage.Text = tanksInGarage.Count().ToString();
 			btnSaveTanksToFavList.Enabled = true;
 			this.Cursor = Cursors.Default;
@@ -83,7 +83,7 @@ namespace WinApp.Forms
 			this.Close();
 		}
 
-		private void btnSaveTanksToFavList_Click(object sender, EventArgs e)
+		private async void btnSaveTanksToFavList_Click(object sender, EventArgs e)
 		{
 			InGarageApiResult.changeFavList = false;
 			if (ddFavList.Text == "")
@@ -160,7 +160,7 @@ namespace WinApp.Forms
 							sql += newsql;
 						}
 						DB.AddWithValue(ref sql, "@favListId", favListId, DB.SqlDataType.Int);
-						DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+                        await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
 						// Select this list
 						GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 						gf.TankId = -1;

@@ -22,10 +22,10 @@ namespace WinApp.Forms
             _battleId = battleId;
         }
 
-        private void Replay_Shown(object sender, EventArgs e)
+        private async void Replay_Shown(object sender, EventArgs e)
         {
             GetvBAddictUploadInfo();
-            FileInfo fi = ReplayHelper.GetReplayFile(_battleId);
+            FileInfo fi = await ReplayHelper.GetReplayFile(_battleId);
             if (fi != null)
             {
                 lblMessage.Text = "Replay file for the current battle is found.";
@@ -59,7 +59,7 @@ namespace WinApp.Forms
         {
             btnUploadReplayTovBAddict.Enabled = false;
             btnUploadReplayTovBAddict.Text = "Uploading...";
-            Application.DoEvents();
+            Refresh();
             string resultText = "";
             bool resultOK = vBAddictHelper.UploadReplay(_battleId, _filename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out resultText);
             string msg = "Upload to vBAddict was successful.";
@@ -75,7 +75,7 @@ namespace WinApp.Forms
                 btnUploadReplayTovBAddict.Text = "Upload done";
                 GetvBAddictUploadInfo();
             }
-            Application.DoEvents();
+            Refresh();
         }
 
         private void GetvBAddictUploadInfo()

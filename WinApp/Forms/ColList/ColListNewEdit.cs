@@ -87,7 +87,7 @@ namespace WinApp.Forms
 			Code.DropDownGrid.Show(ddDefaultTankFilter, Code.DropDownGrid.DropDownGridType.List, favListDD);
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
+		private async void btnSave_Click(object sender, EventArgs e)
 		{
 			string newName = txtName.Text.Trim();
 			if (newName.Length == 0)
@@ -132,7 +132,7 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
 					DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-					DB.ExecuteNonQuery(sql);
+					await DB.ExecuteNonQueryAsync(sql);
 					// Add tanks if new colList and seleced colList in copy to DD
 					if (colListId == 0 && ddCopyFrom.Text != "(None)")
 					{
@@ -155,7 +155,7 @@ namespace WinApp.Forms
 								"   where ColumnListId=@copyFromColumnListId; ";
 						DB.AddWithValue(ref sql, "@copyToColumnListId", copyToId, DB.SqlDataType.Int);
 						DB.AddWithValue(ref sql, "@copyFromColumnListId", copyFromId, DB.SqlDataType.Int);
-						DB.ExecuteNonQuery(sql);
+						await DB.ExecuteNonQueryAsync(sql);
 					
 					}
 					this.Close();

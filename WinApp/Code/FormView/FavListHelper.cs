@@ -27,7 +27,7 @@ namespace WinApp.Code
 			return favListId;
 		}
 
-		public static void FavListSort()
+		public async static Task FavListSort()
 		{
 			string sql = "select * from favList where position is not null order by position;";
 			DataTable dt = DB.FetchData(sql);
@@ -42,11 +42,11 @@ namespace WinApp.Code
 					DB.AddWithValue(ref sql, "@pos", pos, DB.SqlDataType.Int);
 					pos++;
 				}
-				DB.ExecuteNonQuery(sql);
+				await DB.ExecuteNonQueryAsync(sql);
 			}
 		}
 
-		public static void TankSort(int favListId)
+		public async static Task TankSort(int favListId)
 		{
 			string sql = "select tankId from favListTank order by sortorder";
 			DB.AddWithValue(ref sql, "@tankId", favListId, DB.SqlDataType.Int);
@@ -60,7 +60,7 @@ namespace WinApp.Code
 				DB.AddWithValue(ref sql, "@sortorder", pos, DB.SqlDataType.Int);
 			}
 			// Update
-			DB.ExecuteNonQuery(sql);
+			await DB.ExecuteNonQueryAsync(sql);
 		}
 
 		public static bool CheckIfAnyFavList(Form parentForm, int tankId, bool add)

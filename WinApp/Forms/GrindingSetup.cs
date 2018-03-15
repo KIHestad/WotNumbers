@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -166,7 +167,7 @@ namespace WinApp.Forms
 			
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
+		private async void btnSave_Click(object sender, EventArgs e)
 		{
 			if (CheckValidData())
 			{
@@ -175,7 +176,7 @@ namespace WinApp.Forms
                     MsgBox.Button answer = MsgBox.Show("Do you want to save your changes?", "Save Data?", MsgBox.Type.OKCancel, this);
 					if (answer == MsgBox.Button.OK)
 					{
-						SaveData();
+                        await SaveData();
 					}
 				}
 			}
@@ -203,7 +204,7 @@ namespace WinApp.Forms
 			return ok;
 		}
 
-		private void SaveData()
+		private async Task SaveData()
 		{
 			if (CheckValidData())
 			{
@@ -225,7 +226,7 @@ namespace WinApp.Forms
                     progressGoal = 1;
                 DB.AddWithValue(ref sql, "@ProgressGoal", progressGoal, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
-				if (DB.ExecuteNonQuery(sql))
+				if (await DB.ExecuteNonQueryAsync(sql))
 					dataChanged = false;
 			}
 		}
@@ -270,7 +271,7 @@ namespace WinApp.Forms
             dataChanged = true;
 		}
 
-		private void GrindingSetup_FormClosing(object sender, FormClosingEventArgs e)
+		private async void GrindingSetup_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			if (dataChanged)
 			{
@@ -281,8 +282,8 @@ namespace WinApp.Forms
 					{
 						e.Cancel = true;
 					}
-					else					
-						SaveData();
+					else
+                        await SaveData();
 				}
 			}
 		}

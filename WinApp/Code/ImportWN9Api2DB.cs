@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.Data.SqlClient;
 using System.Data.Sql;
 using System.Net;
+using System.Net.Http;
 
 namespace WinApp.Code
 {
@@ -18,11 +19,11 @@ namespace WinApp.Code
 	{
         private class TankData
         {
-            public int id { get; set; }
-            public int mmrange { get; set; }
-            public double wn9exp { get; set; }
-            public double wn9scale { get; set; }
-            public double wn9nerf { get; set; }
+            public int Id { get; set; }
+            public int MMrange { get; set; }
+            public double WN9exp { get; set; }
+            public double WN9scale { get; set; }
+            public double WN9nerf { get; set; }
         }
 
 
@@ -31,23 +32,24 @@ namespace WinApp.Code
 			return DateTime.Now + " " + logtext;
 		}
 
-		public static String UpdateWN9(Form parentForm, int updateOnlyTankId = 0)
+		public async static Task<String> UpdateWN9(Form parentForm, int updateOnlyTankId = 0)
         {
             string sql = "";
             double WN9Version = 0;
             int updateCount = 0;
+            string url = "http://jaj22.org.uk/tankdata/exp_wn9.json";
             // Get WN8 from API
             try
 			{
-				string url = "http://jaj22.org.uk/tankdata/exp_wn9.json";
-				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-				httpRequest.Timeout = 10000;     // 10 secs
-				httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
-				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
-				HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
-				StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
-				string json = responseStream.ReadToEnd();
-				responseStream.Close();
+                HttpClient client = new HttpClient()
+                {
+                    Timeout = new TimeSpan(0, 0, 10) // 10 seconds
+                };
+                client.DefaultRequestHeaders.Add("User-Agent", "Wot Numbers " + AppVersion.AssemblyVersion);
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                string json = await response.Content.ReadAsStringAsync();
+
 				// Get ready to parse through WN9 exp values
 				JObject allTokens = JObject.Parse(json);
                 JToken headerToken = allTokens.First;
@@ -58,14 +60,14 @@ namespace WinApp.Code
                 List<TankData> tankData = JsonConvert.DeserializeObject<List<TankData>>(allTokens["data"].ToString());
                 foreach (TankData item in tankData)
                 {
-                    if (updateOnlyTankId == 0 || updateOnlyTankId == item.id)
+                    if (updateOnlyTankId == 0 || updateOnlyTankId == item.Id)
                     {
                         string newsql = "update tank set mmrange = @mmrange, wn9exp = @wn9exp, wn9scale = @wn9scale, wn9nerf = @wn9nerf where id = @id;";
-                        DB.AddWithValue(ref newsql, "@mmrange", item.mmrange, DB.SqlDataType.Int);
-                        DB.AddWithValue(ref newsql, "@wn9exp", item.wn9exp, DB.SqlDataType.Float);
-                        DB.AddWithValue(ref newsql, "@wn9scale", item.wn9scale, DB.SqlDataType.Float);
-                        DB.AddWithValue(ref newsql, "@wn9nerf", item.wn9nerf, DB.SqlDataType.Float);
-                        DB.AddWithValue(ref newsql, "@id", item.id, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref newsql, "@mmrange", item.MMrange, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref newsql, "@wn9exp", item.WN9exp, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@wn9scale", item.WN9scale, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@wn9nerf", item.WN9nerf, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@id", item.Id, DB.SqlDataType.Int);
                         sql += newsql;
                         updateCount++;
                     }
@@ -75,7 +77,7 @@ namespace WinApp.Code
 			{
 				Log.LogToFile(ex);
 				string msg =
-                    "Could not connect to http://jaj22.org.uk, please check your Internet access." + Environment.NewLine + Environment.NewLine +
+                    "Could not connect to " + url + ", please check your Internet access." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
 					ex.InnerException + Environment.NewLine + Environment.NewLine;
 				MsgBox.Show(msg, "Problem connecting to http://jaj22.org.uk", parentForm);
@@ -85,10 +87,10 @@ namespace WinApp.Code
 			// Execute update statements
 			try
 			{
-				DB.ExecuteNonQuery(sql, true, true);
+                await DB.ExecuteNonQueryAsync(sql, true, true);
 				sql = "update _version_ set version=@version where id=3;";
                 DB.AddWithValue(ref sql, "@version", WN9Version * 100, DB.SqlDataType.Float);
-				DB.ExecuteNonQuery(sql, true, true);
+                await DB.ExecuteNonQueryAsync(sql, true, true);
 			}
 			catch (Exception ex)
 			{

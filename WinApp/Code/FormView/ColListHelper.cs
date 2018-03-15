@@ -103,7 +103,7 @@ namespace WinApp.Code
 			return dfl;
 		}
 
-		public static void SaveColWidth(string colName, int colWidht)
+		public async static Task SaveColWidth(string colName, int colWidht)
 		{
 			int colListId = MainSettings.GetCurrentGridFilter().ColListId;
 			int colSelectionId = GetColSelectionId(colName);
@@ -111,7 +111,7 @@ namespace WinApp.Code
 			DB.AddWithValue(ref sql, "@colWidth", colWidht, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@columnSelectionId", colSelectionId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@columnListId", colListId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
+			await DB.ExecuteNonQueryAsync(sql);
 		}
 
 		public class ColListClass
@@ -327,7 +327,7 @@ namespace WinApp.Code
 			return clc;
 		}
 
-		public static void ColListSort(int colType)
+		public async static Task ColListSort(int colType)
 		{
 			string sql = "select * from columnList where position is not null and colType=" + colType.ToString() + " order by position;";
 			DataTable dt = DB.FetchData(sql);
@@ -342,7 +342,7 @@ namespace WinApp.Code
 					DB.AddWithValue(ref sql, "@pos", pos, DB.SqlDataType.Int);
 					pos++;
 				}
-				DB.ExecuteNonQuery(sql);
+				await DB.ExecuteNonQueryAsync(sql);
 			}
 		}
 

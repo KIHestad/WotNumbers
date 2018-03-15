@@ -5,6 +5,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -90,28 +91,28 @@ namespace WinApp.Gadget
 		public static object[] newParameters = new object[20];
 		public static bool newParametersOK = true;
 		
-		public static void SaveGadgetPosition(int gadgetId, int left, int top)
+		public async static Task SaveGadgetPosition(int gadgetId, int left, int top)
 		{
 			string sql = "update gadget set posX=@posX, posY=@posY where id=@id;";
 			DB.AddWithValue(ref sql, "@posX", left, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@posY", top, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", gadgetId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors);
             HomeViewSaved = false;
         }
 
-		public static void SaveGadgetSize(GadgetItem gadget)
+		public async static Task SaveGadgetSize(GadgetItem gadget)
 		{
 			string sql = "update gadget set width=@width, height=@height where id=@id;";
 			DB.AddWithValue(ref sql, "@width", gadget.width, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@height", gadget.height, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", gadget.id, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors);
             HomeViewSaved = false;
         }
 
 
-        public static void SaveGadgetParameter(GadgetItem gadget)
+        public async static Task SaveGadgetParameter(GadgetItem gadget)
 		{
 			int paramNum = 0;
 			string sql = "";
@@ -145,34 +146,34 @@ namespace WinApp.Gadget
 					paramNum++;
 				}
 			}
-			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
             HomeViewSaved = false;
         }
 
-        public static void DeleteGadgetParameter(int gadgetId)
+        public async static Task DeleteGadgetParameter(int gadgetId)
         {
             string sql = "delete from gadgetParameter where gadgetId = " + gadgetId.ToString();
-            DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+            await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
             HomeViewSaved = false;
         }
 
-        public static void RemoveGadget(GadgetItem gadget)
+        public async static Task RemoveGadget(GadgetItem gadget)
 		{
 			string sql = "delete from gadgetParameter where gadgetId=@id; delete from gadget where id=@id;";
 			DB.AddWithValue(ref sql, "@id", gadget.id, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors);
 			gadgets.Remove(gadget);
             HomeViewSaved = false;
         }
 
-        public static void RemoveGadgetAll()
+        public async static Task RemoveGadgetAll()
 		{
 			string sql = "delete from gadgetParameter ; delete from gadget ;";
-			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors);
             gadgets = new List<GadgetItem>();
         }
 
-        public static int InsertNewGadget(GadgetItem gadget)
+        public async static Task<int> InsertNewGadget(GadgetItem gadget)
 		{
 			int gadgetId = 0;
 			string sql = 
@@ -185,7 +186,7 @@ namespace WinApp.Gadget
 			DB.AddWithValue(ref sql, "@posY", gadget.posY, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@width", gadget.width, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@height", gadget.height, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors);
 			sql = "select max(id) from gadget";
 			gadgetId = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
 			int paramNum = 0;
@@ -207,14 +208,14 @@ namespace WinApp.Gadget
 				}
 			}
 			if (sql != "")
-				DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+				await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
 			gadgets.Insert(0,gadget);
             HomeViewSaved = false;
             return gadgetId;
 		}
 
 
-		public static void SortGadgets()
+		public async static Task SortGadgets()
 		{
 			List<GadgetItem> sortGadgets = new List<GadgetItem>();
 			string sql = "select * from gadget order by sortorder;";
@@ -235,7 +236,7 @@ namespace WinApp.Gadget
 					sql += "update gadget set sortorder=" + sortOrder + " where id = " + gadget.id + "; ";
 					sortOrder++;
 				}
-				DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+				await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
             }
         }
 
@@ -595,7 +596,7 @@ namespace WinApp.Gadget
 			e.Graphics.DrawRectangle(new System.Drawing.Pen(ColorTheme.FormBorderBlue), 0, 0, uc.Width-1, uc.Height-1);
 		}
 
-        public static bool HomeViewLoadFromFile(string fileName, bool showErrorMessage)
+        public async static Task<bool> HomeViewLoadFromFile(string fileName, bool showErrorMessage)
         {
             bool ok = false;
             if (File.Exists(fileName))
@@ -614,7 +615,7 @@ namespace WinApp.Gadget
                         dr["newId"] = dr["id"];
                     }
                     // Remove current setup
-                    GadgetHelper.RemoveGadgetAll();
+                    await GadgetHelper.RemoveGadgetAll();
                     // Store to the database from here
 
                     // Add gadgets
@@ -634,7 +635,7 @@ namespace WinApp.Gadget
                             DB.AddWithValue(ref newsql, "@posY", dr["posY"].ToString(), DB.SqlDataType.Int);
                             DB.AddWithValue(ref newsql, "@width", dr["width"].ToString(), DB.SqlDataType.Int);
                             DB.AddWithValue(ref newsql, "@height", dr["height"].ToString(), DB.SqlDataType.Int);
-                            DB.ExecuteNonQuery(newsql, Config.Settings.showDBErrors, true);
+                            await DB.ExecuteNonQueryAsync(newsql, Config.Settings.showDBErrors, true);
                             // get new id from db and add to memory table
                             string newId = DB.FetchData("select max(id) as newId from gadget").Rows[0]["newId"].ToString();
                             dr["newId"] = newId;
@@ -664,7 +665,7 @@ namespace WinApp.Gadget
                             DB.AddWithValue(ref newsql, "@value", dr["value"].ToString(), DB.SqlDataType.VarChar);
                             sqlBatch += newsql + Environment.NewLine;
                         }
-                        DB.ExecuteNonQuery(sqlBatch, false, true);
+                        await DB.ExecuteNonQueryAsync(sqlBatch, false, true);
                     }
                     catch (Exception ex)
                     {
@@ -694,7 +695,7 @@ namespace WinApp.Gadget
             HomeViewSaved = true;
         }
 
-        public static bool UpdateRecentHomeView(string fileNameWithPath)
+        public async static Task<bool> UpdateRecentHomeView(string fileNameWithPath)
         {
             // Retun true if updated
             bool updated = false;
@@ -729,13 +730,13 @@ namespace WinApp.Gadget
                 DB.AddWithValue(ref sql, "@filename", fileName, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@folder", folder, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@used", used, DB.SqlDataType.DateTime);
-                DB.ExecuteNonQuery(sql);
+                await DB.ExecuteNonQueryAsync(sql);
                 updated = true;
             }
             return updated;
         }
 
-        public static void RemoveRecentHomeView(string fileNameWithPath)
+        public async static Task RemoveRecentHomeView(string fileNameWithPath)
         {
             string sql = "DELETE FROM homeViewRecent ";
             if (fileNameWithPath != "")
@@ -749,7 +750,7 @@ namespace WinApp.Gadget
                 DB.AddWithValue(ref sql, "@filename", fileName, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@folder", folder, DB.SqlDataType.VarChar);
             }
-            DB.ExecuteNonQuery(sql);
+            await DB.ExecuteNonQueryAsync(sql);
         }
 
     }

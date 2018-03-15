@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WinApp.Code
 {
@@ -57,7 +58,7 @@ namespace WinApp.Code
             return newSQL;
         }
 
-        public static void RecalculateForTank(int playerTankId)
+        public async static Task RecalculateForTank(int playerTankId)
         {
             // Get battles
             // Credits = total income
@@ -93,7 +94,7 @@ namespace WinApp.Code
                     newSQL += TankCreditCalculation.CreateSQL(tci);
                 }
             }
-            DB.ExecuteNonQuery(newSQL, Config.Settings.showDBErrors, true);
+            await DB.ExecuteNonQueryAsync(newSQL, Config.Settings.showDBErrors, true);
         }
     }
 }

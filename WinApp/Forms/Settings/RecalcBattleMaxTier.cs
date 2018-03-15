@@ -20,10 +20,10 @@ namespace WinApp.Forms
 			_autoRun = autoRun; 
 		}
 
-        private void RecalcBattleMaxTier_Shown(object sender, EventArgs e)
+        private async void RecalcBattleMaxTier_Shown(object sender, EventArgs e)
 		{
 			if (_autoRun)
-				RunNow();
+                await RunNow();
 		}
 
 		private void UpdateProgressBar(string statusText, int count)
@@ -34,10 +34,9 @@ namespace WinApp.Forms
 			else
 				badProgressBar.Value += count;
 			Refresh();
-			Application.DoEvents();
 		}
 
-		private void RunNow()
+		private async Task RunNow()
 		{
 			this.Cursor = Cursors.WaitCursor;
 			RecalcBattleMaxTierTheme.Cursor = Cursors.WaitCursor;
@@ -73,14 +72,14 @@ namespace WinApp.Forms
                 {
                     battleTime = dr["battleTime"].ToString();
                     UpdateProgressBar("Calc Max Tier " + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
-                    DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+                    await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
                     loopCount = 0;
                 }
 			}
             if (updateSQL != "") // Update last batch of sql's
 			{
                 UpdateProgressBar("Calc Max Tier " + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
-                DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+                await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
 			}
 
 			// Done
@@ -93,9 +92,9 @@ namespace WinApp.Forms
 			this.Close();
 		}
 
-		private void btnStart_Click(object sender, EventArgs e)
+		private async void btnStart_Click(object sender, EventArgs e)
 		{
-			RunNow();
+            await RunNow();
 		}
 
 		

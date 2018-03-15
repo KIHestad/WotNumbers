@@ -57,7 +57,7 @@ namespace WinApp.Code
 				Log.LogToFile(ex, sql);
 				if (ShowError)
 				{
-					Code.MsgBox.Show("Error fetching data from database. Please check your database settings." +
+					MsgBox.Show("Error fetching data from database. Please check your database settings." +
 						Environment.NewLine + Environment.NewLine + sql +
 						Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
 				}
@@ -113,7 +113,7 @@ namespace WinApp.Code
             return hasColumn;
         }
 
-		public static bool ExecuteNonQuery(string sql, bool ShowError = true, bool RunInBatch = false)
+		public async static Task<bool> ExecuteNonQueryAsync(string sql, bool ShowError = true, bool RunInBatch = false)
 		{
 			string lastRunnedSQL = "";
 			bool ok = false;
@@ -129,8 +129,7 @@ namespace WinApp.Code
 						lastRunnedSQL = sql;
 						sql = "BEGIN TRANSACTION; " + sql + "COMMIT TRANSACTION; ";
 						SqlCommand command = new SqlCommand(sql, con);
-						command.ExecuteNonQuery();
-						Application.DoEvents(); // TODO: testing freeze-problem running long querys
+						await command.ExecuteNonQueryAsync();
 					}
 					else
 					{
@@ -140,8 +139,7 @@ namespace WinApp.Code
 							{
 								lastRunnedSQL = s;
 								SqlCommand command = new SqlCommand(s, con);
-								command.ExecuteNonQuery();
-								Application.DoEvents(); // TODO: testing freeze-problem running long querys
+								await command.ExecuteNonQueryAsync();
 							}
 						}
 					}
@@ -157,8 +155,7 @@ namespace WinApp.Code
 						lastRunnedSQL = sql;
 						sql = "BEGIN TRANSACTION; " + sql + "; END TRANSACTION; ";
 						SQLiteCommand command = new SQLiteCommand(sql, con);
-						command.ExecuteNonQuery();
-						Application.DoEvents(); 
+						await command.ExecuteNonQueryAsync();
 					}
 					else
 					{
@@ -168,8 +165,7 @@ namespace WinApp.Code
 							{
 								lastRunnedSQL = s;
 								SQLiteCommand command = new SQLiteCommand(s, con);
-								command.ExecuteNonQuery();
-								Application.DoEvents(); 
+								await command.ExecuteNonQueryAsync();
 							}
 						}
 					}
@@ -191,7 +187,81 @@ namespace WinApp.Code
 			return ok;
 		}
 
-		public static bool ExecuteNonQuery(string sql, string imgParameter, Image img, bool ShowError = true)
+        public static bool ExecuteNonQuery(string sql, bool ShowError = true, bool RunInBatch = false)
+        {
+            string lastRunnedSQL = "";
+            bool ok = false;
+            string[] sqlList = sql.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            try
+            {
+                if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+                {
+                    SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+                    con.Open();
+                    if (RunInBatch)
+                    {
+                        lastRunnedSQL = sql;
+                        sql = "BEGIN TRANSACTION; " + sql + "COMMIT TRANSACTION; ";
+                        SqlCommand command = new SqlCommand(sql, con);
+                        command.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        foreach (string s in sqlList)
+                        {
+                            if (s.Trim().Length > 0)
+                            {
+                                lastRunnedSQL = s;
+                                SqlCommand command = new SqlCommand(s, con);
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                    con.Close();
+                    ok = true;
+                }
+                else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+                {
+                    SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+                    con.Open();
+                    if (RunInBatch)
+                    {
+                        lastRunnedSQL = sql;
+                        sql = "BEGIN TRANSACTION; " + sql + "; END TRANSACTION; ";
+                        SQLiteCommand command = new SQLiteCommand(sql, con);
+                        command.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        foreach (string s in sqlList)
+                        {
+                            if (s.Trim().Length > 0)
+                            {
+                                lastRunnedSQL = s;
+                                SQLiteCommand command = new SQLiteCommand(s, con);
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                    con.Close();
+                    ok = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex, lastRunnedSQL);
+                if (ShowError)
+                {
+                    Code.MsgBox.Show("Error execute query to database. Please check your input parameters." +
+                        Environment.NewLine + Environment.NewLine + lastRunnedSQL +
+                        Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
+                    ok = false;
+                }
+            }
+            return ok;
+        }
+
+        public static bool ExecuteNonQuery(string sql, string imgParameter, Image img, bool ShowError = true)
 		{
 			string lastRunnedSQL = "";
 			bool ok = false;
@@ -211,7 +281,6 @@ namespace WinApp.Code
 							byte[] imgByte = ImageHelper.ImageToByteArray(img, ImageFormat.Png);
 							cmd.Parameters.Add(imgParameter, SqlDbType.VarBinary, imgByte.Length).Value = imgByte;
 							cmd.ExecuteNonQuery();
-							Application.DoEvents(); 
 						}
 					}
 					con.Close();
@@ -232,7 +301,6 @@ namespace WinApp.Code
 							imgParam.Value = ImageHelper.ImageToByteArray(img, ImageFormat.Png);
 							cmd.Parameters.Add(imgParam);
 							cmd.ExecuteNonQuery();
-							Application.DoEvents(); 
 						}
 					}
 					con.Close();

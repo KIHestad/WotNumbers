@@ -9,6 +9,7 @@ using System.Text;
 using System.Linq;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace WinApp.Code
 {
@@ -45,7 +46,7 @@ namespace WinApp.Code
 
 		private static bool newTank = false;
 
-		public static String ReadJson(string filename, bool ForceUpdate = false)
+		public async static Task<String> ReadJson(string filename, bool ForceUpdate = false)
 		{
             // vars to be able to output if error occur
             string dataType = "";
@@ -84,7 +85,7 @@ namespace WinApp.Code
 
 				// Declare
 				DataTable NewPlayerTankTable = TankHelper.GetPlayerTank(-1); // Return no data, only empty database with structure
-                DataTable NewPlayerTankBattleTable = TankHelper.GetPlayerTankBattle(-1, BattleMode.TypeEnum.ModeRandom_TC, false); // Return no data, only empty database with structure
+                DataTable NewPlayerTankBattleTable = await TankHelper.GetPlayerTankBattle(-1, BattleMode.TypeEnum.ModeRandom_TC, false); // Return no data, only empty database with structure
 				DataRow NewPlayerTankRow = NewPlayerTankTable.NewRow();
 				DataRow NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
 				DataRow NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
@@ -260,7 +261,7 @@ namespace WinApp.Code
 									if (tankName != "")
 									{
                                         // log.Add("  > Check for DB update - Tank: '" + tankName );
-                                        battleSaved = CheckTankDataResult(
+                                        battleSaved = await CheckTankDataResult(
                                             tankName,
                                             NewPlayerTankRow,
                                             NewPlayerTankBattle15Row,
@@ -314,7 +315,7 @@ namespace WinApp.Code
                 // Also write last tank found
                 // log.Add("  > Check for DB update - Tank: '" + tankName );
                 // TODO 7Ranked
-                battleSaved = CheckTankDataResult(
+                battleSaved = await CheckTankDataResult(
                     tankName, 
                     NewPlayerTankRow, 
                     NewPlayerTankBattle15Row, 
@@ -357,7 +358,7 @@ namespace WinApp.Code
 			
 		}
 
-		public static bool CheckTankDataResult(string tankName, 
+		public async static Task<bool> CheckTankDataResult(string tankName, 
 												DataRow playerTankNewRow, 
 												DataRow playerTankBattle15NewRow,
 												DataRow playerTankBattle7NewRow,
@@ -406,8 +407,8 @@ namespace WinApp.Code
 			// Check if Player has this tank
 			if (playerTankOldTable.Rows.Count == 0)
 			{
-				// New tank detected, this parts only run when new tank is detected
-				SaveNewPlayerTank(tankId, tankName); // Save new tank
+                // New tank detected, this parts only run when new tank is detected
+                await SaveNewPlayerTank(tankId, tankName); // Save new tank
 				playerTankOldTable = TankHelper.GetPlayerTank(tankId); // Get data into DataTable once more now after row is added
 			}
 			// Get the get existing (old) tank data row
@@ -487,7 +488,7 @@ namespace WinApp.Code
 					sqlFields = sqlFields.Substring(1); // Remove first comma
 					string sql = "UPDATE playerTank SET " + sqlFields + " WHERE Id=@Id ";
 					DB.AddWithValue(ref sql, "@Id", playerTankOldTable.Rows[0]["id"], DB.SqlDataType.Int);
-					DB.ExecuteNonQuery(sql);
+					await DB.ExecuteNonQueryAsync(sql);
 				}
 					
 				// No longer in us
@@ -495,7 +496,7 @@ namespace WinApp.Code
 				List<FragItem> battleFragList = new List<FragItem>(); //  UpdatePlayerTankFrag(tankId, playerTankId, fragList);
 
 				// Check if achivment exists
-				List<AchItem> battleAchList = UpdatePlayerTankAch(tankId, playerTankId, achList);
+				List<AchItem> battleAchList = await UpdatePlayerTankAch(tankId, playerTankId, achList);
 									
 
 				// If detected several battle modes, dont save fraglist and achivements to battle, as we don't know how to seperate them
@@ -517,49 +518,49 @@ namespace WinApp.Code
 				// Now update playerTank battle for different battle modes
 				if (battlesNew15 > 0 || (forceUpdate && playerTankOldRow_battles15 != 0))
 				{
-                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeRandom_TC, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle15NewRow,
+                    await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeRandom_TC, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle15NewRow,
 											playerTankNewRow_battles15, battlesNew15, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNew7 > 0 || (forceUpdate && playerTankOldRow_battles7 != 0))
 				{
-                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeTeam, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7NewRow,
+                    await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeTeam, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7NewRow,
 											playerTankNewRow_battles7, battlesNew7, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNew7Ranked > 0 || (forceUpdate && playerTankOldRow_battles7Ranked != 0))
 				{
-                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeTeamRanked, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7RankedNewRow,
+                    await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeTeamRanked, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7RankedNewRow,
 											playerTankNewRow_battles7Ranked, battlesNew7Ranked, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNewHistorical > 0 || (forceUpdate && playerTankOldRow_battlesHistorical != 0))
 				{
-                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeHistorical, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattleHistoricalNewRow,
+                    await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeHistorical, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattleHistoricalNewRow,
 											playerTankNewRow_battlesHistorical, battlesNewHistorical, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNewSkirmishes > 0 || (forceUpdate && playerTankOldRow_battlesSkirmishes != 0))
 				{
-                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeSkirmishes, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleSkirmishesNewRow,
+                    await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeSkirmishes, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleSkirmishesNewRow,
 											playerTankNewRow_battlesSkirmishes, battlesNewSkirmishes, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNewStronghold > 0 || (forceUpdate && playerTankOldRow_battlesStronghold != 0))
 				{
-                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeStronghold, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleStrongholdNewRow,
+                    await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeStronghold, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleStrongholdNewRow,
 											playerTankNewRow_battlesStronghold, battlesNewStronghold, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				} 
 				if (battlesNewGlobalMap > 0 || (forceUpdate && playerTankOldRow_battlesGlobalMap != 0))
 				{
-                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeGlobalMap, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleGlobalMapNewRow,
+                    await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeGlobalMap, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleGlobalMapNewRow,
 											playerTankNewRow_battlesGlobalMap, battlesNewGlobalMap, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
                 if (battlesNewGrand > 0 || (forceUpdate && playerTankOldRow_battlesGrand != 0))
                 {
-                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeGrand, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleGrandNewRow,
+                    await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeGrand, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleGrandNewRow,
                                             playerTankNewRow_battlesGrand, battlesNewGrand, battleFragList, battleAchList, saveBattleResult);
                     battleSave = true;
                 }
@@ -567,7 +568,7 @@ namespace WinApp.Code
 				{
 					// for special tanks no stats are reported from dossier, make sure playerTankBattle exists anyway for battle mode "Special"
 					// Get or create playerTank BattleResult
-                    DataTable playerTankBattleOld = TankHelper.GetPlayerTankBattle(playerTankId, BattleMode.TypeEnum.ModeSpecial, true);
+                    DataTable playerTankBattleOld = await TankHelper.GetPlayerTankBattle(playerTankId, BattleMode.TypeEnum.ModeSpecial, true);
 				}
 			}
 			playerTankOldTable.Dispose();
@@ -576,21 +577,21 @@ namespace WinApp.Code
 			return battleSave;
 		}
 
-		private static void SaveNewPlayerTank(int tankId, string tankName)
+		private async static Task SaveNewPlayerTank(int tankId, string tankName)
 		{
 			// Check if this tank exists
 			if (!TankHelper.TankExists(tankId))
-                TankHelper.CreateUnknownTank(tankId, tankName);
+                await TankHelper.CreateUnknownTank(tankId, tankName);
 
 			// Add to database
 			string sql = "INSERT INTO PlayerTank (tankId, playerId) VALUES (@tankId, @playerId); ";
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
+			await DB.ExecuteNonQueryAsync(sql);
 			newTank = true;
 		}
 
-		private static List<AchItem> UpdatePlayerTankAch(int tankId, int playerTankId, List<AchItem> achList)
+		private async static Task<List<AchItem>> UpdatePlayerTankAch(int tankId, int playerTankId, List<AchItem> achList)
 		{
 			List<AchItem> battleAchList = new List<AchItem>();
 			if (achList.Count > 0) // new ach detected
@@ -660,12 +661,12 @@ namespace WinApp.Code
 						}
 					}
 				}
-				DB.ExecuteNonQuery(sqlTotal, true, true);
+                await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
 			}
 			return battleAchList;
 		}
 
-        private static void UpdatePlayerTankBattle(BattleMode.TypeEnum battleMode, 
+        private async static Task UpdatePlayerTankBattle(BattleMode.TypeEnum battleMode, 
 													int playerTankId, 
 													int tankId,
 													DataRow playerTankNewRow, DataRow playerTankOldRow,
@@ -677,7 +678,7 @@ namespace WinApp.Code
 													bool saveBattleResult)
 		{
 			// Get or create playerTank BattleResult
-			DataTable playerTankBattleOld = TankHelper.GetPlayerTankBattle(playerTankId, battleMode, true); 
+			DataTable playerTankBattleOld = await TankHelper.GetPlayerTankBattle(playerTankId, battleMode, true); 
 			// Update playerTankBattle
 			string sqlFields = "";
 			// Get rating parameters
@@ -735,16 +736,16 @@ namespace WinApp.Code
 				string sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode=@battleMode; ";
 				DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
                 DB.AddWithValue(ref sql, "@battleMode", BattleMode.GetItemFromType(battleMode).SqlName, DB.SqlDataType.VarChar);
-				DB.ExecuteNonQuery(sql);
+                await DB.ExecuteNonQueryAsync(sql);
 			}
 			// Add battle, if any and not first run - then avoid
 			if (saveBattleResult && battlesNew > 0)
-				AddBattle(playerTankNewRow, playerTankOldRow, playerTankBattleNewRow, playerTankBattleOld.Rows[0], battleMode, tankId, playerTankId, battlesNew, battleFragList, battleAchList);
+                await AddBattle(playerTankNewRow, playerTankOldRow, playerTankBattleNewRow, playerTankBattleOld.Rows[0], battleMode, tankId, playerTankId, battlesNew, battleFragList, battleAchList);
 			playerTankBattleOld.Dispose();
 			playerTankBattleOld.Clear();
 		}
 
-		private static List<FragItem> UpdatePlayerTankFrag(int tankId, int playerTankId, string fraglist)
+		private async static Task<List<FragItem>> UpdatePlayerTankFrag(int tankId, int playerTankId, string fraglist)
 		{
 			List<FragItem> battleFrag = new List<FragItem>();
 			try
@@ -832,7 +833,7 @@ namespace WinApp.Code
 				// Add to database
 				if (playerTankFragSQL != "")
 				{
-					DB.ExecuteNonQuery(playerTankFragSQL, true, true);
+					await DB.ExecuteNonQueryAsync(playerTankFragSQL, true, true);
 				}
 			}
 			catch (Exception ex)
@@ -843,7 +844,7 @@ namespace WinApp.Code
 			return battleFrag;
 		}
 
-		private static void AddBattle(DataRow playerTankNewRow, 
+		private async static Task AddBattle(DataRow playerTankNewRow, 
 										 DataRow playerTankOldRow, 
 										 DataRow playerTankBattleNewRow, 
 										 DataRow playerTankBattleOldRow,
@@ -1040,7 +1041,7 @@ namespace WinApp.Code
 					string sql = "INSERT INTO battle (playerTankId " + sqlFields + ") VALUES (@playerTankId " + sqlValues + "); ";
                     Log.AddToLogBuffer("Adding battle to db: " + sql);
                     DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-					DB.ExecuteNonQuery(sql);
+                    await DB.ExecuteNonQueryAsync(sql);
 					// Get the last battle id
 					int battleId = 0;
 					sql = "select max(id) as battleId from battle";
@@ -1072,8 +1073,8 @@ namespace WinApp.Code
 							battleAchSQL += "INSERT INTO battleAch (battleId, achId, achCount) " +
 											"VALUES (" + battleId + ", " + newAchItem.achId.ToString() + ", " + newAchItem.count.ToString() + "); ";
 						}
-						// Add to database
-						DB.ExecuteNonQuery(battleAchSQL);
+                        // Add to database
+                        await DB.ExecuteNonQueryAsync(battleAchSQL);
 					}
 					dt.Dispose();
 					dt.Clear();

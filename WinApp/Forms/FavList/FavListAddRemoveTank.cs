@@ -95,7 +95,7 @@ namespace WinApp.Forms
 			scrollY.ScrollElementsVisible = dataGridFavList.DisplayedRowCount(false);
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
+		private async void btnSave_Click(object sender, EventArgs e)
 		{
 			FavListHelper.refreshGridAfterAddRemove = false;
 			string sql = ""; 
@@ -115,13 +115,13 @@ namespace WinApp.Forms
 				FavListHelper.lastAddFavListFromPopup = Convert.ToInt32(dr.Cells["id"].Value);
 			}
 			DB.AddWithValue(ref sql, "@tankId", _tankId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+            await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
 			//Sort
 			if (_add)
 				foreach (DataGridViewRow dr in dataGridFavList.SelectedRows)
 				{
 					if (_add)
-						FavListHelper.TankSort(Convert.ToInt32(dr.Cells["id"].Value));
+                        await FavListHelper.TankSort(Convert.ToInt32(dr.Cells["id"].Value));
 				}
 			this.Close();
 		}
