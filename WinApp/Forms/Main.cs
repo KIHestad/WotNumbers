@@ -47,15 +47,51 @@ namespace WinApp.Forms
 
 		public Main()
 		{
-			InitializeComponent();
+            InitializeComponent();
 			// Get Config
 			LoadConfigOK = Config.GetConfig(out LoadConfigMsg);
 			currentPlayerId = Config.Settings.playerId;
 			mainFormPosSize = Config.Settings.posSize;
-		}
+        }
 
-		private async void Main_Load(object sender, EventArgs e)
+        private void Main_Load(object sender, EventArgs e)
 		{
+            // Get PosSize
+            if (mainFormPosSize != null)
+            {
+                this.Top = mainFormPosSize.Top;
+                this.Left = mainFormPosSize.Left;
+                this.Width = mainFormPosSize.Width;
+                this.Height = mainFormPosSize.Height;
+            }
+            // Make sure borderless form do not cover task bar when maximized
+            Screen screen = Screen.FromControl(this);
+            this.MaximumSize = screen.WorkingArea.Size;
+            // Maximize now if last settings
+            if (mainFormPosSize.WindowState == FormWindowState.Maximized)
+            {
+                this.WindowState = FormWindowState.Maximized;
+                mainFormWindowsState = FormWindowState.Maximized;
+            }
+            // Black Border on loading
+            MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
+            // Resize Form Theme Title Area to fit 125% or 150% font size in Win
+            Graphics graphics = this.CreateGraphics();
+            Double dpiFactor = graphics.DpiX / 96;
+            if (dpiFactor != 1)
+            {
+                // Scale form according to scale factor
+                MainTheme.TitleHeight = MainTheme.SystemExitImage.Height + toolMain.Height;
+                // Move main toolbar to bottom of title height
+                toolMain.Top = MainTheme.TitleHeight - toolMain.Height + MainTheme.FormMargin + 2;
+            }
+            this.ShowInTaskbar = !Config.Settings.notifyIconUse;
+            Refresh();
+            this.Opacity = 100;
+        }
+
+        private async void Main_Shown(object sender, EventArgs e)
+        {
             // Style toolbar
             //toolMain.Renderer = new StripRenderer();
             //toolMain.ShowItemToolTips = true;
@@ -80,95 +116,64 @@ namespace WinApp.Forms
                 string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
                 File.Copy(adminDB, Config.AppDataBaseFolder + "Admin.db", true);
             }
-            // Get PosSize
-			if (mainFormPosSize != null)
-			{
-				this.Top = mainFormPosSize.Top;
-				this.Left = mainFormPosSize.Left;
-				this.Width = mainFormPosSize.Width;
-				this.Height = mainFormPosSize.Height;
-			}
-			// Statusbar text
-			lblStatus1.Text = "";
-			lblStatus2.Text = "Application starting...";
-			lblStatusRowCount.Text = "";
-			// Log startup
-			Log.AddToLogBuffer("", false);
-			Log.AddToLogBuffer("'********* Application startup - Wot Numbers " + AppVersion.AssemblyVersion + " " + AppVersion.BuildVersion + " *********'", true);
-			Log.AddToLogBuffer("", false);
-			// Make sure borderless form do not cover task bar when maximized
-			Screen screen = Screen.FromControl(this);
-			this.MaximumSize = screen.WorkingArea.Size;
-			// Maximize now if last settings
-			if (mainFormPosSize.WindowState == FormWindowState.Maximized)
-			{
-				this.WindowState = FormWindowState.Maximized;
-				mainFormWindowsState = FormWindowState.Maximized;
-			}
-			// Black Border on loading
-			MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
-			// Resize Form Theme Title Area to fit 125% or 150% font size in Win
-			Graphics graphics = this.CreateGraphics(); 
-			Double dpiFactor = graphics.DpiX / 96;
-			if (dpiFactor != 1)
-			{
-				// Scale form according to scale factor
-				MainTheme.TitleHeight = MainTheme.SystemExitImage.Height + toolMain.Height;
-				// Move main toolbar to bottom of title height
-				toolMain.Top = MainTheme.TitleHeight - toolMain.Height + MainTheme.FormMargin + 2;
-			}
-			
-			// Mouse scrolling for datagrid
-			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
-			// Main panel covering whole content area - contains (optional) infopanel at top, grid and scrollbars at bottom
-			panelMainArea.Left = MainTheme.MainArea.Left;
-			panelMainArea.Top = MainTheme.MainArea.Top;
-			// Hide scrollbar initially, set fixed init placement
-			scrollX.ScrollElementsTotals = 0;
-			scrollY.ScrollElementsTotals = 0;
-			scrollX.Left = 0;
-			// Grid init placement
-			int gridAreaTop = 0; // Start below info panel
-			int gridAreaHeight = panelMainArea.Height; // Grid height
-			dataGridMain.Top = gridAreaTop;
-			dataGridMain.Left = 0;
-			dataGridMain.Width = panelMainArea.Width - scrollY.Width;
-			dataGridMain.Height = gridAreaHeight - scrollX.Height;
-			// Style datagrid
-			dataGridMain.BorderStyle = BorderStyle.None;
-			dataGridMain.BackgroundColor = ColorTheme.FormBack;
-			dataGridMain.GridColor = ColorTheme.GridBorders;
-			dataGridMain.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-			dataGridMain.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridBorders;
-			dataGridMain.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
-			dataGridMain.ColumnHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
-			dataGridMain.ColumnHeadersDefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
-			dataGridMain.DefaultCellStyle.BackColor = ColorTheme.FormBack;
-			dataGridMain.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
-			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
-			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
-			dataGridMain.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			dataGridMain.ColumnHeadersDefaultCellStyle.Padding = new Padding(2, 4, 0, 4);
-			dataGridMain.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
-			// Set font size
-			int fontSize = Config.Settings.gridFontSize;
-			if (fontSize < 6) fontSize = 8;
-			dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
-			dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
-			dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
+            
+            // Statusbar text
+            lblStatus1.Text = "";
+            lblStatus2.Text = "Application starting...";
+            lblStatusRowCount.Text = "";
+            // Log startup
+            Log.AddToLogBuffer("", false);
+            Log.AddToLogBuffer("'********* Application startup - Wot Numbers " + AppVersion.AssemblyVersion + " " + AppVersion.BuildVersion + " *********'", true);
+            Log.AddToLogBuffer("", false);
+            
+
+            // Mouse scrolling for datagrid
+            dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
+            // Main panel covering whole content area - contains (optional) infopanel at top, grid and scrollbars at bottom
+            panelMainArea.Left = MainTheme.MainArea.Left;
+            panelMainArea.Top = MainTheme.MainArea.Top;
+            // Hide scrollbar initially, set fixed init placement
+            scrollX.ScrollElementsTotals = 0;
+            scrollY.ScrollElementsTotals = 0;
+            scrollX.Left = 0;
+            // Grid init placement
+            int gridAreaTop = 0; // Start below info panel
+            int gridAreaHeight = panelMainArea.Height; // Grid height
+            dataGridMain.Top = gridAreaTop;
+            dataGridMain.Left = 0;
+            dataGridMain.Width = panelMainArea.Width - scrollY.Width;
+            dataGridMain.Height = gridAreaHeight - scrollX.Height;
+            // Style datagrid
+            dataGridMain.BorderStyle = BorderStyle.None;
+            dataGridMain.BackgroundColor = ColorTheme.FormBack;
+            dataGridMain.GridColor = ColorTheme.GridBorders;
+            dataGridMain.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dataGridMain.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridBorders;
+            dataGridMain.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
+            dataGridMain.ColumnHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
+            dataGridMain.ColumnHeadersDefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
+            dataGridMain.DefaultCellStyle.BackColor = ColorTheme.FormBack;
+            dataGridMain.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
+            dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
+            dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
+            dataGridMain.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridMain.ColumnHeadersDefaultCellStyle.Padding = new Padding(2, 4, 0, 4);
+            dataGridMain.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+            // Set font size
+            int fontSize = Config.Settings.gridFontSize;
+            if (fontSize < 6) fontSize = 8;
+            dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
+            dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
+            dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
             // Set Rating colors
             ColorRangeScheme.SetRatingColors();
-		}
 
-        private async void Main_Shown(object sender, EventArgs e)
-        {
             try
             {
                 // Systray icon with context menu
                 CreateNotifyIconContextMenu();
                 notifyIcon.ContextMenu = notifyIconContextMenu;
                 notifyIcon.Visible = Config.Settings.notifyIconUse;
-                this.ShowInTaskbar = !Config.Settings.notifyIconUse;
                 MainTheme.FormExitAsMinimize = Config.Settings.notifyIconFormExitToMinimize;
 
                 // Start WoT if autoRun is enabled

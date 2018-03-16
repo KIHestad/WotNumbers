@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 466; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 468; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3137,7 +3137,10 @@ namespace WinApp.Code
                         "UPDATE player SET name = playerName + ' (RU)', playerServer = 'RU' WHERE playerServer = 'NET'; ";
                     sqlite = mssql.Replace("+", "||");
                     break;
-
+                case 468:
+                    mssql = "UPDATE columnSelection SET colNameBattleSumTank='SUM(playerTankBattle.survived) * 100', colNameBattleSumReversePos=0 WHERE id=98;";
+                    sqlite = mssql;
+                    break;
             }
             string sql = "";
 			// get sql for correct dbtype

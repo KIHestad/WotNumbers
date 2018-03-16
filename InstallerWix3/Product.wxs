@@ -407,7 +407,7 @@
 
   <!-- Lib - Python -->
 
-  <?define LibSource = "..\WinApp\Lib"?>
+  <?define LibSource = "..\WinApp\PythonLib"?>
 
   <Fragment>
     <DirectoryRef Id="INSTALLFOLDER_Lib">
