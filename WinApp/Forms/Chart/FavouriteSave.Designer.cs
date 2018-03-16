@@ -32,7 +32,6 @@
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FavouriteSave));
             this.FavouriteSaveTheme = new BadForm();
-            this.btnDelete = new BadButton();
             this.txtUpdateFavName = new BadTextBox();
             this.cmdCancel = new BadButton();
             this.cmdSave = new BadButton();
@@ -45,7 +44,6 @@
             // 
             // FavouriteSaveTheme
             // 
-            this.FavouriteSaveTheme.Controls.Add(this.btnDelete);
             this.FavouriteSaveTheme.Controls.Add(this.txtUpdateFavName);
             this.FavouriteSaveTheme.Controls.Add(this.cmdCancel);
             this.FavouriteSaveTheme.Controls.Add(this.cmdSave);
@@ -72,19 +70,6 @@
             this.FavouriteSaveTheme.TabIndex = 0;
             this.FavouriteSaveTheme.Text = "Save Favourite";
             this.FavouriteSaveTheme.TitleHeight = 26;
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.BlackButton = false;
-            this.btnDelete.Checked = false;
-            this.btnDelete.Image = null;
-            this.btnDelete.Location = new System.Drawing.Point(17, 153);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 23);
-            this.btnDelete.TabIndex = 7;
-            this.btnDelete.Text = "Delete";
-            this.btnDelete.ToolTipText = "";
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // txtUpdateFavName
             // 
@@ -187,7 +172,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FavouriteSave";
-            this.Load += new System.EventHandler(this.FavouriteSave_Load);
             this.FavouriteSaveTheme.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -203,6 +187,5 @@
         private BadTextBox txtNewFavName;
         private BadCheckBox chkNewFav;
         private BadCheckBox chkUpdateFav;
-        private BadButton btnDelete;
     }
 }

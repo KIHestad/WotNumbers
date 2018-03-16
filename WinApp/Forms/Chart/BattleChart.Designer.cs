@@ -52,6 +52,7 @@
             this.mFavourite14 = new System.Windows.Forms.ToolStripMenuItem();
             this.mFavourite15 = new System.Windows.Forms.ToolStripMenuItem();
             this.mFavouriteSave = new System.Windows.Forms.ToolStripButton();
+            this.mFavouriteRemove = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.mChartAdd = new System.Windows.Forms.ToolStripButton();
             this.mChartRemove = new System.Windows.Forms.ToolStripButton();
@@ -135,6 +136,7 @@
             this.mMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mFavourite,
             this.mFavouriteSave,
+            this.mFavouriteRemove,
             this.toolStripSeparator6,
             this.mChartAdd,
             this.mChartRemove,
@@ -182,14 +184,13 @@
             this.mFavourite.Name = "mFavourite";
             this.mFavourite.ShowDropDownArrow = false;
             this.mFavourite.Size = new System.Drawing.Size(20, 22);
-            this.mFavourite.Tag = "-1";
             this.mFavourite.ToolTipText = "Select Chart from Favourites";
             // 
             // mFavourite01
             // 
             this.mFavourite01.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite01.Name = "mFavourite01";
-            this.mFavourite01.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite01.Size = new System.Drawing.Size(104, 22);
             this.mFavourite01.Text = "Fav01";
             this.mFavourite01.Visible = false;
             this.mFavourite01.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -199,7 +200,7 @@
             // 
             this.mFavourite02.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite02.Name = "mFavourite02";
-            this.mFavourite02.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite02.Size = new System.Drawing.Size(104, 22);
             this.mFavourite02.Text = "Fav02";
             this.mFavourite02.Visible = false;
             this.mFavourite02.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -209,7 +210,7 @@
             // 
             this.mFavourite03.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite03.Name = "mFavourite03";
-            this.mFavourite03.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite03.Size = new System.Drawing.Size(104, 22);
             this.mFavourite03.Text = "Fav03";
             this.mFavourite03.Visible = false;
             this.mFavourite03.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -219,7 +220,7 @@
             // 
             this.mFavourite04.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite04.Name = "mFavourite04";
-            this.mFavourite04.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite04.Size = new System.Drawing.Size(104, 22);
             this.mFavourite04.Text = "Fav04";
             this.mFavourite04.Visible = false;
             this.mFavourite04.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -229,7 +230,7 @@
             // 
             this.mFavourite05.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite05.Name = "mFavourite05";
-            this.mFavourite05.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite05.Size = new System.Drawing.Size(104, 22);
             this.mFavourite05.Text = "Fav05";
             this.mFavourite05.Visible = false;
             this.mFavourite05.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -239,7 +240,7 @@
             // 
             this.mFavourite06.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite06.Name = "mFavourite06";
-            this.mFavourite06.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite06.Size = new System.Drawing.Size(104, 22);
             this.mFavourite06.Text = "Fav06";
             this.mFavourite06.Visible = false;
             this.mFavourite06.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -249,7 +250,7 @@
             // 
             this.mFavourite07.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite07.Name = "mFavourite07";
-            this.mFavourite07.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite07.Size = new System.Drawing.Size(104, 22);
             this.mFavourite07.Text = "Fav07";
             this.mFavourite07.Visible = false;
             this.mFavourite07.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -259,7 +260,7 @@
             // 
             this.mFavourite08.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite08.Name = "mFavourite08";
-            this.mFavourite08.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite08.Size = new System.Drawing.Size(104, 22);
             this.mFavourite08.Text = "Fav08";
             this.mFavourite08.Visible = false;
             this.mFavourite08.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -269,7 +270,7 @@
             // 
             this.mFavourite09.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite09.Name = "mFavourite09";
-            this.mFavourite09.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite09.Size = new System.Drawing.Size(104, 22);
             this.mFavourite09.Text = "Fav09";
             this.mFavourite09.Visible = false;
             this.mFavourite09.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -279,7 +280,7 @@
             // 
             this.mFavourite10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite10.Name = "mFavourite10";
-            this.mFavourite10.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite10.Size = new System.Drawing.Size(104, 22);
             this.mFavourite10.Text = "Fav10";
             this.mFavourite10.Visible = false;
             this.mFavourite10.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -289,7 +290,7 @@
             // 
             this.mFavourite11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite11.Name = "mFavourite11";
-            this.mFavourite11.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite11.Size = new System.Drawing.Size(104, 22);
             this.mFavourite11.Text = "Fav11";
             this.mFavourite11.Visible = false;
             this.mFavourite11.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -299,7 +300,7 @@
             // 
             this.mFavourite12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite12.Name = "mFavourite12";
-            this.mFavourite12.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite12.Size = new System.Drawing.Size(104, 22);
             this.mFavourite12.Text = "Fav12";
             this.mFavourite12.Visible = false;
             this.mFavourite12.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -309,7 +310,7 @@
             // 
             this.mFavourite13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite13.Name = "mFavourite13";
-            this.mFavourite13.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite13.Size = new System.Drawing.Size(104, 22);
             this.mFavourite13.Text = "Fav13";
             this.mFavourite13.Visible = false;
             this.mFavourite13.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -319,7 +320,7 @@
             // 
             this.mFavourite14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite14.Name = "mFavourite14";
-            this.mFavourite14.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite14.Size = new System.Drawing.Size(104, 22);
             this.mFavourite14.Text = "Fav14";
             this.mFavourite14.Visible = false;
             this.mFavourite14.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -329,7 +330,7 @@
             // 
             this.mFavourite15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFavourite15.Name = "mFavourite15";
-            this.mFavourite15.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite15.Size = new System.Drawing.Size(104, 22);
             this.mFavourite15.Text = "Fav15";
             this.mFavourite15.Visible = false;
             this.mFavourite15.Click += new System.EventHandler(this.mFavouriteSelect_Click);
@@ -345,6 +346,17 @@
             this.mFavouriteSave.Text = "Save Favourite";
             this.mFavouriteSave.ToolTipText = "Update or Save as new Favourite";
             this.mFavouriteSave.Click += new System.EventHandler(this.mFavouriteSave_Click);
+            // 
+            // mFavouriteRemove
+            // 
+            this.mFavouriteRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mFavouriteRemove.Image = ((System.Drawing.Image)(resources.GetObject("mFavouriteRemove.Image")));
+            this.mFavouriteRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mFavouriteRemove.Name = "mFavouriteRemove";
+            this.mFavouriteRemove.Size = new System.Drawing.Size(23, 22);
+            this.mFavouriteRemove.Text = "Remove Favourite";
+            this.mFavouriteRemove.ToolTipText = "Remove Favourite";
+            this.mFavouriteRemove.Click += new System.EventHandler(this.mFavouriteRemove_Click);
             // 
             // toolStripSeparator6
             // 
@@ -381,7 +393,7 @@
             this.mChartClear.Name = "mChartClear";
             this.mChartClear.Size = new System.Drawing.Size(54, 22);
             this.mChartClear.Text = "Clear";
-            this.mChartClear.ToolTipText = "Clear chart by removing all chart values";
+            this.mChartClear.ToolTipText = "Clear current view, prepare for new";
             this.mChartClear.Click += new System.EventHandler(this.mChartClear_Click);
             // 
             // toolStripSeparator11
@@ -883,5 +895,6 @@
         private System.Windows.Forms.ToolStripMenuItem mFavourite15;
         private System.Windows.Forms.ToolStripButton mFavouriteSave;
         private System.Windows.Forms.ImageList imageListToolStrip;
+        private System.Windows.Forms.ToolStripButton mFavouriteRemove;
     }
 }

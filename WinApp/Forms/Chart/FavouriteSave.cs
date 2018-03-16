@@ -13,18 +13,30 @@ namespace WinApp.Forms.Chart
 {
     public partial class FavouriteSave : Form
     {
-        private bool _newFav = false;
         private int _chartFavId = -1;
         private string _chartFavNameOld = "";
 
         public FavouriteSave(int chartFavId = -1, string chartFavName = "") // for creating new -> (-1, "")
         {
             InitializeComponent();
-            txtUpdateFavName.Text = chartFavName;
             _chartFavId = chartFavId;
             _chartFavNameOld = chartFavName;
-            _newFav = (chartFavId == -1);
-            ChangeView();
+            bool newFav = (chartFavId == -1);
+            // Preselect save or update checkbox
+            chkNewFav.Checked = newFav;
+            chkUpdateFav.Checked = !newFav;
+            // Only possible to edit existing if not new fav is to be added
+            if (newFav)
+            {
+                chkUpdateFav.Enabled = false;
+                txtUpdateFavName.Text = "";
+                txtUpdateFavName.Enabled = false;
+            }
+            else
+            {
+                txtUpdateFavName.Text = chartFavName;
+                txtNewFavName.Enabled = false;
+            }
             // Set default result values
             BattleChartHelper.SaveFavouriteSaved = false;
             BattleChartHelper.SaveFavouriteDeleted = false;
@@ -36,11 +48,9 @@ namespace WinApp.Forms.Chart
         {
             // Get chart name to save
             string chartFavNameToSave = txtUpdateFavName.Text.Trim();
-            if (_newFav)
-            {
+            if (chkNewFav.Checked)
                 chartFavNameToSave = txtNewFavName.Text.Trim();
-            }
-            
+
             // Check for valid name if new to be created
             if (chartFavNameToSave == "")
             {
@@ -48,18 +58,12 @@ namespace WinApp.Forms.Chart
                 return;
             }
 
-            // Check if already existing if new chart or changed name on existing fav
-            if (_newFav || (!_newFav && _chartFavNameOld != chartFavNameToSave))
+            // Check if chart name is valid, if new chart or if changing name to anything than existing
+            if (chkNewFav.Checked || chkUpdateFav.Checked && _chartFavNameOld != chartFavNameToSave)
             {
-                string sql = "SELECT COUNT(id) FROM chartFav WHERE favouriteName = @favouriteName ";
-                // Check if editing fav, changed name but already exists
-                if (!_newFav)
-                {
-                    sql += "AND id <> @id ";
-                    DB.AddWithValue(ref sql, "@id", _chartFavId, DB.SqlDataType.Int);
-                }
-                DB.AddWithValue(ref sql, "@favouriteName", chartFavNameToSave, DB.SqlDataType.VarChar);
-                DataTable dt = DB.FetchData(sql);
+                string sqlCheckName = "SELECT COUNT(id) FROM chartFav WHERE favouriteName = @favouriteName ";
+                DB.AddWithValue(ref sqlCheckName, "@favouriteName", chartFavNameToSave, DB.SqlDataType.VarChar);
+                DataTable dt = DB.FetchData(sqlCheckName);
                 if (dt != null && dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0][0]) > 0)
                 {
                     MsgBox.Show("A favourit already exists with this name, please select another");
@@ -67,31 +71,31 @@ namespace WinApp.Forms.Chart
                 }
             }
 
-            // Save mode
-            if (!_newFav)
+            // Update or create new
+            if (chkUpdateFav.Checked)
             {
-                // Update current 
-                string sqlUpdate = 
+                // Update current and remove chart lines, to be updater later
+                string sqlUpdate =
                     "UPDATE chartFav " +
                     "SET favouriteName=@favouriteName, battleMode=@battleMode, battleTime=@battleTime, xAxis=@xAxis, bullet=@bullet, spline=@spline " +
-                    "WHERE id=@id;";
+                    "WHERE id=@id;" +
+                    "DELETE FROM chartFavLine WHERE chartFavId = @chartFavId;";
                 DB.AddWithValue(ref sqlUpdate, "@favouriteName", chartFavNameToSave, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sqlUpdate, "@battleMode", BattleChartHelper.Settings.BattleMode, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sqlUpdate, "@battleTime", BattleChartHelper.Settings.BattleTime, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sqlUpdate, "@xAxis", BattleChartHelper.Settings.Xaxis, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sqlUpdate, "@bullet", BattleChartHelper.Settings.Bullet, DB.SqlDataType.Boolean);
                 DB.AddWithValue(ref sqlUpdate, "@spline", BattleChartHelper.Settings.Spline, DB.SqlDataType.Boolean);
-                DB.AddWithValue(ref sqlUpdate, "@id", _chartFavId, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sqlUpdate, "@chartFavId", _chartFavId, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sqlUpdate, "@id", _chartFavId, DB.SqlDataType.Int);
                 await DB.ExecuteNonQueryAsync(sqlUpdate);
                 // Done
-                BattleChartHelper.SaveFavouriteNewFavName = chartFavNameToSave;
                 BattleChartHelper.SaveFavouriteNewFavId = _chartFavId;
-                BattleChartHelper.SaveFavouriteSaved = true;
             }
             else
             {
-                // Insert new
-                string sqlInsert = 
+                // Insert new chart fav, lines updated later
+                string sqlInsert =
                     "INSERT INTO chartFav (favouriteName, battleMode, battleTime, xAxis, bullet, spline ) " +
                     "VALUES (@favouriteName, @battleMode, @battleTime, @xAxis, @bullet, @spline); ";
                 DB.AddWithValue(ref sqlInsert, "@favouriteName", chartFavNameToSave, DB.SqlDataType.VarChar);
@@ -102,28 +106,28 @@ namespace WinApp.Forms.Chart
                 DB.AddWithValue(ref sqlInsert, "@spline", BattleChartHelper.Settings.Spline, DB.SqlDataType.Boolean);
                 await DB.ExecuteNonQueryAsync(sqlInsert);
                 // Get the new id
-                string sql = "SELECT Id FROM chartFav WHERE favouriteName = @favouriteName; ";
-                DB.AddWithValue(ref sql, "@favouriteName", chartFavNameToSave, DB.SqlDataType.VarChar);
-                int chartFavIdNew = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
-                // Save as new favourite now
-                sql = "";
-                foreach (BattleChartHelper.BattleChartItem item in BattleChartHelper.CurrentChartView)
-                {
-                    string newsql =
-                        "INSERT INTO chartFavLine (chartFavId, tankId, chartTypeName, use2ndYaxis) " +
-                        "VALUES (@chartFavId, @tankId, @chartTypeName, @use2ndYaxis);";
-                    DB.AddWithValue(ref newsql, "@chartFavId", chartFavIdNew, DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newsql, "@tankId", item.tankId, DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newsql, "@chartTypeName", item.chartTypeName, DB.SqlDataType.VarChar);
-                    DB.AddWithValue(ref newsql, "@use2ndYaxis", item.use2ndYaxis, DB.SqlDataType.Boolean);
-                    sql += newsql;
-                }
-                await DB.ExecuteNonQueryAsync(sql, true, true);
-                // Done
-                BattleChartHelper.SaveFavouriteNewFavName = chartFavNameToSave;
-                BattleChartHelper.SaveFavouriteNewFavId = chartFavIdNew;
-                BattleChartHelper.SaveFavouriteSaved = true;
+                sqlInsert = "SELECT Id FROM chartFav WHERE favouriteName = @favouriteName; ";
+                DB.AddWithValue(ref sqlInsert, "@favouriteName", chartFavNameToSave, DB.SqlDataType.VarChar);
+                _chartFavId = Convert.ToInt32(DB.FetchData(sqlInsert).Rows[0][0]);
             }
+            // Now add chart lines
+            string sql = "";
+            foreach (BattleChartHelper.BattleChartItem item in BattleChartHelper.CurrentChartView)
+            {
+                string newsql =
+                    "INSERT INTO chartFavLine (chartFavId, tankId, chartTypeName, use2ndYaxis) " +
+                    "VALUES (@chartFavId, @tankId, @chartTypeName, @use2ndYaxis);";
+                DB.AddWithValue(ref newsql, "@chartFavId", _chartFavId, DB.SqlDataType.Int);
+                DB.AddWithValue(ref newsql, "@tankId", item.tankId, DB.SqlDataType.Int);
+                DB.AddWithValue(ref newsql, "@chartTypeName", item.chartTypeName, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref newsql, "@use2ndYaxis", item.use2ndYaxis, DB.SqlDataType.Boolean);
+                sql += newsql;
+            }
+            await DB.ExecuteNonQueryAsync(sql, true, true);
+            // Done
+            BattleChartHelper.SaveFavouriteNewFavName = chartFavNameToSave;
+            BattleChartHelper.SaveFavouriteNewFavId = _chartFavId;
+            BattleChartHelper.SaveFavouriteSaved = true;
             this.Close();
         }
 
@@ -132,43 +136,22 @@ namespace WinApp.Forms.Chart
             this.Close();
         }
 
-        private void ChangeView()
-        {
-            chkNewFav.Checked = _newFav;
-            txtNewFavName.Enabled = _newFav;
-            chkUpdateFav.Checked = !_newFav;
-            txtUpdateFavName.Enabled = !_newFav;
-            btnDelete.Enabled = !_newFav;
-        }
-
         private void chkUpdateFav_Click(object sender, EventArgs e)
         {
-            _newFav = false;
-            ChangeView();
+            chkUpdateFav.Checked = true;
+            chkNewFav.Checked = false;
+            txtNewFavName.Enabled = false;
+            txtUpdateFavName.Enabled = true;
         }
 
         private void chkNewFav_Click(object sender, EventArgs e)
         {
-            _newFav = true;
-            ChangeView();
+            chkNewFav.Checked = true;
+            chkUpdateFav.Checked = false;
+            txtNewFavName.Enabled = true;
+            txtUpdateFavName.Enabled = false;
         }
 
-        private void FavouriteSave_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private async void btnDelete_Click(object sender, EventArgs e)
-        {
-            MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete this favourite?", "Delete Favourite", MsgBox.Type.YesNo);
-            if (answer == MsgBox.Button.Yes)
-            {
-                string sqlDelete = "DELETE FROM chartFavLine WHERE chartFavId = @id; DELETE FROM chartFav WHERE id = @id;";
-                DB.AddWithValue(ref sqlDelete, "@id", _chartFavId, DB.SqlDataType.Int);
-                await DB.ExecuteNonQueryAsync(sqlDelete);
-                BattleChartHelper.SaveFavouriteDeleted = true;
-                this.Close();
-            }
-        }
+             
     }
 }
