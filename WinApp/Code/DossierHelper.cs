@@ -38,6 +38,7 @@ namespace WinApp.Code
                 // ASIA wotasia1-2.login.wargaming.net:20016;leafcap;PlayerAccount
                 // NA wotna3.login.wargaming.net:20016; kihestad; PlayerAccount
                 // RU login.p2.worldoftanks.net:20014;BadButton;PlayerAccount
+                // CT login-ct.worldoftanks.net:20015;BadButton_EU;PlayerAccount
 
                 // Split decoded file name
                 string[] splitDecodedFilename = decodedFileName.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
@@ -74,6 +75,8 @@ namespace WinApp.Code
                     dfi.ServerRealmName = "ASIA";
                 else if (url1.StartsWith("login") && url4.StartsWith("net"))
                     dfi.ServerRealmName = "RU";
+                else if (url1 == "login-ct")
+                    dfi.ServerRealmName = "CT";
                 else
                 {
                     dfi.Success = false;
