@@ -1,6 +1,6 @@
-# uncompyle6 version 2.14.0
+# uncompyle6 version 3.1.0
 # Python bytecode 2.7 (62211)
-# Decompiled from: Python 2.7.14 (v2.7.14:84471935ed, Sep 16 2017, 20:19:30) [MSC v.1500 32 bit (Intel)]
+# Decompiled from: Python 2.7.14 (v2.7.14:84471935ed, Sep 16 2017, 20:25:58) [MSC v.1500 64 bit (AMD64)]
 # Embedded file name: scripts/common/battle_results_shared.py
 import struct
 from itertools import izip
@@ -297,10 +297,6 @@ VEH_FULL_RESULTS_UPDATE = Meta((
  'aogasFactor10', int, 0, None, 'max'), (
  'refSystemXPFactor10', int, 0, None, 'any'), (
  'fairplayFactor10', int, 0, None, 'skip'), (
- 'newYearXPFactor100', int, 0, None, 'any'), (
- 'newYearTmenXPFactor100', int, 0, None, 'any'), (
- 'newYearFreeXPFactor100', int, 0, None, 'any'), (
- 'newYearCreditsFactor100', int, 0, None, 'any'), (
  'orderCredits', int, 0, None, 'sum'), (
  'orderXP', int, 0, None, 'sum'), (
  'orderFreeXP', int, 0, None, 'sum'), (
@@ -354,7 +350,6 @@ COMMON_RESULTS = Meta((
  'guiType', int, 0, None, 'skip'), (
  'vehLockMode', int, 0, None, 'skip'), ('division', None, None, None, 'skip'), (
  'bots', dict, {}, None, 'skip'))
-assert not set(VEH_FULL_RESULTS.names()) & set(COMMON_RESULTS.names())
 VEH_INTERACTIVE_STATS = ('xp', 'damageDealt', 'capturePts', 'flagActions', 'winPoints',
                          'deathCount', 'resourceAbsorbed', 'stopRespawn', 'equipmentDamage',
                          'equipmentKills')
@@ -432,7 +427,8 @@ class VehicleInteractionDetails(object):
         return VehicleInteractionDetails(uniqueVehIDs, values)
 
     def __getitem__(self, uniqueVehID):
-        assert type(uniqueVehID) == tuple
+        if not isinstance(uniqueVehID, tuple):
+            raise UserWarning(('Argument uniqueVehID should be tuple: {}').format(uniqueVehID))
         offset = self.__offsets.get(uniqueVehID, None)
         if offset is None:
             self.__uniqueVehIDs.append(uniqueVehID)
@@ -442,7 +438,8 @@ class VehicleInteractionDetails(object):
         return _VehicleInteractionDetailsItem(self.__values, offset)
 
     def __contains__(self, uniqueVehID):
-        assert type(uniqueVehID) == tuple
+        if not isinstance(uniqueVehID, tuple):
+            raise UserWarning(('Argument uniqueVehID should be tuple: {}').format(uniqueVehID))
         return uniqueVehID in self.__offsets
 
     def __str__(self):

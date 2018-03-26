@@ -49,7 +49,7 @@ VEH_INTERACTION_DETAILS_TYPES = dict(((x[0], x[1]) for x in VEH_INTERACTION_DETA
   
   
 parser = dict()
-parser['version'] = "0.9.21.0.0"
+parser['version'] = "1.0.0.0.0"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
 cachefile = None

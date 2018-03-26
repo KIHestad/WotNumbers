@@ -2947,6 +2947,20 @@
     "version": 98
   },
   {
+    "category": "singleAchievements",
+    "length": 1,
+    "name": "rankedBattlesHero",
+    "offset": 34,
+    "version": 98
+  },
+  {
+    "category": "singleAchievements",
+    "length": 1,
+    "name": "rankedBattlesSeasonOne",
+    "offset": 35,
+    "version": 98
+  },
+  {
     "category": "clanAchievements",
     "length": 1,
     "name": "medalRotmistrov",
