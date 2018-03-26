@@ -976,16 +976,25 @@ namespace WinApp.Forms
 		{
 			if (!Init)
 			{
-				ResizeNow();
-				// Remember if new viewable size is normal or maximized
-				if (this.WindowState != FormWindowState.Minimized)
-					mainFormWindowsState = this.WindowState;
-				// Remember new size for saving on form close
-				if (this.WindowState == FormWindowState.Normal)
-				{
-					Config.Settings.posSize.Width = this.Width;
-					Config.Settings.posSize.Height = this.Height;
-				}
+                bool formNormalOrMax = this.WindowState != FormWindowState.Minimized;
+                if (formNormalOrMax)
+                {
+                    // Form visible, perform normal resize event
+                    ResizeNow();
+                    mainFormWindowsState = this.WindowState;
+                    // Remember new size for saving on form close
+                    if (this.WindowState == FormWindowState.Normal)
+                    {
+                        Config.Settings.posSize.Width = this.Width;
+                        Config.Settings.posSize.Height = this.Height;
+                    }
+                    this.Opacity = 100;
+                }
+                else
+                {
+                    // Form minimized, hide
+                    this.Opacity = 0;
+                }
 			}
 		}
 
@@ -3443,7 +3452,17 @@ namespace WinApp.Forms
                     DataTable dtRest = DB.FetchData(sqlRemainingMaps);
                     if (dtRest.Rows.Count > 0)
                     {
-                        dt.Merge(dtRest);
+                        if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver )
+                            dt.Merge(dtRest);
+                        else
+                        {
+                            foreach (DataRow dr in dtRest.Rows)
+                            {
+                                DataRow newRow = dt.NewRow();
+                                for (int i = 0; i < 8; i++) { newRow[i] = dr[i]; }
+                                dt.Rows.Add(newRow);
+                            }
+                        }
                     }
                 }
 
@@ -4972,13 +4991,15 @@ namespace WinApp.Forms
 			{
 				if (this.WindowState == FormWindowState.Minimized)
 				{
-					this.WindowState = mainFormWindowsState;
-				}
-				else
+                    this.WindowState = mainFormWindowsState;
+                    this.Opacity = 100;
+                }
+                else
 				{
-					this.WindowState = FormWindowState.Minimized;
-				}
-			}
+                    this.WindowState = FormWindowState.Minimized;
+                    this.Opacity = 0;
+                }
+            }
 		}
 
 		private void mSettingsShowLogFiles_Click(object sender, EventArgs e)

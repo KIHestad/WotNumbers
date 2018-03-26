@@ -14,7 +14,8 @@ namespace WinApp.Forms
     {
         #region Init
 
-        int selectedChartFavourite = -1;
+        int selectedChartFavouriteId = -1;
+        string selectedChartFavouriteName = "";
         int initTankId = 0;
 		int decimals = 3;
 		int numPoints = 100; // Max num of points in one chart serie, exept for battle values (ChartValues.totals = false)
@@ -110,11 +111,11 @@ namespace WinApp.Forms
                 // Get latest used favourite
                 if (!String.IsNullOrEmpty(Config.Settings.currentChartFavourite))
                 {
-                    selectedChartFavourite = -1;
-                    if (Int32.TryParse(Config.Settings.currentChartFavourite, out selectedChartFavourite))
+                    selectedChartFavouriteId = -1;
+                    if (Int32.TryParse(Config.Settings.currentChartFavourite, out selectedChartFavouriteId))
                     {
-                        if (selectedChartFavourite > 0)
-                            GetFavouriteChart(selectedChartFavourite);
+                        if (selectedChartFavouriteId > 0)
+                            GetFavouriteChart(selectedChartFavouriteId);
                     }
                 }
                 // Draw current chart view
@@ -967,10 +968,14 @@ namespace WinApp.Forms
         {
             BattleChartHelper.CurrentChartView = new List<BattleChartHelper.BattleChartItem>();
             ClearChartArea(false);
-            selectedChartFavourite = -1;
+            selectedChartFavouriteId = -1;
+            selectedChartFavouriteName = "";
+            BattleChartTheme.Text = "Chart";
+            mFavouriteSave.Image = imageListToolStrip.Images[0];
             SetFavouritMenu();
-            SetFavouritMenuSelected(selectedChartFavourite);
+            SetFavouritMenuSelected(selectedChartFavouriteId);
             lblFooter.Text = "Chart view cleared, prepared for creating new chart";
+            Refresh();
         }
 
         // Refresh
@@ -1084,7 +1089,7 @@ namespace WinApp.Forms
                 ToolStripItem[] menu = mFavourite.DropDownItems.Find("mFavourite" + i.ToString("00"), false);
                 menu[0].Visible = false;
             }
-            mFavouriteRemove.Visible = (selectedChartFavourite != -1);
+            mFavouriteRemove.Enabled = (selectedChartFavouriteId != -1);
             mFavourite.Text = "";
         }
 
@@ -1101,12 +1106,11 @@ namespace WinApp.Forms
             // Get favourite
             string sql =
                 "SELECT chartFav.*, chartFavLine.Id as chartFavLineId, chartFavLine.tankId, chartFavLine.chartTypeName, chartFavLine.use2ndYaxis " +
-                "FROM chartFavLine right JOIN chartFav ON chartFavLine.chartFavId = chartFav.Id " + 
+                "FROM chartFav LEFT JOIN chartFavLine ON chartFavLine.chartFavId = chartFav.Id " + 
                 "WHERE chartFav.id = @id ORDER BY tankId, chartTypeName;";
             DB.AddWithValue(ref sql, "@id", chartFavId, DB.SqlDataType.Int);
             DataTable dt = DB.FetchData(sql);
             // Read into chart if exists
-            string chartFavName = "";
             bool readChartFav = true;
             if (dt.Rows.Count > 0)
             {
@@ -1115,7 +1119,7 @@ namespace WinApp.Forms
                     // read chart fav settings only once
                     if (readChartFav)
                     {
-                        chartFavName = dr["favouriteName"].ToString();
+                        selectedChartFavouriteName = dr["favouriteName"].ToString();
                         BattleChartHelper.Settings.BattleMode = dr["battleMode"].ToString();
                         BattleChartHelper.Settings.BattleTime = dr["battleTime"].ToString();
                         BattleChartHelper.Settings.Xaxis = dr["xaxis"].ToString();
@@ -1135,19 +1139,22 @@ namespace WinApp.Forms
                     }
                 }
                 DrawCurrentChartView();
-                mFavourite.Text = chartFavName;
-                selectedChartFavourite = chartFavId;
-                lblFooter.Text = "Showing Favourite Chart: " + chartFavName;
+                BattleChartTheme.Text = "Chart - " + selectedChartFavouriteName;
+                selectedChartFavouriteId = chartFavId;
+                lblFooter.Text = "Showing Favourite Chart: " + selectedChartFavouriteName;
             }
             else
             {
                 // Chart not found, not existing
-                selectedChartFavourite = -1;
+                selectedChartFavouriteId = -1;
+                selectedChartFavouriteName = "";
+                BattleChartTheme.Text = "Chart";
                 ClearChartArea(false);
             }
+            Refresh();
             // Set menu checked and show delete
-            SetFavouritMenuSelected(selectedChartFavourite);
-            mFavouriteRemove.Visible = (selectedChartFavourite != -1);
+            SetFavouritMenuSelected(selectedChartFavouriteId);
+            mFavouriteRemove.Enabled = (selectedChartFavouriteId != -1);
             // Save status 
             mFavouriteSave.Image = imageListToolStrip.Images[0];
             mFavouriteSave.ToolTipText = "Update or Save as new Favourite";
@@ -1165,28 +1172,32 @@ namespace WinApp.Forms
                 MsgBox.Show("You have to add least one chart value before it is possible to save it as a favourite");
                 return;
             }
-            string currentFavName = mFavourite.Text;
-            Form frm = new Chart.FavouriteSave(selectedChartFavourite, currentFavName);
+            Form frm = new Chart.FavouriteSave(selectedChartFavouriteId, selectedChartFavouriteName);
             frm.ShowDialog();
             if (BattleChartHelper.SaveFavouriteSaved)
             {
                 SetFavouritMenu();
                 SetFavouritMenuSelected(BattleChartHelper.SaveFavouriteNewFavId);
-                mFavourite.Text = BattleChartHelper.SaveFavouriteNewFavName;
-                selectedChartFavourite = BattleChartHelper.SaveFavouriteNewFavId;
+                BattleChartTheme.Text = "Chart - " + BattleChartHelper.SaveFavouriteNewFavName;
+                selectedChartFavouriteId = BattleChartHelper.SaveFavouriteNewFavId;
                 lblFooter.Text = "Saved favourite: " + BattleChartHelper.SaveFavouriteNewFavName;
                 // Saved
                 mFavouriteSave.Image = imageListToolStrip.Images[0];
                 mFavouriteSave.ToolTipText = "Update or Save as new Favourite";
+                mFavouriteRemove.Enabled = true;
             }
             else if (BattleChartHelper.SaveFavouriteDeleted)
             {
                 SetFavouritMenu();
-                selectedChartFavourite = -1;
+                selectedChartFavouriteId = -1;
                 SetFavouritMenuSelected(-1);
-                mFavourite.Text = "";
+                BattleChartTheme.Text = "Chart";
                 lblFooter.Text = "Deleted favourite";
+                mFavouriteSave.Image = imageListToolStrip.Images[0];
+                mFavouriteRemove.Enabled = false;
+                BattleChartTheme.Text = "Chart";
             }
+            Refresh();
         }
         
         #endregion
@@ -1202,9 +1213,9 @@ namespace WinApp.Forms
                 }
             }
 
-            if (selectedChartFavourite.ToString() != Config.Settings.currentChartFavourite && selectedChartFavourite.ToString() != "-1")
+            if (selectedChartFavouriteId.ToString() != Config.Settings.currentChartFavourite && selectedChartFavouriteId.ToString() != "-1")
             {
-                Config.Settings.currentChartFavourite = selectedChartFavourite.ToString();
+                Config.Settings.currentChartFavourite = selectedChartFavouriteId.ToString();
                 Config.SaveConfig(out string msg);
             }
 
@@ -1212,18 +1223,20 @@ namespace WinApp.Forms
 
         private async void mFavouriteRemove_Click(object sender, EventArgs e)
         {
-            if (selectedChartFavourite > -1)
+            if (selectedChartFavouriteId > -1)
             {
                 MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete this favourite?", "Remove favourite", MsgBox.Type.YesNo, this);
                 if (answer == MsgBox.Button.Yes)
                 {
                     await DB.ExecuteNonQueryAsync(
-                    $"DELETE FROM chartFavLine WHERE chartFavId = {selectedChartFavourite};" +
-                    $"DELETE FROM chartFav WHERE id = {selectedChartFavourite};", false, true);
-                    selectedChartFavourite = -1;
+                    $"DELETE FROM chartFavLine WHERE chartFavId = {selectedChartFavouriteId};" +
+                    $"DELETE FROM chartFav WHERE id = {selectedChartFavouriteId};", false, true);
+                    selectedChartFavouriteId = -1;
                     SetFavouritMenu();
-                    SetFavouritMenuSelected(selectedChartFavourite);
+                    SetFavouritMenuSelected(selectedChartFavouriteId);
                     lblFooter.Text = "Deleted favourite";
+                    BattleChartTheme.Text = "Chart";
+                    Refresh();
                 }
             }
 
