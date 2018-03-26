@@ -176,16 +176,26 @@ namespace WinApp.Code
                                 // Upload battle to vBAddict if OK
                                 if (okConvert && vBAddictHelper.Settings.UploadActive)
                                 {
-                                    string msg = "";
-                                    bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out msg);
-                                    if (uploadOK)
-                                        Log.AddToLogBuffer(" > > > Uploaded battle to vBAddict successfully");
-                                    else
+                                    try
                                     {
-                                        Log.AddToLogBuffer(" > > > Error uploading to vBAddict, copy file for later upload");
-                                        FileInfo fileBattleDatCopied = new FileInfo(file); // the battle file
-                                        fileBattleDatCopied.CopyTo(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
-                                        Log.AddToLogBuffer(msg);
+                                        string msg = "";
+                                        bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out msg);
+                                        if (uploadOK)
+                                            Log.AddToLogBuffer(" > > > Uploaded battle to vBAddict successfully");
+                                        else
+                                        {
+                                            Log.AddToLogBuffer(" > > > Error uploading to vBAddict, copy file for later upload");
+                                            FileInfo fileBattleDatCopied = new FileInfo(file); // the battle file
+                                            if (File.Exists(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name))
+                                            {
+                                                File.Delete(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
+                                            }
+                                            fileBattleDatCopied.CopyTo(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
+                                            Log.AddToLogBuffer(msg);
+                                        }
+                                    } catch (Exception ex)
+                                    {
+                                        Log.LogToFile(ex, " > > > Error uploading to vBAddict, copy file for later upload");
                                     }
                                 }
                                 if (deleteFile)
