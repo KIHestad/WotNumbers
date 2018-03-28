@@ -206,7 +206,7 @@ namespace WinApp.Forms
                         SetListener(false);
                         Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
                         Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.Main);
-                        frm.ShowDialog();
+                        frm.ShowDialog(this);
                     }
                 }
 
@@ -282,7 +282,7 @@ namespace WinApp.Forms
                                     this
                                 );
                                 Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.WoTGameClient);
-                                frm.ShowDialog();
+                                frm.ShowDialog(this);
                             }
                         }
 
@@ -536,7 +536,7 @@ namespace WinApp.Forms
 				// Autocreate new database
 				Config.Settings.dossierFilePath = dossierFolder;
 				Form frm = new Forms.DatabaseNew(true);
-				frm.ShowDialog();
+				frm.ShowDialog(this);
 				LoadConfigOK = AutoSetupHelper.AutoSetupCompleteOK;
 				if (LoadConfigOK)
 				{
@@ -1418,7 +1418,7 @@ namespace WinApp.Forms
 		private async void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.ColList();
-			frm.ShowDialog();
+			frm.ShowDialog(this);
 			SetColListMenu(); // Refresh column setup list now
             await ShowView("Refreshed grid after column setup change"); // Refresh grid now
 		}
@@ -1850,7 +1850,7 @@ namespace WinApp.Forms
 		{
 			// Show fal list editor
 			Form frm = new Forms.FavList();
-			frm.ShowDialog();
+			frm.ShowDialog(this);
 			// After fav list changes reload menu
 			SetFavListMenu(); // Reload fav list items
             await ShowView("Refreshed grid after fovourite tank list change"); // Refresh grid now
@@ -2003,7 +2003,7 @@ namespace WinApp.Forms
 		private void ShowCustomBattleTimeFilter()
 		{
 			Form frm = new Forms.BattleTimeFilterCustom();
-			frm.ShowDialog();
+			frm.ShowDialog(this);
 		}
 
 		private void mBattles_MouseDown(object sender, MouseEventArgs e)
@@ -3990,7 +3990,7 @@ namespace WinApp.Forms
 			{
 				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 				Form frm = new Forms.GrindingSetup(playerTankId);
-				frm.ShowDialog();
+				frm.ShowDialog(this);
 				if (MainSettings.View == GridView.Views.Tank)
                     await ShowView("Refreshed grid");
 			}
@@ -4137,7 +4137,7 @@ namespace WinApp.Forms
 		{
             int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
             Form frm = new Forms.Replay(battleId);
-            frm.ShowDialog();
+            frm.ShowDialog(this);
 		}
 
 
@@ -4247,7 +4247,7 @@ namespace WinApp.Forms
 				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 				int tankId = TankHelper.GetTankID(playerTankId);
 				Form frm = new Forms.FavListNewEdit(0, "", tankId);
-				frm.ShowDialog();
+				frm.ShowDialog(this);
 				// After fav list changes reload menu
 				SetFavListMenu(); // Reload fav list items
 			}
@@ -4262,7 +4262,7 @@ namespace WinApp.Forms
 				if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, true))
 				{
 					Form frm = new Forms.FavListAddRemoveTank(tankId, true);
-					frm.ShowDialog();
+					frm.ShowDialog(this);
 				}
 			}
 		}
@@ -4276,7 +4276,7 @@ namespace WinApp.Forms
 				if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, false))
 				{
 					Form frm = new FavListAddRemoveTank(tankId, false);
-					frm.ShowDialog();
+					frm.ShowDialog(this);
 					// refresh if tank removed
 					if (FavListHelper.refreshGridAfterAddRemove)
 					{
@@ -4525,7 +4525,7 @@ namespace WinApp.Forms
 
             // Show dialog
             Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.Main);
-            frm.ShowDialog();
+            frm.ShowDialog(this);
 
             // Update main form title
             currentPlayerId = Config.Settings.playerId;
@@ -4602,7 +4602,7 @@ namespace WinApp.Forms
             double WNcurrentVer8 = DBVersion.GetWNVersion(8);
             double WNcurrentVer9 = DBVersion.GetWNVersion(9);
             Form frm = new Forms.UpdateFromApi(autoRun);
-			frm.ShowDialog();
+			frm.ShowDialog(this);
             //bool WNnewVer8 = (DBVersion.GetWNVersion(8) > WNcurrentVer8);
             bool WNnewVer9 = (DBVersion.GetWNVersion(9) > WNcurrentVer9);
             if (WNnewVer9) //
@@ -4630,7 +4630,7 @@ namespace WinApp.Forms
             bool EFF = (menu.Tag.ToString() == "EFF" || menu.Tag.ToString() == "ALL"); 
             // Show dialog
 			Form frm = new Forms.RecalcBattleRating(false, WN9, WN8, WN7, EFF);
-			frm.ShowDialog();
+			frm.ShowDialog(this);
 			// Return to prev file watcher state
 			if (runState != Config.Settings.dossierFileWathcherRun)
 			{
@@ -4651,7 +4651,7 @@ namespace WinApp.Forms
             }
             // Show dialog
             Form frm = new Forms.RecalcBattleCreditPerTank();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             // Return to prev file watcher state
             if (runState != Config.Settings.dossierFileWathcherRun)
             {
@@ -4753,7 +4753,7 @@ namespace WinApp.Forms
 		private void mHelpAbout_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.About();
-			frm.ShowDialog();
+			frm.ShowDialog(this);
 		}
 
 		private async void mHelpCheckVersion_Click(object sender, EventArgs e)
@@ -4808,11 +4808,11 @@ namespace WinApp.Forms
 		{
 			InGarageApiResult.status = "";
 			Form frm = new Forms.InGarageApi();
-			frm.ShowDialog();
+			frm.ShowDialog(this);
 			if (InGarageApiResult.status == "ok")
 			{
 				frm = new Forms.InGarageProcessData();
-				frm.ShowDialog();
+				frm.ShowDialog(this);
 				if (InGarageApiResult.changeFavList)
 				{
 					// After fav list changes reload menu
@@ -4825,7 +4825,7 @@ namespace WinApp.Forms
 		private void mSettingsAppLayout_Click(object sender, EventArgs e)
 		{
             //Form frm = new Forms.ApplicationLayout();
-            //frm.ShowDialog();
+            //frm.ShowDialog(this);
             //dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
             //dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
             //dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
@@ -4852,7 +4852,7 @@ namespace WinApp.Forms
 				if (Config.Settings.wotGameStartType == ConfigData.WoTGameStartType.NotConfigured)
 				{
                     Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.WoTGameClient);
-					frm.ShowDialog();
+					frm.ShowDialog(this);
 				}
 				else
 				{
@@ -4982,7 +4982,7 @@ namespace WinApp.Forms
 		private void mWoTStartGameSettings_Click(object sender, EventArgs e)
 		{
             //Form frm = new Forms.WoTGameClientSettings();
-            //frm.ShowDialog();
+            //frm.ShowDialog(this);
 		}
 
 		private void notifyIcon_MouseClick(object sender, MouseEventArgs e)

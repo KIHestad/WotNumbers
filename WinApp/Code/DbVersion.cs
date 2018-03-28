@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 468; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 470; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3103,10 +3103,6 @@ namespace WinApp.Code
                         "INSERT INTO map (id, name, arena_id) VALUES (82, 'Klondike', '217_er_alaska'); ";
                     sqlite = mssql;
                     break;
-                case 458:
-                    RunDownloadAndUpdateTanks = true;
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
-                    break;
                 case 459:
                     mssql =
                         "ALTER TABLE player ADD playerName varchar(50) NULL; " +
@@ -3141,6 +3137,16 @@ namespace WinApp.Code
                     mssql = "UPDATE columnSelection SET colNameBattleSumTank='SUM(playerTankBattle.survived) * 100', colNameBattleSumReversePos=0 WHERE id=98;";
                     sqlite = mssql;
                     break;
+                case 469:
+                    mssql =
+                        "INSERT INTO map (id, name, arena_id) VALUES (83, 'Glacier', '115_sweden'); ";
+                    sqlite = mssql;
+                    break;
+                case 470:
+                    RunDownloadAndUpdateTanks = true;
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+
             }
             string sql = "";
 			// get sql for correct dbtype

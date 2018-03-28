@@ -195,7 +195,10 @@ namespace WinApp.Services
                 Battles = battles
             };
             // Call Wot Numbers Web service, log app start and request data 
-            HttpClient client = new HttpClient();
+            HttpClient client = new HttpClient()
+            {
+                Timeout = new TimeSpan(0, 1, 0) 
+            };
             StringContent httpContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync($"{Constants.WotNumWebUrl()}/Api/AppBattle", httpContent);
             response.EnsureSuccessStatusCode();

@@ -27,7 +27,10 @@ namespace WinApp.Services
             try
 			{
                 // Log app start and request data form wot num website
-                HttpClient client = new HttpClient();
+                HttpClient client = new HttpClient()
+                {
+                    Timeout = new TimeSpan(0, 0, 10), // 10 seconds
+                };
                 StringContent httpContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync($"{Constants.WotNumWebUrl()}/Api/AppStartup", httpContent);
                 response.EnsureSuccessStatusCode();

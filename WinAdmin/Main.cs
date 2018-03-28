@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -315,6 +316,7 @@ namespace WinAdmin
 			foreach (string imageFile in images)
 			{
 				string name = Path.GetFileNameWithoutExtension(imageFile);
+                Debug.WriteLine(name);
 				sql = "select id from map where name=@name";
 				DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar, Settings.Config);
 				if (DB.FetchData(sql, Settings.Config, out result).Rows.Count == 0)
