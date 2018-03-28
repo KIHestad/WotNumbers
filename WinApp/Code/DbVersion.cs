@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 470; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 471; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2330,9 +2330,6 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET name='Cred Result per min' WHERE id=544;";
                     sqlite = mssql;
                     break;
-                case 286:
-                    RunInstallNewBrrVersion = true;
-                    break;
                 case 287:
                     mssql = 
                         "CREATE TABLE replayFolder ( " +
@@ -3145,6 +3142,9 @@ namespace WinApp.Code
                 case 470:
                     RunDownloadAndUpdateTanks = true;
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+                case 471:
+                    RunInstallNewBrrVersion = true; // Force install BRR mod if activated in settings, even if no WoT game client is detected
                     break;
 
             }

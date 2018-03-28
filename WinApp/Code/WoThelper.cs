@@ -8,33 +8,21 @@ namespace WinApp.Code
 {
     class WoThelper
     {
-        // Get WoT install folder with end backslash
-        public static string GetFullInstallPath
-        {
-            get
-            {
-                string folder = Config.Settings.wotGameFolder;
-                if (folder != "" && folder.Substring(folder.Length - 1, 1) != "\\")
-                    folder += "\\";
-                return folder;
-            }
-            set { }
-        }
-
         // Returns full path to res_mods folder + current active subfolder, or spesified subfolder
         public static string GetFullResModsPath(string subFolder = "")
         {
             if (subFolder == "")
-                return GetFullInstallPath += "res_mods\\" + Config.Settings.res_mods_subfolder + "\\";
+                return Path.Combine(Config.Settings.wotGameFolder, "res_mods", Config.Settings.res_mods_subfolder);
             else
-                return GetFullInstallPath += "res_mods\\" + subFolder + "\\";
+                return Path.Combine(Config.Settings.wotGameFolder, "res_mods", subFolder);
         }
+
         public static string GetResModsPathSubfolder(string subFolder = "")
         {
             if (subFolder == "")
-                return "\\res_mods\\" + Config.Settings.res_mods_subfolder + "\\";
+                return Path.Combine("res_mods", Config.Settings.res_mods_subfolder);
             else
-                return "\\res_mods\\" + subFolder + "\\";
+                return Path.Combine("res_mods", subFolder);
         }
 
 
@@ -42,7 +30,7 @@ namespace WinApp.Code
         {
             try
             {
-                string resModsFullPath = GetFullInstallPath + "res_mods\\";
+                string resModsFullPath = Path.Combine(Config.Settings.wotGameFolder, "res_mods");
                 DirectoryInfo directory = new DirectoryInfo(resModsFullPath);
                 List<DirectoryInfo> subfolders = directory.GetDirectories().ToList();
                 string highestResModsFolder = "";

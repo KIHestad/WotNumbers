@@ -15,14 +15,14 @@ namespace WinApp.Code
         {
             get
             {
-                return WoThelper.GetFullResModsPath() + "\\scripts\\client\\gui\\";
+                return Path.Combine(WoThelper.GetFullResModsPath(), "scripts", "client" , "gui");
             }
             set { }
         }
         
         private static string ModsFolder
         {
-            get { return ClientGuiFolder += "mods\\"; }
+            get { return Path.Combine(ClientGuiFolder, "mods"); }
             set { }
         }
         
@@ -107,23 +107,11 @@ namespace WinApp.Code
 				string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
 				if (!File.Exists(BrrFile))
 				{
-					string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\" + BrrFile;
-                    File.Copy(fileToCopy, ModsFolder + BrrFile);
+					string fileToCopy = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Docs", BrrFile);
+                    File.Copy(fileToCopy, ModsFolder + BrrFile, true);
 				}
-                //if (!File.Exists(InitFile))
-                //{
-                //    string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\__init__.pyc";
-                //    File.Copy(fileToCopy, InitFile);
-                //}
-                //if (!File.Exists(CameraNodeFile))
-                //{
-                //    string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\CameraNode.pyc";
-                //    File.Copy(fileToCopy, CameraNodeFile);
-                //}
 				// Add the access control entry to the files
                 AddFileSecurity(ModsFolder + BrrFile, userName, FileSystemRights.FullControl, AccessControlType.Allow);
-                //AddFileSecurity(CameraNodeFile, userName, FileSystemRights.FullControl, AccessControlType.Allow);
-                //AddFileSecurity(InitFile, userName, FileSystemRights.FullControl, AccessControlType.Allow);
 			}
 			catch (Exception ex)
 			{

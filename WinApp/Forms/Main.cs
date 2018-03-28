@@ -302,7 +302,7 @@ namespace WinApp.Forms
                                 string msg = "";
                                 if (!BattleResultRetriever.Install(out msg))
                                 {
-                                    MsgBox.Show("Error installing BRR", msg);
+                                    MsgBox.Show(msg, "Error installing BRR");
                                 }
                             }
                         }
