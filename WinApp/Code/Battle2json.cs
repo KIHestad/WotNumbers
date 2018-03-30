@@ -18,7 +18,6 @@ namespace WinApp.Code
 	{
 		private static List<string> battleResultDatFileCopied = new List<string>(); // List of dat-files copyied from wargaming battle folder, to avoid copy several times
 		private static List<string> battleResultJsonFileExists = new List<string>(); // List of json-files already existing in battle folder, to avoid converting several times
-		public static FileSystemWatcher battleResultFileWatcher = new FileSystemWatcher();
 		
         private class ClanInfo
         {
@@ -43,42 +42,6 @@ namespace WinApp.Code
         {
             public string colname;
             public object value;
-        }
-
-        public async static Task UpdateBattleResultFileWatcher()
-        {
-            try
-            {
-                bool run = (Config.Settings.dossierFileWathcherRun == 1);
-                if (Directory.Exists(Path.GetDirectoryName(Config.Settings.battleFilePath)))
-                {
-                    battleResultFileWatcher.Path = Path.GetDirectoryName(Config.Settings.battleFilePath);
-                    battleResultFileWatcher.Filter = "*.dat";
-                    battleResultFileWatcher.IncludeSubdirectories = true;
-                    battleResultFileWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-                    battleResultFileWatcher.Created += new FileSystemEventHandler(BattleResultFileCreated);
-                    battleResultFileWatcher.EnableRaisingEvents = run;
-                }
-                else
-                    battleResultFileWatcher.EnableRaisingEvents = false;
-            }
-            catch (Exception ex)
-            {
-                battleResultFileWatcher.EnableRaisingEvents = false;
-                await Log.LogToFile(ex, "Incorrect dossier file path");
-            }
-
-        }
-
-        private static void BattleResultFileCreated(object source, FileSystemEventArgs e)
-        {
-            if (!Dossier2db.Running)
-            {
-                Log.AddToLogBuffer("// New battle file detected");
-                RunBattleResultRead().ConfigureAwait(false);
-            }
-            else
-                Log.LogToFile("// New battle file detected, reading is terminated due to dossier file process is running").ConfigureAwait(false);
         }
 
         public static void GetExistingBattleFiles()
@@ -302,8 +265,9 @@ namespace WinApp.Code
 
         private static string lastFile = "";
 
-        public async static Task RunBattleResultRead()
+        public async static Task<int> RunBattleResultRead()
         {
+            int BattlesUpdated = 0; // return value
             bool deleteLastFileOnError = false;
             try
             {
@@ -976,6 +940,7 @@ namespace WinApp.Code
                                 // Add Battle ID and run sql if any values
                                 DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
                                 await DB.ExecuteNonQuery(sql);
+                                BattlesUpdated++;
                                 // If grinding, adjust grogress
                                 if (grindXP > 0)
                                     await GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));
@@ -1081,6 +1046,7 @@ namespace WinApp.Code
             {
                 Log.AddToLogBuffer(" > > Could not delete faulty JSON file: " + lastFile + " - Error: " + ex.Message);
             }
+            return BattlesUpdated;
         }
 
         private async static Task GrindingProgress(int playerTankId, int XP)
@@ -1176,7 +1142,7 @@ namespace WinApp.Code
                         {
                             PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
                             ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
-                            //dynamic scopeResult = scope.GetVariable("main")();
+                            dynamic scopeResult = scope.GetVariable("main")();
                         });
 
                         //ScriptRuntimeSetup setup = new ScriptRuntimeSetup();

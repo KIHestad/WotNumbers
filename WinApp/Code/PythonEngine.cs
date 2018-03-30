@@ -12,7 +12,7 @@ using IronPython.Runtime;
 
 namespace WinApp.Code
 {
-    class PythonEngine
+    public class PythonEngine
 	{
 		public static Microsoft.Scripting.Hosting.ScriptEngine Engine; // allow to run ironpython programs
         private static Mutex pythonLock = new Mutex();

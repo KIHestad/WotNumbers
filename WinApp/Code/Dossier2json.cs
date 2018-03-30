@@ -16,39 +16,8 @@ namespace WinApp.Code
 {
 	public class Dossier2json
 	{
-		public static FileSystemWatcher dossierFileWatcher = new FileSystemWatcher();
-        public static Forms.Main _frmMain = null;
 
-		public async static Task<string> UpdateDossierFileWatcher(Forms.Main frmMain)
-		{
-            _frmMain = frmMain;
-            string logText = "Automatically fetch new battles stopped";
-			bool run = (Config.Settings.dossierFileWathcherRun == 1);
-			if (run)
-			{
-				try
-				{
-                    logText = "Automatically fetch new battles started";
-                    frmMain.SetStatus2(logText);
-                    dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.dossierFilePath + "\\");
-					dossierFileWatcher.Filter = "*.dat";
-					dossierFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
-					dossierFileWatcher.Changed += new FileSystemEventHandler(DossierFileChanged);
-					dossierFileWatcher.EnableRaisingEvents = true;
-				}
-				catch (Exception ex)
-				{
-					await Log.LogToFile(ex, "Error on: " + logText);
-					MsgBox.Show("Error in dossier file path, please check your application settings", "Error in dossier file path", frmMain);
-					run = false;
-				}
-			}
-			dossierFileWatcher.EnableRaisingEvents = run;
-			await Log.LogToFile("// " + logText, true);
-			return logText;
-		}
-
-		public async static Task<string> GetLatestUpdatedDossierFile()
+        public async static Task<string> GetLatestUpdatedDossierFile()
 		{
             string dossierFile = "";
             await Task.Run(() =>
@@ -87,54 +56,29 @@ namespace WinApp.Code
             List<string> logText = new List<string>();
             Log.AddToLogBuffer("// Manual run, looking for new dossier file");
             string dossierFile = await GetLatestUpdatedDossierFile();
-            string resultMessage = "";
+            DossierReadResult result = new DossierReadResult();
             if (dossierFile == "")
             {
                 Log.AddToLogBuffer(" > No dossier file found");
-                resultMessage = "No dossier file found - check application settings";
+                result.Message = "No dossier file found - check application settings";
             }
             else
             {
                 Log.AddToLogBuffer(" > Start analyze dossier file");
-                resultMessage = await RunDossierRead(dossierFile, ForceUpdate);
+                result = await RunDossierRead(dossierFile, ForceUpdate);
                 if (ForceUpdate)
                 {
                     Config.Settings.doneRunForceDossierFileCheck = DateTime.Now;
                     await Config.SaveConfig();
                 }
             }
-            frmMain.SetStatus2(resultMessage);
-            await frmMain.GridViewRefresh();
+            if (result.Success)
+                await frmMain.GridViewRefresh(result.Message);
+            else
+                frmMain.SetStatus2(result.Message);
 		}
         
-		private async static void DossierFileChanged(object source, FileSystemEventArgs e)
-		{
-			await Log.CheckLogFileSize();
-			Log.AddToLogBuffer("// Dossier file listener detected updated dossier file");
-			// Dossier file automatic handling
-			// Stop listening to dossier file
-			dossierFileWatcher.EnableRaisingEvents = false;
-			//Log("Dossier file updated");
-			// Get config data
-			string dossierFile = e.FullPath;
-			FileInfo file = new FileInfo(dossierFile);
-			// Wait until file is ready to read, 
-			bool fileOk = await WaitUntilFileReadyToRead(dossierFile, 4);
-			// Perform file conversion from picle to json
-            if (fileOk)
-            {
-                string resultMessage = await RunDossierRead(dossierFile);
-                // Continue listening to dossier file
-                dossierFileWatcher.EnableRaisingEvents = true;
-                // Display result
-                _frmMain.SetStatus2(resultMessage);
-                await _frmMain.GridViewRefresh();
-                // Check for recalc grinding progress
-                await GrindingHelper.CheckForDailyRecalculateGrindingProgress();
-            }
-        }
-
-        private async static Task<bool> WaitUntilFileReadyToRead(string filePath, int maxWaitTimeInSeconds)
+        public async static Task<bool> WaitUntilFileReadyToRead(string filePath, int maxWaitTimeInSeconds)
 		{
 			// Checks file is readable
 			bool fileOK = false;
@@ -159,14 +103,24 @@ namespace WinApp.Code
             return fileOK;
 		}
 
-		private async static Task<string> RunDossierRead(string dossierFile, bool forceUpdate = false)
+        public class DossierReadResult
+        {
+            public bool Success { get; set; }
+            public string Message { get;  set; }
+            public int NewBattlesCount { get; set; }
+        }
+
+		public async static Task<DossierReadResult> RunDossierRead(string dossierFile, bool forceUpdate = false)
 		{
-			string returVal = "";
+            DossierReadResult result = new DossierReadResult()
+            {
+                Success = true,
+                Message = "Starting file handling...",
+                NewBattlesCount = 0
+            };
 			if (!Dossier2db.Running)
 			{
 				Dossier2db.Running = true;
-				bool ok = true;
-				returVal = "Starting file handling...";
 				Log.AddToLogBuffer(" > > Dossier file handling started");
                 // Get player name and server from dossier
                 DossierHelper.DossierFileInfo dfi = DossierHelper.GetDossierFileInfo(dossierFile);
@@ -174,7 +128,9 @@ namespace WinApp.Code
                 {
                     Log.AddToLogBuffer(" > > Dossier file check terminated, could not get plyerinfo from dossier file. " + dfi.Message);
                     Dossier2db.Running = false;
-                    return dfi.Message;
+                    result.Success = false;
+                    result.Message = dfi.Message;
+                    return result;
                 }
 				string playerName = dfi.PlayerName;
 				string playerServer = dfi.ServerRealmName;
@@ -208,107 +164,121 @@ namespace WinApp.Code
                 // If still not identified player break with error
                 if (playerId == 0)
 				{
-					ok = false;
-					Log.AddToLogBuffer(" > > Error identifying player, dossier file check terminated");
-					returVal = "Error identifying player";
+                    Log.AddToLogBuffer(" > > Error identifying player, dossier file check terminated");
+                    Dossier2db.Running = false;
+                    result.Success = false;
+					result.Message = "Error identifying player";
+                    return result;
 				}
 				// If dossier player is not current player change
-				if (ok && (Config.Settings.playerId != playerId || Config.Settings.playerNameAndServer != playerNameAndServer))
+				if (Config.Settings.playerId != playerId || Config.Settings.playerNameAndServer != playerNameAndServer)
 				{
 					Config.Settings.playerId = playerId;
 					Config.Settings.playerName = playerName;
 					Config.Settings.playerServer = playerServer;
                     await Config.SaveConfig();
                 }
-                if (ok)
+				// Copy dossier file and perform file conversion to json format
+				string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
+				string dossier2jsonScript = appPath + "\\dossier2json\\wotdc2j.py"; // python-script for converting dossier file
+				string dossierDatNewFile = Config.AppDataBaseFolder + "dossier.dat"; // new dossier file
+				string dossierDatPrevFile = Config.AppDataBaseFolder + "dossier_prev.dat"; // previous dossier file
+				string dossierJsonFile = Config.AppDataBaseFolder + "dossier.json"; // output file
+				FileInfo fileDossierOriginal = new FileInfo(dossierFile); // the original dossier file
+				fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier file and rename it for analyze
+                bool convertOk = await ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
+                if (!convertOk) // error occured
 				{
-					// Copy dossier file and perform file conversion to json format
-					string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
-					string dossier2jsonScript = appPath + "\\dossier2json\\wotdc2j.py"; // python-script for converting dossier file
-					string dossierDatNewFile = Config.AppDataBaseFolder + "dossier.dat"; // new dossier file
-					string dossierDatPrevFile = Config.AppDataBaseFolder + "dossier_prev.dat"; // previous dossier file
-					string dossierJsonFile = Config.AppDataBaseFolder + "dossier.json"; // output file
-					FileInfo fileDossierOriginal = new FileInfo(dossierFile); // the original dossier file
-					fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier file and rename it for analyze
-                    ok = await Dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
-                    if (!ok) // error occured
-					{
-						returVal = "Error converting dossier file to json - check log file";
-					}
-					else
-					{
-						// Move new file as previos (copy and delete)
-						FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
-						fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
-						fileInfonew.CopyTo(dossierDatPrevFile, true); // copy and rename dossier file
-						try
-						{
-							fileInfonew.Delete();
-							Log.AddToLogBuffer(" > > Renamed copied dossierfile as previous file");
-						}
-						catch (Exception ex)
-						{
-							Log.AddToLogBuffer(" > > Could not copy dossierfile, probably in use");
-							await Log.LogToFile(ex);
-							// throw;
-						}
-
-					}
-					if (ok) // Analyze json file and add to db
-					{
-						if (File.Exists(dossierJsonFile))
-						{
-							returVal = await Dossier2db.ReadJson(dossierJsonFile, forceUpdate);
-							Log.AddToLogBuffer(" > > " + returVal);
-						}
-						else
-						{
-							Log.AddToLogBuffer(" > > No json file found");
-							returVal = "No dossier file found - check log file";
-						}
-					}
+                    Log.AddToLogBuffer(" > > Error converting dossier file to json");
+                    Dossier2db.Running = false;
+                    result.Success = false;
+                    result.Message = "Error converting dossier file to json - check log file";
+                    return result;
+				}
+				// Move new file as previos (copy and delete)
+				FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
+				fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
+				fileInfonew.CopyTo(dossierDatPrevFile, true); // copy and rename dossier file
+				try
+				{
+					fileInfonew.Delete();
+					Log.AddToLogBuffer(" > > Renamed copied dossierfile as previous file");
+				}
+				catch (Exception ex)
+				{
+                    Log.AddToLogBuffer(" > > Could not copy dossierfile, probably in use: " + ex.Message);
+                    await Log.LogToFile(ex);
+                    Dossier2db.Running = false;
+                    result.Success = false;
+                    result.Message = "Could not copy dossierfile, probably in use: " + ex.Message;
+                    return result;
+				}
+				if (File.Exists(dossierJsonFile))
+				{
+                    // Analyze converted json content and read tank and battle data now
+                    result = await Dossier2db.ReadJson(dossierJsonFile, forceUpdate);
+					Log.AddToLogBuffer(" > > " + result.Message);
+				}
+				else
+				{
+                    Log.AddToLogBuffer("No dossier file found");
+                    Dossier2db.Running = false;
+                    result.Success = false;
+                    result.Message = "No dossier file found - check log file";
+                    return result;
 				}
 				// Done analyzing dossier file
 				Dossier2db.Running = false;
-				if (forceUpdate)
+                if (forceUpdate && result.Success)
 				{
 					Config.Settings.doneRunForceDossierFileCheck = DateTime.Now;
                     await Config.SaveConfig();
                 }
-				// Check for battle result
-				Log.AddToLogBuffer(" > Reading battle files started after successfully dossier file check");
-				await Battle2json.RunBattleResultRead();
-				// If new battle saved and not in process of reading battles, create alert file
-				if (Dossier2db.battleSaved || GridView.scheduleGridRefresh)
-				{
-					GridView.scheduleGridRefresh = false;
-					Log.BattleResultDoneLog();
-				}
+				// Check for battle result, do final actions
+                if (result.Success)
+                {
+                    Log.AddToLogBuffer(" > Reading battle files started after successfully dossier file check");
+                    int battlesUpdated = await Battle2json.RunBattleResultRead();
+                    if (result.NewBattlesCount == 0 && battlesUpdated > 0)
+                    {
+                        result.NewBattlesCount = battlesUpdated;
+                        if (battlesUpdated == 1)
+                            result.Message = "Updated one battle";
+                        else
+                            result.Message = $"Updated {battlesUpdated} battles";
+                    }
+                        
+                    // If new battle saved and not in process of reading battles, create alert file
+                    if (Dossier2db.battleSaved || GridView.scheduleGridRefresh)
+                    {
+                        GridView.scheduleGridRefresh = false;
+                    }
+                    // Upload to vBAddict
+                    if (vBAddictHelper.Settings.UploadActive)
+                    {
+                        string prevDossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
+                        bool uploadOK = vBAddictHelper.UploadDossier(prevDossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out string msg);
+                        if (uploadOK)
+                            Log.AddToLogBuffer(" > Success uploading dossier file to vBAddict");
+                        else
+                        {
+                            Log.AddToLogBuffer(" > Error uploading dossier file to vBAddict");
+                            Log.AddToLogBuffer(msg);
+                        }
+                    }
+                }
 				// Done
 				dt.Dispose();
 				dt.Clear();
-				// Upload to vBAddict
-				if (vBAddictHelper.Settings.UploadActive)
-				{
-					string prevDossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
-					string msg = "";
-					bool uploadOK = vBAddictHelper.UploadDossier(prevDossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out msg);
-					if (uploadOK)
-						Log.AddToLogBuffer(" > Success uploading dossier file to vBAddict");
-					else
-					{
-						Log.AddToLogBuffer(" > Error uploading dossier file to vBAddict");
-						Log.AddToLogBuffer(msg);
-					}
-				}
 			}
 			else
 			{
 				Log.AddToLogBuffer(" > > Dossier file check terminated, already running");
-				returVal = "Battle check already running";
+				result.Message = "Battle check already running";
+                result.Success = false;
 			}
 			await Log.WriteLogBuffer();
-			return returVal;
+			return result;
 		}
 
 		private async static Task<bool> ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
@@ -329,7 +299,7 @@ namespace WinApp.Code
                         await Task.Run(() =>
                         {
                             ScriptScope scope = PythonEngine.Engine.ExecuteFile(dossier2jsonScript); // this is your python program
-                            // dynamic result = scope.GetVariable("main")();
+                            dynamic result = scope.GetVariable("main")();
                         });
                         Log.AddToLogBuffer(" > > Finish converted Dossier DAT-file to json");
                     }

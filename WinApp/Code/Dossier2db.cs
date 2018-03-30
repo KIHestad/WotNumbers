@@ -46,8 +46,13 @@ namespace WinApp.Code
 
 		private static bool newTank = false;
 
-		public async static Task<String> ReadJson(string filename, bool ForceUpdate = false)
+        public async static Task<Dossier2json.DossierReadResult> ReadJson(string filename, bool ForceUpdate = false)
 		{
+            Dossier2json.DossierReadResult result = new Dossier2json.DossierReadResult()
+            {
+                NewBattlesCount = 0,
+                Success = true
+            };
             // vars to be able to output if error occur
             string dataType = "";
             string dbField = "";
@@ -79,9 +84,6 @@ namespace WinApp.Code
 					saveBattleResult = false;
 					ForceUpdate = true;
 				}
-
-				// Reset saved variable, sets to true if any new battle is found
-				battleSaved = false;
 
 				// Declare
 				DataTable NewPlayerTankTable = await TankHelper.GetPlayerTank(-1); // Return no data, only empty database with structure
@@ -261,7 +263,7 @@ namespace WinApp.Code
 									if (tankName != "")
 									{
                                         // log.Add("  > Check for DB update - Tank: '" + tankName );
-                                        battleSaved = await CheckTankDataResult(
+                                        result.NewBattlesCount += await CheckTankDataResult(
                                             tankName,
                                             NewPlayerTankRow,
                                             NewPlayerTankBattle15Row,
@@ -315,7 +317,7 @@ namespace WinApp.Code
                 // Also write last tank found
                 // log.Add("  > Check for DB update - Tank: '" + tankName );
                 // TODO 7Ranked
-                battleSaved = await CheckTankDataResult(
+                result.NewBattlesCount += await CheckTankDataResult(
                     tankName, 
                     NewPlayerTankRow, 
                     NewPlayerTankBattle15Row, 
@@ -346,19 +348,28 @@ namespace WinApp.Code
 				// Check for new tanks, then load images
 				if (newTank)
                     await ImageHelper.LoadTankImages(); // Load new image by reloading
-				return "Battle fetch performed successfully"; // - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
+                result.Message = "Battle fetch performed successfully, "; // - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
+                if (result.NewBattlesCount == 0)
+                    result.Message += "no new battles found";
+                else if (result.NewBattlesCount == 1)
+                    result.Message += "one new battle found";
+                else
+                    result.Message += $"{result.NewBattlesCount} new battles found";
+                return result; 
 			}
 			catch (Exception ex)
 			{
                 string latestData = string.Format("Latest data read from dossier: dataType={0} dbField={1} dbValue={2}", dataType, dbField, dbValue);
                 await Log.LogToFile(ex, latestData);
-				return ("An error occured performing battle fetch, please check the log file");
+                result.Message = "An error occured performing battle fetch, please check the log file";
+                result.Success = false;
+                return result;
 			}
 			
 			
 		}
 
-		public async static Task<bool> CheckTankDataResult(string tankName, 
+		public async static Task<int> CheckTankDataResult(string tankName, 
 												DataRow playerTankNewRow, 
 												DataRow playerTankBattle15NewRow,
 												DataRow playerTankBattle7NewRow,
@@ -374,12 +385,12 @@ namespace WinApp.Code
 												bool saveBattleResult = true )
 		{
 			// Get Tank ID
-			bool battleSave = false; // Sets true if battle is saved, and is return value
+			int battleSave = 0; // Sets number of battle saved as return value
 			// int tankId = TankData.GetTankID(tankName); old code - get from name
 			if (playerTankNewRow["compactDescr"] == DBNull.Value)
 			{
 				await Log.LogToFile("### Tank result terminated ### Did not find compactDescr in dossier file for tank: " + tankName,true);
-				return false;
+				return 0;
 			}
 			int tankId = Convert.ToInt32(playerTankNewRow["compactDescr"]);
 			// Detect special battle mode for some tanks
@@ -504,49 +515,49 @@ namespace WinApp.Code
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeRandom_TC, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle15NewRow,
 											playerTankNewRow_battles15, battlesNew15, battleFragList, battleAchList, saveBattleResult);
-					battleSave = true;
+					battleSave += battlesNew15;
 				}
 				if (battlesNew7 > 0 || (forceUpdate && playerTankOldRow_7.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeTeam, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7NewRow,
 											playerTankNewRow_battles7, battlesNew7, battleFragList, battleAchList, saveBattleResult);
-					battleSave = true;
+					battleSave += battlesNew7;
 				}
 				if (battlesNew7Ranked > 0 || (forceUpdate && playerTankOldRow_7Ranked.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeTeamRanked, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7RankedNewRow,
 											playerTankNewRow_battles7Ranked, battlesNew7Ranked, battleFragList, battleAchList, saveBattleResult);
-					battleSave = true;
+					battleSave += battlesNew7Ranked;
 				}
 				if (battlesNewHistorical > 0 || (forceUpdate && playerTankOldRow_Historical.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeHistorical, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattleHistoricalNewRow,
 											playerTankNewRow_battlesHistorical, battlesNewHistorical, battleFragList, battleAchList, saveBattleResult);
-					battleSave = true;
+					battleSave += battlesNewHistorical;
 				}
 				if (battlesNewSkirmishes > 0 || (forceUpdate && playerTankOldRow_Skirmishes.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeSkirmishes, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleSkirmishesNewRow,
 											playerTankNewRow_battlesSkirmishes, battlesNewSkirmishes, battleFragList, battleAchList, saveBattleResult);
-					battleSave = true;
+					battleSave += battlesNewSkirmishes;
 				}
 				if (battlesNewStronghold > 0 || (forceUpdate && playerTankOldRow_Stronghold.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeStronghold, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleStrongholdNewRow,
 											playerTankNewRow_battlesStronghold, battlesNewStronghold, battleFragList, battleAchList, saveBattleResult);
-					battleSave = true;
+					battleSave += battlesNewStronghold;
 				} 
 				if (battlesNewGlobalMap > 0 || (forceUpdate && playerTankOldRow_GlobalMap.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeGlobalMap, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleGlobalMapNewRow,
 											playerTankNewRow_battlesGlobalMap, battlesNewGlobalMap, battleFragList, battleAchList, saveBattleResult);
-					battleSave = true;
+					battleSave += battlesNewGlobalMap;
 				}
                 if (battlesNewGrand > 0 || (forceUpdate && playerTankOldRow_Grand.Battles != 0))
                 {
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeGrand, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleGrandNewRow,
                                             playerTankNewRow_battlesGrand, battlesNewGrand, battleFragList, battleAchList, saveBattleResult);
-                    battleSave = true;
+                    battleSave += battlesNewGrand;
                 }
                 if (specialTankFound)
 				{

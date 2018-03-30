@@ -29,20 +29,22 @@
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
-            BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-            this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
             this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
             this.imageGrid = new System.Windows.Forms.ImageList(this.components);
             this.timerWoTAffnity = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.timerWotNumMenuItem = new System.Windows.Forms.Timer(this.components);
+            this.fswDossier = new System.IO.FileSystemWatcher();
+            this.fswBattle = new System.IO.FileSystemWatcher();
             this.MainTheme = new BadForm();
             this.toolMain = new WinApp.Code.ToolStripEx(this.components);
             this.mWoT = new System.Windows.Forms.ToolStripButton();
@@ -278,9 +280,8 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.timerWotNumMenuItem = new System.Windows.Forms.Timer(this.components);
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fswDossier)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fswBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
             this.panelMainArea.SuspendLayout();
@@ -296,11 +297,6 @@
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
             this.toolStripSeparator11.Size = new System.Drawing.Size(6, 6);
-            // 
-            // fileSystemWatcherNewBattle
-            // 
-            this.fileSystemWatcherNewBattle.EnableRaisingEvents = true;
-            this.fileSystemWatcherNewBattle.SynchronizingObject = this;
             // 
             // imageListToolStrip
             // 
@@ -347,6 +343,25 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // timerWotNumMenuItem
+            // 
+            this.timerWotNumMenuItem.Tick += new System.EventHandler(this.timerWotNumMenuItem_Tick);
+            // 
+            // fswDossier
+            // 
+            this.fswDossier.EnableRaisingEvents = true;
+            this.fswDossier.Filter = "*.dat";
+            this.fswDossier.NotifyFilter = System.IO.NotifyFilters.LastWrite;
+            this.fswDossier.SynchronizingObject = this;
+            this.fswDossier.Changed += new System.IO.FileSystemEventHandler(this.fswDossier_Changed);
+            // 
+            // fswBattle
+            // 
+            this.fswBattle.Filter = "*.dat";
+            this.fswBattle.NotifyFilter = System.IO.NotifyFilters.LastWrite;
+            this.fswBattle.SynchronizingObject = this;
+            this.fswBattle.Created += new System.IO.FileSystemEventHandler(this.fswBattle_Created);
             // 
             // MainTheme
             // 
@@ -2580,7 +2595,7 @@
             this.mWotNumWebStats.Image = ((System.Drawing.Image)(resources.GetObject("mWotNumWebStats.Image")));
             this.mWotNumWebStats.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mWotNumWebStats.Name = "mWotNumWebStats";
-            this.mWotNumWebStats.Size = new System.Drawing.Size(96, 20);
+            this.mWotNumWebStats.Size = new System.Drawing.Size(96, 22);
             this.mWotNumWebStats.Text = "Stats on Web";
             this.mWotNumWebStats.ToolTipText = "Go to the Stats page on Wot Numbers website";
             this.mWotNumWebStats.Click += new System.EventHandler(this.mWotNumWebStats_Click);
@@ -2592,7 +2607,7 @@
             this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
             this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
+            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
             this.mVBaddict.Text = "toolStripButton1";
             this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
             this.mVBaddict.Visible = false;
@@ -2761,10 +2776,6 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // timerWotNumMenuItem
-            // 
-            this.timerWotNumMenuItem.Tick += new System.EventHandler(this.timerWotNumMenuItem_Tick);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2786,7 +2797,8 @@
             this.ResizeEnd += new System.EventHandler(this.Main_ResizeEnd);
             this.LocationChanged += new System.EventHandler(this.Main_LocationChanged);
             this.Resize += new System.EventHandler(this.Main_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fswDossier)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fswBattle)).EndInit();
             this.MainTheme.ResumeLayout(false);
             this.MainTheme.PerformLayout();
             this.toolMain.ResumeLayout(false);
@@ -2801,7 +2813,6 @@
 
 		private System.Windows.Forms.Timer timerStatus2;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
-		private System.IO.FileSystemWatcher fileSystemWatcherNewBattle;
 		private BadForm MainTheme;
 		private System.Windows.Forms.Label lblStatus2;
 		private System.Windows.Forms.Label lblStatus1;
@@ -3044,7 +3055,8 @@
         private System.Windows.Forms.ToolStripMenuItem mAdminToolsUploadBattlesAll;
         private System.Windows.Forms.ToolStripButton mWotNumWebStats;
         private System.Windows.Forms.Timer timerWotNumMenuItem;
-        private System.Windows.Forms.Timer timer1;
+        private System.IO.FileSystemWatcher fswDossier;
+        private System.IO.FileSystemWatcher fswBattle;
     }
 }
 

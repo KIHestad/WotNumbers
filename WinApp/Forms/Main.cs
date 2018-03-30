@@ -312,8 +312,6 @@ namespace WinApp.Forms
                     // Run app statup webservice api, check for new version and more
                     await RunAppStartupAPI(false);
 
-                    // Show status message
-                    SetStatus2("Application started");
                 }
                 else
                 {
@@ -325,13 +323,6 @@ namespace WinApp.Forms
                     StatusBarHelper.ClearAfterNextShow = false;
                     SetStatus2("Application started with errors");
                 }
-
-                // Update file watcher to read battle result file - trigger if new dossier or battle result is found
-                fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
-                fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
-                fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
-                fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
-                fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 
                 // Set vbAddice icon image
                 ExternalPlayerProfile.image_vBAddict = imageListToolStrip.Images[15];
@@ -823,19 +814,22 @@ namespace WinApp.Forms
         private int status2DefaultColor = 200;
 		private int status2fadeColor = 200;
 		
-        public async Task GridViewRefresh()
+        public async Task GridViewRefresh(string message = null)
         {
             if (!GridView.refreshRunning)
             {
                 GridView.refreshRunning = true;
-                await ShowView("New battle data fetched, view refreshed");
+                if (message == null)
+                    message = "View refreshed";
+                await ShowView(message);
                 if (notifyIcon.Visible)
                     notifyIcon.ShowBalloonTip(1000);
                 GridView.refreshRunning = false;
             }
         }
 
-		private async void NewBattleFileChanged(object source, FileSystemEventArgs e)
+        // TODO - Remove
+        private async void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
             await GridViewRefresh();
 		}
@@ -921,8 +915,7 @@ namespace WinApp.Forms
 				lblStatus1.ForeColor = Color.DarkRed;
 				
 			}
-			string result = await Dossier2json.UpdateDossierFileWatcher(this);
-			await Battle2json.UpdateBattleResultFileWatcher();
+			string result = await UpdateDossierAndBattleFileWatcher();
 			SetFormBorder();
 			if (showStatus2Message)
 				SetStatus2(result);
@@ -1334,11 +1327,100 @@ namespace WinApp.Forms
 			
 		}
 
-		#endregion
+        #endregion
 
-		#region Menu Items: Col List
+        #region Dossier and Battle File Listeners
 
-		private async Task SetColListMenu()
+        public async Task<string> UpdateDossierAndBattleFileWatcher()
+        {
+            string logText = "Automatically fetch new battles stopped";
+            bool run = (Config.Settings.dossierFileWathcherRun == 1);
+            if (run)
+            {
+                try
+                {
+                    logText = "Automatically fetch new battles started";
+                    SetStatus2(logText);
+                    // Dossier
+                    fswDossier.Path = Path.GetDirectoryName(Config.Settings.dossierFilePath + "\\");
+                    fswDossier.Filter = "*.dat";
+                    fswDossier.NotifyFilter = NotifyFilters.LastWrite;
+                    fswDossier.EnableRaisingEvents = true;
+                    // Battle
+                    fswBattle.Path = Path.GetDirectoryName(Config.Settings.battleFilePath);
+                    fswBattle.Filter = "*.dat";
+                    fswBattle.IncludeSubdirectories = true;
+                    fswBattle.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+                    fswBattle.EnableRaisingEvents = true;
+                }
+                catch (Exception ex)
+                {
+                    await Log.LogToFile(ex, "Error on: " + logText);
+                    MsgBox.Show("Error activation dossier or battle listners, please check your application settings", "Error in dossier file path", this);
+                    run = false;
+                }
+            }
+            // Set active / deactive now
+            fswDossier.EnableRaisingEvents = run;
+            fswBattle.EnableRaisingEvents = run;
+            await Log.LogToFile("// " + logText, true);
+            return logText;
+        }
+        
+        private async void fswDossier_Changed(object sender, FileSystemEventArgs e)
+        {
+            // Stop listening to dossier file
+            fswDossier.EnableRaisingEvents = false;
+            // Logging
+            await Log.CheckLogFileSize();
+            await Log.LogToFile("// Dossier file listener detected updated dossier file");
+            // Dossier file automatic handling
+            // Get config data
+            string dossierFile = e.FullPath;
+            FileInfo file = new FileInfo(dossierFile);
+            // Wait until file is ready to read, 
+            bool fileOk = await Dossier2json.WaitUntilFileReadyToRead(dossierFile, 4);
+            // Perform file conversion from picle to json
+            if (fileOk)
+            {
+                var result = await Dossier2json.RunDossierRead(dossierFile);
+                // Refresh and display result
+                if (result.Success && result.NewBattlesCount > 0)
+                    await GridViewRefresh(result.Message);
+                else
+                    SetStatus2(result.Message);
+                // Check for recalc grinding progress
+                await GrindingHelper.CheckForDailyRecalculateGrindingProgress();
+            }
+            // Continue listening to dossier file
+            fswDossier.EnableRaisingEvents = true;
+        }
+
+        private async void fswBattle_Created(object sender, FileSystemEventArgs e)
+        {
+            if (!Dossier2db.Running)
+            {
+                fswBattle.EnableRaisingEvents = false;
+                await Log.LogToFile("// Battle file listener detected new battle file");
+                int battlesUpdated = await Battle2json.RunBattleResultRead();
+                // Refresh and display result
+                if (battlesUpdated > 0)
+                    await GridViewRefresh("Battle files updated");
+                fswBattle.EnableRaisingEvents = true;
+            }
+            else
+                await Log.LogToFile("// New battle file detected, reading is terminated due to dossier file process is running");
+        }
+
+        
+                
+
+
+        #endregion
+
+        #region Menu Items: Col List
+
+        private async Task SetColListMenu()
 		{
 			// Hide and uncheck all colum setup list menu items
 			for (int i = 1; i <= 15; i++)
@@ -5735,7 +5817,9 @@ namespace WinApp.Forms
 
 
 
+
         #endregion
+
         
     }
 }

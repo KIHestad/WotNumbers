@@ -11,7 +11,6 @@ namespace WinApp.Code
 	public class Log
 	{
 		private static string filename = "Log.txt"; // Log filename
-		private static string battleResultDoneFile = "LastBattle.txt";
 		public static List<string> logBuffer = new List<string>();
 
 		#region logBuffer
@@ -195,29 +194,5 @@ namespace WinApp.Code
 			return ok;
 		}
 		
-		public static void BattleResultDoneLog()
-		{
-			using (StreamWriter sw = File.CreateText(Config.AppDataBaseFolder + battleResultDoneFile))
-			{
-				sw.WriteLine("last battle: " + DateTime.Now.ToString());
-				sw.Close();
-			}
-		}
-
-		public static string BattleResultDoneLogFileName()
-		{
-			if (!File.Exists(Config.AppDataBaseFolder + battleResultDoneFile))
-			{
-				using (StreamWriter sw = File.CreateText(Config.AppDataBaseFolder + battleResultDoneFile))
-				{
-					sw.WriteLine("no battles logged");
-					sw.Close();
-				}
-			}
-			return Config.AppDataBaseFolder + battleResultDoneFile;
-		}
-
-
-
 	}
 }
