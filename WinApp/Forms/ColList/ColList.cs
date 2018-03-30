@@ -17,26 +17,27 @@ namespace WinApp.Forms
 		// The current selected col list
 		private int SelectedColListId = 0;
 		private int separatorDefaultColWidth = 3;
+        private Main _frmMain { get; set; }
 		#region Init
 
-		public ColList()
+		public ColList(Main frmMain)
 		{
 			InitializeComponent();
-			if (MainSettings.View == GridView.Views.Tank)
-			{
-				ColListTheme.Text = "Edit Tank View";
-			}
-
-			else if (MainSettings.View == GridView.Views.Battle)
-			{
-				ColListTheme.Text = "Edit Battle View";
-			}
+            _frmMain = frmMain;
 		}
 
 		private async void ColumnSetup_Load(object sender, EventArgs e)
 		{
-			// Make sure borderless form do not cover task bar when maximized
-			Screen screen = Screen.FromControl(this);
+            if (MainSettings.View == GridView.Views.Tank)
+            {
+                ColListTheme.Text = "Edit Tank View";
+            }
+            else if (MainSettings.View == GridView.Views.Battle)
+            {
+                ColListTheme.Text = "Edit Battle View";
+            }
+            // Make sure borderless form do not cover task bar when maximized
+            Screen screen = Screen.FromControl(this);
 			this.MaximumSize = screen.WorkingArea.Size;
 			// Style toolbar
 			toolAllColumns.Renderer = new StripRenderer();
@@ -52,7 +53,7 @@ namespace WinApp.Forms
             // Show available columns
             toolAllColumns = await ColListHelper.SetToolStripColType(toolAllColumns, MainSettings.View);
             toolAvailableCol_All.Checked = true;
-            SetAllColumnsDataGrid();
+            await SetAllColumnsDataGrid();
 			// Mouse scrolling
 			dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
 			dataGridSelectedColumns.MouseWheel += new MouseEventHandler(dataGridSelectedColumns_MouseWheel);
@@ -300,9 +301,9 @@ namespace WinApp.Forms
 
 		#region All Columns 
 
-		private void SetAllColumnsDataGrid()
+		private async Task SetAllColumnsDataGrid()
 		{
-            dataGridAllColumns.DataSource = ColListHelper.GetDataGridColums(toolAllColumns, MainSettings.View);
+            dataGridAllColumns.DataSource = await ColListHelper.GetDataGridColums(toolAllColumns, MainSettings.View);
             dataGridAllColumns.Columns["Description"].Width = 300;
             dataGridAllColumns.Columns["id"].Visible = false;
             dataGridAllColumns.Columns["colWidth"].Visible = false;
@@ -311,7 +312,7 @@ namespace WinApp.Forms
             scrollAllColumns.ScrollElementsVisible = dataGridAllColumns.DisplayedRowCount(false);
 		}
 
-		private void toolAvaliableCol_Group_Click(object sender, EventArgs e)
+		private async void toolAvaliableCol_Group_Click(object sender, EventArgs e)
 		{
             foreach (ToolStripButton button in toolAllColumns.Items)
             {
@@ -319,7 +320,7 @@ namespace WinApp.Forms
             } 
             ToolStripButton selectedButton = (ToolStripButton)sender;
             selectedButton.Checked = true;
-            SetAllColumnsDataGrid();
+            await SetAllColumnsDataGrid();
 		}
 
 		private bool scrollingAllColumns = false;
@@ -949,8 +950,8 @@ namespace WinApp.Forms
 				gf.ColListName = dataGridColumnList.Rows[0].Cells[1].Value.ToString();
 				MainSettings.UpdateCurrentGridFilter(gf);
 			}
-			
-		}
+            await _frmMain.ReturnFromColListFrom();
+        }
 
 		private void toolSelectedTanks_Separator_Click(object sender, EventArgs e)
 		{
@@ -1046,7 +1047,6 @@ namespace WinApp.Forms
 						break;
 					case GridView.Views.Tank:
                         await ColListSystemDefault.NewSystemTankColList();
-
 						this.Close();
 						break;
 					case GridView.Views.Battle:

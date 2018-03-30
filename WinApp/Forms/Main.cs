@@ -1498,13 +1498,17 @@ namespace WinApp.Forms
 			}
 		}
 
-		private async void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
+		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.ColList();
-			frm.ShowDialog(this);
+            Form frm = new Forms.ColList(this);
+			frm.ShowDialog();
+		}
+
+        public async Task ReturnFromColListFrom()
+        {
             await SetColListMenu(); // Refresh column setup list now
             await ShowView("Refreshed grid after column setup change"); // Refresh grid now
-		}
+        }
 
 		#endregion
 

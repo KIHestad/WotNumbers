@@ -307,10 +307,18 @@ namespace WinApp.Code.FormView
 			int count = Convert.ToInt32((await DB.FetchData(sql)).Rows[0][0]);
 			if (count == 0)
 			{
-				sql = "update columnList set colDefault=1 where id=" + favListId + "; ";
+				sql = "update columnList set colDefault=1 where id=" + favListId + " and colType= " + colTypeId.ToString();
                 await DB.ExecuteNonQuery(sql);
-				MainSettings.GridFilterBattle.ColListId = Convert.ToInt32(favListId);
-				MainSettings.GridFilterBattle.ColListName = "Default";
+                if (colTypeId == 1)
+                {
+                    MainSettings.GridFilterTank.ColListId = Convert.ToInt32(favListId);
+                    MainSettings.GridFilterTank.ColListName = "Default";
+                }
+                else
+                {
+                    MainSettings.GridFilterBattle.ColListId = Convert.ToInt32(favListId);
+                    MainSettings.GridFilterBattle.ColListName = "Default";
+                }
 			}
 		}
 

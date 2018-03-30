@@ -126,7 +126,7 @@ namespace WinApp.Forms.Settings
                 return;
             }
             // Check for valid res_mods folder
-            string res_modFolder = txtFolder.Text + WoThelper.GetResModsPathSubfolder(txtResModsSubFolder.Text.Trim());
+            string res_modFolder = Path.Combine(txtFolder.Text, WoThelper.GetResModsPathSubfolder(txtResModsSubFolder.Text.Trim()));
             if (res_modFolder == "" || !Directory.Exists(res_modFolder))
             {
                 MsgBox.Show(

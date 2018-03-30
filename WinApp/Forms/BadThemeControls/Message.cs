@@ -22,22 +22,31 @@ namespace WinApp.Forms
 			txtMessage.Text = message;
 			txtMessage.SelectionStart = 0;
 			txtMessage.SelectionLength = 0;
-			MessageTheme.Text = title;
+            MessageTheme.Text = title;
             _MessageType = MessageType;
-            if (MessageType == MsgBox.Type.OKCancel || MessageType == MsgBox.Type.YesNo)
-			{
-				btnClose.Visible = false;
-				btnCancel.Visible = true;
-				btnOK.Visible = true;
-                if (MessageType == MsgBox.Type.YesNo)
-                {
-                    btnCancel.Text = "No";
-                    btnOK.Text = "Yes";
-                }
-			}
-            else if (MessageType == MsgBox.Type.OK)
+            switch (MessageType)
             {
-                btnClose.Text = "OK";
+                case MsgBox.Type.Close:
+                    MsgBox.SelectedButton = MsgBox.Button.Close;
+                    break;
+                case MsgBox.Type.OKCancel:
+                    btn2.Text = "OK";
+                    btn1.Text = "Cancel";
+                    btn2.Visible = true;
+                    MsgBox.SelectedButton = MsgBox.Button.Cancel;
+                    break;
+                case MsgBox.Type.YesNo:
+                    btn2.Text = "Yes";
+                    btn1.Text = "No";
+                    MsgBox.SelectedButton = MsgBox.Button.No;
+                    btn2.Visible = true;
+                    break;
+                case MsgBox.Type.OK:
+                    btn1.Text = "OK";
+                    MsgBox.SelectedButton = MsgBox.Button.OK;
+                    break;
+                default:
+                    break;
             }
 		}
 
@@ -57,7 +66,7 @@ namespace WinApp.Forms
 				}
 			}
 			if (lines > 12) lines = 12; // max size
-			this.Height = txtMessage.Top + (lines * 25) + 20; // resize initial height of form to fit content
+			this.Height = txtMessage.Top + (lines * 25) + 50; // resize initial height of form to fit content
 			if (this.Top == 0)
 			{
 				Form lastForm = null;
@@ -76,33 +85,43 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void cmdClose_Click(object sender, EventArgs e)
-		{
-            if (_MessageType == MsgBox.Type.YesNo)
-                Code.MsgBox.SelectedButton = Code.MsgBox.Button.No;
-            else
-                Code.MsgBox.SelectedButton = Code.MsgBox.Button.Close;
-			this.Close();
-		}
-
-		private void btnOK_Click(object sender, EventArgs e)
-		{
-            if (_MessageType == MsgBox.Type.YesNo)
-                Code.MsgBox.SelectedButton = Code.MsgBox.Button.Yes;
-            else
-                Code.MsgBox.SelectedButton = Code.MsgBox.Button.OK;
-			this.Close();
-		}
-
-		private void btnCancel_Click(object sender, EventArgs e)
-		{
-            if (btnCancel.Text == "OK")
-                MsgBox.SelectedButton = MsgBox.Button.OK;
-            else
-                MsgBox.SelectedButton = MsgBox.Button.Cancel;
+        private void btn1_Click(object sender, EventArgs e)
+        {
+            switch (_MessageType)
+            {
+                case MsgBox.Type.Close:
+                    MsgBox.SelectedButton = MsgBox.Button.Close;
+                    break;
+                case MsgBox.Type.OKCancel:
+                    MsgBox.SelectedButton = MsgBox.Button.Cancel;
+                    break;
+                case MsgBox.Type.YesNo:
+                    MsgBox.SelectedButton = MsgBox.Button.No;
+                    break;
+                case MsgBox.Type.OK:
+                    MsgBox.SelectedButton = MsgBox.Button.OK;
+                    break;
+            }
             this.Close();
-		}
+        }
 
+        private void btn2_Click(object sender, EventArgs e)
+        {
+            switch (_MessageType)
+            {
+                case MsgBox.Type.OKCancel:
+                    MsgBox.SelectedButton = MsgBox.Button.OK;
+                    break;
+                case MsgBox.Type.YesNo:
+                    MsgBox.SelectedButton = MsgBox.Button.Yes;
+                    break;
+            }
+            this.Close();
+        }
 
-	}
+        private void btnCopyText_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(MessageTheme.Text + Environment.NewLine + Environment.NewLine + txtMessage.Text);
+        }
+    }
 }

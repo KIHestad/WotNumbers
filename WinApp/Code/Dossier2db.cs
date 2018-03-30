@@ -488,10 +488,9 @@ namespace WinApp.Code
 					
 				// No longer in us
 				// Check fraglist to update playertank frags
-				List<FragItem> battleFragList = new List<FragItem>(); //  UpdatePlayerTankFrag(tankId, playerTankId, fragList);
-
+				//List<FragItem> battleFragList = new List<FragItem>(); //  UpdatePlayerTankFrag(tankId, playerTankId, fragList);
 				// Check if achivment exists
-				List<AchItem> battleAchList = await UpdatePlayerTankAch(tankId, playerTankId, achList);
+				//List<AchItem> battleAchList = await UpdatePlayerTankAch(tankId, playerTankId, achList);
 									
 
 				// If detected several battle modes, dont save fraglist and achivements to battle, as we don't know how to seperate them
@@ -504,59 +503,54 @@ namespace WinApp.Code
 				if (battlesNewStronghold > 0) severalModes++;
 				if (battlesNewGlobalMap > 0) severalModes++;
                 if (battlesNewGrand > 0) severalModes++;
-                if (severalModes > 1)
-				{
-					battleFragList.Clear();
-					battleAchList.Clear();
-				}
-
+                
 				// Now update playerTank battle for different battle modes
 				if (battlesNew15 > 0 || (forceUpdate && playerTankOldRow_15.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeRandom_TC, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle15NewRow,
-											playerTankNewRow_battles15, battlesNew15, battleFragList, battleAchList, saveBattleResult);
+											playerTankNewRow_battles15, battlesNew15, saveBattleResult);
 					battleSave += battlesNew15;
 				}
 				if (battlesNew7 > 0 || (forceUpdate && playerTankOldRow_7.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeTeam, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7NewRow,
-											playerTankNewRow_battles7, battlesNew7, battleFragList, battleAchList, saveBattleResult);
+											playerTankNewRow_battles7, battlesNew7, saveBattleResult);
 					battleSave += battlesNew7;
 				}
 				if (battlesNew7Ranked > 0 || (forceUpdate && playerTankOldRow_7Ranked.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeTeamRanked, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7RankedNewRow,
-											playerTankNewRow_battles7Ranked, battlesNew7Ranked, battleFragList, battleAchList, saveBattleResult);
+											playerTankNewRow_battles7Ranked, battlesNew7Ranked, saveBattleResult);
 					battleSave += battlesNew7Ranked;
 				}
 				if (battlesNewHistorical > 0 || (forceUpdate && playerTankOldRow_Historical.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeHistorical, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattleHistoricalNewRow,
-											playerTankNewRow_battlesHistorical, battlesNewHistorical, battleFragList, battleAchList, saveBattleResult);
+											playerTankNewRow_battlesHistorical, battlesNewHistorical, saveBattleResult);
 					battleSave += battlesNewHistorical;
 				}
 				if (battlesNewSkirmishes > 0 || (forceUpdate && playerTankOldRow_Skirmishes.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeSkirmishes, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleSkirmishesNewRow,
-											playerTankNewRow_battlesSkirmishes, battlesNewSkirmishes, battleFragList, battleAchList, saveBattleResult);
+											playerTankNewRow_battlesSkirmishes, battlesNewSkirmishes, saveBattleResult);
 					battleSave += battlesNewSkirmishes;
 				}
 				if (battlesNewStronghold > 0 || (forceUpdate && playerTankOldRow_Stronghold.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeStronghold, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleStrongholdNewRow,
-											playerTankNewRow_battlesStronghold, battlesNewStronghold, battleFragList, battleAchList, saveBattleResult);
+											playerTankNewRow_battlesStronghold, battlesNewStronghold, saveBattleResult);
 					battleSave += battlesNewStronghold;
 				} 
 				if (battlesNewGlobalMap > 0 || (forceUpdate && playerTankOldRow_GlobalMap.Battles != 0))
 				{
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeGlobalMap, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleGlobalMapNewRow,
-											playerTankNewRow_battlesGlobalMap, battlesNewGlobalMap, battleFragList, battleAchList, saveBattleResult);
+											playerTankNewRow_battlesGlobalMap, battlesNewGlobalMap, saveBattleResult);
 					battleSave += battlesNewGlobalMap;
 				}
                 if (battlesNewGrand > 0 || (forceUpdate && playerTankOldRow_Grand.Battles != 0))
                 {
                     await UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeGrand, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleGrandNewRow,
-                                            playerTankNewRow_battlesGrand, battlesNewGrand, battleFragList, battleAchList, saveBattleResult);
+                                            playerTankNewRow_battlesGrand, battlesNewGrand, saveBattleResult);
                     battleSave += battlesNewGrand;
                 }
                 if (specialTankFound)
@@ -667,9 +661,7 @@ namespace WinApp.Code
 													DataRow playerTankNewRow, DataRow playerTankOldRow,
 													DataRow playerTankBattleNewRow,
 													int playerTankNewRow_battles,
-													int battlesNew, 
-													List<FragItem> battleFragList, 
-													List<AchItem> battleAchList,
+													int battlesNew,
 													bool saveBattleResult)
 		{
 			// Get or create playerTank BattleResult
@@ -735,7 +727,7 @@ namespace WinApp.Code
 			}
 			// Add battle, if any and not first run - then avoid
 			if (saveBattleResult && battlesNew > 0)
-                await AddBattle(playerTankNewRow, playerTankOldRow, playerTankBattleNewRow, playerTankBattleOld.Rows[0], battleMode, tankId, playerTankId, battlesNew, battleFragList, battleAchList);
+                await AddBattle(playerTankNewRow, playerTankOldRow, playerTankBattleNewRow, playerTankBattleOld.Rows[0], battleMode, tankId, playerTankId, battlesNew);
 			playerTankBattleOld.Dispose();
 			playerTankBattleOld.Clear();
 		}
@@ -846,9 +838,7 @@ namespace WinApp.Code
                                          BattleMode.TypeEnum battleMode, 
 										 int tankId, 
 										 int playerTankId, 
-										 int battlesCount, 
-										 List<FragItem> battleFragList, 
-										 List<AchItem> battleAchList)
+										 int battlesCount)
 		{
 			try
 			{
@@ -1058,18 +1048,18 @@ namespace WinApp.Code
 					//	DB.ExecuteNonQuery(battleFragSQL);
 					//}
 					// Insert battle Achievements
-					if (battleAchList.Count > 0)
-					{
-						// Loop through new frags
-						string battleAchSQL = "";
-						foreach (var newAchItem in battleAchList)
-						{
-							battleAchSQL += "INSERT INTO battleAch (battleId, achId, achCount) " +
-											"VALUES (" + battleId + ", " + newAchItem.achId.ToString() + ", " + newAchItem.count.ToString() + "); ";
-						}
-                        // Add to database
-                        await DB.ExecuteNonQuery(battleAchSQL);
-					}
+					//if (battleAchList.Count > 0)
+					//{
+					//	// Loop through new frags
+					//	string battleAchSQL = "";
+					//	foreach (var newAchItem in battleAchList)
+					//	{
+					//		battleAchSQL += "INSERT INTO battleAch (battleId, achId, achCount) " +
+					//						"VALUES (" + battleId + ", " + newAchItem.achId.ToString() + ", " + newAchItem.count.ToString() + "); ";
+					//	}
+                    //  // Add to database
+                    //  await DB.ExecuteNonQuery(battleAchSQL);
+					//}
 					dt.Dispose();
 					dt.Clear();
 				}
