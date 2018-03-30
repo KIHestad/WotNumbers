@@ -58,7 +58,7 @@ namespace WinApp.Forms
                 "  credTotCost=null, " +
                 "  credTotResult=null, " +
                 "  credBtlLifetime=null ";
-            await DB.ExecuteNonQueryAsync(resetSQL);
+            await DB.ExecuteNonQuery(resetSQL);
 			// Get battles
 			UpdateProgressBar("Getting battle count");
             // Credits = total income
@@ -76,7 +76,7 @@ namespace WinApp.Forms
                 "group by playerTank.id, tank.name, battle.battleMode " +
                 "order by tank.name, battle.battleMode";
 				
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			int tot = dt.Rows.Count;
 			badProgressBar.ValueMax = tot + 2;
 			sql = "";
@@ -100,14 +100,14 @@ namespace WinApp.Forms
                     if (sql.Length >= 5000) // Approx 50 updates
                     {
                         lblProgressStatus.Text = "Saving to database...";
-                        await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+                        await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
                         sql = "";
                     }
                 }
 			}
 			if (sql != "") // Update last batch of sql's
 			{
-                await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+                await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
 				sql = "";
 			}
 

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 using WinApp.Code.FormLayout;
@@ -53,12 +54,12 @@ namespace WinApp.Forms.Settings
             btnSave.Enabled = changesApplied;
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private async void btnSave_Click(object sender, EventArgs e)
         {
-            SaveChanges();
+            await SaveChanges();
         }
 
-        public void SaveChanges()
+        public async Task SaveChanges()
         {
             // Settings
             Config.Settings.notifyIconUse = chkNotifyIconUse.Checked;
@@ -66,8 +67,7 @@ namespace WinApp.Forms.Settings
             Config.Settings.databaseBackupFilePath = txtBackupFilePath.Text;
             Config.Settings.databaseBackupPeriod = Convert.ToInt32(ddPeriod.Text);
             Config.Settings.newDayAtHour = Convert.ToInt32(ddHour.Text);
-            string msg = "";
-            Config.SaveConfig(out msg);
+            await Config.SaveConfig();
             EditChangesApply(false);
             //Session Settings
             Config.SessionSettings.tempBattleResultSave = chkTempBattleresultSave.Checked;
@@ -91,10 +91,10 @@ namespace WinApp.Forms.Settings
             EditChangesApply(true);
         }
 
-        private void ddHour_Click(object sender, EventArgs e)
+        private async void ddHour_Click(object sender, EventArgs e)
         {
             currentValue = ddHour.Text;
-            Code.DropDownGrid.Show(ddHour, Code.DropDownGrid.DropDownGridType.List, "00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23");
+            await Code.DropDownGrid.Show(ddHour, Code.DropDownGrid.DropDownGridType.List, "00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23");
         }
 
         private void ddHour_TextChanged(object sender, EventArgs e)
@@ -103,10 +103,10 @@ namespace WinApp.Forms.Settings
                 EditChangesApply(true);
         }
 
-        private void ddPeriod_Click(object sender, EventArgs e)
+        private async void ddPeriod_Click(object sender, EventArgs e)
         {
             currentValue = ddPeriod.Text;
-            Code.DropDownGrid.Show(ddPeriod, Code.DropDownGrid.DropDownGridType.List, "0,1,2,3,4,5,6,7");
+            await Code.DropDownGrid.Show(ddPeriod, Code.DropDownGrid.DropDownGridType.List, "0,1,2,3,4,5,6,7");
         }
 
         private void ddPeriod_TextChanged(object sender, EventArgs e)

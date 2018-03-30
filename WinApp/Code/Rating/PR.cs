@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WinApp.Code.Rating
 {
@@ -33,7 +34,7 @@ namespace WinApp.Code.Rating
             public double track88 { get; set; } // ptb.assistTrack - battle.assistTrack 
         }
 
-        private static RatingParametersPR GetParamForPlayerTotal(string battleMode)
+        private async static Task<RatingParametersPR> GetParamForPlayerTotal(string battleMode)
         {
             RatingParametersPR rpPR = new RatingParametersPR();
             // Get player totals from db
@@ -50,7 +51,7 @@ namespace WinApp.Code.Rating
                 "  playerTank pt on ptb.playerTankId=pt.id " +
                 "where pt.playerId=@playerId " + battleModeWhere ;
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-            DataTable playerTotalsTable = DB.FetchData(sql);
+            DataTable playerTotalsTable = await DB.FetchData(sql);
             if (playerTotalsTable.Rows.Count > 0)
             {
                 DataRow stats = playerTotalsTable.Rows[0];
@@ -67,14 +68,14 @@ namespace WinApp.Code.Rating
             return rpPR;
         }
 
-        public static double CalcPlayerTotal(string battleMode)
+        public async static Task<double> CalcPlayerTotal(string battleMode)
         {
-            return UseFormula(GetParamForPlayerTotal(battleMode));
+            return UseFormula(await GetParamForPlayerTotal(battleMode));
         }
 
-        public static double CalcBattleRange(string battleMode, string battleTimeFilter, int maxBattles = 0)
+        public async static Task<double> CalcBattleRange(string battleMode, string battleTimeFilter, int maxBattles = 0)
         {
-            return UseFormula(GetParamForPlayerTotal(battleMode));
+            return UseFormula(await GetParamForPlayerTotal(battleMode));
         }
 
 

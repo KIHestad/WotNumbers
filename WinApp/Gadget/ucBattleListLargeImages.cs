@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
+using System.Threading.Tasks;
 
 namespace WinApp.Gadget
 {
@@ -64,7 +65,7 @@ namespace WinApp.Gadget
 			}
 		}
 
-		public void DataBind()
+		public async Task DataBind()
 		{
 			// Images are 160x100
 			// Get all tanks and show in imageGadget
@@ -76,7 +77,7 @@ namespace WinApp.Gadget
 				"where pt.playerId=@playerId " +
 				"order by b.battleTime desc; ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable battle = DB.FetchData(sql);
+			DataTable battle = await DB.FetchData(sql);
 			int rowCount = 0;
 			for (int row = 0; row < _rows; row++)
 			{

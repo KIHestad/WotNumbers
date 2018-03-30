@@ -30,7 +30,7 @@ namespace WinApp.Code
 			set { _Value = value; }
 		}	
 		
-		public static string Show(string Title, PopupGridType DataSourceType, string DataSource, string OverrideDbCon = "")
+		public async static Task<string> Show(string Title, PopupGridType DataSourceType, string DataSource, string OverrideDbCon = "")
 		{
 			Value = "";
 			ValueSelected = false;
@@ -48,7 +48,7 @@ namespace WinApp.Code
 			}
 			else if (DataSourceType == PopupGridType.Sql)
 			{
-				dt = DB.FetchData(DataSource);
+				dt = await DB.FetchData(DataSource);
 			}
 			if (dt.Rows.Count > 0)
 			{

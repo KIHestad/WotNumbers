@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WinApp.Code.Rating
 {
     public class WR
     {
-        public static double WinrateBattle(string battleTimeFilter, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public async static Task<double> WinrateBattle(string battleTimeFilter, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             // Calculate winrate for spesified battles
             double WR = 0;
@@ -22,7 +23,7 @@ namespace WinApp.Code.Rating
                 "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            DataTable dtBattles = DB.FetchData(sql);
+            DataTable dtBattles = await DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
                 double BATTLES = 0;
@@ -40,7 +41,7 @@ namespace WinApp.Code.Rating
             return WR;
         }
 
-        public static double WinrateTank(string battleTimeFilter, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public async static Task<double> WinrateTank(string battleTimeFilter, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             // calculate average winrate for all tanks included in filter
             double WR = 0;
@@ -57,7 +58,7 @@ namespace WinApp.Code.Rating
                 "  where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + ")";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            DataTable dtBattles = DB.FetchData(sql);
+            DataTable dtBattles = await DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
                 double BATTLES = 0;

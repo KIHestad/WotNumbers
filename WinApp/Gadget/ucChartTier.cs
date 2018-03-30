@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Threading.Tasks;
 
 namespace WinApp.Gadget
 {
@@ -64,9 +65,9 @@ namespace WinApp.Gadget
             }
 		}
 
-		public void DataBind()
+		public async Task DataBind()
 		{
-			DrawChart();
+			await DrawChart();
 		}
 
 		private void CreateEmptyChart()
@@ -123,7 +124,7 @@ namespace WinApp.Gadget
 			}
 		}
 
-		private void DrawChart()
+		private async Task DrawChart()
 		{
 			// Show battle mode
 			string battleModeText = "Total";
@@ -179,7 +180,7 @@ namespace WinApp.Gadget
 				DB.AddWithValue(ref sql, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 			}
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			Series serie1 = chart1.Series[0];
 			//for (int x = 0; x < 10; x++)
 			//	serie1.Points[x].YValues[0] = 0;
@@ -239,7 +240,7 @@ namespace WinApp.Gadget
 				GadgetHelper.DrawBorderOnGadget(sender, e);
 		}
 
-		private void btnSelection_Click(object sender, EventArgs e)
+		private async void btnSelection_Click(object sender, EventArgs e)
 		{
 			btnTotal.Checked = false;
 			btnMonth3.Checked = false;
@@ -249,7 +250,7 @@ namespace WinApp.Gadget
 			BadButton btn = (BadButton)sender;
 			btn.Checked = true;
             _battleTimeSpan = GadgetHelper.GetTimeItemFromName(btn.Tag.ToString()).TimeRange;
-			DrawChart();
+			await DrawChart();
 		}
 
 		private void timer1_Tick(object sender, EventArgs e)

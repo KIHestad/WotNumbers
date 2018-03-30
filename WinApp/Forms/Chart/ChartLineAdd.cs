@@ -45,7 +45,7 @@ namespace WinApp.Forms
             InitializeComponent();
         }
 
-        private void ChartLineAdd_Load(object sender, EventArgs e)
+        private async void ChartLineAdd_Load(object sender, EventArgs e)
         {
             // Tank GridStyle and handle scrolling for Tank Grid
             GridHelper.StyleDataGrid(dataGridTanks, DataGridViewSelectionMode.CellSelect);
@@ -69,7 +69,7 @@ namespace WinApp.Forms
                     "where playerTank.playerId = @playerId " +
                     "order by playerTank.lastBattleTime DESC; ";
                 DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                DataTable dtTank = DB.FetchData(sql);
+                DataTable dtTank = await DB.FetchData(sql);
                 foreach (DataRow dr in dtTank.Rows)
                 {
                     // Use ImageHelper to add tank image
@@ -97,7 +97,7 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
             }
             // Spesific tank added, select it
             if (_tankId != 0)
@@ -228,7 +228,7 @@ namespace WinApp.Forms
         #region datagrid scrolling
 
         // Enable mouse wheel scrolling for datagrid
-        private void dataGridTank_MouseWheel(object sender, MouseEventArgs e)
+        private async void dataGridTank_MouseWheel(object sender, MouseEventArgs e)
         {
             try
             {
@@ -248,12 +248,12 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
                 // throw;
             }
         }
 
-        private void dataGridChartTypes_MouseWheel(object sender, MouseEventArgs e)
+        private async void dataGridChartTypes_MouseWheel(object sender, MouseEventArgs e)
         {
             try
             {
@@ -273,7 +273,7 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
                 // throw;
             }
         }

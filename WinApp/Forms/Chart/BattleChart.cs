@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using WinApp.Code;
@@ -65,7 +66,7 @@ namespace WinApp.Forms
             mSpline.Checked = BattleChartHelper.Settings.Spline;
         }
 
-        private void BattleChart_Load(object sender, EventArgs e)
+        private async void BattleChart_Load(object sender, EventArgs e)
 		{
             // Toolstrip set width
             mMain.Width = this.Width - 2;
@@ -94,11 +95,11 @@ namespace WinApp.Forms
             //ChartingMain.ChartAreas[0].AxisY2.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
             ChartingMain.ChartAreas[0].AxisY2.MajorGrid.LineColor = Color.Transparent;
             // Get favourites
-            SetFavouritMenu();
+            await SetFavouritMenu();
 
         }
 
-        private void BattleChart_Shown(object sender, EventArgs e)
+        private async void BattleChart_Shown(object sender, EventArgs e)
         {
             if (initTankId != 0)
             {
@@ -115,11 +116,11 @@ namespace WinApp.Forms
                     if (Int32.TryParse(Config.Settings.currentChartFavourite, out selectedChartFavouriteId))
                     {
                         if (selectedChartFavouriteId > 0)
-                            GetFavouriteChart(selectedChartFavouriteId);
+                            await GetFavouriteChart(selectedChartFavouriteId);
                     }
                 }
                 // Draw current chart view
-                DrawCurrentChartView();
+                await DrawCurrentChartView();
             }
 
         }
@@ -169,7 +170,7 @@ namespace WinApp.Forms
 				
 		}
 
-        private void DrawCurrentChartView()
+        private async Task DrawCurrentChartView()
         {
             // Default = auto x-axis
             ChartingMain.ChartAreas[0].AxisX.Minimum = Double.NaN;
@@ -189,13 +190,13 @@ namespace WinApp.Forms
             foreach (BattleChartHelper.BattleChartItem item in BattleChartHelper.CurrentChartView)
             {
                 if (yAxix1 && yAxix2)
-                    AddChartValuesToChart(item.tankId, item.tankName, item.chartTypeName, item.use2ndYaxis); // Both Y-axis in use
+                    await AddChartValuesToChart(item.tankId, item.tankName, item.chartTypeName, item.use2ndYaxis); // Both Y-axis in use
                 else
-                    AddChartValuesToChart(item.tankId, item.tankName, item.chartTypeName, false); // Only one Y-axis
+                    await AddChartValuesToChart(item.tankId, item.tankName, item.chartTypeName, false); // Only one Y-axis
             }
         }
 
-        private void AddChartValuesToChart(int tankId, string tankName, string chartTypeName, bool use2ndYaxis)
+        private async Task AddChartValuesToChart(int tankId, string tankName, string chartTypeName, bool use2ndYaxis)
 		{
             // Init
             string chartSerie = tankName + " - " + chartTypeName;
@@ -260,17 +261,17 @@ namespace WinApp.Forms
 			switch (chartTypeName)
 			{
 				case "WN8":
-                    DrawChartSeriesWN8(tankId, chartSerie, chartMode);
+                    await DrawChartSeriesWN8(tankId, chartSerie, chartMode);
                     return;
                 case "WN9":
                     if (tankId != 0)
-                        DrawChartSeriesWN9PerTank(tankId, chartSerie, chartOrder, chartMode);
+                        await DrawChartSeriesWN9PerTank(tankId, chartSerie, chartOrder, chartMode);
                     else
                         DrawChartSeriesWN9ForAccount(chartSerie, chartOrder, chartMode);
                     return;
             }
-			// Draw series in chart now
-			DrawChartSeries(tankId, chartSerie, chartOrder, chartType, chartMode);
+            // Draw series in chart now
+            await DrawChartSeries(tankId, chartSerie, chartOrder, chartType, chartMode);
 		}
 
 		private static double CalcChartSeriesPointValue(List<double> values, BattleChartHelper.CalculationType calcType, double defaultTier)
@@ -319,7 +320,7 @@ namespace WinApp.Forms
 			return result;
 		}
 
-		private void DrawChartSeries(int tankId, string chartSerie, string chartOrder, BattleChartHelper.ChartType chartType, string chartMode)
+		private async Task DrawChartSeries(int tankId, string chartSerie, string chartOrder, BattleChartHelper.ChartType chartType, string chartMode)
 		{
 			// Create sql select fields and to store values
 			string currentValCols = "";
@@ -344,7 +345,7 @@ namespace WinApp.Forms
 			if (tankId != 0)
 			{
 				// Find playertank and current value
-				int playerTankId = TankHelper.GetPlayerTankId(tankId);
+				int playerTankId = await TankHelper.GetPlayerTankId(tankId);
 				ptWhere = " where pt.id=@playerTankId ";
 				bWhere = " where playerTankId=@playerTankId ";
 				DB.AddWithValue(ref ptWhere, "@playerTankId", playerTankId, DB.SqlDataType.Int);
@@ -371,7 +372,7 @@ namespace WinApp.Forms
 				"  tank t on pt.tankId = t.id " +
 				ptWhere;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dtCurrent = DB.FetchData(sql);
+			DataTable dtCurrent = await DB.FetchData(sql);
 			if (dtCurrent.Rows.Count > 0)
 			{
 				for (int i = 0; i < values.Count; i++)
@@ -391,7 +392,7 @@ namespace WinApp.Forms
 					"  tank t on pt.tankId = t.id " +
 					GetBattleTimeFilter(bWhere);
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				DataTable dtFirst = DB.FetchData(sql);
+				DataTable dtFirst = await DB.FetchData(sql);
 				if (dtFirst.Rows.Count > 0)
 				{
 					for (int i = 0; i < values.Count; i++)
@@ -411,7 +412,7 @@ namespace WinApp.Forms
 				GetBattleTimeFilter(bWhere) + " " +
 				"order by battleTime " + chartOrder;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dtChart = DB.FetchData(sql);
+			DataTable dtChart = await DB.FetchData(sql);
 			double chartVal = 0;
 			// Calculate values for some special charts
 			double defaultTier = 0;
@@ -422,14 +423,14 @@ namespace WinApp.Forms
 						// The total tier is added in column number 6, the total number of battles in col num 0
 						defaultTier = Convert.ToDouble(dtCurrent.Rows[0][6]) / Convert.ToDouble(dtCurrent.Rows[0][0]);
 					else
-						defaultTier = TankHelper.GetTankTier(tankId);
+						defaultTier = await TankHelper.GetTankTier(tankId);
 					break;
 				case BattleChartHelper.CalculationType.wn7:
 					if (tankId == 0)
 						// The total tier is added in column number 6, the total number of battles in col num 0
-                        defaultTier = Code.Rating.WNHelper.GetAverageTier();
+                        defaultTier = await WNHelper.GetAverageTier();
 					else
-						defaultTier = TankHelper.GetTankTier(tankId);
+						defaultTier = await TankHelper.GetTankTier(tankId);
 					break;
 				case BattleChartHelper.CalculationType.wn8:
 					break;
@@ -498,7 +499,7 @@ namespace WinApp.Forms
 			dtCurrent.Clear();
 		}
 
-		private void DrawChartSeriesWN8(int tankId, string chartSerie, string chartMode)
+		private async Task DrawChartSeriesWN8(int tankId, string chartSerie, string chartMode)
 		{
 			Cursor = Cursors.WaitCursor;
 			// Find playerTank current value or all tanks current value
@@ -507,7 +508,7 @@ namespace WinApp.Forms
 			string bWhere = "";
             if (tankId != 0)
 			{
-				int playerTankId = TankHelper.GetPlayerTankId(tankId);
+				int playerTankId = await TankHelper.GetPlayerTankId(tankId);
 				ptWhere = " and pt.id=@playerTankId ";
 				bSumWhere = " and playerTankId=@playerTankId ";
 				bWhere = " where playerTankId=@playerTankId ";
@@ -527,7 +528,7 @@ namespace WinApp.Forms
 				"where t.expDmg is not null " + ptWhere + " " + battleModeWhere +
 				"group by t.id ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable ptb = DB.FetchData(sql); // ptb holds all parameters needed to calc WN8
+			DataTable ptb = await DB.FetchData(sql); // ptb holds all parameters needed to calc WN8
             
 			// Find battles
             if (chartMode != "ALL")
@@ -540,7 +541,7 @@ namespace WinApp.Forms
                 GetBattleTimeFilter(bWhere) + " " +
                 "order by battleTime DESC "; 
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dtBattle = DB.FetchData(sql);
+			DataTable dtBattle = await DB.FetchData(sql);
 			double chartVal = 0;
 
 			// Draw chart per date
@@ -625,7 +626,7 @@ namespace WinApp.Forms
 			Cursor = Cursors.Default;
 		}
         
-        private void DrawChartSeriesWN9PerTank(int tankId, string chartSerie, string chartOrder, string chartMode)
+        private async Task DrawChartSeriesWN9PerTank(int tankId, string chartSerie, string chartOrder, string chartMode)
         {
             Cursor = Cursors.WaitCursor;
             // Find playerTank current value or all tanks current value
@@ -633,7 +634,7 @@ namespace WinApp.Forms
             string bSumWhere = "";
             string bWhere = "";
             // Filter on tank
-            int playerTankId = TankHelper.GetPlayerTankId(tankId);
+            int playerTankId = await TankHelper.GetPlayerTankId(tankId);
             ptWhere = " and pt.id=@playerTankId ";
             bSumWhere = " and playerTankId=@playerTankId ";
             bWhere = " where playerTankId=@playerTankId ";
@@ -654,7 +655,7 @@ namespace WinApp.Forms
                 "where t.wn9exp is not null " + ptWhere + " " + battleModeWhere +
                 "group by t.id ";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-            DataTable ptb = DB.FetchData(sql);
+            DataTable ptb = await DB.FetchData(sql);
 
             // if per battle, start from left - find initial value
             if (BattleChartHelper.Settings.Xaxis == "Battle")
@@ -672,7 +673,7 @@ namespace WinApp.Forms
                     GetBattleTimeFilter(bSumWhere) + " " +
                     "group by t.id ";
                 DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                DataTable dtBattleSum = DB.FetchData(sql);
+                DataTable dtBattleSum = await DB.FetchData(sql);
                 if (dtBattleSum.Rows.Count > 0)
                 {
                     foreach (DataRow ptbRow in ptb.Rows)
@@ -702,7 +703,7 @@ namespace WinApp.Forms
                 GetBattleTimeFilter(bWhere) + " " +
                 "order by battleTime " + chartOrder;
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-            DataTable dtChart = DB.FetchData(sql);
+            DataTable dtChart = await DB.FetchData(sql);
             double chartVal = 0;
             
             // If per date
@@ -723,8 +724,7 @@ namespace WinApp.Forms
                     DateTime thisDate = Convert.ToDateTime(dr["battle_time"]);
                     if (thisDate <= chartDate)
                     {
-                        double wn9maxhist = 0;
-                        chartVal = Math.Round(WN9.CalcPlayerTankBattle(ptb, out wn9maxhist), decimals);
+                        chartVal = Math.Round((await WN9.CalcPlayerTankBattle(ptb)).WN9, decimals);
                         ChartingMain.Series[chartSerie].Points.AddXY(thisDate, chartVal); // Use battle date
                         chartDate = thisDate.AddHours(-hourInterval);
                     }
@@ -766,8 +766,8 @@ namespace WinApp.Forms
                     step++;
                     if (step % stepMod == 0 || step == 0)
                     {
-                        double wn9maxhist = 0;
-                        chartVal = Math.Round(Code.Rating.WN9.CalcPlayerTankBattle(ptb, out wn9maxhist), decimals);
+                        WN9.Wn9Result Wn9result = await WN9.CalcPlayerTankBattle(ptb);
+                        chartVal = Math.Round(Wn9result.WN9, decimals);
                         ChartingMain.Series[chartSerie].Points.AddXY(battleCount, chartVal); // Use battle count
                     }
                 }
@@ -791,7 +791,7 @@ namespace WinApp.Forms
         Point? prevPosition = null;
         ToolTip tooltip = new ToolTip();
 
-        private void ChartingMain_MouseMove(object sender, MouseEventArgs e)
+        private async void ChartingMain_MouseMove(object sender, MouseEventArgs e)
         {
             try
             {
@@ -836,7 +836,7 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
                 //throw;
             }
         }
@@ -846,12 +846,12 @@ namespace WinApp.Forms
         #region Toolbar events
 
         // Select Spline
-        private void mSpline_Click(object sender, EventArgs e)
+        private async void mSpline_Click(object sender, EventArgs e)
         {
             mSpline.Checked = !mSpline.Checked;
             BattleChartHelper.Settings.Spline = mSpline.Checked;
             // Update chart view
-            DrawCurrentChartView();
+            await DrawCurrentChartView();
             if (mSpline.Checked)
                 lblFooter.Text = "Selected Spline (curved line)";
             else
@@ -859,12 +859,12 @@ namespace WinApp.Forms
         }
 
         // Select Bullet
-        private void mBullet_Click(object sender, EventArgs e)
+        private async void mBullet_Click(object sender, EventArgs e)
         {
             mBullet.Checked = !mBullet.Checked;
             BattleChartHelper.Settings.Bullet = mBullet.Checked;
             // Update chart view
-            DrawCurrentChartView();
+            await DrawCurrentChartView();
             if (mBullet.Checked)
                 lblFooter.Text = "Selected Bullets";
             else
@@ -872,7 +872,7 @@ namespace WinApp.Forms
         }
 
         // Selected X-Axis
-        private void mXaxis_Click(object sender, EventArgs e)
+        private async void mXaxis_Click(object sender, EventArgs e)
         {
             ToolStripButton button = (ToolStripButton)sender;
             if (!button.Checked)
@@ -882,7 +882,7 @@ namespace WinApp.Forms
                 button.Checked = true;
                 BattleChartHelper.Settings.Xaxis = button.Text;
                 // Update chart view
-                DrawCurrentChartView();
+                await DrawCurrentChartView();
                 lblFooter.Text = "Selected X-Axis";
             }
         }
@@ -920,24 +920,24 @@ namespace WinApp.Forms
         }
 
         // Selected Battle Time Filter
-        private void mBattleTimeChanged_Click(object sender, EventArgs e)
+        private async void mBattleTimeChanged_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
             BattleChartHelper.Settings.BattleTime = menu.Tag.ToString();
             SetBattleTimeFilterMenu();
             // Update chart view
-            DrawCurrentChartView();
+            await DrawCurrentChartView();
             lblFooter.Text = "Selected Battle Time: " + menu.Text;
         }
 
         // Select battle mode
-        private void mBattleModesChanged_Click(object sender, EventArgs e)
+        private async void mBattleModesChanged_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
             BattleChartHelper.Settings.BattleMode = menu.Tag.ToString();
             SetBattleModeMenu();
             // Update chart view
-            DrawCurrentChartView();
+            await DrawCurrentChartView();
             lblFooter.Text = "Selected Battle Mode: " + menu.Text;
         }
 
@@ -964,7 +964,7 @@ namespace WinApp.Forms
         }
 
         // Clear Chart
-        private void mChartClear_Click(object sender, EventArgs e)
+        private async void mChartClear_Click(object sender, EventArgs e)
         {
             BattleChartHelper.CurrentChartView = new List<BattleChartHelper.BattleChartItem>();
             ClearChartArea(false);
@@ -972,17 +972,17 @@ namespace WinApp.Forms
             selectedChartFavouriteName = "";
             BattleChartTheme.Text = "Chart";
             mFavouriteSave.Image = imageListToolStrip.Images[0];
-            SetFavouritMenu();
+            await SetFavouritMenu();
             SetFavouritMenuSelected(selectedChartFavouriteId);
             lblFooter.Text = "Chart view cleared, prepared for creating new chart";
             Refresh();
         }
 
         // Refresh
-        private void mRefresh_Click(object sender, EventArgs e)
+        private async void mRefresh_Click(object sender, EventArgs e)
         {
             // Update chart view
-            DrawCurrentChartView();
+            await DrawCurrentChartView();
             lblFooter.Text = "Refreshed chart";
         }
 
@@ -993,7 +993,7 @@ namespace WinApp.Forms
         }
 
         // Open form for adding new chart line
-        private void OpenFormSelectChartParameters(int tankId = 0)
+        private async void OpenFormSelectChartParameters(int tankId = 0)
         {
             Form frm = new ChartLineAdd(tankId);
             frm.ShowDialog();
@@ -1002,7 +1002,7 @@ namespace WinApp.Forms
                 // Add new chart items to chart view
                 BattleChartHelper.CurrentChartView.AddRange(BattleChartHelper.NewChartItem);
                 // Add the new chart item to current chart
-                DrawCurrentChartView();
+                await DrawCurrentChartView();
                 // Chage to unsaved
                 mFavouriteSave.Image = imageListToolStrip.Images[1];
                 mFavouriteSave.ToolTipText = "Update or Save as new Favourite (chart values unsaved)";
@@ -1011,7 +1011,7 @@ namespace WinApp.Forms
             lblFooter.Text = "Added chart values";
         }
 
-        private void mChartRemove_Click(object sender, EventArgs e)
+        private async void mChartRemove_Click(object sender, EventArgs e)
         {
             if (BattleChartHelper.CurrentChartView.Count == 0)
             {
@@ -1022,7 +1022,7 @@ namespace WinApp.Forms
             frm.ShowDialog();
             if (BattleChartHelper.RemovedChartValues > 0)
             {
-                DrawCurrentChartView();
+                await DrawCurrentChartView();
                 lblFooter.Text = "Removed " + BattleChartHelper.RemovedChartValues + " chart value";
                 if (BattleChartHelper.RemovedChartValues > 1)
                     lblFooter.Text += "s";
@@ -1049,11 +1049,11 @@ namespace WinApp.Forms
         #region Favourites
 
 
-        private void SetFavouritMenu()
+        private async Task SetFavouritMenu()
         {
             ResetFavouriteMenu();
             string sql = "SELECT id, favouriteName FROM chartFav ORDER BY favouriteName;";
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             int count = dt.Rows.Count;
             if (count > 15)
                 count = 15;
@@ -1093,13 +1093,13 @@ namespace WinApp.Forms
             mFavourite.Text = "";
         }
 
-        private void mFavouriteSelect_Click(object sender, EventArgs e)
+        private async void mFavouriteSelect_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
-            GetFavouriteChart(Convert.ToInt32(menu.Tag));
+            await GetFavouriteChart(Convert.ToInt32(menu.Tag));
         }
 
-        private void GetFavouriteChart(int chartFavId)
+        private async Task GetFavouriteChart(int chartFavId)
         {
             // Clear current charts
             BattleChartHelper.CurrentChartView = new List<BattleChartHelper.BattleChartItem>();
@@ -1109,7 +1109,7 @@ namespace WinApp.Forms
                 "FROM chartFav LEFT JOIN chartFavLine ON chartFavLine.chartFavId = chartFav.Id " + 
                 "WHERE chartFav.id = @id ORDER BY tankId, chartTypeName;";
             DB.AddWithValue(ref sql, "@id", chartFavId, DB.SqlDataType.Int);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             // Read into chart if exists
             bool readChartFav = true;
             if (dt.Rows.Count > 0)
@@ -1138,7 +1138,7 @@ namespace WinApp.Forms
                         BattleChartHelper.CurrentChartView.Add(item);
                     }
                 }
-                DrawCurrentChartView();
+                await DrawCurrentChartView();
                 BattleChartTheme.Text = "Chart - " + selectedChartFavouriteName;
                 selectedChartFavouriteId = chartFavId;
                 lblFooter.Text = "Showing Favourite Chart: " + selectedChartFavouriteName;
@@ -1160,12 +1160,12 @@ namespace WinApp.Forms
             mFavouriteSave.ToolTipText = "Update or Save as new Favourite";
         }
 
-        private void mFavouriteSave_Click(object sender, EventArgs e)
+        private async void mFavouriteSave_Click(object sender, EventArgs e)
         {
-            SaveFavourite();
+            await SaveFavourite();
         }
 
-        private void SaveFavourite()
+        private async Task SaveFavourite()
         {
             if (BattleChartHelper.CurrentChartView.Count == 0)
             {
@@ -1176,7 +1176,7 @@ namespace WinApp.Forms
             frm.ShowDialog();
             if (BattleChartHelper.SaveFavouriteSaved)
             {
-                SetFavouritMenu();
+                await SetFavouritMenu();
                 SetFavouritMenuSelected(BattleChartHelper.SaveFavouriteNewFavId);
                 BattleChartTheme.Text = "Chart - " + BattleChartHelper.SaveFavouriteNewFavName;
                 selectedChartFavouriteId = BattleChartHelper.SaveFavouriteNewFavId;
@@ -1188,7 +1188,7 @@ namespace WinApp.Forms
             }
             else if (BattleChartHelper.SaveFavouriteDeleted)
             {
-                SetFavouritMenu();
+                await SetFavouritMenu();
                 selectedChartFavouriteId = -1;
                 SetFavouritMenuSelected(-1);
                 BattleChartTheme.Text = "Chart";
@@ -1202,21 +1202,21 @@ namespace WinApp.Forms
         
         #endregion
 
-        private void BattleChart_FormClosing(object sender, FormClosingEventArgs e)
+        private async void BattleChart_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (mFavouriteSave.ToolTipText == "Update or Save as new Favourite (chart values unsaved)" && BattleChartHelper.CurrentChartView.Count > 0)
             {
                 MsgBox.Button answer = MsgBox.Show("Chart is edited but not saved as favourite, save now?", "Save Favourite", MsgBox.Type.YesNo);
                 if (answer == MsgBox.Button.Yes)
                 {
-                    SaveFavourite();
+                    await SaveFavourite();
                 }
             }
 
             if (selectedChartFavouriteId.ToString() != Config.Settings.currentChartFavourite && selectedChartFavouriteId.ToString() != "-1")
             {
                 Config.Settings.currentChartFavourite = selectedChartFavouriteId.ToString();
-                Config.SaveConfig(out string msg);
+                await Config.SaveConfig();
             }
 
         }
@@ -1228,11 +1228,11 @@ namespace WinApp.Forms
                 MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete this favourite?", "Remove favourite", MsgBox.Type.YesNo, this);
                 if (answer == MsgBox.Button.Yes)
                 {
-                    await DB.ExecuteNonQueryAsync(
+                    await DB.ExecuteNonQuery(
                     $"DELETE FROM chartFavLine WHERE chartFavId = {selectedChartFavouriteId};" +
                     $"DELETE FROM chartFav WHERE id = {selectedChartFavouriteId};", false, true);
                     selectedChartFavouriteId = -1;
-                    SetFavouritMenu();
+                    await SetFavouritMenu();
                     SetFavouritMenuSelected(selectedChartFavouriteId);
                     lblFooter.Text = "Deleted favourite";
                     BattleChartTheme.Text = "Chart";

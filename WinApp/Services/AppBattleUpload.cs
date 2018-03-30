@@ -34,7 +34,7 @@ namespace WinApp.Services
             try
             {
                 // Get player
-                DataTable dtPlayer = DB.FetchData($"SELECT playerApiId, playerApiToken FROM player WHERE Id={Config.Settings.playerId};");
+                DataTable dtPlayer = await DB.FetchData($"SELECT playerApiId, playerApiToken FROM player WHERE Id={Config.Settings.playerId};");
                 int playerId = Convert.ToInt32(dtPlayer.Rows[0]["playerApiId"]);
                 Guid playerToken = Guid.Parse(dtPlayer.Rows[0]["playerApiToken"].ToString());
                 // Get battles for transfer
@@ -60,7 +60,7 @@ namespace WinApp.Services
                         WHERE b.Id IN (" + battleIds + @")
                         ORDER BY b.id DESC; ";
                 }
-                DataTable dtBattle = DB.FetchData(sql);
+                DataTable dtBattle = await DB.FetchData(sql);
                 // Loop through, find result
                 int uploadSuccess = 0;
                 int uploadTotal = 0;
@@ -153,8 +153,8 @@ namespace WinApp.Services
                         var value = dr[debugField];
                         if (value == DBNull.Value)
                             value = "NULL";
-                        Log.LogToFile(ex, " ### Error reading battle: " + battleId.ToString() + " field: " + debugField + " with value: " + value.ToString() + " for upload to web.");
-                        await DB.ExecuteNonQueryAsync($"UPDATE battle SET transferred=1 WHERE id={battleId}");
+                        await Log.LogToFile(ex, " ### Error reading battle: " + battleId.ToString() + " field: " + debugField + " with value: " + value.ToString() + " for upload to web.");
+                        await DB.ExecuteNonQuery($"UPDATE battle SET transferred=1 WHERE id={battleId}");
                     }
                     
                     // Upload for each 1000 battles
@@ -181,7 +181,7 @@ namespace WinApp.Services
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, " ### Error uploading battles to web");
+                await Log.LogToFile(ex, " ### Error uploading battles to web");
                 return $"Error uploading battles to web. Please check log file. Error: {ex.Message}" + Environment.NewLine + Environment.NewLine; 
             }
         }
@@ -213,7 +213,7 @@ namespace WinApp.Services
                     sql += $"UPDATE battle SET transferred=1 WHERE id={item.ToString()}; ";
                 }
             }
-            await DB.ExecuteNonQueryAsync(sql, false, true);
+            await DB.ExecuteNonQuery(sql, false, true);
             return result.BattleIdSuccessTransfer.Count;
         }
 

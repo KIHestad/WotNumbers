@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WinApp.Code
 {
@@ -26,7 +27,7 @@ namespace WinApp.Code
         }
 
 
-        private static string GetHighestResModsFolder()
+        private async static Task<string> GetHighestResModsFolder()
         {
             try
             {
@@ -64,20 +65,19 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Error getting highest res_mods subfolder");
+                await Log.LogToFile(ex, "Error getting highest res_mods subfolder");
                 return "";
             }
             
         }
 
-        public static void CheckForNewResModsFolder()
+        public async static Task CheckForNewResModsFolder()
         {
-            string highestResModsFolder = GetHighestResModsFolder();
+            string highestResModsFolder = await GetHighestResModsFolder();
             if (highestResModsFolder != "" && highestResModsFolder != Config.Settings.res_mods_subfolder)
             {
-                string msg = "";
                 Config.Settings.res_mods_subfolder = highestResModsFolder;
-                Config.SaveConfig(out msg);
+                await Config.SaveConfig();
             }
         }
 

@@ -10,7 +10,49 @@ namespace WinApp.Code
 {
 	class ColListHelper
 	{
-		public static int GetColList(string colListName)
+        public class ColListItem
+        {
+            public int id = 0;
+            public string colType = "";
+            public string colName = "";
+            public string name = "";
+            public string colNameSelect = ""; // colName + ' as ' + name
+            public string description = "";
+            public string colGroup = "";
+            public int colWidth = 0;
+            public string colDataType = "";
+            public string colNameSort = "";
+        }
+
+        public class ColListItems
+        {
+            public ColListItems()
+            {
+                ColListItemList = new List<ColListItem>();
+                Select = "";
+            }
+            public string Select { get; set; }
+            public List<ColListItem> ColListItemList { get; set; }
+        }
+
+        public class SelectedColumnList
+        {
+            public SelectedColumnList()
+            {
+                ColListItems = new ColListItems();
+                Img = -1;
+                Smallimg = -1;
+                Contourimg = -1;
+                Masterybadgeimg = -1;
+            }
+            public ColListItems ColListItems { get; set; }
+            public int Img { get; set; }
+            public int Smallimg { get; set; }
+            public int Contourimg { get; set; }
+            public int Masterybadgeimg { get; set; }
+        }
+        
+        public async static Task<int> GetColListId(string colListName)
 		{
 			int colListId = 0;
 			string sql = "select columnList.id as id " +
@@ -18,7 +60,7 @@ namespace WinApp.Code
 						 "where columnList.colType=@colType and columnList.name=@name";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@name", colListName, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				colListId = Convert.ToInt32(dt.Rows[0]["id"]);
@@ -26,39 +68,38 @@ namespace WinApp.Code
 			return colListId;
 		}
 
-		public static string GetColListName(int colListId)
+		public async static Task<string> GetColListName(int colListId)
 		{
 			string colListName = "";
 			string sql = "select columnList.name " +
 						 "from columnList  " +
 						 "where columnList.id=@id";
 			DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				colListName = dt.Rows[0]["name"].ToString();
 			}
 			return colListName;
 		}
-
-		public static int GetColListStartup(GridView.Views view, out string colListName)
+        
+		public async static Task<ColListItem> GetColListStartup(GridView.Views view)
 		{
-			int colListId = 0;
-			colListName = "";
-			string sql = "select id, name " +
+            ColListItem item = new ColListItem();
+            string sql = "select id, name " +
 						 "from columnList  " +
 						 "where columnList.colType=@colType and colDefault=1 ";
 			DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
-				colListId = Convert.ToInt32(dt.Rows[0]["id"]);
-				colListName = dt.Rows[0]["name"].ToString();
+				item.id = Convert.ToInt32(dt.Rows[0]["id"]);
+				item.name = dt.Rows[0]["name"].ToString();
 			}
-			return colListId;
+			return item;
 		}
 
-		public static int GetColSelectionId(string colName)
+		public async static Task<int> GetColSelectionId(string colName)
 		{
 			int colListId = 0;
 			string sql = "select columnSelection.id as id " +
@@ -66,7 +107,7 @@ namespace WinApp.Code
 						 "where colType=@colType and name=@colName";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@colName", colName, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				colListId = Convert.ToInt32(dt.Rows[0]["id"]);
@@ -74,7 +115,7 @@ namespace WinApp.Code
 			return colListId;
 		}
 
-		public static GridFilter.Settings GetSettingsForColList(int colListId)
+		public async static Task<GridFilter.Settings> GetSettingsForColList(int colListId)
 		{
 			GridFilter.Settings dfl = new GridFilter.Settings();
 			string sql = "SELECT columnList.id AS colListId, columnList.name AS colListName, columnList.defaultFavListId AS colListDefaultFavList, " +
@@ -83,7 +124,7 @@ namespace WinApp.Code
 						 "     favList ON columnList.defaultFavListId = favList.id " +
 						 "WHERE columnList.id=@id;";
 			DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				dfl.ColListId = colListId;
@@ -106,31 +147,15 @@ namespace WinApp.Code
 		public async static Task SaveColWidth(string colName, int colWidht)
 		{
 			int colListId = MainSettings.GetCurrentGridFilter().ColListId;
-			int colSelectionId = GetColSelectionId(colName);
+			int colSelectionId = await GetColSelectionId(colName);
 			string sql = "UPDATE columnListSelection SET colWidth=@colWidth WHERE columnSelectionId=@columnSelectionId AND columnListId=@columnListId ;";
 			DB.AddWithValue(ref sql, "@colWidth", colWidht, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@columnSelectionId", colSelectionId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@columnListId", colListId, DB.SqlDataType.Int);
-			await DB.ExecuteNonQueryAsync(sql);
+			await DB.ExecuteNonQuery(sql);
 		}
 
-		public class ColListClass
-		{
-			public string colType = "";
-			public string colName = "";
-			public string name = "";
-			public string colNameSelect = ""; // colName + ' as ' + name
-			public string description = "";
-			public string colGroup = "";
-			public int colWidth = 0;
-			public string colDataType = "";
-			public string colNameSort = "";
-		}
-
-		public static void GetSelectedColumnList(
-			out string Select, out List<ColListClass> colList, 
-			out int img, out int smallimg, out int contourimg, out int masterybadgeimg,
-			bool grouping = false, bool groupingSum = false)
+		public async static Task<SelectedColumnList> GetSelectedColumnList(bool grouping = false, bool groupingSum = false)
 		{
 			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.colNameSQLite, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType, columnSelection.colNameSort " +
 						 "FROM   columnListSelection INNER JOIN " +
@@ -138,21 +163,18 @@ namespace WinApp.Code
 						 "WHERE        (columnListSelection.columnListId = @columnListId) " +
 						 "ORDER BY columnListSelection.sortorder; ";
 			DB.AddWithValue(ref sql, "@columnListId", MainSettings.GetCurrentGridFilter().ColListId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
-			Select = "";
-			img = -1;
-			smallimg = -1;
-			contourimg = -1;
-			masterybadgeimg = -1;
-			List<ColListClass> selectColList = new List<ColListClass>();
+			DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
+            SelectedColumnList selectedColumnList = new SelectedColumnList();
 			if (dt.Rows.Count == 0)
 			{
-				Select = "'No columns defined in Column Selection List' As 'Error', ";
-				ColListClass colListItem = new ColListClass();
-				colListItem.name = "Error";
-				colListItem.colWidth = 300;
-				colListItem.colType = "VarChar";
-				selectColList.Add(colListItem);
+                selectedColumnList.ColListItems.Select = "'No columns defined in Column Selection List' As 'Error', ";
+                ColListItem colListItem = new ColListItem
+                {
+                    name = "Error",
+                    colWidth = 300,
+                    colType = "VarChar"
+                };
+                selectedColumnList.ColListItems.ColListItemList.Add(colListItem);
 			}
 			else
 			{
@@ -160,7 +182,7 @@ namespace WinApp.Code
 				foreach (DataRow dr in dt.Rows)
 				{
 					string colName = dr["colName"].ToString(); // Get default colName
-					ColListClass colListItem = new ColListClass();
+					ColListItem colListItem = new ColListItem();
 					string colAlias = dr["name"].ToString();
 					colListItem.name = colAlias;
 					colListItem.colName = dr["colName"].ToString();
@@ -171,7 +193,7 @@ namespace WinApp.Code
 						colListItem.colNameSort = dr["colnameSort"].ToString();
 					else
 						colListItem.colNameSort = colListItem.colName;
-					selectColList.Add(colListItem);
+                    selectedColumnList.ColListItems.ColListItemList.Add(colListItem);
 					// Check for alternative colName for SQLite
 					if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
 					{
@@ -185,34 +207,34 @@ namespace WinApp.Code
 						string imgColName = dr["name"].ToString();
 						switch (imgColName)
 						{
-							case "Tank Icon": contourimg = colNum; break;
-							case "Tank Image": smallimg = colNum; break;
-							case "Tank Image Large": img = colNum; break;
-							case "Mastery Badge": masterybadgeimg = colNum; break;
+							case "Tank Icon": selectedColumnList.Contourimg = colNum; break;
+							case "Tank Image": selectedColumnList.Smallimg = colNum; break;
+							case "Tank Image Large": selectedColumnList.Img = colNum; break;
+							case "Mastery Badge": selectedColumnList.Masterybadgeimg = colNum; break;
 						}
 					}
 					else if (colDataType == "DateTime" || colDataType == "VarChar")
 					{
 						if (!grouping)
-							Select += colName + " as '" + colAlias + "', "; // return value
+                            selectedColumnList.ColListItems.Select += colName + " as '" + colAlias + "', "; // return value
 						else
 						{
 							if (colName == "tank.name" || colName == "tank.short_name")
-                                Select += colName + " as '" + colAlias + "', "; // return value
+                                selectedColumnList.ColListItems.Select += colName + " as '" + colAlias + "', "; // return value
                             else
 							{
 								if (colDataType == "DateTime")
 									colListItem.colNameSelect = "NULL";
 								else if (colDataType == "VarChar")
 									colListItem.colNameSelect = "''";
-								Select += colListItem.colNameSelect + " as '" + colAlias + "', "; 
+                                selectedColumnList.ColListItems.Select += colListItem.colNameSelect + " as '" + colAlias + "', "; 
 							}
 						}
 					}
 					else // Numbers
 					{
 						if (!grouping)
-							Select += colName + " as '" + colAlias + "', "; // return value
+                            selectedColumnList.ColListItems.Select += colName + " as '" + colAlias + "', "; // return value
 						else
 						{
 							if (colName == "battle.battlesCount")
@@ -230,42 +252,43 @@ namespace WinApp.Code
 								else
 									colListItem.colNameSelect = "AVG(" + colName + ")"; // else avg value
 							}
-							Select += colListItem.colNameSelect + " as '" + colAlias + "', "; 
+                            selectedColumnList.ColListItems.Select += colListItem.colNameSelect + " as '" + colAlias + "', "; 
 						}
 					}
 					colNum++;
                     // Check for adding calculated column "Battles today" after column "Battles Day"
                     if (colAlias == "Battles Day")
                     {
-                        colListItem = new ColListClass();
+                        colListItem = new ColListItem();
                         colListItem.name = "Battles Today";
                         colListItem.colName = "Battles Today";
                         colListItem.colNameSelect = "0";
                         colListItem.colWidth = Convert.ToInt32(dr["colWidth"]); // Same as prev column = "Battles Day"
                         colListItem.colType = "Int";
                         colListItem.colNameSort = "Battles Today";
-                        selectColList.Add(colListItem);
-                        Select += "0 as 'Battles Today', ";
+                        selectedColumnList.ColListItems.ColListItemList.Add(colListItem);
+                        selectedColumnList.ColListItems.Select += "0 as 'Battles Today', ";
                     }
 				}
 			}
-			colList = selectColList;
+			return selectedColumnList;
 		}
 
-		public static void GetAllTankDataColumn(out string select, out List<ColListClass> colList)
+
+		public async static Task<ColListItems> GetAllTankDataColumn()
 		{
 			string sql = "SELECT * " +
 						 "FROM  columnSelection " +
 						 "WHERE colDataType<>'Image' AND colType=1 " +
 						 "ORDER BY position; ";
-			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
-			select = "";
-			List<ColListClass> selectColList = new List<ColListClass>();
+			DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
+            ColListItems tankDataColumn = new ColListItems();
+			List<ColListItem> selectColList = new List<ColListItem>();
 			int colNum = 0;
 			foreach (DataRow dr in dt.Rows)
 			{
 				string colName = dr["colName"].ToString(); // Get default colName
-				ColListClass colListItem = new ColListClass();
+				ColListItem colListItem = new ColListItem();
 				colListItem.name = dr["name"].ToString();
 				colListItem.description = dr["description"].ToString();
 				colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
@@ -281,34 +304,36 @@ namespace WinApp.Code
 				{
 					colName = dr["colNameSQLite"].ToString();
 				}
-				// Normal select from db
-				select += colName + " as '" + dr["name"].ToString() + "', ";
+                // Normal select from db
+                tankDataColumn.Select += colName + " as '" + dr["name"].ToString() + "', ";
 				colNum++;
 			}
-			select = select.Substring(0, select.Length - 2); // Remove latest comma
-			colList = selectColList;
-		}
+            tankDataColumn.Select = tankDataColumn.Select.Substring(0, tankDataColumn.Select.Length - 2); // Remove latest comma
+            tankDataColumn.ColListItemList = selectColList;
+            return tankDataColumn;
 
-		public static ColListClass GetColListItem(int id)
+        }
+
+		public async static Task<ColListItem> GetColListItem(int id)
 		{
 			string sql = "SELECT * FROM columnSelection WHERE id=@id; ";
 			DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			return GetColListItem(dt);			
 		}
 
-		public static ColListClass GetColListItem(string name, GridView.Views view)
+		public async static Task<ColListItem> GetColListItem(string name, GridView.Views view)
 		{
 			string sql = "SELECT * FROM columnSelection WHERE name=@name AND colType=@colType; ";
 			DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			return GetColListItem(dt);
 		}
 
-		public static ColListClass GetColListItem(DataTable dt)
+		public static ColListItem GetColListItem(DataTable dt)
 		{
-			ColListClass clc = new ColListClass();
+			ColListItem clc = new ColListItem();
 			if (dt.Rows.Count > 0) 
 			{
 				clc.colName = dt.Rows[0]["colName"].ToString();
@@ -330,7 +355,7 @@ namespace WinApp.Code
 		public async static Task ColListSort(int colType)
 		{
 			string sql = "select * from columnList where position is not null and colType=" + colType.ToString() + " order by position;";
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				sql = "";
@@ -342,11 +367,11 @@ namespace WinApp.Code
 					DB.AddWithValue(ref sql, "@pos", pos, DB.SqlDataType.Int);
 					pos++;
 				}
-				await DB.ExecuteNonQueryAsync(sql);
+				await DB.ExecuteNonQuery(sql);
 			}
 		}
 
-        public static ToolStrip SetToolStripColType(ToolStrip toolStripColType, GridView.Views view, bool forGadget = false)
+        public async static Task<ToolStrip> SetToolStripColType(ToolStrip toolStripColType, GridView.Views view, bool forGadget = false)
         {
             // Get colGroups to show in toolbar
             string forGadgetWhere = "";
@@ -354,7 +379,7 @@ namespace WinApp.Code
                 forGadgetWhere = " AND colDataType NOT IN ('VarChar', 'Image', 'DateTime') AND colGroup NOT IN ('Module', 'Equip/Crew') "; 
             string sql = "select colGroup from columnSelection WHERE colType=@colType AND colGroup IS NOT NULL " + forGadgetWhere + " order by position; "; // First get all sorted by position
             DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             // Now get unique values based
             List<string> colGroup = new List<string>();
             foreach (DataRow dr in dt.Rows)
@@ -379,7 +404,7 @@ namespace WinApp.Code
             return toolStripColType;
         }
 
-        public static DataTable GetDataGridColums(ToolStrip toolStripColType, GridView.Views view, bool forGadget = false)
+        public async static Task<DataTable> GetDataGridColums(ToolStrip toolStripColType, GridView.Views view, bool forGadget = false)
         {
             string forGadgetWhere = "";
             if (forGadget)
@@ -395,7 +420,7 @@ namespace WinApp.Code
             sql += "ORDER BY position; ";
             DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@colGroup", colGroup, DB.SqlDataType.VarChar);
-            return DB.FetchData(sql);
+            return await DB.FetchData(sql);
         }
 
 	}

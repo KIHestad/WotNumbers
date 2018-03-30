@@ -26,7 +26,7 @@ namespace WinApp.Forms
 			_autoSetup = autoSetup;
 		}
 
-		private void frmDatabaseNew_Load(object sender, EventArgs e)
+		private async void frmDatabaseNew_Load(object sender, EventArgs e)
 		{
 			if (_autoSetup)
 			{
@@ -47,7 +47,7 @@ namespace WinApp.Forms
 			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 			{
 				DatabaseNewTheme.Text = "Create New MS SQL Server Database";
-				txtFileLocation.Text = GetMSSQLDefualtFileLocation();
+				txtFileLocation.Text = await GetMSSQLDefualtFileLocation();
 			}
 			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 			{
@@ -66,7 +66,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private string GetMSSQLDefualtFileLocation()
+		private async Task<string> GetMSSQLDefualtFileLocation()
 		{
 			string folder = "";
 			try
@@ -85,7 +85,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 			return folder;
@@ -121,7 +121,7 @@ namespace WinApp.Forms
 			badProgressBar.Visible = true;
 			UpdateProgressBar("Creating new database");
 			// Create db now
-			ok = DB.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType);
+			ok = await DB.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType);
 			if (ok)
 			{
 				// Fill database with default data
@@ -137,14 +137,14 @@ namespace WinApp.Forms
 					filename = "createTableSQLite.txt";
 				StreamReader streamReader = new StreamReader(path + filename, Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = await DB.ExecuteNonQueryAsync(sql);
+				ok = await DB.ExecuteNonQuery(sql);
 				if (ok)
 				{
 					// Insert default data
 					UpdateProgressBar("Inserting data into database");
 					streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
 					sql = streamReader.ReadToEnd();
-					ok = await DB.ExecuteNonQueryAsync(sql);
+					ok = await DB.ExecuteNonQuery(sql);
 					if (ok)
 					{
 						// Upgrade to latest version
@@ -153,18 +153,18 @@ namespace WinApp.Forms
 						
 						// Get tanks, remember to init tankList first
 						UpdateProgressBar("Retrieves tanks from Wargaming API");
-						TankHelper.GetTankList();
+                        await TankHelper.GetTankList();
 
                         // OLD METHOD, still in use because some tanks are missing from the new method
                         await ImportWotApi2DB.ImportTankList(this);
-                        TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
+                        await TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
                         // NEW METHOD
                         await ImportWotApi2DB.ImportTanks(this);
-                        
-                        
+
+
                         // Init after getting tanks and other basic data import
-						TankHelper.GetTankList();
-						TankHelper.GetJson2dbMappingFromDB();
+                        await TankHelper.GetTankList();
+                        await TankHelper.GetJson2dbMappingFromDB();
 
 						// Get turret
 						//UpdateProgressBar("Retrieves tank turrets from Wargaming API");
@@ -181,7 +181,7 @@ namespace WinApp.Forms
 						// Get achievements
 						UpdateProgressBar("Retrieves achievements from Wargaming API");
 						await ImportWotApi2DB.ImportAchievements(this);
-						TankHelper.GetAchList();
+                        await TankHelper.GetAchList();
 
 						// Get WN8 ratings
 						UpdateProgressBar("Retrieves WN8 expected values from API");
@@ -200,12 +200,12 @@ namespace WinApp.Forms
 						Config.Settings.playerServer = "";
 						Config.Settings.playerId = 0;
 
-						// New Init after upgrade db
-						TankHelper.GetAllLists();
+                        // New Init after upgrade db
+                        await TankHelper.GetAllLists();
 
 						// Startup with default settings
-						MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
-						MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
+						MainSettings.GridFilterTank = await GridFilter.GetDefault(GridView.Views.Tank);
+						MainSettings.GridFilterBattle = await GridFilter.GetDefault(GridView.Views.Battle);
 
 					}
 				}
@@ -213,7 +213,6 @@ namespace WinApp.Forms
 			// Done
 			Cursor.Current = Cursors.Default;
 			badProgressBar.Visible = false;
-			string result = "";
 			if (ok)
 			{
 				// Save new database to config
@@ -221,19 +220,19 @@ namespace WinApp.Forms
 					Config.Settings.databaseName = txtDatabasename.Text;
 				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 					Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
-				Code.MsgBox.Show("Database created successfully, new database saved to settings.", "Created database", this);
+				MsgBox.Show("Database created successfully, new database saved to settings.", "Created database", this);
 			}
 			else
 			{
 				// Revert to prevous settings
-				Code.MsgBox.Show("Failed to create database, revert to using previous settings.", "Failed to create database", this);
+				MsgBox.Show("Failed to create database, revert to using previous settings.", "Failed to create database", this);
 				Config.Settings = Config.LastWorkingSettings;
 			}
-			Config.SaveConfig(out result);
+			await Config.SaveConfig();
 		}
 
 
-		private void cmdSelectFile_Click(object sender, EventArgs e)
+		private async void cmdSelectFile_Click(object sender, EventArgs e)
 		{
 			// Select dossier file
 			folderBrowserDialogDBPath.ShowNewFolderButton = false;
@@ -243,7 +242,7 @@ namespace WinApp.Forms
 				if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 					folderBrowserDialogDBPath.SelectedPath = Config.AppDataDBFolder;
 				else if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
-					folderBrowserDialogDBPath.SelectedPath = GetMSSQLDefualtFileLocation();
+					folderBrowserDialogDBPath.SelectedPath = await GetMSSQLDefualtFileLocation();
 			}
 			else
 			{

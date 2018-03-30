@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 using WinApp.Code.FormLayout;
@@ -48,20 +49,19 @@ namespace WinApp.Forms.Settings
             btnSave.Enabled = changesApplied;
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private async void btnSave_Click(object sender, EventArgs e)
         {
-            SaveChanges();
+            await SaveChanges();
         }
 
-        public void SaveChanges()
+        public async Task SaveChanges()
         {
             Config.Settings.gridBattlesTotalsTop = chkBattleTotalsPosition.Checked;
             Config.Settings.gridFontSize = Convert.ToInt32(ddFontSize.Text);
             string ratingColorsEnumText = ddRatingColor.Text.Replace(" ", "_");
             Config.Settings.RatingColors = (ColorRangeScheme.RatingColorScheme)Enum.Parse(typeof(ColorRangeScheme.RatingColorScheme), ratingColorsEnumText);
             Config.Settings.useSmallMasteryBadgeIcons = chkSmallMasteryBadgeIcons.Checked;
-            string msg = "";
-            Config.SaveConfig(out msg);
+            await Config.SaveConfig();
             // Load new mastery badge icons if changed
             if (currentMasteryBadgeIcons != chkSmallMasteryBadgeIcons.Checked)
                 ImageHelper.CreateMasteryBageImageTable();
@@ -84,10 +84,10 @@ namespace WinApp.Forms.Settings
             EditChangesApply(true);
         }
 
-        private void ddFontSize_Click(object sender, EventArgs e)
+        private async void ddFontSize_Click(object sender, EventArgs e)
         {
             currentValue = ddFontSize.Text;
-            Code.DropDownGrid.Show(ddFontSize, Code.DropDownGrid.DropDownGridType.List, "6,7,8,9,10,11,12,14");
+            await Code.DropDownGrid.Show(ddFontSize, Code.DropDownGrid.DropDownGridType.List, "6,7,8,9,10,11,12,14");
         }
 
         private void ddFontSize_TextChanged(object sender, EventArgs e)
@@ -96,10 +96,10 @@ namespace WinApp.Forms.Settings
                 EditChangesApply(true);
         }
 
-        private void ddRatingColor_Click(object sender, EventArgs e)
+        private async void ddRatingColor_Click(object sender, EventArgs e)
         {
             currentRatingColorValue = ddRatingColor.Text;
-            Code.DropDownGrid.Show(ddRatingColor, Code.DropDownGrid.DropDownGridType.List, "WN Official Colors,WoT Labs Colors,XVM Colors");
+            await Code.DropDownGrid.Show(ddRatingColor, Code.DropDownGrid.DropDownGridType.List, "WN Official Colors,WoT Labs Colors,XVM Colors");
         }
 
         private void ddRatingColor_TextChanged(object sender, EventArgs e)

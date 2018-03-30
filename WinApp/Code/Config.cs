@@ -46,6 +46,12 @@ namespace WinApp.Code
 			public DateTime? to = null;
 		}
 
+        public class Result
+        {
+            public bool Success { get; set; }
+            public string Message { get; set; }
+        }
+
 		public dbType  databaseType { get; set; }				// SQLite or MS SQL Server
 		public string  databaseFileName { get; set; }			// SQLite Filename
 		public string  databaseServer { get; set; }				// MSSQL Servername
@@ -324,10 +330,13 @@ namespace WinApp.Code
         }
 
 		
-		public static bool SaveConfig(out string msg)
+		public async static Task<ConfigData.Result> SaveConfig()
 		{
-			bool ok = true;
-			string returnMsg = "Application settings successfully saved.";
+            ConfigData.Result result = new ConfigData.Result()
+            {
+                Success = true,
+                Message = "Application settings successfully saved."
+            };
 			// Write new settings to Json
 			try
 			{
@@ -336,23 +345,26 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
-				returnMsg = "Error occured saving application settings to config file" + Environment.NewLine + Environment.NewLine + ex.Message;
+				await Log.LogToFile(ex);
+                result.Success = false;
+				result.Message = "Error occured saving application settings to config file" + Environment.NewLine + Environment.NewLine + ex.Message;
 			}
-			msg = returnMsg;
-			return ok;
+			return result;
 		}
 
-		public static bool GetConfig(out string msg)
+		public async static Task<ConfigData.Result> GetConfig()
 		{
-			bool ok = true;
-			string returMsg = "Application settings successfully read.";
+            ConfigData.Result result = new ConfigData.Result()
+            {
+                Success = true,
+                Message = "Application settings successfully read."
+            };
 			// Does config file exist?
 			if (!File.Exists(Config.AppDataBaseFolder + configfile))
 			{
 				SetConfigDefaults();
-				returMsg = "Config file is missing, please configure application settings.";
-				ok = false;
+				result.Message = "Config file is missing, please configure application settings.";
+				result.Success = false;
 			}
 			else
 			{
@@ -366,20 +378,19 @@ namespace WinApp.Code
 				}
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					await Log.LogToFile(ex);
 					File.Delete(Config.AppDataBaseFolder + configfile);
 					SetConfigDefaults();
-					returMsg = "Error reading config file, please configure application settings." + Environment.NewLine + Environment.NewLine + ex.Message;
-					ok = false;
+                    result.Message = "Error reading config file, please configure application settings." + Environment.NewLine + Environment.NewLine + ex.Message;
+                    result.Success = false;
 				}
 			}
-			msg = returMsg;
-			return ok;
+			return result;
 		}
 
 		
 		// Create standard dbconnection string based on standard config settings
-		public static string DatabaseConnection() 
+		public static string DatabaseConnection()
 		{
 			int connectionTimeot = 10;
 			string dbcon = "";

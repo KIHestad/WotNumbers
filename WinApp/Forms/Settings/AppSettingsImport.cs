@@ -113,7 +113,7 @@ namespace WinApp.Forms.Settings
                 // Write recentBattles to db
                 int i = 0;
                 progressBarImport.Visible = true;
-                double avgBattleTier = Code.Rating.WNHelper.GetAverageTier();
+                double avgBattleTier = await Code.Rating.WNHelper.GetAverageTier();
                 while (i < recentBattles.Rows.Count)
                 {
                     progressBarImport.Value++;
@@ -125,8 +125,8 @@ namespace WinApp.Forms.Settings
                         // Then get tankId and playerTankId
                         int wstankId = Convert.ToInt32(recentBattles.Rows[i]["rbTankId"]);
                         int wsCountryId = Convert.ToInt32(recentBattles.Rows[i]["rbCountryId"]);
-                        int tankId = TankHelper.ConvertWs2TankId(wstankId, wsCountryId); // Convert WS tankId + countryID to tank.TankID
-                        int playerTankId = TankHelper.GetPlayerTankId(tankId);
+                        int tankId = await TankHelper.ConvertWs2TankId(wstankId, wsCountryId); // Convert WS tankId + countryID to tank.TankID
+                        int playerTankId = await TankHelper.GetPlayerTankId(tankId);
                         if (playerTankId != 0) // If not player tank is found skip
                         {
                             DateTime battleTime = Convert.ToDateTime("1970-01-01 01:00:00").AddSeconds(Convert.ToInt32(recentBattles.Rows[i]["rbBattleTime"]));
@@ -177,8 +177,8 @@ namespace WinApp.Forms.Settings
                                 int xp = Convert.ToInt32(recentBattles.Rows[i]["rbXPReceived"]) / 100;
                                 string battleMode = recentBattles.Rows[i]["rbBattleMode"].ToString();
                                 // Calc WN9
-                                double wn9maxhist = 0; // not in use for battles
-                                int wn9 = Convert.ToInt32(Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp, out wn9maxhist), 0));
+                                var Wn9Result = await Code.Rating.WN9.CalcBattle(tankId, rp);
+                                int wn9 = Convert.ToInt32(Math.Round(Wn9Result.WN9, 0));
                                 // Calc WN8
                                 int wn8 = Convert.ToInt32(Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp), 0));
                                 // Calc EFF
@@ -189,7 +189,7 @@ namespace WinApp.Forms.Settings
                                 int wn7 = Convert.ToInt32(Math.Round(Code.Rating.WN7.WN7battle(rp, true), 0));
                                 // Insert or update Battle table
                                 string sqlInsertBattle = "";
-                                int battleId = TankHelper.GetBattleIdForImportedWsBattle(wsId);
+                                int battleId = await TankHelper.GetBattleIdForImportedWsBattle(wsId);
                                 if (battleId > 0)
                                     sqlInsertBattle =
                                     "update battle SET playerTankId=@playerTankId, battlesCount=@battlesCount, frags=@frags, dmg=@dmg, dmgReceived=@dmgReceived, spotted=@spotted, cap=@cap, def=@def, survived=@survived, killed=@killed, " +
@@ -224,12 +224,12 @@ namespace WinApp.Forms.Settings
                                 DB.AddWithValue(ref sqlInsertBattle, "@wn8", wn8, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sqlInsertBattle, "@wn9", wn9, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sqlInsertBattle, "@eff", eff, DB.SqlDataType.Int);
-                                await DB.ExecuteNonQueryAsync(sqlInsertBattle);
+                                await DB.ExecuteNonQuery(sqlInsertBattle);
 
                                 // Get the last battleId if inserted
                                 if (battleId == 0)
                                 {
-                                    DataTable dt = DB.FetchData("select max(id) as battleId from battle");
+                                    DataTable dt = await DB.FetchData("select max(id) as battleId from battle");
                                     if (dt.Rows.Count > 0)
                                     {
                                         battleId = Convert.ToInt32(dt.Rows[0][0]);
@@ -251,7 +251,7 @@ namespace WinApp.Forms.Settings
                                         string[] frag = newitem.Split(stringSeparators2, StringSplitOptions.None);
                                         int wsfragcountryId = Convert.ToInt32(frag[0]);
                                         int wsfragtankId = Convert.ToInt32(frag[1]);
-                                        int fraggedtankId = TankHelper.ConvertWs2TankId(wsfragtankId, wsfragcountryId); // Convert WS tankId + countryID to tank.TankID
+                                        int fraggedtankId = await TankHelper.ConvertWs2TankId(wsfragtankId, wsfragcountryId); // Convert WS tankId + countryID to tank.TankID
                                         bool fraggedTankExist = false;
                                         foreach (var fragListItem in fragList)
                                         {
@@ -279,7 +279,7 @@ namespace WinApp.Forms.Settings
                                                 battleId.ToString() + ", " + battleFragItem.tankId + ", " + battleFragItem.fragCount + "); " + Environment.NewLine;
                                         }
                                     }
-                                    await DB.ExecuteNonQueryAsync(sqlInsertBattleFrag);
+                                    await DB.ExecuteNonQuery(sqlInsertBattleFrag);
                                 }
                             }
                         }
@@ -319,7 +319,7 @@ namespace WinApp.Forms.Settings
                     "delete from battleAch where battleId IN (select id from battle where wsId is not null); " +
                     "delete from battleFrag where battleId IN (select id from battle where wsId is not null); " +
                     "delete from battle where wsId is not null; ";
-                await DB.ExecuteNonQueryAsync(sql);
+                await DB.ExecuteNonQuery(sql);
                 Code.MsgBox.Show("Previously imported battles from WoT Statistics is now removed", "Removed successfully", (Form)this.TopLevelControl);
             }
         }

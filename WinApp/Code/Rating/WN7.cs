@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WinApp.Code.Rating
 {
     public class WN7
     {
-        public static double WN7total(string battleMode = "15")
+        public async static Task<double> WN7total(string battleMode = "15")
         {
-            WNHelper.RatingParameters rp = WNHelper.GetParamForPlayerTankBattle(battleMode);
+            WNHelper.RatingParameters rp = await WNHelper.GetParamForPlayerTankBattle(battleMode);
             if (rp == null)
                 return 0;
-            rp.TIER = WNHelper.GetAverageTier(battleMode);
+            rp.TIER = await WNHelper.GetAverageTier(battleMode);
             return WN7useFormula(rp);
         }
 
@@ -40,7 +41,7 @@ namespace WinApp.Code.Rating
             return WN7useFormula(rp, calcForBattle);
         }
 
-        public static double WN7battle(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public async static Task<double> WN7battle(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             double WN7 = 0;
             if (battleMode == "")
@@ -54,7 +55,7 @@ namespace WinApp.Code.Rating
                     "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            DataTable dtBattles = DB.FetchData(sql);
+            DataTable dtBattles = await DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
                 WNHelper.RatingParameters rp = new WNHelper.RatingParameters();
@@ -80,13 +81,13 @@ namespace WinApp.Code.Rating
             return WN7;
         }
 
-        public static double WN7reverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public async static Task<double> WN7reverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             // Find current total EFF
-            WNHelper.RatingParameters rp = WNHelper.GetParamForPlayerTankBattle(battleMode);
+            WNHelper.RatingParameters rp = await WNHelper.GetParamForPlayerTankBattle(battleMode);
             if (rp == null)
                 return 0;
-            rp.TIER = WNHelper.GetAverageTier(battleMode) * rp.BATTLES;
+            rp.TIER = await WNHelper.GetAverageTier(battleMode) * rp.BATTLES;
             double totalWN7 = WN7useFormula(rp);
 
             // Find changes and subtract
@@ -101,7 +102,7 @@ namespace WinApp.Code.Rating
                     "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            DataTable dtBattles = DB.FetchData(sql);
+            DataTable dtBattles = await DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
                 if (battleCount == 0) battleCount = dtBattles.Rows.Count;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -17,7 +18,7 @@ namespace WinApp.Forms
 			_tankId = tankId;
 		}
 
-		private void FavListAddRemoveTank_Load(object sender, EventArgs e)
+		private async void FavListAddRemoveTank_Load(object sender, EventArgs e)
 		{
 			if (_add)
 			{
@@ -33,11 +34,11 @@ namespace WinApp.Forms
 			GridHelper.StyleDataGrid(dataGridFavList);
 
             // Populate grid with data
-            ShowFavList();
+            await ShowFavList();
 
 		}
 
-		private void ShowFavList()
+		private async Task ShowFavList()
 		{
 			string sql = "select position as '#', name as 'Name', '' as 'Show', id from favList ";
 			if (_add)
@@ -46,7 +47,7 @@ namespace WinApp.Forms
 				sql += "where id in (select favListId from favListTank where tankId=@tankId) ";
 			sql += " order by COALESCE(position,99), name";
 			DB.AddWithValue(ref sql, "@tankId", _tankId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			// Modify datatable by adding values to Show
 			foreach (DataRow row in dt.Rows)
 			{
@@ -115,7 +116,7 @@ namespace WinApp.Forms
 				FavListHelper.lastAddFavListFromPopup = Convert.ToInt32(dr.Cells["id"].Value);
 			}
 			DB.AddWithValue(ref sql, "@tankId", _tankId, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+            await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
 			//Sort
 			if (_add)
 				foreach (DataGridViewRow dr in dataGridFavList.SelectedRows)

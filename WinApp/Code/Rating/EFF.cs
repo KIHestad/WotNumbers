@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WinApp.Code.Rating
 {
     public class EFF
     {
-        public static double EffTotal(string battleMode = "15")
+        public async static Task<double> EffTotal(string battleMode = "15")
         {
-            WNHelper.RatingParameters rp = WNHelper.GetParamForPlayerTankBattle(battleMode);
+            WNHelper.RatingParameters rp = await WNHelper.GetParamForPlayerTankBattle(battleMode);
             if (rp == null)
                 return 0;
             return EffUseFormula(rp);
@@ -53,7 +54,7 @@ namespace WinApp.Code.Rating
             return EffUseFormula(rp);
         }
 
-        public static double EffBattle(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public async static Task<double> EffBattle(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             double EFF = 0;
             if (battleMode == "")
@@ -67,7 +68,7 @@ namespace WinApp.Code.Rating
                     "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            DataTable dtBattles = DB.FetchData(sql);
+            DataTable dtBattles = await DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
                 WNHelper.RatingParameters rp = new WNHelper.RatingParameters();
@@ -93,10 +94,10 @@ namespace WinApp.Code.Rating
         }
 
         // Special calculation finds previous efficiency based on effiency parameters now - battle recorded parameters
-        public static double EffReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public async static Task<double> EffReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             // Find current total EFF
-            WNHelper.RatingParameters rp = WNHelper.GetParamForPlayerTankBattle(battleMode);
+            WNHelper.RatingParameters rp = await WNHelper.GetParamForPlayerTankBattle(battleMode);
             if (rp == null)
                 return 0;
             double totalEff = EffUseFormula(rp);
@@ -113,7 +114,7 @@ namespace WinApp.Code.Rating
                     "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            DataTable dtBattles = DB.FetchData(sql);
+            DataTable dtBattles = await DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
                 if (battleCount == 0) battleCount = dtBattles.Rows.Count;

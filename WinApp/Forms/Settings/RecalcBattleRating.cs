@@ -76,7 +76,7 @@ namespace WinApp.Forms
 				"from battle inner join playerTank on battle.playerTankId = playerTank.id " +
                 battleWhere +
 				"order by battle.id";
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			int tot = dt.Rows.Count;
 			badProgressBar.ValueMax = tot + 1;
 			sql = "";
@@ -100,8 +100,8 @@ namespace WinApp.Forms
                 string newSQL = "update battle set ";
                 if (_forWN9)
                 {
-                    double WN9maxhist = 0; // not in use for battles
-                    WN9 = Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp, out WN9maxhist), 0);
+                    var GetWn9 = await Code.Rating.WN9.CalcBattle(tankId, rp);
+                    WN9 = Math.Round(GetWn9.WN9, 0);
                     newSQL += "wn9=@wn9, ";
                     DB.AddWithValue(ref newSQL, "@wn9", WN9, DB.SqlDataType.Int);
                 }
@@ -119,7 +119,7 @@ namespace WinApp.Forms
                 }
                 if (_forWN7)
                 {
-                    rp.TIER = Code.Rating.WNHelper.GetAverageTier();
+                    rp.TIER = await Code.Rating.WNHelper.GetAverageTier();
                     WN7 = Math.Round(Code.Rating.WN7.WN7battle(rp, true), 0); 
                     newSQL += "wn7=@wn7, ";
                     DB.AddWithValue(ref newSQL, "@wn7", WN7, DB.SqlDataType.Int);
@@ -131,13 +131,13 @@ namespace WinApp.Forms
 				if (sql.Length >= 4000) // Approx 100 updates
 				{
 					lblProgressStatus.Text = "Saving to database...";
-                    await DB.ExecuteNonQueryAsync(sql,Config.Settings.showDBErrors,true);
+                    await DB.ExecuteNonQuery(sql,Config.Settings.showDBErrors,true);
 					sql = "";
 				}
 			}
 			if (sql != "") // Update last batch of sql's
 			{
-                await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+                await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
 				sql = "";
 			}
 

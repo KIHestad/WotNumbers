@@ -499,7 +499,7 @@ abstract class BadThemeContainerControl : ContainerControl
 		}
 		catch (Exception ex)
 		{
-			Log.LogToFile(ex);
+			Log.LogToFile(ex).ConfigureAwait(false); 
 			//throw;
 		}
 		// Done
@@ -755,7 +755,7 @@ abstract class BadThemeControl : Control
 		}
 		catch (Exception)
 		{
-			// Log.LogToFile(ex);
+			// await Log.LogToFile(ex);
 			// throw;
 		}
 		
@@ -1664,9 +1664,9 @@ class BadScrollBar : BadThemeControl
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
-				// throw;
-			}
+				Log.LogToFile(ex).ConfigureAwait(false);
+                // throw;
+            }
 			
 			Invalidate();
 		}
@@ -1684,7 +1684,7 @@ class BadScrollBar : BadThemeControl
 				}
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					Log.LogToFile(ex).ConfigureAwait(false);
 					// throw;
 				}
 				Invalidate(); 
@@ -1760,7 +1760,7 @@ class BadScrollBar : BadThemeControl
 		}
 		catch (Exception ex)
 		{
-			Log.LogToFile(ex);
+			Log.LogToFile(ex).ConfigureAwait(false); 
 			// throw;
 		}
 	}

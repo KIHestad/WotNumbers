@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -78,11 +79,11 @@ namespace WinApp.Code
 
 		public static string tankIdDebug = "0";
 
-		public static void LoadTankImages()
+		public async static Task LoadTankImages()
 		{
 			try
 			{
-				if (DB.CheckConnection(false))
+				if (await DB.CheckConnection(false))
 				{
 					string adminDB = Config.AppDataBaseFolder + "Admin.db";
 					string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
@@ -106,7 +107,7 @@ namespace WinApp.Code
 						if (dr["smallImg"] == DBNull.Value)
 						{
 							// Missing image
-							// Log.LogToFile("Missing image for tank: " + tankIdDebug);
+							// await Log.LogToFile("Missing image for tank: " + tankIdDebug);
 							imgOK = false;
 						}
 						if (imgOK)
@@ -135,7 +136,7 @@ namespace WinApp.Code
 			catch (Exception ex)
 			{
 				if (Config.Settings.showDBErrors) 
-					Log.LogToFile(ex, "Error loading tank images for tank: " + tankIdDebug);
+					await Log.LogToFile(ex, "Error loading tank images for tank: " + tankIdDebug);
 			}
 		}
 
@@ -169,11 +170,11 @@ namespace WinApp.Code
 			return image;
 		}
 
-        public static Image GetMap(int mapId, bool getIllustation = false, int reSize = 0)
+        public async static Task<Image> GetMap(int mapId, bool getIllustation = false, int reSize = 0)
 		{
 			string sql = "select arena_id from map where id=@mapId";
 			DB.AddWithValue(ref sql, "@mapId", mapId, DB.SqlDataType.Int);
-			DataTable dtArenaId = DB.FetchData(sql);
+			DataTable dtArenaId = await DB.FetchData(sql);
 			string arena_id = "";
 			if (dtArenaId.Rows.Count > 0)
 			{

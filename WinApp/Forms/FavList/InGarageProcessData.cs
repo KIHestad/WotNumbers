@@ -28,9 +28,9 @@ namespace WinApp.Forms
 		{
 			this.Cursor = Cursors.WaitCursor;
 			txtNickname.Text = InGarageApiResult.nickname;
-			GetFavList();
+            await GetFavList();
 			string sql = "select * from favList where name = 'In Garage';";
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 				ddFavList.Text = "In Garage";
 			tanksInGarage = await ImportWotApi2DB.ImportPlayersInGarageVehicles(this);
@@ -39,16 +39,16 @@ namespace WinApp.Forms
 			this.Cursor = Cursors.Default;
 		}
 
-		private void ddFavList_Click(object sender, EventArgs e)
+		private async void ddFavList_Click(object sender, EventArgs e)
 		{
-			Code.DropDownGrid.Show(ddFavList, Code.DropDownGrid.DropDownGridType.List, favList);
+            await Code.DropDownGrid.Show(ddFavList, Code.DropDownGrid.DropDownGridType.List, favList);
 		}
 
-		private void GetFavList()
+		private async Task GetFavList()
 		{
 			favList = "";
 			string sql = "select * from favList order by COALESCE(position,99), name";
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				foreach (DataRow dr in dt.Rows)
@@ -60,18 +60,18 @@ namespace WinApp.Forms
 				favList = favList.Substring(0, favList.Length - 1);
 		}
 
-		private void btnCreateFavList_Click(object sender, EventArgs e)
+		private async void btnCreateFavList_Click(object sender, EventArgs e)
 		{
 			string sql = "select * from favList where name = 'In Garage';";
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			string newFavListName = "";
 			if (dt.Rows.Count == 0)
 				newFavListName = "In Garage";
 			Form frm = new Forms.FavListNewEdit(0, newFavListName);
 			frm.ShowDialog();
-			GetFavList();
+            await GetFavList();
 			sql = "select * from favList order by id desc";
-			dt = DB.FetchData(sql);
+			dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				ddFavList.Text = dt.Rows[0]["name"].ToString();
@@ -97,13 +97,13 @@ namespace WinApp.Forms
 				// Check how many to be delted and how many added
 				List<int> newTank = new List<int>();
 				List<int> delTank = new List<int>();
-				int favListId = FavListHelper.GetId(ddFavList.Text);
+				int favListId = await FavListHelper.GetId(ddFavList.Text);
 				if (favListId > 0)
 				{
 					// Find new tanks
 					string sql = "select * from favListTank where favListId=@favListId";
 					DB.AddWithValue(ref sql, "@favListId", favListId, DB.SqlDataType.Int);
-					DataTable currentTanks = DB.FetchData(sql);
+					DataTable currentTanks = await DB.FetchData(sql);
 					foreach (int tankInGarage in tanksInGarage)
 					{
 						DataRow[] exists = currentTanks.Select("tankId = " + tankInGarage.ToString());
@@ -139,7 +139,7 @@ namespace WinApp.Forms
 						string sql = "select max(sortorder) from favListTank where favListId=@favListId;";
 						DB.AddWithValue(ref sql, "@favListId", favListId, DB.SqlDataType.Int);
 						int sortOrder = 0;
-						DataTable lastSortOrder = DB.FetchData(sql);
+						DataTable lastSortOrder = await DB.FetchData(sql);
 						if (lastSortOrder.Rows.Count > 0)
 							if (lastSortOrder.Rows[0][0] != DBNull.Value)
 								sortOrder = Convert.ToInt32(lastSortOrder.Rows[0][0]);
@@ -160,7 +160,7 @@ namespace WinApp.Forms
 							sql += newsql;
 						}
 						DB.AddWithValue(ref sql, "@favListId", favListId, DB.SqlDataType.Int);
-                        await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+                        await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
 						// Select this list
 						GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 						gf.TankId = -1;

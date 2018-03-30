@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
 using WinApp.Code.FormLayout;
+using System.Threading.Tasks;
 
 namespace WinApp.Gadget
 {
@@ -26,7 +27,7 @@ namespace WinApp.Gadget
 
         }
 
-		public void DataBind()
+		public async Task DataBind()
 		{
 			GridHelper.StyleGadgetDataGrid(dataGridView1);
             string sql = "";
@@ -54,7 +55,7 @@ namespace WinApp.Gadget
             }
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", _battleMode, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			// create table structure
             string battleModeText = "All Battle Modes";
             string tankCountText = "Tanks Owned";
@@ -65,7 +66,7 @@ namespace WinApp.Gadget
             }
             sql = "Select '" + tankCountText + "' as '" + battleModeText + "', CAST(0 AS FLOAT) as 'Light', CAST(0 AS FLOAT) as 'Medium', CAST(0 AS FLOAT) as 'Heavy', CAST(0 AS FLOAT) as 'TD', CAST(0 AS FLOAT) as 'SPG', CAST(0 AS FLOAT) as 'Total' ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dtResult = DB.FetchData(sql);
+			DataTable dtResult = await DB.FetchData(sql);
 			DataRow drBattles = dtResult.NewRow();
             drBattles[battleModeText] = "Battle Count";
 			dtResult.Rows.Add(drBattles);

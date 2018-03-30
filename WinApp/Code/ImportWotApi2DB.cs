@@ -79,7 +79,7 @@ namespace WinApp.Code
 		{
 			try
 			{
-				Log.CheckLogFileSize();
+				await Log.CheckLogFileSize();
 				Log.AddToLogBuffer("// Get data from WoT API: " + WotAPi.ToString());
 				string url = WotServerApiUrl();
 				string applicationId = WotApplicationId();
@@ -130,7 +130,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				string msg = 
 					"Could not connect to WoT API within timeout period (10 seconds), please try again later." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
@@ -145,7 +145,7 @@ namespace WinApp.Code
 
 		#region update log file
 
-		private static void WriteApiLog(string apiType, LogItems logItems)
+		private async static Task WriteApiLog(string apiType, LogItems logItems)
 		{
 			// Update log after import
 			Log.AddToLogBuffer("// " + apiType + " import complete: (" + DateTime.Now.ToString() + ")");
@@ -169,7 +169,7 @@ namespace WinApp.Code
             {
                 Log.AddToLogBuffer(" > None updated, no existing items found");
             }
-            Log.WriteLogBuffer();
+            await Log.WriteLogBuffer();
         }
 
         #endregion
@@ -317,9 +317,9 @@ namespace WinApp.Code
                                 sqlTotal += sql + Environment.NewLine;
                             }
                         }
-                        await DB.ExecuteNonQueryAsync(sqlTotal, true, true); // Run all SQL in batch
+                        await DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
                         // Update log file after import
-                        WriteApiLog("Tanks", logItems);
+                        await WriteApiLog("Tanks", logItems);
                     }
 
 					//Code.MsgBox.Show("Tank import complete");
@@ -328,7 +328,7 @@ namespace WinApp.Code
 
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					await Log.LogToFile(ex);
 					Code.MsgBox.Show(ex.Message, "Error fetching tanks from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
@@ -463,9 +463,9 @@ namespace WinApp.Code
                                 sqlTotal += sql + Environment.NewLine;
                             }
                         }
-                        await DB.ExecuteNonQueryAsync(sqlTotal, true, true); // Run all SQL in batch
+                        await DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
                         // Update log file after import
-                        WriteApiLog("Tank list", logItems);
+                        await WriteApiLog("Tank list", logItems);
                     }
 
                     //Code.MsgBox.Show("Tank import complete");
@@ -474,7 +474,7 @@ namespace WinApp.Code
 
                 catch (Exception ex)
                 {
-                    Log.LogToFile(ex);
+                    await Log.LogToFile(ex);
                     Code.MsgBox.Show(ex.Message, "Error fetching tanks from WoT API", parentForm);
                     return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
                 }
@@ -561,7 +561,7 @@ namespace WinApp.Code
 
                 catch (Exception ex)
                 {
-                    Log.LogToFile(ex);
+                    await Log.LogToFile(ex);
                     foundTankInfo.message = "Error in running Wargaming API for tank detals." + Environment.NewLine + Environment.NewLine + ex.Message;
                     return foundTankInfo; 
                 }
@@ -595,7 +595,7 @@ namespace WinApp.Code
 
 						rootToken = rootToken.Next;   // start reading modules
 						JToken turrets = rootToken.Children().First();   // read all tokens in data token
-						DataTable itemsInDB = DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
+						DataTable itemsInDB = await DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
 						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 						foreach (JProperty turret in turrets)   // turret = turretId + child tokens
 						{
@@ -650,9 +650,9 @@ namespace WinApp.Code
 								logItems.UpdatedCount++;
 							}
 						}
-						await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
-						// Update log file after import
-						WriteApiLog("Turrets", logItems);
+						await DB.ExecuteNonQuery(sqlTotal, true, true);
+                        // Update log file after import
+                        await WriteApiLog("Turrets", logItems);
 					}
 
 					//Code.MsgBox.Show("Turret import complete");
@@ -662,7 +662,7 @@ namespace WinApp.Code
 				
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					await Log.LogToFile(ex);
 					Code.MsgBox.Show(ex.Message, "Error fetching turrets from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
@@ -699,9 +699,9 @@ namespace WinApp.Code
 
 						// Drop relations to turret and tank before import (new relations will be added)
 						string sql = "DELETE FROM modTankGun; DELETE FROM modTurretGun; ";
-                        await DB.ExecuteNonQueryAsync(sql);
+                        await DB.ExecuteNonQuery(sql);
 
-						DataTable itemsInDB = DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
+						DataTable itemsInDB = await DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
 						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 						foreach (JProperty gun in guns)
 						{
@@ -795,18 +795,18 @@ namespace WinApp.Code
 							}
 						}
 
-						// Update log file after import
-						WriteApiLog("Guns", logItems);
+                        // Update log file after import
+                        await WriteApiLog("Guns", logItems);
 
 					}
-                    await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
+                    await DB.ExecuteNonQuery(sqlTotal, true, true);
 					//Code.MsgBox.Show("Gun import complete");
 					return ("Gun import Complete");
 				}
 
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					await Log.LogToFile(ex);
 					Code.MsgBox.Show(ex.Message, "Error fetching guns from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
@@ -843,9 +843,9 @@ namespace WinApp.Code
 
 						// Drop relations to tank before import (new relations will be added)
 						string sql = "DELETE FROM modTankRadio;";
-                        await DB.ExecuteNonQueryAsync(sql);
+                        await DB.ExecuteNonQuery(sql);
 
-						DataTable itemsInDB = DB.FetchData("select id from modRadio");   // Fetch id of radios already existing in db
+						DataTable itemsInDB = await DB.FetchData("select id from modRadio");   // Fetch id of radios already existing in db
 						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 
 						foreach (JProperty radio in radios)
@@ -899,17 +899,17 @@ namespace WinApp.Code
 							}
 						}
 
-						// Update log file after import
-						WriteApiLog("Radios", logItems);
+                        // Update log file after import
+                        await WriteApiLog("Radios", logItems);
 					}
-                    await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
+                    await DB.ExecuteNonQuery(sqlTotal, true, true);
 					//Code.MsgBox.Show("Radio import complete");
 					return ("Import Complete");
 				}
 
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					await Log.LogToFile(ex);
 					Code.MsgBox.Show(ex.Message, "Error fetching radios from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
@@ -945,7 +945,7 @@ namespace WinApp.Code
 						rootToken = rootToken.Next;
 						JToken maps = rootToken.Children().First();
                         // Get all current maps into list for checking if exits
-                        DataTable currentMaps = DB.FetchData("SELECT * FROM map");
+                        DataTable currentMaps = await DB.FetchData("SELECT * FROM map");
 						foreach (JProperty map in maps)
 						{
 							JToken itemToken = map.First();
@@ -985,20 +985,20 @@ namespace WinApp.Code
                                 logItems.UpdatedCount++;
                             }
 						}
-						// Update log file after import
-						WriteApiLog("Maps", logItems);
+                        // Update log file after import
+                        await WriteApiLog("Maps", logItems);
 					}
                     // Update existing maps
                     if (sqlTotal.Length > 0)
                     {
                         sqlTotal = "UPDATE map SET active=0;" + sqlTotal; // Remove active flag before updates
-                        await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
+                        await DB.ExecuteNonQuery(sqlTotal, true, true);
                     }
                     // Add new maps
                     if (newMaps.Count > 0)
                     {
                         sqlTotal = "";
-                        DataTable currentMaps = DB.FetchData("SELECT MAX(id) FROM map");
+                        DataTable currentMaps = await DB.FetchData("SELECT MAX(id) FROM map");
                         int newId = 0;
                         if (currentMaps.Rows.Count > 0)
                             newId = Convert.ToInt32(currentMaps.Rows[0][0]);
@@ -1010,14 +1010,14 @@ namespace WinApp.Code
                             sqlTotal += newSQL + "\n" + Environment.NewLine;
                         }
                         if (sqlTotal.Length > 0)
-                            await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
+                            await DB.ExecuteNonQuery(sqlTotal, true, true);
                     }
 					return ("Import Complete");
 				}
 
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					await Log.LogToFile(ex);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
 			}
@@ -1059,7 +1059,7 @@ namespace WinApp.Code
                             if (description.Length > 255)
                                 description = description.Substring(0, 255);
                             // Check if ach already exists
-                            if (!TankHelper.GetAchievmentExist(itemToken["name"].ToString()))
+                            if (!await TankHelper.GetAchievmentExist(itemToken["name"].ToString()))
 							{
 								string sql = "INSERT INTO ACH (name, section, section_order, name_i18n, type, ordernum, description) " +
 											"VALUES (@name, @section, 0, @name_i18n, @type, @ordernum, @description); ";
@@ -1182,9 +1182,9 @@ namespace WinApp.Code
 								logItems.UpdatedCount++;
 							}
 						}
-						await DB.ExecuteNonQueryAsync(sqlTotal, true, true);
-						// Update log file after import
-						WriteApiLog("Achievements", logItems);
+						await DB.ExecuteNonQuery(sqlTotal, true, true);
+                        // Update log file after import
+                        await WriteApiLog("Achievements", logItems);
 					}
 
 					//Code.MsgBox.Show("Achievement import complete");
@@ -1192,7 +1192,7 @@ namespace WinApp.Code
 
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					await Log.LogToFile(ex);
 					Code.MsgBox.Show(ex.Message, "Error fetching acheivments from WoT API", parentForm);
 					//return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
@@ -1230,13 +1230,13 @@ namespace WinApp.Code
 							tanksInGarage.Add(tankId);
 						}
 						Log.AddToLogBuffer("// Found " + tanksInGarage.Count + " tanks in garage");
-						Log.WriteLogBuffer();
+						await Log.WriteLogBuffer();
 					}
 				}
 
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					await Log.LogToFile(ex);
 					Code.MsgBox.Show(ex.Message, "Error fetching tanks in garage from WoT API", parentForm);
 				}
 			}

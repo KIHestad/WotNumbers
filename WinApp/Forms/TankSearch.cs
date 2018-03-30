@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -22,7 +23,7 @@ namespace WinApp.Forms
             InitializeComponent();
         }
 
-        private void TankSearch_Load(object sender, EventArgs e)
+        private async void TankSearch_Load(object sender, EventArgs e)
         {
             // Style toolbar
             toolStripMain.Renderer = new StripRenderer();
@@ -40,10 +41,10 @@ namespace WinApp.Forms
             // Get MAin mode
             MainModeAdvanced = Config.Settings.tankSearchMainModeAdvanced;
             // Setup form and initial data structure
-            Setup();
+            await Setup();
         }
 
-        private void Setup()
+        private async Task Setup()
         {
             // Setup menu
             mSeparator2.Visible = MainModeAdvanced;
@@ -69,7 +70,7 @@ namespace WinApp.Forms
             ResizeForm();
             // Show data
             CreateEmptyResultSet();
-            SearchNow();
+            await SearchNow();
             ResizeNow();
         }
 
@@ -219,21 +220,21 @@ namespace WinApp.Forms
             }
         }
 
-        private void mNationToggleAll_Click(object sender, EventArgs e)
+        private async void mNationToggleAll_Click(object sender, EventArgs e)
         {
             mNationToggleAll.Checked = !mNationToggleAll.Checked;
             SelectAllNations(mNationToggleAll.Checked);
-            SearchNow();
+            await SearchNow();
         }
 
-        private void mNation_Click(object sender, EventArgs e)
+        private async void mNation_Click(object sender, EventArgs e)
         {
             ToolStripButton btn = (ToolStripButton)sender;
             if (mNationSelectMode.Text == "Single" && !btn.Checked)
                 SelectAllNations(false);
             btn.Checked = !btn.Checked;
             mNationToggleAll.Checked = (GetNationCheckedCount() == 8);
-            SearchNow();
+            await SearchNow();
         }
 
         private int GetNationCheckedCount()
@@ -278,9 +279,9 @@ namespace WinApp.Forms
             }
         }
 
-        private void mTxtSearch_TextChanged(object sender, EventArgs e)
+        private async void mTxtSearch_TextChanged(object sender, EventArgs e)
         {
-            SearchNow();
+            await SearchNow();
         }
 
         private void mNationSelectMode_Click(object sender, EventArgs e)
@@ -332,7 +333,7 @@ namespace WinApp.Forms
             }
         }
 
-        private void SearchNow()
+        private async Task SearchNow()
         {
             try
             {
@@ -354,8 +355,7 @@ namespace WinApp.Forms
                 {
                     // Advanced
                     CreateEmptyResultSet();
-                    int nationCount = 0;
-                    string nationFilter = GetSelectedNations(out nationCount);
+                    string nationFilter = GetSelectedNations(out int nationCount);
                     // Check if any selection is made
                     if (freeTextSearch == "" && nationFilter == "")
                     {
@@ -375,7 +375,7 @@ namespace WinApp.Forms
                         freeTextSearch +
                         "order by tank.tier desc, tank.tankTypeId, tank.short_name; ";
                     DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                    DataTable dtSearchTanks = DB.FetchData(sql);
+                    DataTable dtSearchTanks = await DB.FetchData(sql);
 
                     // Populate table
                     int currentTier = 11; // start one above max tier to force write first header
@@ -441,7 +441,7 @@ namespace WinApp.Forms
                         freeTextSearch +
                         "order by tank.short_name; ";
                     DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                    dt = DB.FetchData(sql);
+                    dt = await DB.FetchData(sql);
                     // Add image column to datatable
                     // Use ImageHelper to add columns in use
                     ImageHelper.ImgColumns img = new ImageHelper.ImgColumns("Tank", 3);
@@ -602,7 +602,7 @@ namespace WinApp.Forms
         }
 
         // Enable mouse wheel scrolling for datagrid
-        private void dataGridTanks_MouseWheel(object sender, MouseEventArgs e)
+        private async void dataGridTanks_MouseWheel(object sender, MouseEventArgs e)
         {
             try
             {
@@ -622,7 +622,7 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
                 // throw;
             }
         }
@@ -637,7 +637,7 @@ namespace WinApp.Forms
             MoveAllTanksScrollBar();
         }
 
-        private void mResetSearch_Click(object sender, EventArgs e)
+        private async void mResetSearch_Click(object sender, EventArgs e)
         {
             mTxtSearch.Text = "";
             mTxtSearch.Focus();
@@ -648,10 +648,10 @@ namespace WinApp.Forms
                 mNationToggleAll.Text = "All";
                 mNationToggleAll.Visible = false;
             }
-            SearchNow();
+            await SearchNow();
         }
 
-        private void TankSearch_FormClosing(object sender, FormClosingEventArgs e)
+        private async void TankSearch_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Remember latest search params
             TankSearchHelper.SearchText = mTxtSearch.Text;
@@ -668,13 +668,12 @@ namespace WinApp.Forms
             if (MainModeAdvanced != Config.Settings.tankSearchMainModeAdvanced)
             {
                 Config.Settings.tankSearchMainModeAdvanced = MainModeAdvanced;
-                string msg = "";
-                Config.SaveConfig(out msg);
+                await Config.SaveConfig();
             }
             
         }
 
-        private void mMainMode_Click(object sender, EventArgs e)
+        private async void mMainMode_Click(object sender, EventArgs e)
         {
             MainModeAdvanced = !MainModeAdvanced;
             if (MainModeAdvanced)
@@ -685,7 +684,7 @@ namespace WinApp.Forms
             {
                 mMainMode.Image = imageListMainMode.Images[1];
             }
-            Setup();
+            await Setup();
         }
 
     }

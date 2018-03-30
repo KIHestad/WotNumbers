@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace WinApp.Forms.Settings
 {
@@ -18,17 +19,17 @@ namespace WinApp.Forms.Settings
             InitializeComponent();
         }
 
-        private void AppSettingsReplay_Load(object sender, EventArgs e)
+        private async void AppSettingsReplay_Load(object sender, EventArgs e)
         {
             // Style datagrid
             GridHelper.StyleDataGrid(dataGridReplayFolder);
             // Show content
-            ShowReplayFolders();
+            await ShowReplayFolders();
         }
 
-        private void ShowReplayFolders()
+        private async Task ShowReplayFolders()
         {
-            DataTable dt = DB.FetchData("select path as 'Path', '' as 'Sub', id, subfolder from replayFolder order by path");
+            DataTable dt = await DB.FetchData("select path as 'Path', '' as 'Sub', id, subfolder from replayFolder order by path");
             // Modify datatable by adding values to '*' column, indication subfolders included
             foreach (DataRow row in dt.Rows)
             {
@@ -71,7 +72,7 @@ namespace WinApp.Forms.Settings
                 MsgBox.Button answer = MsgBox.Show("Does subfolders with replay files exists?", "Include subfolders?", MsgBox.Type.YesNo);
                 bool subfolder = (answer == MsgBox.Button.Yes);
                 await ReplayHelper.AddReplayFolder(path, subfolder);
-                ShowReplayFolders();
+                await ShowReplayFolders();
             }
         }
 
@@ -81,7 +82,7 @@ namespace WinApp.Forms.Settings
             {
                 int id = Convert.ToInt32(dataGridReplayFolder.SelectedRows[0].Cells["id"].Value);
                 await ReplayHelper.RemoveReplayFolder(id);
-                ShowReplayFolders();
+                await ShowReplayFolders();
             }
         }
 

@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WinApp.Code.Rating
 {
     public class RWR
     {
-        public static double? RWRtotal(string battleMode)
+        public async static Task<double?> RWRtotal(string battleMode)
         {
             double? RWR = null;
-            WN8.RatingParametersWN8 rpWN8 = WN8.GetParamForPlayerTotal(battleMode);
+            WN8.RatingParametersWN8 rpWN8 = await WN8.GetParamForPlayerTotal(battleMode);
             // Use WN8 formula to calculate result
             RWR = RWRuseFormula(rpWN8);
             return RWR;
@@ -41,7 +42,7 @@ namespace WinApp.Code.Rating
             }
         }
 
-        public static double? RWRbattle(string battleTimeFilter, int maxBattles, string battleMode)
+        public async static Task<double?> RWRbattle(string battleTimeFilter, int maxBattles, string battleMode)
         {
             double? RWR = null;
             if (battleMode == "")
@@ -58,7 +59,7 @@ namespace WinApp.Code.Rating
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 
-            DataTable ptb = DB.FetchData(sql);
+            DataTable ptb = await DB.FetchData(sql);
             // Get all battles
             sql =
                 "select battlesCount as battles, victory as wins, tank.id as tankId " +
@@ -67,7 +68,7 @@ namespace WinApp.Code.Rating
                 "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " order by battleTime DESC";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            DataTable dtBattles = DB.FetchData(sql);
+            DataTable dtBattles = await DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
                 int countBattles = 0;
@@ -95,12 +96,12 @@ namespace WinApp.Code.Rating
                 if (ptb.Rows.Count > 0)
                     RWR = RWRplayerTankBattle(ptb);
                 if (error != "" && Config.Settings.showDBErrors)
-                    Log.LogToFile("RWRbattle() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+                    await Log.LogToFile("RWRbattle() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
             }
             return RWR;
         }
 
-        public static double? RWRReverse(string battleTimeFilter, string battleMode)
+        public async static Task<double?> RWRReverse(string battleTimeFilter, string battleMode)
         {
             if (battleMode == "")
                 battleMode = "%";
@@ -115,7 +116,7 @@ namespace WinApp.Code.Rating
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 
-            DataTable ptb = DB.FetchData(sql);
+            DataTable ptb = await DB.FetchData(sql);
             // Get all battles and subtract from totals
             sql =
                 "select battlesCount as battles, dmg, spotted as spot, frags, " +
@@ -125,7 +126,7 @@ namespace WinApp.Code.Rating
                 "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " order by battleTime DESC";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            DataTable dtBattles = DB.FetchData(sql);
+            DataTable dtBattles = await DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
                 string error = "";
@@ -146,7 +147,7 @@ namespace WinApp.Code.Rating
                     }
                 }
                 if (error != "" && Config.Settings.showDBErrors)
-                    Log.LogToFile("RWRReverse() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+                    await Log.LogToFile("RWRReverse() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
 
             }
             return RWR.RWRplayerTankBattle(ptb);

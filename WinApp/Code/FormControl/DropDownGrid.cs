@@ -40,7 +40,7 @@ namespace WinApp.Code
 		}
 
 
-		public static string Show(BadDropDownBox DropDownControl, DropDownGridType DataSourceType, object DataSource, string OverrideDbCon = "")
+		public async static Task<string> Show(BadDropDownBox DropDownControl, DropDownGridType DataSourceType, object DataSource, string OverrideDbCon = "")
 		{
 			if (Shown)
 			{
@@ -65,7 +65,7 @@ namespace WinApp.Code
 				}
 				else if (DataSourceType == DropDownGridType.Sql)
 				{
-					dt = DB.FetchData(DataSource.ToString());
+					dt = await DB.FetchData(DataSource.ToString());
 				}
                 else if (DataSourceType == DropDownGridType.DataTable)
                 {

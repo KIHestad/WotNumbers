@@ -88,9 +88,9 @@ namespace WinApp.Forms.Settings
             vBAddictHelper.Settings.UploadReplayActive = chkActivateAutoReplayUpload.Checked;
             await vBAddictHelper.SaveSettings();
             Config.Settings.vBAddictShowToolBarMenu = chkShowvbAddictIcon.Checked;
-            string msg = "";
-            if (!Config.SaveConfig(out msg))
-                MsgBox.Show("Error saving settings: " + msg, "Save result");
+            var result = await Config.SaveConfig();
+            if (!result.Success)
+                MsgBox.Show("Error saving settings: " + result.Message, "Save result");
             else
             {
                 btnCancel.Enabled = false;

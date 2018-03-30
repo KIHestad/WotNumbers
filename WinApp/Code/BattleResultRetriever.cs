@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Permissions;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WinApp.Code
@@ -48,22 +49,21 @@ namespace WinApp.Code
 
 		
 
-		public static bool IsWoTGameFolderOK()
+		public async static Task<bool> IsWoTGameFolderOK()
 		{
-			string msg = "";
 			bool woTGameFolderOK = false;
 			if (Config.Settings.wotGameFolder == "")
 			{
 				if (Directory.Exists("C:\\Games\\World_of_Tanks"))
 				{
 					Config.Settings.wotGameFolder = "C:\\Games\\World_of_Tanks";
-					Config.SaveConfig(out msg);
+					await Config.SaveConfig();
 					woTGameFolderOK = true;
 				}
 				else if (Directory.Exists("D:\\Games\\World_of_Tanks"))
 				{
 					Config.Settings.wotGameFolder = "D:\\Games\\World_of_Tanks";
-					Config.SaveConfig(out msg);
+					await Config.SaveConfig();
 					woTGameFolderOK = true;
 				}
 			}
@@ -77,7 +77,7 @@ namespace WinApp.Code
 			get
 			{
 				int files = 0;
-				if (File.Exists(ModsFolder + BrrFile))
+				if (File.Exists(Path.Combine(ModsFolder, BrrFile)))
 					files++;
                 //if (File.Exists(BattleResultRetriever.InitFile))
                 //    files++;
@@ -105,13 +105,11 @@ namespace WinApp.Code
 					Directory.CreateDirectory(ModsFolder);
 				}
 				string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-				if (!File.Exists(BrrFile))
-				{
-					string fileToCopy = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Docs", BrrFile);
-                    File.Copy(fileToCopy, ModsFolder + BrrFile, true);
-				}
+				string fileToCopy = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Docs", BrrFile);
+                string fileCopyToLocation = Path.Combine(ModsFolder, BrrFile);
+                File.Copy(fileToCopy, fileCopyToLocation, true);
 				// Add the access control entry to the files
-                AddFileSecurity(ModsFolder + BrrFile, userName, FileSystemRights.FullControl, AccessControlType.Allow);
+                AddFileSecurity(fileCopyToLocation, userName, FileSystemRights.FullControl, AccessControlType.Allow);
 			}
 			catch (Exception ex)
 			{
@@ -127,7 +125,7 @@ namespace WinApp.Code
 			msg = "";
 			try
 			{
-                File.Delete(ModsFolder + BrrFile);
+                File.Delete(Path.Combine(ModsFolder, BrrFile));
 			}
 			catch (Exception ex)
 			{

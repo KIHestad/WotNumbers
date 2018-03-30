@@ -33,7 +33,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void ColumnSetup_Load(object sender, EventArgs e)
+		private async void ColumnSetup_Load(object sender, EventArgs e)
 		{
 			// Make sure borderless form do not cover task bar when maximized
 			Screen screen = Screen.FromControl(this);
@@ -48,9 +48,9 @@ namespace WinApp.Forms
 			GridHelper.StyleDataGrid(dataGridSelectedColumns);
 			// Show content
 			SelectedColListId = MainSettings.GetCurrentGridFilter().ColListId;
-			ShowColumnSetupList();
+            await ShowColumnSetupList();
             // Show available columns
-            toolAllColumns = ColListHelper.SetToolStripColType(toolAllColumns, MainSettings.View);
+            toolAllColumns = await ColListHelper.SetToolStripColType(toolAllColumns, MainSettings.View);
             toolAvailableCol_All.Checked = true;
             SetAllColumnsDataGrid();
 			// Mouse scrolling
@@ -60,7 +60,7 @@ namespace WinApp.Forms
 			ColListTheme.Cursor = Cursors.Default;
 			// Separator default colWidth
 			string sql = "select colWidth from columnSelection where id = 900";
-			separatorDefaultColWidth = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
+			separatorDefaultColWidth = Convert.ToInt32((await DB.FetchData(sql)).Rows[0][0]);
 		}
 
 		#endregion
@@ -150,7 +150,7 @@ namespace WinApp.Forms
 
 		#region ColumnList
 
-		private void ShowColumnSetupList(bool selectNewestColList = false)
+		private async Task ShowColumnSetupList(bool selectNewestColList = false)
 		{
 			string sql = "select columnList.position as '#', columnList.name as 'Name', '' as 'Show', '' as 'Startup', '' as 'System', " +
 				"favList.name as 'Fav Tank List', columnList.id, columnList.defaultFavListId, columnList.sysCol, columnList.colDefault " +
@@ -158,7 +158,7 @@ namespace WinApp.Forms
 				"where columnList.colType=@colType " +
 				"order by COALESCE(columnList.position,99), name; ";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DataTable dtColumnList = DB.FetchData(sql);
+			DataTable dtColumnList = await DB.FetchData(sql);
 			// Modify datatable by adding values to Show, Default and System columns
 			foreach (DataRow row in dtColumnList.Rows)
 			{
@@ -213,19 +213,19 @@ namespace WinApp.Forms
 			}
 			if (dataGridColumnList.Rows.Count > 0)
 				dataGridColumnList.Rows[rownum].Selected = true;
-			SelectColumnList();
+            await SelectColumnList();
 			// Connect to scrollbar
 			scrollColumnList.ScrollElementsTotals = dtColumnList.Rows.Count;
 			scrollColumnList.ScrollElementsVisible = dataGridColumnList.DisplayedRowCount(false);
 		}
 
-		private void dataGridColumnList_CellClick(object sender, DataGridViewCellEventArgs e)
+		private async void dataGridColumnList_CellClick(object sender, DataGridViewCellEventArgs e)
 		{
 			SelectedColListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
-			SelectColumnList();
+            await SelectColumnList();
 		}
 
-		private void SelectColumnList()
+		private async Task SelectColumnList()
 		{
 			// Set enabled when not sysColumn
 			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
@@ -242,8 +242,8 @@ namespace WinApp.Forms
 			toolColListVisible.Enabled = !isDefault;
 			// Disable default if already default, or if col is hidden
 			toolColListDefault.Enabled = (!isDefault && !isHidden);
-			// Get cols for this Col list now
-			GetSelectedColumnsFromColumnList();
+            // Get cols for this Col list now
+            await GetSelectedColumnsFromColumnList();
 			
 		}
 
@@ -259,16 +259,16 @@ namespace WinApp.Forms
 				dataGridColumnList.FirstDisplayedScrollingRowIndex = scrollColumnList.ScrollPosition;
 		}
 
-		private void btnSelectedColumnListCancel_Click(object sender, EventArgs e)
+		private async void btnSelectedColumnListCancel_Click(object sender, EventArgs e)
 		{
-			SelectColumnList();
+            await SelectColumnList();
 		}
 
 		private async void btnSelectedColumnListSave_Click(object sender, EventArgs e)
 		{
 			string ColumnSetupListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
 			string message = "You are about to save the selected columns to column setup list: " + ColumnSetupListName;
-            Code.MsgBox.Button answer = MsgBox.Show(message, "Save selected columns to column setup list", MsgBox.Type.OKCancel, this);
+            MsgBox.Button answer = MsgBox.Show(message, "Save selected columns to column setup list", MsgBox.Type.OKCancel, this);
 			if (answer == MsgBox.Button.OK)
 			{
                 await SaveSelectedColumnList();
@@ -290,9 +290,9 @@ namespace WinApp.Forms
 				sql += insertsql;
 			}
 			DB.AddWithValue(ref sql, "@columnListId", SelectedColListId, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
-			// Refresh Grid
-			ShowColumnSetupList();
+            await DB.ExecuteNonQuery(sql);
+            // Refresh Grid
+            await ShowColumnSetupList();
 		}
 
 
@@ -350,7 +350,7 @@ namespace WinApp.Forms
 		}
 
 		// Enable mouse wheel scrolling for datagrid
-		private void dataGridAllColumns_MouseWheel(object sender, MouseEventArgs e)
+		private async void dataGridAllColumns_MouseWheel(object sender, MouseEventArgs e)
 		{
 			try
 			{
@@ -370,7 +370,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -393,7 +393,7 @@ namespace WinApp.Forms
 
 		private DataTable dtSelectedColumns = new DataTable();
 		private bool selectedColumnSetupDone = false;
-		private void GetSelectedColumnsFromColumnList()
+		private async Task GetSelectedColumnsFromColumnList()
 		{
 			string sql =
 				"SELECT columnListSelection.sortorder AS '#', columnSelection.name AS 'Name', description as 'Description', columnSelectionId, columnListId, columnListSelection.colWidth " +
@@ -402,7 +402,7 @@ namespace WinApp.Forms
 				"		AND columnListSelection.columnListId = @columnListId " +
 				"ORDER BY sortorder ";
 			DB.AddWithValue(ref sql, "@columnListId", SelectedColListId, DB.SqlDataType.Int);
-			dtSelectedColumns = DB.FetchData(sql);
+			dtSelectedColumns = await DB.FetchData(sql);
 			ShowSelectedColumns();
 			if (!selectedColumnSetupDone)
 			{
@@ -590,7 +590,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void RemoveSelectedColumn(bool All = false)
+		private async Task RemoveSelectedColumn(bool All = false)
 		{
 			try
 			{
@@ -620,7 +620,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 			}
 			
 		}
@@ -656,13 +656,13 @@ namespace WinApp.Forms
 			RemoveButton_Click(true);
 		}
 
-		private void RemoveButton_Click(bool selectAll = false)
+		private async void RemoveButton_Click(bool selectAll = false)
 		{
 			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
 			if (sysCol)
 				ShowSystemColListMessage();
 			else
-				RemoveSelectedColumn(selectAll);
+                await RemoveSelectedColumn(selectAll);
 		}
 
 		private void dataGridAllColumns_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -746,7 +746,7 @@ namespace WinApp.Forms
 		}
 
 		// Enable mouse wheel scrolling for datagrid
-		private void dataGridSelectedColumns_MouseWheel(object sender, MouseEventArgs e)
+		private async void dataGridSelectedColumns_MouseWheel(object sender, MouseEventArgs e)
 		{
 			try
 			{
@@ -766,7 +766,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -786,18 +786,18 @@ namespace WinApp.Forms
 		private async void toolColListDelete_Click(object sender, EventArgs e)
 		{
 			string ColListName = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
-			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete selected column list: " + ColListName,
+			MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete selected column list: " + ColListName,
                 "Confirm deletion", MsgBox.Type.OKCancel, this);
 			if (answer == MsgBox.Button.OK)
 			{
 
 				string sql = "delete from columnListSelection where columnListId=@id; delete from columnList where id=@id;";
 				DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
-                await DB.ExecuteNonQueryAsync(sql);
+                await DB.ExecuteNonQuery(sql);
 				SelectedColListId = 0;
 				if (dataGridColumnList.RowCount > 0)
 					SelectedColListId = Convert.ToInt32(dataGridColumnList.Rows[0].Cells["id"].Value);
-				ShowColumnSetupList();
+                await ShowColumnSetupList();
 			}
 		}
 
@@ -831,7 +831,7 @@ namespace WinApp.Forms
 
 				DB.AddWithValue(ref sql, "@position", Convert.ToInt32(ColListSelectedListPos), DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-				DataTable dt = DB.FetchData(sql);
+				DataTable dt = await DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
 				{
 					int rowNextToPos = Convert.ToInt32(dt.Rows[0]["position"]);
@@ -842,7 +842,7 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@position",  Convert.ToInt32(ColListSelectedListPos), DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToId", rowNextToId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
-                    await DB.ExecuteNonQueryAsync(sql);
+                    await DB.ExecuteNonQuery(sql);
 				}
                 await ColListSort();
 			}
@@ -852,7 +852,7 @@ namespace WinApp.Forms
 		{
 			string sql = "select * from columnList where colType=@colType and position is not null order by position;";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				sql = "";
@@ -864,8 +864,8 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@pos", pos, DB.SqlDataType.Int);
 					pos++;
 				}
-                await DB.ExecuteNonQueryAsync(sql);
-				ShowColumnSetupList(selectNewestColList);
+                await DB.ExecuteNonQuery(sql);
+                await ShowColumnSetupList(selectNewestColList);
 			}
 		}
 
@@ -875,8 +875,8 @@ namespace WinApp.Forms
 						 "update columnList set colDefault=1 where colType=@colType and id=@id;";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
-			ShowColumnSetupList();
+            await DB.ExecuteNonQuery(sql);
+            await ShowColumnSetupList();
 		}
 
 		private async void toolColListVisible_Click(object sender, EventArgs e)
@@ -885,7 +885,7 @@ namespace WinApp.Forms
 			if (toolColListVisible.Text == "Hide")
 				sql = "update columnList set position=NULL where id=@id";
 			DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
             await ColListSort();
 		}
 
@@ -898,16 +898,16 @@ namespace WinApp.Forms
             await ColListSort(true);
 		}
 
-		private void toolColListModify_Click(object sender, EventArgs e)
+		private async void toolColListModify_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.ColListNewEdit(SelectedColListId);
 			frm.ShowDialog();
-			ShowColumnSetupList();
+            await ShowColumnSetupList();
 		}
 
-		private void toolColListRefresh_Click(object sender, EventArgs e)
+		private async void toolColListRefresh_Click(object sender, EventArgs e)
 		{
-			ShowColumnSetupList();
+            await ShowColumnSetupList();
 		}
 
 		private void btnClose_Click(object sender, EventArgs e)
@@ -922,27 +922,28 @@ namespace WinApp.Forms
 
 		}
 
-		private void ColList_FormClosing(object sender, FormClosingEventArgs e)
+		private async void ColList_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			try
 			{
-				// Try to use selected collist from grid
-				int colListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
-				// Check if exists, might be deleted if reset system view
-				string colListName = ColListHelper.GetColListName(colListId);
-				if (colListName == "")
+                ColListHelper.ColListItem item = new ColListHelper.ColListItem();
+                // Try to use selected collist from grid
+                item.id = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
+                // Check if exists, might be deleted if reset system view
+                item.name = await ColListHelper.GetColListName(item.id);
+				if (item.name == "")
 				{
-					// Get statup list
-					colListId = ColListHelper.GetColListStartup(MainSettings.View, out colListName);
+                    // Get statup list
+                    item = await ColListHelper.GetColListStartup(MainSettings.View);
 				}
 				GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
-				gf.ColListId = colListId;
-				gf.ColListName = colListName;
+				gf.ColListId = item.id;
+				gf.ColListName = item.name;
 				MainSettings.UpdateCurrentGridFilter(gf);
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 				gf.ColListId = Convert.ToInt32(dataGridColumnList.Rows[0].Cells["id"].Value);
 				gf.ColListName = dataGridColumnList.Rows[0].Cells[1].Value.ToString();
@@ -1030,7 +1031,7 @@ namespace WinApp.Forms
 			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
 			separatorDefaultColWidth = Convert.ToInt32(menu.Name.Substring(22, 2));
 			DB.AddWithValue(ref sql, "@colWidth", separatorDefaultColWidth, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
             await ColListSort();
 		}
 

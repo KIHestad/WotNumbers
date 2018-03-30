@@ -30,11 +30,11 @@ namespace WinApp.Code
             public bool UploadReplayActive { get; set; }
         }
 
-        public static void GetSettings()
+        public async static Task GetSettings()
         {
             string sql = "SELECT * FROM player WHERE id=@id";
             DB.AddWithValue(ref sql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             string token = "";
             bool uploadActive = false;
             bool uploadReplayActive = false;
@@ -61,7 +61,7 @@ namespace WinApp.Code
             DB.AddWithValue(ref sql, "@vbaddictToken", Settings.Token, DB.SqlDataType.VarChar);
             DB.AddWithValue(ref sql, "@vbaddictUploadActive", Settings.UploadActive, DB.SqlDataType.Boolean);
             DB.AddWithValue(ref sql, "@vbaddictUploadReplayActive", Settings.UploadReplayActive, DB.SqlDataType.Boolean);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
         }
 
 		public async static Task<string> TestConnection()
@@ -230,15 +230,25 @@ namespace WinApp.Code
 			catch (Exception ex)
 			{
 				result = false;
-				Log.LogToFile(ex, "Error uploading battle file to vBAddict.");
+				Log.LogToFile(ex, "Error uploading battle file to vBAddict.").ConfigureAwait(false);
 			}
 			return result;
 		}
 
-        public static bool UploadReplay(int battleId, string replayFile, string playerName, string playerServer, string playerToken, out string msg)
+        public class UploadReplayresult
         {
-            msg = "";
-            bool uploadOK = true;
+            public UploadReplayresult()
+            {
+                Success = true;
+                Message = "";
+            }
+            public bool Success { get; set; }
+            public string Message { get; set; }
+        }
+
+        public async static Task<UploadReplayresult> UploadReplay(int battleId, string replayFile, string playerName, string playerServer, string playerToken)
+        {
+            UploadReplayresult result = new UploadReplayresult();
             try
             {
                 string url = "http://carius.vbaddict.net:82/upload_file/replay/@SERVER/@USERNAME/@TOKEN/xml/";
@@ -283,40 +293,50 @@ namespace WinApp.Code
                 foreach (XmlNode item in response[0].ChildNodes)
                 {
                     if (item.Name == "status") status = item.InnerText;
-                    if (item.Name == "message") msg = item.InnerText;
+                    if (item.Name == "message") result.Message = item.InnerText;
                 }
-                uploadOK = (status == "0");
-                if (uploadOK)
-                    UpdateInfoUploadedvBAddict(battleId);
+                result.Success = (status == "0");
+                if (result.Success)
+                    await UpdateInfoUploadedvBAddict(battleId);
             }
             catch (Exception ex)
             {
-                uploadOK = false;
-                Log.LogToFile(ex, "Error uploading replay file to vBAddict.");
-                msg = ex.Message;
+                result.Success = false;
+                await Log.LogToFile(ex, "Error uploading replay file to vBAddict.").ConfigureAwait(false);
+                result.Message = ex.Message;
             }
-            return uploadOK;
+            return result;
         }
 
-        public static List<string> SearchForUser(string AccountId, out string error)
+        public class SearchForuserResult
         {
-            List<string> AccountIds = new List<string>();
-            AccountIds.Add(AccountId);
-            return SearchForUser(AccountIds, out error);
+            public List<string> Users { get; set; }
+            public string ErrorMessage { get; set; }
         }
-        
 
-        public static List<string> SearchForUser(List<string> AccountIds, out string error)
+        public async static Task<SearchForuserResult> SearchForUser(string AccountId)
+        {
+            List<string> AccountIds = new List<string>
+            {
+                AccountId
+            };
+            return await SearchForUser(AccountIds);
+        }
+
+        public async static Task<SearchForuserResult> SearchForUser(List<string> AccountIds)
         {
             // Default
-            error = "";
+            SearchForuserResult result = new SearchForuserResult()
+            {
+                Users = new List<string>(),
+                ErrorMessage = ""
+            };
             // Terminate if no data
             if (AccountIds.Count == 0)
             {
                 return null;
             }
             // Get API URL
-            List<string> foundUsers = new List<string>();
             string accountIDList = "";
             foreach (string accountId in AccountIds)
             {
@@ -348,31 +368,31 @@ namespace WinApp.Code
                     node = xmlDoc.GetElementsByTagName("item" + counter).Item(0);
                     while (node != null)
                     {
-                        foundUsers.Add(node.ChildNodes[0].InnerText);
+                        result.Users.Add(node.ChildNodes[0].InnerText);
                         counter++;
                         node = xmlDoc.GetElementsByTagName("item" + counter).Item(0);
                     }
                 }
                 else
                 {
-                    error = "Returned message: " + responseMessage + " [Status:" + responseStatus + "] when searching for users at vBAddict";
-                    Log.LogToFile(error);
+                    result.ErrorMessage = "Returned message: " + responseMessage + " [Status:" + responseStatus + "] when searching for users at vBAddict";
+                    await Log.LogToFile(result.ErrorMessage);
                 }
-                return foundUsers;
+                return result;
             }
             catch (Exception ex)
             {
-                error = "Error running vBAddict API: " + url;
-                Log.LogToFile(ex, error);
-                return null;
+                result.ErrorMessage = "Error running vBAddict API: " + url;
+                await Log.LogToFile(ex, result.ErrorMessage);
+                return result;
             }
         }
 
-        public static string GetInfoUploadedvBAddict(int battleId)
+        public async static Task<string> GetInfoUploadedvBAddict(int battleId)
         {
             string sql = "select uploadedvBAddict from battle where id=@id";
             DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             string result = "";
             if (dt.Rows.Count > 0)
             {
@@ -386,17 +406,17 @@ namespace WinApp.Code
             return result;
         }
 
-        public static string UpdateInfoUploadedvBAddict(int battleId)
+        public async static Task<string> UpdateInfoUploadedvBAddict(int battleId)
         {
             string sql = "update battle set uploadedvBAddict=@uploadedvBAddict where id=@id";
             DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
             DateTime uploadTime = DateTime.Now;
             DB.AddWithValue(ref sql, "@uploadedvBAddict", uploadTime, DB.SqlDataType.DateTime);
-            DB.ExecuteNonQuery(sql);
-            return GetInfoUploadedvBAddict(battleId);
+            await DB.ExecuteNonQuery(sql);
+            return await GetInfoUploadedvBAddict(battleId);
         }
 
-        public static string GetReplayURLInfo(int battleId)
+        public async static Task<string> GetReplayURLInfo(int battleId)
         {
             // return: map - nation - tankname - battleid
             string replayURLInfo = "";
@@ -409,7 +429,7 @@ namespace WinApp.Code
                 "  left join map on battle.mapId = map.id  " +
                 "  left join country on tank.countryId = country.id " +
                 "where battle.id=" + battleId.ToString();
-            DataTable dtBattle = DB.FetchData(sql);
+            DataTable dtBattle = await DB.FetchData(sql);
             if (dtBattle.Rows.Count > 0)
             {
                 DataRow drBattle = dtBattle.Rows[0];

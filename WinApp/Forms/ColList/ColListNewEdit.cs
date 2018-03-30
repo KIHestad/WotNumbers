@@ -31,7 +31,7 @@ namespace WinApp.Forms
 			colListId = selectedColListId;
 		}
 
-		private void ColListNewEdit_Load(object sender, EventArgs e)
+		private async void ColListNewEdit_Load(object sender, EventArgs e)
 		{
 			if (colListId > 0)
 			{
@@ -40,7 +40,7 @@ namespace WinApp.Forms
 							"from columnList left join favList on columnList.defaultFavListId=favList.id " +
 							"where columnList.id=@id";
 				DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
-				DataRow dr = DB.FetchData(sql).Rows[0];
+				DataRow dr = (await DB.FetchData(sql)).Rows[0];
 				txtName.Text = dr["colListName"].ToString();
 				prevName = dr["colListName"].ToString();
 				if (dr["favListname"] == DBNull.Value)
@@ -55,7 +55,7 @@ namespace WinApp.Forms
 			}
 			favListDD = "(Use Current),(My Tanks)";
 			string favListSql = "select * from favList order by COALESCE(position,99), name";
-			DataTable dtFavList = DB.FetchData(favListSql);
+			DataTable dtFavList = await DB.FetchData(favListSql);
 			if (dtFavList.Rows.Count > 0)
 			{
 				foreach (DataRow dr in dtFavList.Rows)
@@ -67,7 +67,7 @@ namespace WinApp.Forms
 			copyFromDD = "(None)";
 			string copyFromSql = "select * from columnList where colType=@colType order by COALESCE(position,99), name";
 			DB.AddWithValue(ref copyFromSql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DataTable dtcopyFrom = DB.FetchData(copyFromSql);
+			DataTable dtcopyFrom = await DB.FetchData(copyFromSql);
 			if (dtcopyFrom.Rows.Count > 0)
 			{
 				foreach (DataRow dr2 in dtcopyFrom.Rows)
@@ -82,9 +82,9 @@ namespace WinApp.Forms
 			this.Close();
 		}
 
-		private void ddDefaultTankFilter_Click(object sender, EventArgs e)
+		private async void ddDefaultTankFilter_Click(object sender, EventArgs e)
 		{
-			Code.DropDownGrid.Show(ddDefaultTankFilter, Code.DropDownGrid.DropDownGridType.List, favListDD);
+            await Code.DropDownGrid.Show(ddDefaultTankFilter, Code.DropDownGrid.DropDownGridType.List, favListDD);
 		}
 
 		private async void btnSave_Click(object sender, EventArgs e)
@@ -100,7 +100,7 @@ namespace WinApp.Forms
 				string sql = "select id from columnList where name=@name and colType=@colType; ";
 				DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
 				DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-				DataTable dtExists = DB.FetchData(sql);
+				DataTable dtExists = await DB.FetchData(sql);
 				if (dtExists.Rows.Count > 0 && newName != prevName)
 				{
 					Code.MsgBox.Show("This name is already in use, select a different name for the column list", "Name already in use", this);
@@ -119,7 +119,7 @@ namespace WinApp.Forms
 						// Find favListId
 						sql = "select id from favList where name=@name";
 						DB.AddWithValue(ref sql, "@name", selectedfavListName, DB.SqlDataType.VarChar);
-						DataTable dtFavList = DB.FetchData(sql);
+						DataTable dtFavList = await DB.FetchData(sql);
 						if (dtFavList.Rows.Count > 0)
 							defaultFavListId = Convert.ToInt32(dtFavList.Rows[0][0]);
 					}
@@ -132,7 +132,7 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
 					DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-					await DB.ExecuteNonQueryAsync(sql);
+					await DB.ExecuteNonQuery(sql);
 					// Add tanks if new colList and seleced colList in copy to DD
 					if (colListId == 0 && ddCopyFrom.Text != "(None)")
 					{
@@ -140,13 +140,13 @@ namespace WinApp.Forms
 						sql = "select id from columnList where name=@name and colType=@colType; ";
 						DB.AddWithValue(ref sql, "@name", ddCopyFrom.Text, DB.SqlDataType.VarChar);
 						DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-						DataTable dtCopyFrom = DB.FetchData(sql);
+						DataTable dtCopyFrom = await DB.FetchData(sql);
 						int copyFromId = Convert.ToInt32(dtCopyFrom.Rows[0]["id"]);
 						// Get the id for copy to
 						sql = "select id from columnList where name=@name and colType=@colType; ";
 						DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
 						DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-						DataTable dtCopyTo = DB.FetchData(sql);
+						DataTable dtCopyTo = await DB.FetchData(sql);
 						int copyToId = Convert.ToInt32(dtCopyTo.Rows[0]["id"]);
 						// Copy now
 						sql =	"insert into columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) " +
@@ -155,7 +155,7 @@ namespace WinApp.Forms
 								"   where ColumnListId=@copyFromColumnListId; ";
 						DB.AddWithValue(ref sql, "@copyToColumnListId", copyToId, DB.SqlDataType.Int);
 						DB.AddWithValue(ref sql, "@copyFromColumnListId", copyFromId, DB.SqlDataType.Int);
-						await DB.ExecuteNonQueryAsync(sql);
+						await DB.ExecuteNonQuery(sql);
 					
 					}
 					this.Close();
@@ -163,9 +163,9 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void ddCopyFrom_Click(object sender, EventArgs e)
+		private async void ddCopyFrom_Click(object sender, EventArgs e)
 		{
-			Code.DropDownGrid.Show(ddCopyFrom, Code.DropDownGrid.DropDownGridType.List, copyFromDD);
+            await Code.DropDownGrid.Show(ddCopyFrom, Code.DropDownGrid.DropDownGridType.List, copyFromDD);
 		}
 
 		

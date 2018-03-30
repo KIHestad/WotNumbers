@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -24,7 +25,7 @@ namespace WinApp.Forms
 
         private async void Replay_Shown(object sender, EventArgs e)
         {
-            GetvBAddictUploadInfo();
+            await GetvBAddictUploadInfo();
             FileInfo fi = await ReplayHelper.GetReplayFile(_battleId);
             if (fi != null)
             {
@@ -55,17 +56,16 @@ namespace WinApp.Forms
             Process.Start("explorer.exe", _filename);
         }
 
-        private void btnUploadReplayTovBAddict_Click(object sender, EventArgs e)
+        private async void btnUploadReplayTovBAddict_Click(object sender, EventArgs e)
         {
             btnUploadReplayTovBAddict.Enabled = false;
             btnUploadReplayTovBAddict.Text = "Uploading...";
             Refresh();
-            string resultText = "";
-            bool resultOK = vBAddictHelper.UploadReplay(_battleId, _filename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out resultText);
+            var result = await vBAddictHelper.UploadReplay(_battleId, _filename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token);
             string msg = "Upload to vBAddict was successful.";
-            if (!resultOK)
+            if (!result.Success)
             {
-                msg = "Upload to vBAddict failed with message: " + resultText;
+                msg = "Upload to vBAddict failed with message: " + result.Message;
                 btnUploadReplayTovBAddict.Text = "Upload to vBAddict";
                 btnUploadReplayTovBAddict.Enabled = true;
                 MsgBox.Show(msg, "Upload to vBAddict result", this);
@@ -73,14 +73,14 @@ namespace WinApp.Forms
             else
             {
                 btnUploadReplayTovBAddict.Text = "Upload done";
-                GetvBAddictUploadInfo();
+                await GetvBAddictUploadInfo();
             }
             Refresh();
         }
 
-        private void GetvBAddictUploadInfo()
+        private async Task GetvBAddictUploadInfo()
         {
-            linkvBAddictUpload.Text = vBAddictHelper.GetInfoUploadedvBAddict(_battleId);
+            linkvBAddictUpload.Text = await vBAddictHelper.GetInfoUploadedvBAddict(_battleId);
             toolTipvBAddictLink.SetToolTip(linkvBAddictUpload, "Go to battle report at vBAddict");
         }
 

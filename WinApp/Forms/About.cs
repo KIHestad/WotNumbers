@@ -18,13 +18,13 @@ namespace WinApp.Forms
 			InitializeComponent();
 		}
 
-		private void About_Load(object sender, EventArgs e)
+		private async void About_Load(object sender, EventArgs e)
 		{
 			string dbVersionComment = " (correct version)";
-			if (DBVersion.ExpectedNumber != DBVersion.GetDBVersion())
+			if (DBVersion.ExpectedNumber != await DBVersion.GetDBVersion())
 				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")";
 			lblAppVer.Text = AppVersion.AssemblyVersion + " " + AppVersion.BuildVersion;
-			lblDBver.Text = DBVersion.GetDBVersion().ToString("0000");
+			lblDBver.Text = (await DBVersion.GetDBVersion()).ToString("0000");
 			lblWN8ver.Text = DBVersion.GetWNVersion(8).ToString();
             lblWN9ver.Text = DBVersion.GetWNVersion(9).ToString();
             linkWotNumbers.Text = Constants.WotNumWebUrl();
@@ -40,7 +40,7 @@ namespace WinApp.Forms
 			System.Diagnostics.Process.Start("http://www.vbaddict.net/");
 		}
 
-		private void btnIronPythonEnvironment_Click(object sender, EventArgs e)
+		private async void btnIronPythonEnvironment_Click(object sender, EventArgs e)
 		{
 			// Use IronPython
 			try
@@ -64,7 +64,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex, "CheckIronPythonDefaultEncoding exception");
+				await Log.LogToFile(ex, "CheckIronPythonDefaultEncoding exception");
 				Code.MsgBox.Show("Error: " + ex.Message + Environment.NewLine + Environment.NewLine +
 					"Inner Exception: " + ex.InnerException, "Error running IronPython Environment Check");
 			}

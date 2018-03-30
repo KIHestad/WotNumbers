@@ -31,10 +31,10 @@ namespace WinApp.Forms
             _tankId = tankID;
         }
 
-        private void TankInfoEdit_Load(object sender, EventArgs e)
+        private async void TankInfoEdit_Load(object sender, EventArgs e)
         {
             txtID.Text = _tankId.ToString();
-            DataRow dr = TankHelper.GetTankInfo(_tankId);
+            DataRow dr = await TankHelper.GetTankInfo(_tankId);
             if (dr != null)
             {
                 // Get default values
@@ -52,12 +52,12 @@ namespace WinApp.Forms
                 ShowTankWN9(dr);
                 _WN9Changed = false;
                 // Get dropdown values
-                DataTable dt = DB.FetchData("SELECT name FROM tankType ORDER BY id");
+                DataTable dt = await DB.FetchData("SELECT name FROM tankType ORDER BY id");
                 foreach (DataRow dr1 in dt.Rows)
                     _tankTypes += dr1["name"].ToString() + ",";
                 if (_tankTypes.Length > 0)
                     _tankTypes = _tankTypes.Substring(0, _tankTypes.Length - 1);
-                dt = DB.FetchData("SELECT name FROM country ORDER BY sortOrder");
+                dt = await DB.FetchData("SELECT name FROM country ORDER BY sortOrder");
                 foreach (DataRow dr2 in dt.Rows)
                     _nations += dr2["name"].ToString() + ",";
                 if (_nations.Length > 0)
@@ -107,11 +107,11 @@ namespace WinApp.Forms
             );
         }
 
-        private int GetIdFromName(string tableName, string nameValue)
+        private async Task<int> GetIdFromName(string tableName, string nameValue)
         {
             string sql = "SELECT id FROM " + tableName + " WHERE name=@name";
             DB.AddWithValue(ref sql, "@name", nameValue, DB.SqlDataType.VarChar);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             int nationId = -1;
             if (dt.Rows.Count > 0)
                 nationId = Convert.ToInt32(dt.Rows[0]["id"]);
@@ -153,9 +153,9 @@ namespace WinApp.Forms
                 DB.AddWithValue(ref sql, "@tankTypeId", GetIdFromName("tankType", _defaultTankDetails.tankType), DB.SqlDataType.Int);
                 DB.AddWithValue(ref sql, "@customTankInfo", _defaultTankDetails.customTankInfo, DB.SqlDataType.Boolean);
                 DB.AddWithValue(ref sql, "@id", _tankId, DB.SqlDataType.Int);
-                await DB.ExecuteNonQueryAsync(sql);
+                await DB.ExecuteNonQuery(sql);
                 // Update tankinfo
-                TankHelper.GetTankList();
+                await TankHelper.GetTankList();
                 return true;
             }
             catch (Exception ex)
@@ -212,9 +212,9 @@ namespace WinApp.Forms
                 DB.AddWithValue(ref sql, "@wn9nerf", txtWN9nerf.Text.Trim(), DB.SqlDataType.Float);
                 // id
                 DB.AddWithValue(ref sql, "@id", _tankId, DB.SqlDataType.Int);
-                await DB.ExecuteNonQueryAsync(sql);
+                await DB.ExecuteNonQuery(sql);
                 // Update tankinfo
-                TankHelper.GetTankList();
+                await TankHelper.GetTankList();
                 return true;
             }
             catch (Exception ex)
@@ -261,14 +261,14 @@ namespace WinApp.Forms
             }
         }
 
-        private void ddNation_Click(object sender, EventArgs e)
+        private async void ddNation_Click(object sender, EventArgs e)
         {
-            Code.DropDownGrid.Show(ddNation, Code.DropDownGrid.DropDownGridType.List, _nations);
+            await Code.DropDownGrid.Show(ddNation, Code.DropDownGrid.DropDownGridType.List, _nations);
         }
 
-        private void ddTankType_Click(object sender, EventArgs e)
+        private async void ddTankType_Click(object sender, EventArgs e)
         {
-            Code.DropDownGrid.Show(ddTankType, Code.DropDownGrid.DropDownGridType.List, _tankTypes);
+            await Code.DropDownGrid.Show(ddTankType, Code.DropDownGrid.DropDownGridType.List, _tankTypes);
         }
        
 
@@ -319,8 +319,8 @@ namespace WinApp.Forms
             string result = await ImportWN8Api2DB.UpdateWN8(this, _tankId); // result is empty if any error
             if (result != "")
             {
-                TankHelper.GetTankList();
-                DataRow dr = TankHelper.GetTankInfo(_tankId);
+                await TankHelper.GetTankList();
+                DataRow dr = await TankHelper.GetTankInfo(_tankId);
                 ShowTankWN8(dr);
                 _WN8Changed = false;
                 MsgBox.Show(result, "Result getting WN8 expected values");
@@ -333,8 +333,8 @@ namespace WinApp.Forms
             string result = await ImportWN9Api2DB.UpdateWN9(this, _tankId); // result is empty if any error
             if (result != "")
             {
-                TankHelper.GetTankList();
-                DataRow dr = TankHelper.GetTankInfo(_tankId);
+                await TankHelper.GetTankList();
+                DataRow dr = await TankHelper.GetTankInfo(_tankId);
                 ShowTankWN9(dr);
                 _WN9Changed = false;
                 MsgBox.Show(result, "Result getting WN9 expected values");

@@ -97,7 +97,7 @@ namespace WinApp.Gadget
 			DB.AddWithValue(ref sql, "@posX", left, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@posY", top, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", gadgetId, DB.SqlDataType.Int);
-			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors);
+			await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
             HomeViewSaved = false;
         }
 
@@ -107,7 +107,7 @@ namespace WinApp.Gadget
 			DB.AddWithValue(ref sql, "@width", gadget.width, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@height", gadget.height, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", gadget.id, DB.SqlDataType.Int);
-			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors);
+			await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
             HomeViewSaved = false;
         }
 
@@ -124,7 +124,7 @@ namespace WinApp.Gadget
 					string sqlCheck = "select id from gadgetParameter where gadgetId=@gadgetId and paramNum=@paramNum;";
 					DB.AddWithValue(ref sqlCheck, "@gadgetId", gadget.id, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sqlCheck, "@paramNum", paramNum, DB.SqlDataType.Int);
-					DataTable dt = DB.FetchData(sqlCheck);
+					DataTable dt = await DB.FetchData(sqlCheck);
 					string newParam = "";
 					if (dt.Rows.Count == 0)
 					{
@@ -146,14 +146,14 @@ namespace WinApp.Gadget
 					paramNum++;
 				}
 			}
-			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+			await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
             HomeViewSaved = false;
         }
 
         public async static Task DeleteGadgetParameter(int gadgetId)
         {
             string sql = "delete from gadgetParameter where gadgetId = " + gadgetId.ToString();
-            await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+            await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
             HomeViewSaved = false;
         }
 
@@ -161,7 +161,7 @@ namespace WinApp.Gadget
 		{
 			string sql = "delete from gadgetParameter where gadgetId=@id; delete from gadget where id=@id;";
 			DB.AddWithValue(ref sql, "@id", gadget.id, DB.SqlDataType.Int);
-			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors);
+			await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 			gadgets.Remove(gadget);
             HomeViewSaved = false;
         }
@@ -169,7 +169,7 @@ namespace WinApp.Gadget
         public async static Task RemoveGadgetAll()
 		{
 			string sql = "delete from gadgetParameter ; delete from gadget ;";
-			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors);
+			await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
             gadgets = new List<GadgetItem>();
         }
 
@@ -186,9 +186,10 @@ namespace WinApp.Gadget
 			DB.AddWithValue(ref sql, "@posY", gadget.posY, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@width", gadget.width, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@height", gadget.height, DB.SqlDataType.Int);
-			await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors);
+			await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 			sql = "select max(id) from gadget";
-			gadgetId = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
+            DataTable dt = await DB.FetchData(sql);
+            gadgetId = Convert.ToInt32(dt.Rows[0][0]);
 			int paramNum = 0;
 			sql = "";
 			foreach (object param in newParameters)
@@ -208,7 +209,7 @@ namespace WinApp.Gadget
 				}
 			}
 			if (sql != "")
-				await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+				await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
 			gadgets.Insert(0,gadget);
             HomeViewSaved = false;
             return gadgetId;
@@ -219,7 +220,7 @@ namespace WinApp.Gadget
 		{
 			List<GadgetItem> sortGadgets = new List<GadgetItem>();
 			string sql = "select * from gadget order by sortorder;";
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 1) // Only sort if more than two items
 			{
 				foreach (DataRow dr in dt.Rows)
@@ -236,15 +237,15 @@ namespace WinApp.Gadget
 					sql += "update gadget set sortorder=" + sortOrder + " where id = " + gadget.id + "; ";
 					sortOrder++;
 				}
-				await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+				await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
             }
         }
 
-		public static bool HasGadetParameter(GadgetItem gadget)
+		public async static Task<bool> HasGadetParameter(GadgetItem gadget)
 		{
 			string sql = "select count(id) from gadgetParameter where gadgetId=@gadgetId;";
 			DB.AddWithValue(ref sql, "@gadgetId", gadget.id, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+			DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			bool hasParam = false;
 			if (dt.Rows.Count > 0)
 			{
@@ -255,7 +256,7 @@ namespace WinApp.Gadget
 			return hasParam;
 		}
 
-		public static void GetGadgets()
+		public async static Task GetGadgets()
 		{
 			try
 			{
@@ -268,7 +269,7 @@ namespace WinApp.Gadget
 					"where visible=1 " +
 					"group by gadget.id, visible, width, height, posX, posY, controlName, sortorder  " +
 					"order by sortorder;";
-				DataTable dt = DB.FetchData(sql);
+				DataTable dt = await DB.FetchData(sql);
 				foreach (DataRow dr in dt.Rows)
 				{
 					// get parameters
@@ -279,7 +280,7 @@ namespace WinApp.Gadget
 					{
 						sql = "select * from gadgetParameter where gadgetId=@gadgetId order by paramNum; ";
 						DB.AddWithValue(ref sql, "@gadgetId", gadgetId, DB.SqlDataType.Int);
-						DataTable dtParams = DB.FetchData(sql);
+						DataTable dtParams = await DB.FetchData(sql);
 						int paramCount = 0;
 						foreach (DataRow drParams in dtParams.Rows)
 						{
@@ -294,7 +295,7 @@ namespace WinApp.Gadget
 							paramCount++;
 						}
 					}
-					Control uc = GetGadgetControl(dr["controlName"].ToString(), param);
+					Control uc = await GetGadgetControl(dr["controlName"].ToString(), param);
 					uc.Name = "uc" + dr["id"].ToString();
 					uc.Tag = dr["controlName"].ToString();
 					uc.Top = Convert.ToInt32(dr["posY"]);
@@ -317,7 +318,7 @@ namespace WinApp.Gadget
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 			}
 		}
 
@@ -333,7 +334,7 @@ namespace WinApp.Gadget
 			return resizable;
 		}
 
-		public static Control GetGadgetControl(string name, object[] param)
+		public async static Task<Control> GetGadgetControl(string name, object[] param)
 		{
 			try
 			{
@@ -450,7 +451,7 @@ namespace WinApp.Gadget
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				return null;
 			}
 		}
@@ -481,7 +482,7 @@ namespace WinApp.Gadget
 			return name;
 		}
 
-        public static void ControlDataBind(Control c)
+        public async static Task ControlDataBind(Control c)
         {
             if (c.Tag != null)
             {
@@ -489,47 +490,47 @@ namespace WinApp.Gadget
                 {
                     case "ucGaugePR":
                         ucGaugePR ucGaugePR = (ucGaugePR)c;
-                        ucGaugePR.DataBind();
+                        await ucGaugePR.DataBind();
                         break;
                     case "ucGaugeWinRate":
                         ucGaugeWinRate ucGaugeWinRate = (ucGaugeWinRate)c;
-                        ucGaugeWinRate.DataBind();
+                        await ucGaugeWinRate.DataBind();
                         break;
                     case "ucGaugeRWR":
                         ucGaugeRWR ucGaugeRWR = (ucGaugeRWR)c;
-                        ucGaugeRWR.DataBind();
+                        await ucGaugeRWR.DataBind();
                         break;
                     case "ucGaugeWN9":
                         ucGaugeWN9 ucGaugeWN9 = (ucGaugeWN9)c;
-                        ucGaugeWN9.DataBind();
+                        await ucGaugeWN9.DataBind();
                         break;
                     case "ucGaugeWN8":
                         ucGaugeWN8 ucGaugeWN8 = (ucGaugeWN8)c;
-                        ucGaugeWN8.DataBind();
+                        await ucGaugeWN8.DataBind();
                         break;
                     case "ucGaugeWN7":
                         ucGaugeWN7 ucGaugeWN7 = (ucGaugeWN7)c;
-                        ucGaugeWN7.DataBind();
+                        await ucGaugeWN7.DataBind();
                         break;
                     case "ucGaugeEFF":
                         ucGaugeEFF ucGaugeEFF = (ucGaugeEFF)c;
-                        ucGaugeEFF.DataBind();
+                        await ucGaugeEFF.DataBind();
                         break;
                     case "ucTotalStats":
                         ucTotalStats ucTotalStats = (ucTotalStats)c;
-                        ucTotalStats.DataBind();
+                        await ucTotalStats.DataBind();
                         break;
                     case "ucTotalTanks":
                         ucTotalTanks ucTotalTanks = (ucTotalTanks)c;
-                        ucTotalTanks.DataBind();
+                        await ucTotalTanks.DataBind();
                         break;
                     case "ucBattleTypes":
                         ucBattleTypes ucBattleTypes = (ucBattleTypes)c;
-                        ucBattleTypes.DataBind();
+                        await ucBattleTypes.DataBind();
                         break;
                     case "ucBattleListLargeImages":
                         ucBattleListLargeImages ucBattleListLargeImages = (ucBattleListLargeImages)c;
-                        ucBattleListLargeImages.DataBind();
+                        await ucBattleListLargeImages.DataBind();
                         break;
                     case "ucChartBattle":
                         ucChartBattle ucChartBattle = (ucChartBattle)c;
@@ -537,23 +538,23 @@ namespace WinApp.Gadget
                         break;
                     case "ucChartTier":
                         ucChartTier ucChartTier = (ucChartTier)c;
-                        ucChartTier.DataBind();
+                        await ucChartTier.DataBind();
                         break;
                     case "ucChartNation":
                         ucChartNation ucChartNation = (ucChartNation)c;
-                        ucChartNation.DataBind();
+                        await ucChartNation.DataBind();
                         break;
                     case "ucChartTankType":
                         ucChartTankType ucChartTankType = (ucChartTankType)c;
-                        ucChartTankType.DataBind();
+                        await ucChartTankType.DataBind();
                         break;
                     case "ucGaugeKillDeath":
                         ucGaugeKillDeath ucGaugeKillDeath = (ucGaugeKillDeath)c;
-                        ucGaugeKillDeath.DataBind();
+                        await ucGaugeKillDeath.DataBind();
                         break;
                     case "ucGaugeDmgCausedReceived":
                         ucGaugeDmgCausedReceived ucGaugeDmgCausedReceived = (ucGaugeDmgCausedReceived)c;
-                        ucGaugeDmgCausedReceived.DataBind();
+                        await ucGaugeDmgCausedReceived.DataBind();
                         break;
                     case "ucHeading":
                         ucHeading ucHeading = (ucHeading)c;
@@ -635,9 +636,10 @@ namespace WinApp.Gadget
                             DB.AddWithValue(ref newsql, "@posY", dr["posY"].ToString(), DB.SqlDataType.Int);
                             DB.AddWithValue(ref newsql, "@width", dr["width"].ToString(), DB.SqlDataType.Int);
                             DB.AddWithValue(ref newsql, "@height", dr["height"].ToString(), DB.SqlDataType.Int);
-                            await DB.ExecuteNonQueryAsync(newsql, Config.Settings.showDBErrors, true);
+                            await DB.ExecuteNonQuery(newsql, Config.Settings.showDBErrors, true);
                             // get new id from db and add to memory table
-                            string newId = DB.FetchData("select max(id) as newId from gadget").Rows[0]["newId"].ToString();
+                            DataTable dt = await DB.FetchData("select max(id) as newId from gadget");
+                            string newId = dt.Rows[0]["newId"].ToString();
                             dr["newId"] = newId;
                         }
                     }
@@ -645,7 +647,7 @@ namespace WinApp.Gadget
                     {
                         if (showErrorMessage)
                             MsgBox.Show("Error adding gadget " + latestObject + ": " + ex.Message, "Gadget Error");
-                        Log.LogToFile(ex, "Latest SQL query: " + newsql);
+                        await Log.LogToFile(ex, "Latest SQL query: " + newsql);
                         return false;
                     }
 
@@ -665,13 +667,13 @@ namespace WinApp.Gadget
                             DB.AddWithValue(ref newsql, "@value", dr["value"].ToString(), DB.SqlDataType.VarChar);
                             sqlBatch += newsql + Environment.NewLine;
                         }
-                        await DB.ExecuteNonQueryAsync(sqlBatch, false, true);
+                        await DB.ExecuteNonQuery(sqlBatch, false, true);
                     }
                     catch (Exception ex)
                     {
                         if (showErrorMessage)
                             MsgBox.Show("Error adding gadget parameter id " + gadgetId + ": " + ex.Message, "Gadget Parameter Error");
-                        Log.LogToFile(ex, "Latest SQL query: " + sqlBatch);
+                        await Log.LogToFile(ex, "Latest SQL query: " + sqlBatch);
                         return false;
                     }
                 }
@@ -681,14 +683,14 @@ namespace WinApp.Gadget
             return ok;
         }
 
-        public static void HomeViewSaveToFile(string fileName)
+        public async static Task HomeViewSaveToFile(string fileName)
         {
             // Get gadgets
-            DataTable dtGadget = DB.FetchData("select * from gadget order by id;");
+            DataTable dtGadget = await DB.FetchData("select * from gadget order by id;");
             string jsonResult = JsonConvert.SerializeObject(dtGadget, Newtonsoft.Json.Formatting.Indented);
             jsonResult += Environment.NewLine;
             // Get gadgets parametes
-            DataTable dtGadgetParameter = DB.FetchData("select * from gadgetParameter order by gadgetid,id;");
+            DataTable dtGadgetParameter = await DB.FetchData("select * from gadgetParameter order by gadgetid,id;");
             jsonResult += JsonConvert.SerializeObject(dtGadgetParameter, Newtonsoft.Json.Formatting.Indented);
             // Save
             File.WriteAllText(fileName, jsonResult);
@@ -707,12 +709,12 @@ namespace WinApp.Gadget
             string sql = "SELECT * FROM homeViewRecent WHERE filename=@filename AND folder=@folder;";
             DB.AddWithValue(ref sql, "@filename", fileName, DB.SqlDataType.VarChar);
             DB.AddWithValue(ref sql, "@folder", folder, DB.SqlDataType.VarChar);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             if (dt.Rows.Count == 0)
             {
                 // Check if need to remove recent item
                 sql = "SELECT * FROM homeViewRecent ORDER BY id DESC;";
-                dt = DB.FetchData(sql);
+                dt = await DB.FetchData(sql);
                 sql = "";
                 if (dt.Rows.Count > 4)
                 {
@@ -730,7 +732,7 @@ namespace WinApp.Gadget
                 DB.AddWithValue(ref sql, "@filename", fileName, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@folder", folder, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@used", used, DB.SqlDataType.DateTime);
-                await DB.ExecuteNonQueryAsync(sql);
+                await DB.ExecuteNonQuery(sql);
                 updated = true;
             }
             return updated;
@@ -750,7 +752,7 @@ namespace WinApp.Gadget
                 DB.AddWithValue(ref sql, "@filename", fileName, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@folder", folder, DB.SqlDataType.VarChar);
             }
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
         }
 
     }

@@ -19,20 +19,24 @@ namespace WinApp.Forms.Settings
         public MergePlayers()
         {
             InitializeComponent();
-            dtPlayer = DB.FetchData("SELECT name FROM player ORDER BY name");
-        }
-        
-        private void ddPlayerMergeFrom_Click(object sender, EventArgs e)
-        {
-            Code.DropDownGrid.Show(ddPlayerMergeFrom, Code.DropDownGrid.DropDownGridType.DataTable, dtPlayer);
         }
 
-        private void ddPlayerMergeTo_Click(object sender, EventArgs e)
+        private async void MergePlayers_Load(object sender, EventArgs e)
         {
-            Code.DropDownGrid.Show(ddPlayerMergeTo, Code.DropDownGrid.DropDownGridType.DataTable, dtPlayer);
+            dtPlayer = await DB.FetchData("SELECT name FROM player ORDER BY name");
         }
 
-        private void ddPlayerMergeFrom_TextChanged(object sender, EventArgs e)
+        private async void ddPlayerMergeFrom_Click(object sender, EventArgs e)
+        {
+            await Code.DropDownGrid.Show(ddPlayerMergeFrom, Code.DropDownGrid.DropDownGridType.DataTable, dtPlayer);
+        }
+
+        private async void ddPlayerMergeTo_Click(object sender, EventArgs e)
+        {
+            await Code.DropDownGrid.Show(ddPlayerMergeTo, Code.DropDownGrid.DropDownGridType.DataTable, dtPlayer);
+        }
+
+        private async void ddPlayerMergeFrom_TextChanged(object sender, EventArgs e)
         {
             // prepare to get data
             lblProgressStatus.Text = "Looking for battles for player...";
@@ -45,7 +49,7 @@ namespace WinApp.Forms.Settings
                 WHERE    player.name = @playerNameAndServer;
             ";
             DB.AddWithValue(ref sql, "@playerNameAndServer", ddPlayerMergeFrom.Text, DB.SqlDataType.VarChar);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             // Get result
             battleCount = 0;
             if (dt != null)
@@ -96,7 +100,7 @@ namespace WinApp.Forms.Settings
                 ";
                 DB.AddWithValue(ref sql, "@PlayerNameFrom", ddPlayerMergeFrom.Text, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@PlayerNameTo", ddPlayerMergeTo.Text, DB.SqlDataType.VarChar);
-                DataTable dt = DB.FetchData(sql);
+                DataTable dt = await DB.FetchData(sql);
                 if (dt != null)
                 {
                     badProgressBar.ValueMax = dt.Rows.Count;
@@ -109,7 +113,7 @@ namespace WinApp.Forms.Settings
                         sql = "UPDATE battle SET playerTankId = @playerTankIdTo WHERE playerTankId = @playerTankIdFrom;";
                         DB.AddWithValue(ref sql, "@playerTankIdFrom", dr["FROM_playerTankId"], DB.SqlDataType.Int);
                         DB.AddWithValue(ref sql, "@playerTankIdTo", dr["TO_playerTankId"], DB.SqlDataType.Int);
-                        if (!await DB.ExecuteNonQueryAsync(sql,false))
+                        if (!await DB.ExecuteNonQuery(sql,false))
                             errorCount++;
                         badProgressBar.Value++;
                         lblProgressStatus.Text = "Merging battle data for tank ID: " + dr["FROM_tankId"].ToString();

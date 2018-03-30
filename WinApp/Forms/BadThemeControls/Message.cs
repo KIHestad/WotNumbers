@@ -35,6 +35,10 @@ namespace WinApp.Forms
                     btnOK.Text = "Yes";
                 }
 			}
+            else if (MessageType == MsgBox.Type.OK)
+            {
+                btnClose.Text = "OK";
+            }
 		}
 
 		private void Message_Load(object sender, EventArgs e)
@@ -92,8 +96,11 @@ namespace WinApp.Forms
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			Code.MsgBox.SelectedButton = Code.MsgBox.Button.Cancel;
-			this.Close();
+            if (btnCancel.Text == "OK")
+                MsgBox.SelectedButton = MsgBox.Button.OK;
+            else
+                MsgBox.SelectedButton = MsgBox.Button.Cancel;
+            this.Close();
 		}
 
 

@@ -49,7 +49,7 @@ namespace WinApp.Code.Rating
             public double TIER {get; set;}
         }
 
-        public static RatingParameters GetParamForPlayerTankBattle(string battleMode, bool excludeIfWN8ExpDmgIsNull = false, bool excludeIfWN9ExpValIsNull = false, int playerTankId = 0)
+        public async static Task<RatingParameters> GetParamForPlayerTankBattle(string battleMode, bool excludeIfWN8ExpDmgIsNull = false, bool excludeIfWN9ExpValIsNull = false, int playerTankId = 0)
         {
             RatingParameters rp = new RatingParameters();
             string battleModeWhere = "";
@@ -81,8 +81,8 @@ namespace WinApp.Code.Rating
                 "  tank t on pt.tankId = t.id " +
                 "where pt.playerId=@playerId " + battleModeWhere + excludeIfWN8ExpDmgIsNullWhere + excludeIfWN9ExpValIsNullWhere + playerTankIdWhere;
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-            DataTable playerTotalsTable = DB.FetchData(sql);
-            DataTable dt = DB.FetchData(sql);
+            DataTable playerTotalsTable = await DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             if (dt.Rows.Count == 0)
                 return null;
             DataRow stats = dt.Rows[0];
@@ -101,7 +101,7 @@ namespace WinApp.Code.Rating
 
         #region get data to datatable for use to get wn params
 
-        public static DataTable GetTotalTankStatsForPlayerTank(string battleMode = "15", string tankJoin = "", int tankID = 0)
+        public async static Task<DataTable> GetTotalTankStatsForPlayerTank(string battleMode = "15", string tankJoin = "", int tankID = 0)
         {
             if (battleMode == "")
                 battleMode = "%";
@@ -120,13 +120,13 @@ namespace WinApp.Code.Rating
                 "group by tank.id ";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            return DB.FetchData(sql);
+            return await DB.FetchData(sql);
         }
 
-        public static DataTable GetDataForPlayerTankBattleReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public async static Task<DataTable> GetDataForPlayerTankBattleReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             // Get datatable with all tanks and total stats
-            DataTable ptb = GetTotalTankStatsForPlayerTank(battleMode, tankJoin);
+            DataTable ptb = await GetTotalTankStatsForPlayerTank(battleMode, tankJoin);
             // Get all battles and subtract from totals
             string sql =
                 "select battlesCount as battles, dmg, spotted as spot, frags, " +
@@ -136,7 +136,7 @@ namespace WinApp.Code.Rating
                 "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            DataTable dtBattles = DB.FetchData(sql);
+            DataTable dtBattles = await DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
                 if (battleCount == 0) battleCount = dtBattles.Rows.Count;
@@ -166,7 +166,7 @@ namespace WinApp.Code.Rating
                     if (count > battleCount) break;
                 }
                 if (error != "" && Config.Settings.showDBErrors)
-                    Log.LogToFile("GetDataForPlayerTankBattleReverse() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+                    await Log.LogToFile("GetDataForPlayerTankBattleReverse() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
 
             }
 
@@ -174,7 +174,7 @@ namespace WinApp.Code.Rating
         }
 
         
-        public static DataTable GetDataForBattleRange(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public async static Task<DataTable> GetDataForBattleRange(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             if (battleMode == "")
                 battleMode = "%";
@@ -191,7 +191,7 @@ namespace WinApp.Code.Rating
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 
-            DataTable ptb = DB.FetchData(sql);
+            DataTable ptb = await DB.FetchData(sql);
             // Get all battles
             
             // OLD - had to loop through all battles, instead of per tank - also removed multiplier on battles for each stat
@@ -212,7 +212,7 @@ namespace WinApp.Code.Rating
 
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            DataTable dtBattles = DB.FetchData(sql);
+            DataTable dtBattles = await DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
                 int countBattles = 0;
@@ -241,7 +241,7 @@ namespace WinApp.Code.Rating
                     if (maxBattles > 0 && countBattles > maxBattles) break;
                 }
                 if (error != "" && Config.Settings.showDBErrors)
-                    Log.LogToFile("GetDataForBattleRange() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+                    await Log.LogToFile("GetDataForBattleRange() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
 
                 // Return playertanks with stats
                 DataRow[] dr = ptb.Select("battles > 0");
@@ -260,7 +260,7 @@ namespace WinApp.Code.Rating
 
         #endregion
 
-		public static double GetAverageTier(string battleMode = "")
+		public async static Task<double> GetAverageTier(string battleMode = "")
         {
             double tier = 0;
             // Get average battle tier, used for total player WN7 and battle WN7
@@ -277,7 +277,7 @@ namespace WinApp.Code.Rating
                 "  tank t on pt.tankId = t.id " +
                 "where pt.playerId=@playerId " + battleModeWhere;
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
             {
                 double totalBattles = Convert.ToDouble(dt.Rows[0][0]);
@@ -304,24 +304,24 @@ namespace WinApp.Code.Rating
             // Update playerTankBattle
             string sqlFields = "";
             // Get rating parameters
-            RatingParameters rp = GetParamForPlayerTankBattle(battleMode, playerTankId: playerTankId);
-            int tankId = TankHelper.GetTankID(playerTankId);
+            RatingParameters rp = await GetParamForPlayerTankBattle(battleMode, playerTankId: playerTankId);
+            int tankId = await TankHelper.GetTankID(playerTankId);
             // Calculate WN9
             double WN9maxhist = 0;
-            sqlFields += " wn9=" + Math.Round(WN9.CalcTank(tankId, rp, out WN9maxhist), 0).ToString();
+            sqlFields += " wn9=" + Math.Round((await WN9.CalcTank(tankId, rp)).WN9, 0).ToString();
             sqlFields += ", wn9maxhist=" + Math.Round(WN9maxhist, 0).ToString();
             // Calculate WN8
             sqlFields += ", wn8=" + Math.Round(WN8.CalcTank(tankId, rp), 0).ToString();
             // Calculate Eff
             sqlFields += ", eff=" + Math.Round(EFF.EffTank(tankId, rp), 0).ToString();
             // Calculate WN7 - use special tier
-            rp.TIER = TankHelper.GetTankTier(tankId);
+            rp.TIER = await TankHelper.GetTankTier(tankId);
             sqlFields += ", wn7=" + Math.Round(WN7.WN7tank(rp), 0).ToString();
             // Calculate RWR
             sqlFields += ", rwr=" + RWR.RWRtank(tankId, rp);
             // Save
             string sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE PlayerTankId = " + playerTankId.ToString() + " AND battleMode = '" + battleMode + "'";
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
         }
 
 

@@ -21,7 +21,7 @@ namespace WinApp.Gadget
 			_gadgetId = gadgetId;
 		}
 
-		private void paramBattleMode_Load(object sender, EventArgs e)
+		private async void paramBattleMode_Load(object sender, EventArgs e)
 		{
 			object[] currentParameters = new object[] { null, null, null, null, null };
 			if (_gadgetId > -1)
@@ -29,7 +29,7 @@ namespace WinApp.Gadget
 				// Lookup value for current gadget
 				string sql = "select * from gadgetParameter where gadgetId=@gadgetId order by paramNum;";
 				DB.AddWithValue(ref sql, "@gadgetId", _gadgetId, DB.SqlDataType.Int);
-				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+				DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 				foreach (DataRow dr in dt.Rows)
 				{
 		 			object paramValue = dr["value"];
@@ -44,9 +44,9 @@ namespace WinApp.Gadget
 		}
 
 
-		private void ddBattleMode_Click(object sender, EventArgs e)
+		private async void ddBattleMode_Click(object sender, EventArgs e)
 		{
-			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, BattleMode.GetDropDownList(true));
+            await DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, BattleMode.GetDropDownList(true));
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
@@ -88,9 +88,9 @@ namespace WinApp.Gadget
 				GadgetHelper.DrawBorderOnGadget(sender, e);
 		}
 
-        private void ddTimeSpan_Click(object sender, EventArgs e)
+        private async void ddTimeSpan_Click(object sender, EventArgs e)
         {
-            DropDownGrid.Show(ddTimeSpan, DropDownGrid.DropDownGridType.List, GadgetHelper.GetTimeDropDownList());
+            await DropDownGrid.Show(ddTimeSpan, DropDownGrid.DropDownGridType.List, GadgetHelper.GetTimeDropDownList());
         }
 
         private void paramBattleMode_FormClosing(object sender, FormClosingEventArgs e)

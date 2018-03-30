@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 using WinApp.Code.FormLayout;
@@ -47,13 +48,13 @@ namespace WinApp.Forms
 			parentForm = selectedParentForm;
 		}
 
-        private void BattleDetail_Shown(object sender, EventArgs e)
+        private async void BattleDetail_Shown(object sender, EventArgs e)
         {
             // Get vbAddict players
-            ExternalPlayerProfile.GetvBAddictPlayers(battleId);
+            await ExternalPlayerProfile.GetvBAddictPlayers(battleId);
         }
 
-		private void BattleDetail_Load(object sender, EventArgs e)
+		private async void BattleDetail_Load(object sender, EventArgs e)
 		{
             try
             {
@@ -65,11 +66,11 @@ namespace WinApp.Forms
                 panelBattleReview.Width = panelMyResult.Width;
                 panelBattleReview.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top);
                 // My result
-                GetMyPersonalInfo();
+                await GetMyPersonalInfo();
                 // Teams
                 string sql = "select id from battlePlayer where battleId=@battleId";
                 DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-                if (DB.FetchData(sql).Rows.Count > 0)
+                if ((await DB.FetchData(sql)).Rows.Count > 0)
                 {
                     // Show team tabs and make ready datagrids
                     btnTeams.Visible = true;
@@ -114,7 +115,7 @@ namespace WinApp.Forms
                     sql = "select team from battlePlayer where battleId=@battleId and name=@name";
                     DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
                     DB.AddWithValue(ref sql, "@name", Config.Settings.playerName, DB.SqlDataType.VarChar);
-                    DataTable dt = DB.FetchData(sql);
+                    DataTable dt = await DB.FetchData(sql);
                     if (dt.Rows.Count > 0)
                     {
                         team1 = Convert.ToInt32(dt.Rows[0][0]);
@@ -129,7 +130,7 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Battle detail failed on BattleDetail_Load()");
+                await Log.LogToFile(ex, "Battle detail failed on BattleDetail_Load()");
                 MsgBox.Show("An error occured showing battle details, please check log file for complete error message", "Error", parentForm);
             }
             
@@ -196,7 +197,7 @@ namespace WinApp.Forms
             dgvTeam2.ContextMenuStrip = ExternalPlayerProfile.MenuItems();
         }
 
-		private void DgvTeam_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+		private async void DgvTeam_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
 		{
 			try
 			{
@@ -211,7 +212,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				if (Config.Settings.showDBErrors)
 					MsgBox.Show("Error on grid mouse down event, see log file", "Grid error", this);
 			}
@@ -221,7 +222,7 @@ namespace WinApp.Forms
 
 		#region My Result
 
-		private void GetMyPersonalInfo()
+		private async Task GetMyPersonalInfo()
 		{
             try
             {
@@ -239,7 +240,7 @@ namespace WinApp.Forms
                 "       battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
                 "WHERE	battle.id=@battleId";
                 DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-                DataTable dt = DB.FetchData(sql);
+                DataTable dt = await DB.FetchData(sql);
                 if (dt.Rows.Count > 0)
                 {
                     DataRow dr = dt.Rows[0];
@@ -385,19 +386,19 @@ namespace WinApp.Forms
                     wn7 = Convert.ToInt32(dr["wn7"]);
                     eff = Convert.ToInt32(dr["eff"]);
                     lblBattleMode.Text = battleMode;
-                    GetWN8Details();
-                    GetStandardGridDetails();
+                    await GetWN8Details();
+                    await GetStandardGridDetails();
                 }
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Battle detail failed on GetMyPersonalInfo()");
+                await Log.LogToFile(ex, "Battle detail failed on GetMyPersonalInfo()");
                 MsgBox.Show("An error occured showing battle details, please check log file for complete error message", "Error", parentForm);
             }
             
 		}
 
-		private void GetWN8Details()
+		private async Task GetWN8Details()
 		{
 			// Format
 			GridHelper.StyleDataGrid(dgvWN8, DataGridViewSelectionMode.CellSelect);
@@ -410,7 +411,7 @@ namespace WinApp.Forms
 				"FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id INNER JOIN tank ON playerTank.tankId = tank.id " +
 				"WHERE battle.id = @battleId";
 			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				DataRow dr = dt.Rows[0];
@@ -531,7 +532,7 @@ namespace WinApp.Forms
             dgvWN8.Rows[5].Cells["Value"].Style.ForeColor = ColorRangeScheme.WN8color(wn8);
 		}
 
-		private void GetStandardGridDetails()
+		private async Task GetStandardGridDetails()
 		{
             try
             {
@@ -546,7 +547,7 @@ namespace WinApp.Forms
                     "FROM battle " +
                     "WHERE id = @battleId";
                 DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-                DataTable dtRes = DB.FetchData(sql);
+                DataTable dtRes = await DB.FetchData(sql);
                 // Tank total result
                 sql =
                     "SELECT battles, dmg, dmgReceived, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, " +
@@ -557,7 +558,7 @@ namespace WinApp.Forms
                 DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
                 DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
                 DB.AddWithValue(ref sql, "@battleMode", BattleMode.GetItemFromType(mainBattleMode).SqlName, DB.SqlDataType.VarChar);
-                DataTable dtAvg = DB.FetchData(sql);
+                DataTable dtAvg = await DB.FetchData(sql);
                 if (dtRes.Rows.Count > 0)
                 {
                     DataRow drVal = dtRes.Rows[0];
@@ -691,7 +692,7 @@ namespace WinApp.Forms
                         DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
                         DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
                         DB.AddWithValue(ref sql, "@battleMode", BattleMode.GetItemFromType(mainBattleMode).SqlName, DB.SqlDataType.VarChar);
-                        DataTable dtTotBattle = DB.FetchData(sql);
+                        DataTable dtTotBattle = await DB.FetchData(sql);
                         DataRow drTotBattle = dtTotBattle.Rows[0];
                         double totBattleCount = Convert.ToInt32(drTotBattle["battles"]);
 
@@ -748,7 +749,7 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Battle detail failed on GetStandardGridDetails()");
+                await Log.LogToFile(ex, "Battle detail failed on GetStandardGridDetails()");
                 MsgBox.Show("An error occured showing battle details, please check log file for complete error message", "Error", parentForm);
             }
             	
@@ -958,7 +959,7 @@ namespace WinApp.Forms
 			return sortField;
 		}
 
-		private DataTable GetDataGridSource(int team, string orderHeaderText = "XP", bool orderAscending = false)
+		private async Task<DataTable> GetDataGridSource(int team, string orderHeaderText = "XP", bool orderAscending = false)
 		{
 			string fortResourcesFields = "";
 			if (showFortResources) fortResourcesFields = ", fortResource as 'IR' ";
@@ -1026,7 +1027,7 @@ namespace WinApp.Forms
 				orderBy;
 			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@team", team, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			// Add image as first col
 			dt.Columns.Add("TankImage", typeof(Image)).SetOrdinal(3);
 			// Add Total Row
@@ -1251,10 +1252,10 @@ namespace WinApp.Forms
 		#region GridScrollbar
 
 		bool scrollingX = false;
-		private void scroll_MouseDown(object sender, MouseEventArgs e)
+		private async void scroll_MouseDown(object sender, MouseEventArgs e)
 		{
 			scrollingX = true;
-			ScrollX();
+			await ScrollX();
 		}
 
 		private void scroll_MouseUp(object sender, MouseEventArgs e)
@@ -1262,12 +1263,12 @@ namespace WinApp.Forms
 			scrollingX = false;
 		}
 
-		private void scroll_MouseMove(object sender, MouseEventArgs e)
+		private async void scroll_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (scrollingX) ScrollX();
+			if (scrollingX) await ScrollX();
 		}
 
-		private void ScrollX()
+		private async Task ScrollX()
 		{
 			try
 			{
@@ -1285,7 +1286,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 		}

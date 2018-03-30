@@ -10,6 +10,7 @@ using WinApp.Code;
 using System.Diagnostics;
 using WinApp.Gadget;
 using WinApp.Code.FormLayout;
+using System.Threading.Tasks;
 
 namespace WinApp.Gadget
 {
@@ -30,7 +31,7 @@ namespace WinApp.Gadget
 		
 		}
 
-		public void DataBind()
+		public async Task DataBind()
 		{
             // Colors
             aGauge1.SetColorRanges(ColorRangeScheme.RangeKillDeath);
@@ -103,7 +104,7 @@ namespace WinApp.Gadget
 				DB.AddWithValue(ref sql, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 			}
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			double dmg = 0;
 			double dmgReceived = 0;
 			end_val = 0;
@@ -137,7 +138,7 @@ namespace WinApp.Gadget
 			return s;
 		}
 		
-		private void btnTime_Click(object sender, EventArgs e)
+		private async void btnTime_Click(object sender, EventArgs e)
 		{
 			BadButton b = (BadButton)sender;
 			btn3M.Checked = false;
@@ -154,7 +155,7 @@ namespace WinApp.Gadget
 				case "btnWeek": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeWeek; break;
 				case "btnToday": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeToday; break;
 			}
-			DataBind();
+			await DataBind();
 		}
 
 		private void ucGauge_Paint(object sender, PaintEventArgs e)

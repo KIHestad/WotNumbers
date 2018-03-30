@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
 
@@ -32,7 +33,7 @@ namespace WinApp.Code
             }
         }
 
-        public static void Wargaming(string playerName, string playerAccountId)
+        public async static Task Wargaming(string playerName, string playerAccountId)
         {
             try
             {
@@ -44,11 +45,11 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Error on showing player profile on Wargaming website.");
+                await Log.LogToFile(ex, "Error on showing player profile on Wargaming website.");
             }
         }
 
-        public static void WotLabs(string playerName)
+        public async static Task WotLabs(string playerName)
         {
             try
             {
@@ -57,11 +58,11 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Error on showing player profile on WotLabs website.");
+                await Log.LogToFile(ex, "Error on showing player profile on WotLabs website.");
             }
         }
 
-        public static void vBAddict(string playerName)
+        public async static Task vBAddict(string playerName)
         {
             try
             {
@@ -70,11 +71,11 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Error on showing player profile on vBAddict website.");
+                await Log.LogToFile(ex, "Error on showing player profile on vBAddict website.");
             }
         }
 
-        public static void Noobmeter(string playerName, string playerAccountId)
+        public async static Task Noobmeter(string playerName, string playerAccountId)
         {
             try
             {
@@ -83,11 +84,11 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Error on showing player profile on vBAddict website.");
+                await Log.LogToFile(ex, "Error on showing player profile on vBAddict website.");
             }
         }
 
-        public static void Wot_Life(string playerName)
+        public async static Task Wot_Life(string playerName)
         {
             try
             {
@@ -96,11 +97,11 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Error on showing player profile on WoT-Life.com website.");
+                await Log.LogToFile(ex, "Error on showing player profile on WoT-Life.com website.");
             }
         }
 
-        public static void WoTstats(string playerName)
+        public async static Task WoTstats(string playerName)
         {
             try
             {
@@ -109,7 +110,7 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Error on showing player profile on WoTstats.org website.");
+                await Log.LogToFile(ex, "Error on showing player profile on WoTstats.org website.");
             }
         }
 
@@ -211,59 +212,58 @@ namespace WinApp.Code
         public static List<string> vBAddictPlayers { get; set; }
         public static bool vBAddictPlayersManualLookup { get; set; }
 
-        private static void ToolStripItem_WargamingPP_Click(object sender, EventArgs e)
+        private async static void ToolStripItem_WargamingPP_Click(object sender, EventArgs e)
         {
             string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
             string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
-            ExternalPlayerProfile.Wargaming(playerName, playerAccountId);
+            await Wargaming(playerName, playerAccountId);
         }
 
-        private static void ToolStripItem_WotLabsPP_Click(object sender, EventArgs e)
+        private async static void ToolStripItem_WotLabsPP_Click(object sender, EventArgs e)
         {
             string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
-            ExternalPlayerProfile.WotLabs(playerName);
+            await WotLabs(playerName);
         }
 
-        private static void ToolStripItem_vBAddictPP_Click(object sender, EventArgs e)
+        private async static void ToolStripItem_vBAddictPP_Click(object sender, EventArgs e)
         {
             string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
             string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
             if (vBAddictPlayersManualLookup)
             {
-                string error = "";
-                List<string> foundPlayer = vBAddictHelper.SearchForUser(playerAccountId, out error);
-                if (foundPlayer.Contains(playerAccountId))
-                    ExternalPlayerProfile.vBAddict(playerName);
+                var searchResult = await vBAddictHelper.SearchForUser(playerAccountId);
+                if (searchResult.Users.Contains(playerAccountId))
+                    await vBAddict(playerName);
                 else
-                    Code.MsgBox.Show("Player has no uploads to vBAddict, profile lookup is cancelled", "Player has no vBAddice profile");
+                    MsgBox.Show("Player has no uploads to vBAddict, profile lookup is cancelled", "Player has no vBAddice profile");
             }
             else
             {
-                ExternalPlayerProfile.vBAddict(playerName);
+                await vBAddict(playerName);
             }
                 
         }
 
-        private static void ToolStripItem_NoobmeterPP_Click(object sender, EventArgs e)
+        private async static void ToolStripItem_NoobmeterPP_Click(object sender, EventArgs e)
         {
             string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
             string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
-            ExternalPlayerProfile.Noobmeter(playerName, playerAccountId);
+            await Noobmeter(playerName, playerAccountId);
         }
 
-        private static void ToolStripItem_Wot_LifePP_Click(object sender, EventArgs e)
+        private async static void ToolStripItem_Wot_LifePP_Click(object sender, EventArgs e)
         {
             string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
-            ExternalPlayerProfile.Wot_Life(playerName);
+            await Wot_Life(playerName);
         }
 
-        private static void ToolStripItem_WoTstatsPP_Click(object sender, EventArgs e)
+        private async static void ToolStripItem_WoTstatsPP_Click(object sender, EventArgs e)
         {
             string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
-            ExternalPlayerProfile.WoTstats(playerName);
+            await WoTstats(playerName);
         }
 
-        public static void GetvBAddictPlayers(int battleId)
+        public async static Task GetvBAddictPlayers(int battleId)
         {
             List<string> allPlayers = new List<string>();
             vBAddictPlayers = new List<string>();
@@ -272,7 +272,7 @@ namespace WinApp.Code
                 "from battlePlayer " +
                 "where battleId=@battleId;";
             DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             // Terminate if none found
             if (dt.Rows.Count == 0)
                 return;
@@ -282,8 +282,8 @@ namespace WinApp.Code
                 allPlayers.Add(dr["accountId"].ToString());
             }
             // Get vBAddict players
-            string error = "";
-            vBAddictPlayers = vBAddictHelper.SearchForUser(allPlayers, out error);
+            vBAddictHelper.SearchForuserResult getvBAddictPlayers = await vBAddictHelper.SearchForUser(allPlayers);
+            vBAddictPlayers = getvBAddictPlayers.Users;
             vBAddictPlayersManualLookup = false;
         }
 

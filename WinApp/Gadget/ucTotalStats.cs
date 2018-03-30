@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
 using WinApp.Code.FormLayout;
+using System.Threading.Tasks;
 
 namespace WinApp.Gadget
 {
@@ -24,6 +25,16 @@ namespace WinApp.Gadget
         {
             InitializeComponent();
             currentParameters = totalStatsParam;
+        }
+
+        private void ucTotalStats_Load(object sender, EventArgs e)
+		{
+            // Greate grid
+            GridHelper.StyleGadgetDataGrid(dataGrid, DataGridViewSelectionMode.CellSelect);
+            dataGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.Transparent;
+            dataGrid.ColumnHeadersDefaultCellStyle.Padding = new Padding(0, 0, 0, 6);
+            dataGrid.ColumnHeadersDefaultCellStyle.Font = new Font(dataGrid.DefaultCellStyle.Font.FontFamily, 9);
+            // Load data
             // Get battle mode
             battleMode = (string)currentParameters[0];
             // Get timespan
@@ -35,23 +46,13 @@ namespace WinApp.Gadget
             gridHeaders = headerList.Split(new string[] { ";" }, StringSplitOptions.None);
             // Get gadget header
             lblHeader.Text = (string)currentParameters[4];
-        }
-
-        private void ucTotalStats_Load(object sender, EventArgs e)
-		{
-            // Greate grid
-            GridHelper.StyleGadgetDataGrid(dataGrid, DataGridViewSelectionMode.CellSelect);
-            dataGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.Transparent;
-            dataGrid.ColumnHeadersDefaultCellStyle.Padding = new Padding(0, 0, 0, 6);
-            dataGrid.ColumnHeadersDefaultCellStyle.Font = new Font(dataGrid.DefaultCellStyle.Font.FontFamily, 9);
             // show correct timespan button as selected
             SelectTimeRangeButton();
         }
 
-        public void DataBind()
+        public async Task DataBind()
         {
-            GetGridData();
-            ReziseNow();
+            await GetGridData();
         }
 
         private class DataGridDataClass
@@ -67,12 +68,13 @@ namespace WinApp.Gadget
 
         private static List<DataGridDataClass> dataGridData = null;
 
-        private void GetGridData()
+        private async Task GetGridData()
         {
+            string debug = null;
             try
             {
                 // Clear Grid
-                ClearSelectedColumnsDataGrid();
+                await ClearSelectedColumnsDataGrid();
                 // Prepare data fetch
                 dataGridData = new List<DataGridDataClass>();
                 // Check if any data rows
@@ -94,6 +96,7 @@ namespace WinApp.Gadget
                             for (int sectionCol = 0; sectionCol < gridColums; sectionCol++)
                             {
                                 dgvr.Cells["Data" + sectionCol].Value = rowItems[(sectionCol * 2) + 1];
+                                debug = "Data" + sectionCol;
                                 DataGridViewCell cellTrendLookup = null;
                                 if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
                                     cellTrendLookup = dgvr.Cells["Trend" + sectionCol];
@@ -112,18 +115,19 @@ namespace WinApp.Gadget
                     }
                 }
                 dataGrid.ClearSelection();
-                GetData();
+                await ReziseNow();
+                await GetData();
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Error getting data for the total stats gadget");
+                await Log.LogToFile(ex, $"Error getting data for the total stats gadget. Debug Info: {debug}");
                 if (Config.Settings.showDBErrors)
-                    MsgBox.Show("Error getting data for the total stats gadget, see log file", "Home View Error");
+                    MsgBox.Show("Error getting data for the total stats gadget, see log file.", "Home View Error");
             }
             
         }
 
-        private void GetData() //;object sender, DoWorkEventArgs e)
+        private async Task GetData() //;object sender, DoWorkEventArgs e)
         {
             //try
             {
@@ -133,7 +137,7 @@ namespace WinApp.Gadget
                     "FROM columnSelection " +
                     "WHERE colType=1 AND colNameSum IS NOT NULL " +
                     "ORDER BY id";
-                DataTable dtColumnSelection = DB.FetchData(sql);
+                DataTable dtColumnSelection = await DB.FetchData(sql);
                 string sqlSelectValue = ""; // The SQL to fetch calculated total stats value
                 string sqlSelectTrend = ""; // The SQL to fetch sum battle result for timespan to use for show in trend or use in trend calculation
                 string sqlSelectTotal = ""; // The SQL to fetch total result to use in in trend calculation
@@ -200,7 +204,7 @@ namespace WinApp.Gadget
                     }
                     DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
                     DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-                    DataTable dtTotalStats = DB.FetchData(sql);
+                    DataTable dtTotalStats = await DB.FetchData(sql);
                     DataRow drTotalStats = dtTotalStats.Rows[0];
                     DataRow drTotalStatsTrend = null;
                     DataRow drTotalStatsTank = null;
@@ -248,7 +252,7 @@ namespace WinApp.Gadget
                         DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
                         sql += battleTimeFilter;
                         // Get trend data
-                        DataTable dtTotalStatsTrend = DB.FetchData(sql);
+                        DataTable dtTotalStatsTrend = await DB.FetchData(sql);
                         drTotalStatsTrend = dtTotalStatsTrend.Rows[0];
                         // SQL to get total tanks stats
                         if (sqlSelectTotal.Length > 2)
@@ -281,7 +285,7 @@ namespace WinApp.Gadget
                             DB.AddWithValue(ref sqlTotals, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
                             DB.AddWithValue(ref sqlTotals, "@battleMode", battleMode, DB.SqlDataType.VarChar);
                             // Get Totals data
-                            DataTable dtTotalStatsTank = DB.FetchData(sqlTotals);
+                            DataTable dtTotalStatsTank = await DB.FetchData(sqlTotals);
                             drTotalStatsTank = dtTotalStatsTank.Rows[0];
                         }
                     }
@@ -300,27 +304,27 @@ namespace WinApp.Gadget
                                 // Get special calculations
                                 if (colName == "WN9")
                                 {
-                                    item.cellValue.Value = Code.Rating.WN9.CalcPlayerTotal(battleMode);
+                                    item.cellValue.Value = await Code.Rating.WN9.CalcPlayerTotal(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.WN9color(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else if (colName == "WN8")
                                 {
-                                    item.cellValue.Value = Code.Rating.WN8.CalcPlayerTotal(battleMode);
+                                    item.cellValue.Value = await Code.Rating.WN8.CalcPlayerTotal(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.WN8color(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else if (colName == "WN7" )
                                 {
-                                    item.cellValue.Value = Code.Rating.WN7.WN7total(battleMode);
+                                    item.cellValue.Value = await Code.Rating.WN7.WN7total(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.WN7color(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else if (colName == "EFF")
                                 {
-                                    item.cellValue.Value = Code.Rating.EFF.EffTotal(battleMode);
+                                    item.cellValue.Value = await Code.Rating.EFF.EffTotal(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.EffColor(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else if (colName == "RWR")
                                 {
-                                    double? RWR = Code.Rating.RWR.RWRtotal(battleMode);
+                                    double? RWR = await Code.Rating.RWR.RWRtotal(battleMode);
                                     item.cellValue.Value = RWR;
                                     if (RWR != null)
                                         item.cellValue.Style.ForeColor = ColorRangeScheme.RWRcolor(Convert.ToInt32(RWR));
@@ -415,31 +419,31 @@ namespace WinApp.Gadget
                                         else if (colName == "EFF")
                                         {
                                             // Calc EFF
-                                            double prevValue = Code.Rating.EFF.EffReverse(battleTimeFilter, 0, battleMode);
+                                            double prevValue = await Code.Rating.EFF.EffReverse(battleTimeFilter, 0, battleMode);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else if (colName == "WN7")
                                         {
                                             // Calc WN7
-                                            double prevValue = Code.Rating.WN7.WN7reverse(battleTimeFilter, 0, battleMode);
+                                            double prevValue = await Code.Rating.WN7.WN7reverse(battleTimeFilter, 0, battleMode);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else if (colName == "WN8")
                                         {
                                             // Calc WN8
-                                            double prevValue = Code.Rating.WN8.CalcBattleRangeReverse(battleTimeFilter, 0, battleMode);
+                                            double prevValue = await Code.Rating.WN8.CalcBattleRangeReverse(battleTimeFilter, 0, battleMode);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else if (colName == "WN9")
                                         {
                                             // Calc WN9
-                                            double prevValue = Code.Rating.WN9.CalcBattleRangeReverse(battleTimeFilter, 0, battleMode);
+                                            double prevValue = await Code.Rating.WN9.CalcBattleRangeReverse(battleTimeFilter, 0, battleMode);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else if (colName == "RWR")
                                         {
                                             // Calc RWR
-                                            double? prevValue = Code.Rating.RWR.RWRReverse(battleTimeFilter, battleMode);
+                                            double? prevValue = await Code.Rating.RWR.RWRReverse(battleTimeFilter, battleMode);
                                             if (prevValue != null)
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - Convert.ToDouble(prevValue);
                                         }
@@ -597,7 +601,7 @@ namespace WinApp.Gadget
             }
         }
 
-        private void ClearSelectedColumnsDataGrid()
+        private async Task ClearSelectedColumnsDataGrid()
         {
             try
             {
@@ -634,12 +638,12 @@ namespace WinApp.Gadget
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
             }
             
         }
 
-        private void ReziseNow()
+        private async Task ReziseNow()
         {
             try
             {
@@ -695,7 +699,7 @@ namespace WinApp.Gadget
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
             }
         }
 
@@ -720,12 +724,12 @@ namespace WinApp.Gadget
                 GadgetHelper.DrawBorderOnGadget(sender, e);
         }
 
-        private void ucTotalStats_Resize(object sender, EventArgs e)
+        private async void ucTotalStats_Resize(object sender, EventArgs e)
         {
-            ReziseNow();
+            await ReziseNow();
         }
 
-        private void btnTimeSpan_Click(object sender, EventArgs e)
+        private async void btnTimeSpan_Click(object sender, EventArgs e)
         {
             BadButton b = (BadButton)sender;
             switch (b.Name)
@@ -737,7 +741,7 @@ namespace WinApp.Gadget
                 case "btnToday": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeToday; break;
             }
             SelectTimeRangeButton();
-            DataBind();
+            await DataBind();
         }
 
         string footerTimespanText = "";

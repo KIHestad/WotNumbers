@@ -50,16 +50,16 @@ namespace WinApp.Forms
 			UpdateProgressBar("Retrieves tanks from Wargaming API");
 
             // old method
-            TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
+            await TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
             await ImportWotApi2DB.ImportTankList(this, overwriteCustom);
 
             // New method
-            TankHelper.GetTankList();
+            await TankHelper.GetTankList();
             await ImportWotApi2DB.ImportTanks(this, overwriteCustom);
-            
+
             // Init after getting tanks and other basic data import
-            TankHelper.GetTankList();
-			TankHelper.GetJson2dbMappingFromDB();
+            await TankHelper.GetTankList();
+            await TankHelper.GetJson2dbMappingFromDB();
 
 			// Get turret
 			// UpdateProgressBar("Retrieves tank turrets from Wargaming API");
@@ -76,7 +76,7 @@ namespace WinApp.Forms
 			// Get achievements
 			UpdateProgressBar("Retrieves achievements from Wargaming API");
 			await ImportWotApi2DB.ImportAchievements(this);
-			TankHelper.GetAchList();
+            await TankHelper.GetAchList();
 
 			// Get achievements
 			UpdateProgressBar("Retrieves maps from Wargaming API");
@@ -92,7 +92,7 @@ namespace WinApp.Forms
             await ImportWN9Api2DB.UpdateWN9(this);
 
             // New Init after upgrade db
-            TankHelper.GetAllLists();
+            await TankHelper.GetAllLists();
 
             // Done
             DBVersion.RunDownloadAndUpdateTanks = false;
@@ -102,7 +102,7 @@ namespace WinApp.Forms
 
 			// Save to settings
 			Config.Settings.doneRunWotApi = DateTime.Now;
-            Config.SaveConfig(out string msg);
+            await Config.SaveConfig();
 
             // Done
             this.Cursor = Cursors.Default;

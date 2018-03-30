@@ -21,12 +21,12 @@ namespace WinApp.Forms.Settings
             InitializeComponent();
         }
 
-        private void AppSettingsMain_Load(object sender, EventArgs e)
+        private async void AppSettingsMain_Load(object sender, EventArgs e)
         {
-            DataBind();
+            await DataBind();
         }
         
-        private void DataBind()
+        private async Task DataBind()
         {
             // Startup settings
             txtDossierFilePath.Text = Config.Settings.dossierFilePath;
@@ -44,13 +44,13 @@ namespace WinApp.Forms.Settings
             // Player
             cboSelectPlayer.Text = Config.Settings.playerNameAndServer;
             chkShowDBError.Checked = Config.Settings.showDBErrors;
-            PlayerPanel();
+            await PlayerPanel();
             EditChangesApply(false);
         }
 
-        private void PlayerPanel()
+        private async Task PlayerPanel()
         {
-            bool ok = DB.CheckConnection(false);
+            bool ok = await DB.CheckConnection(false);
             cboSelectPlayer.Enabled = ok;
         }
 
@@ -75,12 +75,12 @@ namespace WinApp.Forms.Settings
             }
         }
 
-        private void btnSave_Click_1(object sender, EventArgs e)
+        private async void btnSave_Click_1(object sender, EventArgs e)
         {
-            SaveChanges();
+            await SaveChanges();
         }
 
-        public void SaveChanges()
+        public async Task SaveChanges()
         {
             // Dossier File path
             if (Directory.Exists(txtDossierFilePath.Text))
@@ -92,7 +92,7 @@ namespace WinApp.Forms.Settings
             Config.Settings.showDBErrors = chkShowDBError.Checked;
             // Player
             Config.Settings.playerNameAndServer = cboSelectPlayer.Text;
-            DataTable dt = DB.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'", Config.Settings.showDBErrors);
+            DataTable dt = await DB.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'", Config.Settings.showDBErrors);
             if (dt.Rows.Count > 0)
             {
                 int playerId = 0;
@@ -101,16 +101,14 @@ namespace WinApp.Forms.Settings
                 Config.Settings.playerId = playerId;
             }
             // vBAddict settings
-            vBAddictHelper.GetSettings();
+            await vBAddictHelper.GetSettings();
             // Download file path and settings
             // Download path and settings
             Config.Settings.downloadFilePath = txtDownloadFilePath.Text;
             Config.Settings.downloadFilePathAddSubfolder = chkCreateDownloadSubFolders.Checked;
             // Save
-            string msg = "";
-            bool saveOk = false;
-            saveOk = Config.SaveConfig(out msg);
-            if (saveOk)
+            ConfigData.Result result = await Config.SaveConfig();
+            if (result.Success)
             {
                 // MsgBox.Show(msg, "Application settings saved", (Form)this.TopLevelControl);
                 //((Form)this.TopLevelControl).Close();
@@ -118,11 +116,11 @@ namespace WinApp.Forms.Settings
             }
             else
             {
-                MsgBox.Show(msg, "Error saving application settings", (Form)this.TopLevelControl);
+                MsgBox.Show(result.Message, "Error saving application settings", (Form)this.TopLevelControl);
             }
         }
 
-        private void btnDbSetting_Click(object sender, EventArgs e)
+        private async void btnDbSetting_Click(object sender, EventArgs e)
         {
             // Check first for valid dossier path
             if (Directory.Exists(txtDossierFilePath.Text))
@@ -130,7 +128,7 @@ namespace WinApp.Forms.Settings
                 Config.Settings.dossierFilePath = txtDossierFilePath.Text;
                 Form frm = new Forms.DatabaseSetting();
                 frm.ShowDialog();
-                DataBind();
+                await DataBind();
                 // Refresh();
             }
             else
@@ -140,10 +138,10 @@ namespace WinApp.Forms.Settings
         }
 
         private static string currentSelectedPlayer = "";
-        private void cboSelectPlayer_Click(object sender, EventArgs e)
+        private async void cboSelectPlayer_Click(object sender, EventArgs e)
         {
             currentSelectedPlayer = cboSelectPlayer.Text;
-            Code.DropDownGrid.Show(cboSelectPlayer, Code.DropDownGrid.DropDownGridType.Sql, "SELECT name FROM player ORDER BY name");
+            await Code.DropDownGrid.Show(cboSelectPlayer, Code.DropDownGrid.DropDownGridType.Sql, "SELECT name FROM player ORDER BY name");
         }
 
         private void EditChangesApply(bool changesApplied)
@@ -153,9 +151,9 @@ namespace WinApp.Forms.Settings
             btnSave.Enabled = changesApplied;
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private async void btnCancel_Click(object sender, EventArgs e)
         {
-            DataBind();
+            await DataBind();
             EditChangesApply(false);
         }
 

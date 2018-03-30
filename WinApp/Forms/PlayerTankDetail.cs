@@ -40,7 +40,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void PlayerTankDetails_Load(object sender, EventArgs e)
+		private async void PlayerTankDetails_Load(object sender, EventArgs e)
 		{
 			// Mouse scrolling
 			dataGridTankDetail.MouseWheel += new MouseEventHandler(dataGridTankDetail_MouseWheel);
@@ -59,7 +59,8 @@ namespace WinApp.Forms
 					sql = "SELECT * FROM tank WHERE id=@id; ";
 					DB.AddWithValue(ref sql, "@id", initTankId, DB.SqlDataType.Int);
 				}
-				DataRow drTankData = DB.FetchData(sql).Rows[0];
+                DataTable dt = await DB.FetchData(sql);
+                DataRow drTankData = dt.Rows[0];
 				string tankName = drTankData["name"].ToString();
 				int tankId = Convert.ToInt32(drTankData["id"]);
 				// Show name in title bar
@@ -67,11 +68,9 @@ namespace WinApp.Forms
 				// Show picture
 				picLarge.Image = ImageHelper.GetTankImage(tankId,"img");
 				// Get all columns to show as rows in grid
-				string select = "";
-				List<ColListHelper.ColListClass> cols = new List<ColListHelper.ColListClass>();
-				ColListHelper.GetAllTankDataColumn(out select, out cols);
-				// Use playerTankBattleTotalsView in stead of playerTankBattle to show totals
-				select = select.Replace("playerTankBattle", "playerTankBattleTotalsView");
+                var tankDataColListItems = await ColListHelper.GetAllTankDataColumn();
+                // Use playerTankBattleTotalsView in stead of playerTankBattle to show totals
+                tankDataColListItems.Select = tankDataColListItems.Select.Replace("playerTankBattle", "playerTankBattleTotalsView");
 				// Get Tank data to show in grid
 				string playerTankWhere = "";
 				string playerTankJoin = "";
@@ -83,7 +82,7 @@ namespace WinApp.Forms
 				else
 					playerTankJoin = "playerTankBattleTotalsView ON playerTankBattleTotalsView.playerTankId = -1 LEFT OUTER JOIN ";
 				sql =
-					"SELECT   " + select + " " + Environment.NewLine +
+					"SELECT   " + tankDataColListItems.Select + " " + Environment.NewLine +
 					"FROM     tank LEFT JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
@@ -95,7 +94,7 @@ namespace WinApp.Forms
 					"WHERE    " + playerTankWhere + " tank.id=@tankId ";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-				DataTable dtTankData = DB.FetchData(sql, Config.Settings.showDBErrors);
+				DataTable dtTankData = await DB.FetchData(sql, Config.Settings.showDBErrors);
 				// Make cols to rows from the two datatables into new to show in grid
 				DataTable dtGrid = new DataTable();
 				dtGrid.Columns.Add("Parameter", typeof(string));
@@ -103,7 +102,7 @@ namespace WinApp.Forms
 				dtGrid.Columns.Add("Header", typeof(bool));
 				dtGrid.Columns.Add("ToolTip", typeof(string));
 				string currentHeader = "";
-				foreach (ColListHelper.ColListClass col in cols)
+				foreach (ColListHelper.ColListItem col in tankDataColListItems.ColListItemList)
 				{
 					// Add header
 					if (currentHeader != col.colGroup)
@@ -177,7 +176,7 @@ namespace WinApp.Forms
 		}
 
 		// Enable mouse wheel scrolling for datagrid
-		private void dataGridTankDetail_MouseWheel(object sender, MouseEventArgs e)
+		private async void dataGridTankDetail_MouseWheel(object sender, MouseEventArgs e)
 		{
 			try
 			{
@@ -197,7 +196,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 		}

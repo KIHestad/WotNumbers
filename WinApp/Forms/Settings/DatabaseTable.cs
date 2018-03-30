@@ -36,7 +36,7 @@ namespace WinApp.Forms
 		}
 
 
-		private void DatabaseTable_Load(object sender, EventArgs e)
+		private async void DatabaseTable_Load(object sender, EventArgs e)
 		{
 			// Make sure borderless form do not cover task bar when maximized
 			Screen screen = Screen.FromControl(this);
@@ -79,7 +79,7 @@ namespace WinApp.Forms
 			dataGridViewShowTable.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridViewShowTable.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 			// dropdown tables
-			DataTable dt = DB.ListTables();
+			DataTable dt = await DB.ListTables();
 			foreach (DataRow dr in dt.Rows)
 			{
 				tableList += dr["TABLE_NAME"].ToString() + ",";
@@ -90,34 +90,34 @@ namespace WinApp.Forms
 			RefreshScrollbars();
 		}
 
-		private void popupSelectTable_Click(object sender, EventArgs e)
+		private async void popupSelectTable_Click(object sender, EventArgs e)
 		{
             // Show popup with available tables
             selectSQL = "";
-            Code.DropDownGrid.Show(ddSelectTable, Code.DropDownGrid.DropDownGridType.List, tableList);
+            await Code.DropDownGrid.Show(ddSelectTable, Code.DropDownGrid.DropDownGridType.List, tableList);
         }
 
 
 		#region Grid
 
-		private void btnRefresh_Click(object sender, EventArgs e)
+		private async void btnRefresh_Click(object sender, EventArgs e)
 		{
-			RefreshDataGrid();
+			await RefreshDataGrid();
 		}
 
-		private void RefreshDataGrid()
+		private async Task RefreshDataGrid()
 		{
             // Show content in grid
             if (selectSQL != "" && selectSQL.ToUpper().StartsWith("SELECT "))
             {
-                dataGridViewShowTable.DataSource = DB.FetchData(selectSQL);
+                dataGridViewShowTable.DataSource = await DB.FetchData(selectSQL);
             }
             else
             {
                 string TableName = ddSelectTable.Text.ToString();
                 if (TableName != "")
                 {
-                    dataGridViewShowTable.DataSource = DB.FetchData("SELECT * FROM " + TableName);
+                    dataGridViewShowTable.DataSource = await DB.FetchData("SELECT * FROM " + TableName);
                 }
             }
 			ResizeNow();			
@@ -248,7 +248,7 @@ namespace WinApp.Forms
 		}
 
 		// Enable mouse wheel scrolling for datagrid
-		private void dataGridViewShowTable_MouseWheel(object sender, MouseEventArgs e)
+		private async void dataGridViewShowTable_MouseWheel(object sender, MouseEventArgs e)
 		{
 			try
 			{
@@ -268,7 +268,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 
@@ -276,9 +276,9 @@ namespace WinApp.Forms
 
 		#endregion
 
-		private void popupSelectTable_TextChanged(object sender, EventArgs e)
+		private async void popupSelectTable_TextChanged(object sender, EventArgs e)
 		{
-            RefreshDataGrid();
+            await RefreshDataGrid();
         }
 
 		private void DatabaseTable_LocationChanged(object sender, EventArgs e)
@@ -319,7 +319,7 @@ namespace WinApp.Forms
                             sql + Environment.NewLine + Environment.NewLine, "Confirm running SQL", MsgBox.Type.YesNo);
                         if (answer == MsgBox.Button.Yes)
                         {
-                            bool sqlResult = await DB.ExecuteNonQueryAsync(sql, true);
+                            bool sqlResult = await DB.ExecuteNonQuery(sql, true);
                             if (sqlResult)
                             {
                                 MsgBox.Show("Sql query has run successfully");

@@ -15,6 +15,7 @@ namespace WinApp.Code
             Close = 0,
             OKCancel = 1,
             YesNo = 2,
+            OK = 3
         }
 
 		public enum Button
@@ -35,22 +36,22 @@ namespace WinApp.Code
 
 		public static Button Show(string Message, string Title, Type MessageType, Form owner)
 		{
-			return ShowNow(Message, Title, MessageType, owner);
+            return ShowNow(Message, Title, MessageType, owner);
 		}
 
 		public static Button Show(string Message, string Title, Type MessageType)
 		{
-			return ShowNow(Message, Title, MessageType, null);
+            return ShowNow(Message, Title, MessageType, null);
 		}
 
 		public static Button Show(string Message, string Title, Form owner)
 		{
-			return ShowNow(Message, Title, Type.Close, owner);
+            return ShowNow(Message, Title, Type.Close, owner);
 		}
 
 		public static Button Show(string Message, string Title)
 		{
-			return ShowNow(Message, Title, Type.Close, null);
+            return ShowNow(Message, Title, Type.Close, null);
 		}
 
         public static Button Show(string Message)
@@ -76,7 +77,7 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Error opening messagebox");
+                Log.LogToFile(ex, "Error opening messagebox").ConfigureAwait(false);
                 return Button.Cancel;
                 // throw;
             }

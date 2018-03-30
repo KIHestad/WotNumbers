@@ -32,6 +32,8 @@
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MergePlayers));
             this.FormTheme = new BadForm();
+            this.badLabel3 = new BadLabel();
+            this.badGroupBox1 = new BadGroupBox();
             this.badLabel1 = new BadLabel();
             this.ddPlayerMergeTo = new BadDropDownBox();
             this.badLabel2 = new BadLabel();
@@ -40,8 +42,6 @@
             this.btnStart = new BadButton();
             this.lblProgressStatus = new BadLabel();
             this.badProgressBar = new BadProgressBar();
-            this.badGroupBox1 = new BadGroupBox();
-            this.badLabel3 = new BadLabel();
             this.FormTheme.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,6 +76,28 @@
             this.FormTheme.TabIndex = 0;
             this.FormTheme.Text = "Merge Players";
             this.FormTheme.TitleHeight = 26;
+            // 
+            // badLabel3
+            // 
+            this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel3.Dimmed = false;
+            this.badLabel3.Image = null;
+            this.badLabel3.Location = new System.Drawing.Point(37, 66);
+            this.badLabel3.Name = "badLabel3";
+            this.badLabel3.Size = new System.Drawing.Size(300, 33);
+            this.badLabel3.TabIndex = 35;
+            this.badLabel3.Text = "Please backup the database before merging data.";
+            this.badLabel3.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // badGroupBox1
+            // 
+            this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
+            this.badGroupBox1.Image = null;
+            this.badGroupBox1.Location = new System.Drawing.Point(22, 40);
+            this.badGroupBox1.Name = "badGroupBox1";
+            this.badGroupBox1.Size = new System.Drawing.Size(330, 65);
+            this.badGroupBox1.TabIndex = 34;
+            this.badGroupBox1.Text = "Information";
             // 
             // badLabel1
             // 
@@ -170,28 +192,6 @@
             this.badProgressBar.ValueMax = 100D;
             this.badProgressBar.ValueMin = 0D;
             // 
-            // badGroupBox1
-            // 
-            this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
-            this.badGroupBox1.Image = null;
-            this.badGroupBox1.Location = new System.Drawing.Point(22, 40);
-            this.badGroupBox1.Name = "badGroupBox1";
-            this.badGroupBox1.Size = new System.Drawing.Size(330, 65);
-            this.badGroupBox1.TabIndex = 34;
-            this.badGroupBox1.Text = "Information";
-            // 
-            // badLabel3
-            // 
-            this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.badLabel3.Dimmed = false;
-            this.badLabel3.Image = null;
-            this.badLabel3.Location = new System.Drawing.Point(37, 66);
-            this.badLabel3.Name = "badLabel3";
-            this.badLabel3.Size = new System.Drawing.Size(300, 33);
-            this.badLabel3.TabIndex = 35;
-            this.badLabel3.Text = "Please backup the database before merging data.";
-            this.badLabel3.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
             // MergePlayers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -204,6 +204,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MergePlayers";
+            this.Load += new System.EventHandler(this.MergePlayers_Load);
             this.FormTheme.ResumeLayout(false);
             this.ResumeLayout(false);
 

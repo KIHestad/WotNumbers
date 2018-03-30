@@ -84,8 +84,7 @@ namespace WinApp.Code
             {
                 await RecalculateGrindingProgress();
                 Config.Settings.lastGrindingProgressRecalc = today;
-                string msg = "";
-                Config.SaveConfig(out msg);
+                await Config.SaveConfig();
                 grindingRecalcPerformed = true;
             }
             return grindingRecalcPerformed;
@@ -106,7 +105,7 @@ namespace WinApp.Code
                 "WHERE  playerTank.playerid = @playerId AND gGrindXP > 0 " +
                 "GROUP BY playerTank.id, tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, gCompleationDate, gProgressGoal ";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             sql = "";
             foreach (DataRow grinding in dt.Rows)
             {
@@ -142,7 +141,7 @@ namespace WinApp.Code
                 int playerTankId = Convert.ToInt32(grinding["playerTankId"]);
                 DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
             }
-            await DB.ExecuteNonQueryAsync(sql, RunInBatch: true);
+            await DB.ExecuteNonQuery(sql, RunInBatch: true);
         }
 
         public static int CalcRealAvgXP(string Battles, string Wins, string TotalXP, string AvgXP, string BtlDay)

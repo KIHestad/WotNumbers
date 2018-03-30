@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using WinApp.Code;
 using WinApp.Code.Rating;
 using WinApp.Code.FormLayout;
+using System.Threading.Tasks;
 
 namespace WinApp.Forms
 {
@@ -49,7 +50,7 @@ namespace WinApp.Forms
 			tankJoin = currentTankJoin;
 		}
 
-		private void BattleSummary_Load(object sender, EventArgs e)
+		private async void BattleSummary_Load(object sender, EventArgs e)
 		{
 			// Reset list of valid vBAddict players, forces lookup
             ExternalPlayerProfile.vBAddictPlayers = null;
@@ -75,7 +76,7 @@ namespace WinApp.Forms
                 "WHERE   playerTank.playerId=@playerid " + sqlBattleWhere;
             DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			DataTable dt = new DataTable();
-			dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+			dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			DataRow dr = null;
 			int battlesCount = 0;
 			if (dt.Rows.Count > 0)
@@ -98,9 +99,9 @@ namespace WinApp.Forms
 					BattleSummaryTheme.Text = "Summary of " + battlesCount.ToString() + " Battles";
 				// Show battle mode
                 BattleSummaryTheme.Text += " - Average values based on Battle Mode: " + BattleMode.GetItemFromSqlName(battleMode).Name;
-				// Get battle data
-				GetStandardGridDetails();
-				GetWN8Details();
+                // Get battle data
+                await GetStandardGridDetails();
+                await GetWN8Details();
 			}
 			
 		}
@@ -209,7 +210,7 @@ namespace WinApp.Forms
             dgvTeam1.ContextMenuStrip = ExternalPlayerProfile.MenuItems();
         }
 
-        private void DgvTeam_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        private async void DgvTeam_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             try
             {
@@ -223,7 +224,7 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
                 if (Config.Settings.showDBErrors)
                     MsgBox.Show("Error on grid mouse down event, see log file", "Grid error", this);
             }
@@ -234,7 +235,7 @@ namespace WinApp.Forms
 
 		#region My result
 
-		private void GetStandardGridDetails()
+		private async Task GetStandardGridDetails()
 		{
 			// This battle result 
 			string sql =
@@ -254,7 +255,7 @@ namespace WinApp.Forms
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
 				"WHERE   playerTank.playerId=@playerid " + sqlBattleWhere;
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-			DataTable dtRes = DB.FetchData(sql);
+			DataTable dtRes = await DB.FetchData(sql);
 			// Total result
 			string battleModeAvgFilter = "";
 			if (battleMode != "")
@@ -267,7 +268,7 @@ namespace WinApp.Forms
 				"WHERE playerTank.playerId=@playerId " + battleModeAvgFilter;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-			DataTable dtAvg = DB.FetchData(sql);
+			DataTable dtAvg = await DB.FetchData(sql);
 			if (dtRes.Rows.Count > 0)
 			{
 				DataRow drVal = dtRes.Rows[0];
@@ -367,13 +368,13 @@ namespace WinApp.Forms
                 wn8avg = Convert.ToInt32(WN8.CalcPlayerTotal(battleMode));
 				wn7avg = Convert.ToInt32(WN7.WN7total(battleMode));
 				effavg = Convert.ToInt32(EFF.EffTotal(battleMode));
-                wravg = Code.Rating.WR.WinrateTank(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
+                wravg = await WR.WinrateTank(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
                 // Calc current battle ratings
                 wn9 = Convert.ToInt32(WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
                 wn8 = Convert.ToInt32(WN8.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
                 wn7 = Convert.ToInt32(WN7.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
                 eff = Convert.ToInt32(EFF.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
-                wr = Code.Rating.WR.WinrateBattle(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
+                wr = await WR.WinrateBattle(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
 				// Add rows to Ratings grid
 				DataTable dtRating = dt.Clone();
                 dtRating.Rows.Add(GetValues(dtRating, wn9, wn9avg, "WN9"));
@@ -412,7 +413,7 @@ namespace WinApp.Forms
 					"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
 					"WHERE   arenaUniqueID is not null AND playerTank.playerId=@playerid " + sqlBattleWhere;
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-				dtRes = DB.FetchData(sql);
+				dtRes = await DB.FetchData(sql);
 				int battleResultRowCount = 0;
 				if (dtRes.Rows.Count > 0 && dtRes.Rows[0][0] != DBNull.Value)
 					battleResultRowCount = Convert.ToInt32(dtRes.Rows[0][0]);
@@ -437,7 +438,7 @@ namespace WinApp.Forms
 						"FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.Id " +
 						"WHERE arenaUniqueID is not null AND playerTank.playerId=@playerId " + battleModeFilter; 
 					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-					DataTable dtTotBattle = DB.FetchData(sql);
+					DataTable dtTotBattle = await DB.FetchData(sql);
 					DataRow drTotBattle = dtTotBattle.Rows[0];
 					double totBattleCount = Convert.ToInt32(drTotBattle["battles"]);
 					double battleCount = Convert.ToInt32(dtRes.Rows[0]["battlesCount"]);
@@ -484,7 +485,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void GetWN8Details()
+		private async Task GetWN8Details()
 		{
 			// Format
 			GridHelper.StyleDataGrid(dgvWN8, DataGridViewSelectionMode.CellSelect);
@@ -505,7 +506,7 @@ namespace WinApp.Forms
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
 				"WHERE   playerTank.playerId=@playerid " + sqlBattleWhere;
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				// Calc total WN 8 parameter values
@@ -885,7 +886,7 @@ namespace WinApp.Forms
 		}
 
 
-		private DataTable GetDataGridSource(string orderHeaderText = "", bool? orderAscending = null)
+		private async Task<DataTable> GetDataGridSource(string orderHeaderText = "", bool? orderAscending = null)
 		{
 			if (orderHeaderText == "")
 				orderHeaderText = lastOrderHeaderText;
@@ -970,7 +971,7 @@ namespace WinApp.Forms
 				sql = sql.Replace("@CALC(", "AVG(");
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@playerTeam", playerTeam, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			// Add Total Row
 			DataRow totalRow = dt.NewRow();
 			// Set 0 ad deafult
@@ -1077,10 +1078,10 @@ namespace WinApp.Forms
 		#region GridScrollbar
 
 		bool scrollingY = false;
-		private void scroll_MouseDown(object sender, MouseEventArgs e)
+		private async void scroll_MouseDown(object sender, MouseEventArgs e)
 		{
 			scrollingY = true;
-			ScrollY();
+            await ScrollY();
 		}
 
 		private void scroll_MouseUp(object sender, MouseEventArgs e)
@@ -1088,12 +1089,12 @@ namespace WinApp.Forms
 			scrollingY = false;
 		}
 
-		private void scroll_MouseMove(object sender, MouseEventArgs e)
+		private async void scroll_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (scrollingY) ScrollY();
+			if (scrollingY) await ScrollY();
 		}
 
-		private void ScrollY()
+		private async Task ScrollY()
 		{
 			try
 			{
@@ -1102,7 +1103,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 		}

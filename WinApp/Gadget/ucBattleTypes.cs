@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
 using WinApp.Code.FormLayout;
+using System.Threading.Tasks;
 
 namespace WinApp.Gadget
 {
@@ -31,7 +32,7 @@ namespace WinApp.Gadget
 			
 		}
 
-		public void DataBind()
+		public async Task DataBind()
 		{
 			GridHelper.StyleGadgetDataGrid(dataGridView1);
 			// Create table structure, and get total number of used tanks to show in first row
@@ -55,7 +56,7 @@ namespace WinApp.Gadget
 				"where playerTank.playerId=@playerId and tankid in (" +
 				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId)";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+			DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			// If no data quit
 			if (dt.Rows.Count == 0) return;
 			// 15
@@ -65,7 +66,7 @@ namespace WinApp.Gadget
 				"where playerTank.playerId=@playerId and tankid in (" +
 				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = '15')";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-			DataTable dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
+			DataTable dtValue = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			int usedRandom = 0;
 			if (dtValue.Rows[0][0] != DBNull.Value) usedRandom = Convert.ToInt32(dtValue.Rows[0][0]);
             // 7
@@ -75,7 +76,7 @@ namespace WinApp.Gadget
                 "where playerTank.playerId=@playerId and tankid in (" +
                 "  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = '7')";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-            dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
+            dtValue = await DB.FetchData(sql, Config.Settings.showDBErrors);
             int usedTeam = 0;
             if (dtValue.Rows[0][0] != DBNull.Value) usedTeam = Convert.ToInt32(dtValue.Rows[0][0]);
             // 7Ranked
@@ -85,7 +86,7 @@ namespace WinApp.Gadget
                 "where playerTank.playerId=@playerId and tankid in (" +
                 "  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = '7Ranked')";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-            dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
+            dtValue = await DB.FetchData(sql, Config.Settings.showDBErrors);
             int usedTeamRanked = 0;
             if (dtValue.Rows[0][0] != DBNull.Value) usedTeamRanked = Convert.ToInt32(dtValue.Rows[0][0]);
 			// Skirmishes
@@ -95,7 +96,7 @@ namespace WinApp.Gadget
 				"where playerTank.playerId=@playerId and tankid in (" +
 				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Skirmishes')";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-			dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
+			dtValue = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			int usedSkirmishes = 0;
 			if (dtValue.Rows[0][0] != DBNull.Value) usedSkirmishes = Convert.ToInt32(dtValue.Rows[0][0]);
 			// Stronghold
@@ -105,7 +106,7 @@ namespace WinApp.Gadget
 				"where playerTank.playerId=@playerId and tankid in (" +
 				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Stronghold')";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-			dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
+			dtValue = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			int usedStronghold = 0;
 			if (dtValue.Rows[0][0] != DBNull.Value) usedStronghold = Convert.ToInt32(dtValue.Rows[0][0]);
             // Global Map
@@ -115,7 +116,7 @@ namespace WinApp.Gadget
                 "where playerTank.playerId=@playerId and tankid in (" +
                 "  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'GlobalMap')";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-            dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
+            dtValue = await DB.FetchData(sql, Config.Settings.showDBErrors);
             int usedGlobalMap = 0;
             if (dtValue.Rows[0][0] != DBNull.Value) usedGlobalMap = Convert.ToInt32(dtValue.Rows[0][0]);
 
@@ -139,7 +140,7 @@ namespace WinApp.Gadget
 				"  tank t on pt.tankId = t.id " +
 				"where pt.playerId=@playerId ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dtStats = DB.FetchData(sql);
+			DataTable dtStats = await DB.FetchData(sql);
 			if (dtStats.Rows.Count > 0 && dtStats.Rows[0]["battles"] != DBNull.Value)
 			{
 				// TOTALS
@@ -158,7 +159,7 @@ namespace WinApp.Gadget
 					"  tank t on pt.tankId = t.id " +
 					"where pt.playerId=@playerId and ptb.battleMode='15'";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				dtStats = DB.FetchData(sql);
+				dtStats = await DB.FetchData(sql);
 				stats = dtStats.Rows[0];
 				if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
 				{
@@ -177,7 +178,7 @@ namespace WinApp.Gadget
 					"  tank t on pt.tankId = t.id " +
 					"where pt.playerId=@playerId and ptb.battleMode='7'";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				dtStats = DB.FetchData(sql);
+				dtStats = await DB.FetchData(sql);
 				stats = dtStats.Rows[0];
 				if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
 				{
@@ -196,7 +197,7 @@ namespace WinApp.Gadget
                     "  tank t on pt.tankId = t.id " +
                     "where pt.playerId=@playerId and ptb.battleMode='7Ranked'";
                 DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                dtStats = DB.FetchData(sql);
+                dtStats = await DB.FetchData(sql);
                 stats = dtStats.Rows[0];
                 if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
                 {
@@ -216,7 +217,7 @@ namespace WinApp.Gadget
 					"  tank t on pt.tankId = t.id " +
 					"where pt.playerId=@playerId and ptb.battleMode='Skirmishes'";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				dtStats = DB.FetchData(sql);
+				dtStats = await DB.FetchData(sql);
 				stats = dtStats.Rows[0];
 				if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
 				{
@@ -235,7 +236,7 @@ namespace WinApp.Gadget
 					"  tank t on pt.tankId = t.id " +
 					"where pt.playerId=@playerId and ptb.battleMode='Stronghold'";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				dtStats = DB.FetchData(sql);
+				dtStats = await DB.FetchData(sql);
 				stats = dtStats.Rows[0];
 				if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
 				{
@@ -254,7 +255,7 @@ namespace WinApp.Gadget
                     "  tank t on pt.tankId = t.id " +
                     "where pt.playerId=@playerId and ptb.battleMode='GlobalMap'";
                 DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                dtStats = DB.FetchData(sql);
+                dtStats = await DB.FetchData(sql);
                 stats = dtStats.Rows[0];
                 if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
                 {

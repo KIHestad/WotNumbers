@@ -9,11 +9,16 @@ namespace WinApp.Code
 	public static class MainSettings
 	{
 		public static GridView.Views View = GridView.Views.Overall;
-		public static GridFilter.Settings GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
-		public static GridFilter.Settings GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
-        // public static GridFilter.Settings GridFilterMap = GridFilter.GetDefault(GridView.Views.Map); Use same as for battle
+        public static GridFilter.Settings GridFilterTank { get; set; }
+        public static GridFilter.Settings GridFilterBattle { get; set; }
+        
+        public async static Task SetDefaultGridFilters()
+        {
+            GridFilterTank = await GridFilter.GetDefault(GridView.Views.Tank);
+            GridFilterBattle = await GridFilter.GetDefault(GridView.Views.Battle);
+        }
 
-		public static GridFilter.Settings GetCurrentGridFilter()
+        public static GridFilter.Settings GetCurrentGridFilter()
 		{
 			GridFilter.Settings gf = new GridFilter.Settings();
 			switch (View)

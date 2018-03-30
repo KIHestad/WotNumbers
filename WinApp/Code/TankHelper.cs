@@ -41,39 +41,39 @@ namespace WinApp.Code
             DB.AddWithValue(ref insertSql, "@name", tankName, DB.SqlDataType.VarChar);
             DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
             DB.AddWithValue(ref insertSql, "@premium", premium, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(insertSql);
+            await DB.ExecuteNonQuery(insertSql);
         }
         
         #region DatabaseLookup
 
-		public static void GetAllLists()
+		public async static Task GetAllLists()
 		{
-			Log.CheckLogFileSize();
-			GetTankList();
-			GetJson2dbMappingFromDB();
-			GetAchList();
-			GetPlayerTankAchList();
-			GetPlayerTankFragList();
+			await Log.CheckLogFileSize();
+			await GetTankList();
+            await GetJson2dbMappingFromDB();
+            await GetAchList();
+            await GetPlayerTankAchList();
+            await GetPlayerTankFragList();
 			Battle2json.GetExistingBattleFiles();
 		}
 
 		public static DataTable achList = new DataTable();
 
-		public static void GetAchList()
+		public async static Task GetAchList()
 		{
 			achList.Dispose();
 			achList.Clear();
-			achList = DB.FetchData("SELECT id, name FROM ach");
+			achList = await DB.FetchData("SELECT id, name FROM ach");
 		}
 
 		public static DataTable playerTankAchList = new DataTable();
 
-		public static void GetPlayerTankAchList()
+		public async static Task GetPlayerTankAchList()
 		{
 			playerTankAchList.Dispose();
 			playerTankAchList.Clear();
 			playerTankAchList = new DataTable();
-			playerTankAchList = DB.FetchData("SELECT playerTankAch.* " +
+			playerTankAchList = await DB.FetchData("SELECT playerTankAch.* " +
 											"FROM playerTankAch INNER JOIN playerTank ON playerTankAch.playerTankId=playerTank.Id " +
 											"WHERE playerId=" + Config.Settings.playerId.ToString());
 		}
@@ -86,7 +86,7 @@ namespace WinApp.Code
 
 		public static DataTable playerTankFragList = new DataTable();
 
-		public static void GetPlayerTankFragList()
+		public async static Task GetPlayerTankFragList()
 		{
 			playerTankFragList.Dispose();
 			playerTankFragList.Clear();
@@ -94,7 +94,7 @@ namespace WinApp.Code
 			string sql = "SELECT playerTank.id AS playerTankId, playerTank.tankId as PlayerTankTankId, playerTankFrag.* " +
 	  					"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId " +
 						"WHERE playerId=" + Config.Settings.playerId.ToString();
-			playerTankFragList = DB.FetchData(sql);
+			playerTankFragList = await DB.FetchData(sql);
 		}
 
 		public static void ClearPlayerTankFragList()
@@ -105,20 +105,20 @@ namespace WinApp.Code
 
 		public static DataTable tankList = new DataTable();
 
-		public static void GetTankList()
+		public async static Task GetTankList()
 		{
 			tankList.Dispose();
 			tankList.Clear();
-			tankList = DB.FetchData("SELECT * FROM tank");
+			tankList = await DB.FetchData("SELECT * FROM tank");
 			tankList.AcceptChanges();
 		}
 
-		public static DataTable GetPlayerTank(int tankId)
+		public async static Task<DataTable> GetPlayerTank(int tankId)
 		{
 			string sql = "SELECT * FROM playerTank WHERE playerId=@playerId AND tankId=@tankId; ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-			return DB.FetchData(sql);
+			return await DB.FetchData(sql);
 		}
 
         public async static Task<DataTable> GetPlayerTankBattle(int playerTankId, BattleMode.TypeEnum dossierBattleMode, bool CreateNewIfNotExists)
@@ -127,34 +127,42 @@ namespace WinApp.Code
 			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
 			DB.AddWithValue(ref sql, "@playerId", playerTankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode.SqlName, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (CreateNewIfNotExists && dt.Rows.Count == 0) // No battle recorded for this tank in this mode, create now and fetch once more
 			{
                 await AddPlayerTankBattle(playerTankId, battleMode.SqlName);
-				dt = DB.FetchData(sql);
+				dt = await DB.FetchData(sql);
 			}
 			return dt;
 		}
 
-        public static int GetPlayerTankBattleCount(int playerTankId, BattleMode.TypeEnum dossierBattleMode, out int wins, out int xp)
+        public class PlayerTankBattleCountResult
+        {
+            public int Battles { get; set; }
+            public int Wins { get; set; }
+            public int Xp { get; set; }
+        }
+
+        public async static Task<PlayerTankBattleCountResult> GetPlayerTankBattleCount(int playerTankId, BattleMode.TypeEnum dossierBattleMode)
 		{
+            PlayerTankBattleCountResult result = new PlayerTankBattleCountResult();
             BattleMode.Item battleMode = BattleMode.GetItemFromType(dossierBattleMode);
 			string sql = "SELECT battles, wins, xp FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
 			DB.AddWithValue(ref sql, "@playerId", playerTankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode.SqlName, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
-			int battles = 0;
-			xp = 0;
-			wins = 0;
+			DataTable dt = await DB.FetchData(sql);
+            result.Battles = 0;
+			result.Xp = 0;
+            result.Wins = 0;
 			if (dt.Rows.Count > 0) // No battle recorded for this tank in this mode, create now and fetch once more
 			{
-				battles = Convert.ToInt32(dt.Rows[0]["battles"]);
-				wins = Convert.ToInt32(dt.Rows[0]["wins"]);
-				xp = Convert.ToInt32(dt.Rows[0]["xp"]);
+                result.Battles = Convert.ToInt32(dt.Rows[0]["battles"]);
+                result.Wins = Convert.ToInt32(dt.Rows[0]["wins"]);
+                result.Xp = Convert.ToInt32(dt.Rows[0]["xp"]);
 			}
 			dt.Dispose();
 			dt.Clear();
-			return battles;
+			return result;
 		}
 		
 
@@ -163,14 +171,14 @@ namespace WinApp.Code
 			string sql = "INSERT INTO PlayerTankBattle (playerTankId, battleMode, battles) VALUES (@playerTankId, @battleMode, 0); ";
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 		}
 
-		public static int GetPlayerTankCount()
+		public async static Task<int> GetPlayerTankCount()
 		{
 			string sql = "SELECT count(id) AS count FROM playerTank WHERE playerId=@playerId; ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			int count = 0;
 			if (dt.Rows.Count > 0) count = Convert.ToInt32(dt.Rows[0]["count"]);
 			dt.Dispose();
@@ -178,12 +186,12 @@ namespace WinApp.Code
 			return count;
 		}
 
-		public static int ConvertWs2TankId(int wsTankId, int wsCountryId)
+		public async static Task<int> ConvertWs2TankId(int wsTankId, int wsCountryId)
 		{
 			string sql = "SELECT tankId FROM wsTankId WHERE wsTankId=@wsTankId AND wsCountryId=@wsCountryId; ";
 			DB.AddWithValue(ref sql, "@wsTankId", wsTankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@wsCountryId", wsCountryId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			int lookupTankId = 0;
 			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0]["tankId"]);
 			dt.Dispose();
@@ -192,14 +200,14 @@ namespace WinApp.Code
 		}
 
 
-		public static int GetPlayerTankId(int tankId)
+		public async static Task<int> GetPlayerTankId(int tankId)
 		{
 			string sql = "SELECT playerTank.id " +
 						 "FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " +
 						 "WHERE tank.id=@id and playerTank.playerId=@playerId; ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", tankId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			int lookupTankId = 0;
 			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0][0]);
 			dt.Dispose();
@@ -207,14 +215,14 @@ namespace WinApp.Code
 			return lookupTankId;
 		}
 
-		public static int GetPlayerTankId(string tankName)
+		public async static Task<int> GetPlayerTankId(string tankName)
 		{
 			string sql = "SELECT playerTank.id " +
 						 "FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " +
 						 "WHERE tank.name=@name and playerTank.playerId=@playerId; ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@name", tankName, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			int lookupTankId = 0;
 			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0][0]);
 			dt.Dispose();
@@ -222,18 +230,18 @@ namespace WinApp.Code
 			return lookupTankId;
 		}
 
-		public static DataTable GetBattle(int battleId)
+		public async static Task<DataTable> GetBattle(int battleId)
 		{
 			string sql = "SELECT * FROM battle WHERE id=@id; ";
 			DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
-			return DB.FetchData(sql);
+			return await DB.FetchData(sql);
 		}
 
-		public static int GetBattleIdForImportedWsBattle(int wsId)
+		public async static Task<int> GetBattleIdForImportedWsBattle(int wsId)
 		{
 			string sql = "SELECT Id FROM battle WHERE wsId=@wsId; ";
 			DB.AddWithValue(ref sql, "@wsId", wsId, DB.SqlDataType.Int); 
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			int lookupBattle = 0;
 			if (dt.Rows.Count > 0) lookupBattle = Convert.ToInt32(dt.Rows[0]["Id"]);
 			dt.Dispose();
@@ -243,12 +251,12 @@ namespace WinApp.Code
 
 		public static DataTable json2dbMapping = new DataTable();
 		
-		public static void GetJson2dbMappingFromDB()
+		public async static Task GetJson2dbMappingFromDB()
 		{
-			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty; ");
+			json2dbMapping = await DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty; ");
 		}
 
-        public static DataTable GetTankData2BattleMapping(BattleMode.TypeEnum dossierBattleMode)
+        public async static Task<DataTable> GetTankData2BattleMapping(BattleMode.TypeEnum dossierBattleMode)
 		{
             BattleMode.Item battleMode = BattleMode.GetItemFromType(dossierBattleMode);
 			string sql =
@@ -257,7 +265,7 @@ namespace WinApp.Code
 				"WHERE   (dbBattle IS NOT NULL) AND (dbPlayerTankMode IS NULL OR dbPlayerTankMode=@dbPlayerTankMode) " +
 				"GROUP BY dbDataType, dbPlayerTank, dbBattle, dbPlayerTankMode ";
 			DB.AddWithValue(ref sql, "@dbPlayerTankMode", battleMode.SqlName, DB.SqlDataType.VarChar);
-			return DB.FetchData(sql);
+			return await DB.FetchData(sql);
 		}
 
 		#endregion
@@ -286,15 +294,15 @@ namespace WinApp.Code
                 return dr[0]["name"].ToString();
 		}
 
-        public static DataRow GetTankInfo(int TankId)
+        public async static Task<DataRow> GetTankInfo(int TankId)
         {
             string sql = @"
-select t.*, c.name as countryName, tt.name as tankTypeName
-from tank t 
-    left join country c on t.countryId = c.id 
-    left join tankType tt on t.tankTypeId = tt.id
-where t.id = " + TankId.ToString();
-            DataTable dt = DB.FetchData(sql);
+                select t.*, c.name as countryName, tt.name as tankTypeName
+                from tank t 
+                    left join country c on t.countryId = c.id 
+                    left join tankType tt on t.tankTypeId = tt.id
+                where t.id = " + TankId.ToString();
+            DataTable dt = await DB.FetchData(sql);
             if (dt.Rows.Count > 0)
                 return dt.Rows[0];
             else
@@ -325,24 +333,24 @@ where t.id = " + TankId.ToString();
             return hasCustomTankInfo;
         }
 
-        public static int GetTankTier(string TankName)
+        public async static Task<int> GetTankTier(string TankName)
 		{
 			int tankTier = 0;
 			string sql = "SELECT tier FROM tank WHERE name=@name; ";
 			DB.AddWithValue(ref sql, "@name", TankName, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0) tankTier = Convert.ToInt32(dt.Rows[0]["tier"]);
 			dt.Dispose();
 			dt.Clear();
 			return tankTier;
 		}
 
-		public static int GetTankTier(int TankId)
+		public async static Task<int> GetTankTier(int TankId)
 		{
 			int tankTier = 0;
 			string sql = "SELECT tier FROM tank WHERE id=@id; ";
 			DB.AddWithValue(ref sql, "@id", TankId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0) tankTier = Convert.ToInt32(dt.Rows[0]["tier"]);
 			dt.Dispose();
 			dt.Clear();
@@ -363,14 +371,14 @@ where t.id = " + TankId.ToString();
 			return tankID;
 		}
 
-		public static int GetTankID(int PlayerTankId)
+		public async static Task<int> GetTankID(int PlayerTankId)
 		{
 			string sql = "SELECT tank.id " +
 						 "FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " +
 						 "WHERE playerTank.Id=@PlayerTankId AND playerTank.playerId=@playerId; ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@PlayerTankId", PlayerTankId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			int tankId = 0;
 			if (dt.Rows.Count > 0) tankId = Convert.ToInt32(dt.Rows[0]["id"]);
 			dt.Dispose();
@@ -378,12 +386,12 @@ where t.id = " + TankId.ToString();
 			return tankId;
 		}
 
-		public static bool GetAchievmentExist(string achName)
+		public async static Task<bool> GetAchievmentExist(string achName)
 		{
 			bool exists = false;
 			string sql = "SELECT ach.id FROM ach WHERE name=@name; ";
 			DB.AddWithValue(ref sql, "@name", achName, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			exists = (dt.Rows.Count > 0);
 			dt.Dispose();
 			dt.Clear();
@@ -397,11 +405,11 @@ where t.id = " + TankId.ToString();
 			return (foundRows.Length > 0);
 		}
 
-		public static bool PlayerTankExists(int tankId)
+		public async static Task<bool> PlayerTankExists(int tankId)
 		{
 			string sql = "SELECT id FROM playerTank WHERE tankId=@tankId; ";
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			bool exists = (dt.Rows.Count > 0);
 			dt.Dispose();
 			dt.Clear();

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
 using System.Drawing.Imaging;
+using System.Threading.Tasks;
 
 namespace WinApp.Forms
 {
@@ -35,7 +36,7 @@ namespace WinApp.Forms
 
 		#region Main
 
-		private void BattleMapAndComment_Load(object sender, EventArgs e)
+		private async void BattleMapAndComment_Load(object sender, EventArgs e)
 		{
 			// Paint toolstrip
 			toolStripPaint.Renderer = new StripRenderer();
@@ -45,7 +46,7 @@ namespace WinApp.Forms
 			// Check if painting exists
 			string sql = "select painting from battleMapPaint where battleId=@battleId";
 			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-			DataTable dtBtlMapPaint = DB.FetchData(sql);
+			DataTable dtBtlMapPaint = await DB.FetchData(sql);
 			if (dtBtlMapPaint.Rows.Count > 0)
 			{
 				paintingExists = true;
@@ -70,7 +71,7 @@ namespace WinApp.Forms
 				"  playerTank on battle.playerTankId = playerTank.Id " +
 				"where battle.id=@battleId";
 			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-			DataRow dr = DB.FetchData(sql).Rows[0];
+			DataRow dr = (await DB.FetchData(sql)).Rows[0];
 			// Get map pictures and text
 			if (dr["arena_id"] != DBNull.Value)
 			{
@@ -100,7 +101,7 @@ namespace WinApp.Forms
 				chkClan.Visible = false;
 			// Other other battle reviews
 			GridHelper.StyleDataGrid(dgvReviews);
-			GetOtherBattleReviews();
+            await GetOtherBattleReviews();
 			ResizeNow();
 		}
 
@@ -109,7 +110,7 @@ namespace WinApp.Forms
 			base.OnInvalidated(e);
 		}
 
-		private void GetOtherBattleReviews()
+		private async Task GetOtherBattleReviews()
 		{
 			string where = "";
 			if (chkTank.Checked)
@@ -129,7 +130,7 @@ namespace WinApp.Forms
 				"where comment is not null and battle.id <> @battleId " + where +
 				"order by battleTime DESC; ";
 			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			dgvReviews.DataSource = dt;
 			dgvReviews.Columns["battleId"].Visible = false;
 		}
@@ -157,7 +158,7 @@ namespace WinApp.Forms
 			string sql = "update battle set comment=@comment where id=@id";
 			DB.AddWithValue(ref sql, "@comment", lastBattleComment, DB.SqlDataType.VarChar);
 			DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 		}
 
 		private void BattleReview_Resize(object sender, EventArgs e)
@@ -205,9 +206,9 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void dataGridViewFilterChanged(object sender, EventArgs e)
+		private async void dataGridViewFilterChanged(object sender, EventArgs e)
 		{
-			GetOtherBattleReviews();
+            await GetOtherBattleReviews();
 		}
 
 		#endregion
@@ -343,13 +344,13 @@ namespace WinApp.Forms
 		{
 			// Delete previous painting
 			string sql = "DELETE FROM battleMapPaint WHERE battleId=" + battleId;
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			// Save new painting if exists
 			if (paintingExists)
 			{
 				sql = "INSERT INTO battleMapPaint (battleId, painting) VALUES (@battleId, @painting)";
 				DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(sql, imgParameter: "@painting", img: picPaint.Image);
+                await DB.ExecuteNonQuery(sql, imgParameter: "@painting", img: picPaint.Image);
 			}
 		}
 

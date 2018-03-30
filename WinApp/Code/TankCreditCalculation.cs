@@ -75,7 +75,7 @@ namespace WinApp.Code
                 "where credits is not null and creditsNet is not null and battle.playerTankId=@playerTankId " +
                 "group by battle.battleMode ";
             DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             string newSQL = "";
             foreach (DataRow dr in dt.Rows)
             {
@@ -94,7 +94,7 @@ namespace WinApp.Code
                     newSQL += TankCreditCalculation.CreateSQL(tci);
                 }
             }
-            await DB.ExecuteNonQueryAsync(newSQL, Config.Settings.showDBErrors, true);
+            await DB.ExecuteNonQuery(newSQL, Config.Settings.showDBErrors, true);
         }
     }
 }

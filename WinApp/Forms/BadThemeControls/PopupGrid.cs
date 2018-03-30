@@ -85,7 +85,7 @@ namespace WinApp.Forms
 			dataGridPopup.FirstDisplayedScrollingRowIndex = scrollY.ScrollPosition;
 		}
 
-		private void dataGridPopup_MouseWheel(object sender, MouseEventArgs e)
+		private async void dataGridPopup_MouseWheel(object sender, MouseEventArgs e)
 		{
 			try
 			{
@@ -105,7 +105,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 

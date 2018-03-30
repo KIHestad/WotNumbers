@@ -16,12 +16,12 @@ namespace WinApp.Code
 
 		#region logBuffer
 		
-		public static void WriteLogBuffer(bool forceLogging = false)
+		public async static Task WriteLogBuffer(bool forceLogging = false)
 		{
 			bool loggingOk = true;
 			if (Config.Settings.showDBErrors || forceLogging)
 			{
-				loggingOk = LogToFileLogBuffer(logBuffer, false);
+				loggingOk = await LogToFileLogBuffer(logBuffer, false);
 			}
 			if (loggingOk)
             {
@@ -68,13 +68,13 @@ namespace WinApp.Code
 
 		#region Direct logging
 
-		public static void LogToFile(Exception ex, string customErrorMsg = "")
+		public async static Task LogToFile(Exception ex, string customErrorMsg = "")
 		{
 			// Add list og Strings
-			if (CreateFileIfNotExist())
+			if (await CreateFileIfNotExist())
 			{
 				// Write current logbuffer first, force log logbuffer to include recent logging
-				WriteLogBuffer(true);
+				await WriteLogBuffer(true);
 				// Log exception
 				using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 				{
@@ -93,33 +93,33 @@ namespace WinApp.Code
 						if (customErrorMsg != "")
 							logtext += "   Details: " + Environment.NewLine + "   " + customErrorMsg + Environment.NewLine;
 						logtext += "}" + Environment.NewLine + Environment.NewLine; 
-						sw.WriteLine(logtext);
+						await sw.WriteLineAsync(logtext);
 					}
 				}
 			}
 		}
 
 
-		public static void LogToFile(string logtext, bool addDateTime = true)
+		public async static Task LogToFile(string logtext, bool addDateTime = true)
 		{
 			if (Config.Settings.showDBErrors)
 			{
 				// Write current logbuffer first
-				WriteLogBuffer();
+				await WriteLogBuffer();
 				// Add list og Strings
-				if (CreateFileIfNotExist())
+				if (await CreateFileIfNotExist())
 				{
 					using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 					{
 						if (addDateTime) logtext = DateTime.Now + "\t" + logtext;
-						sw.WriteLine(logtext);
+						await sw.WriteLineAsync(logtext);
 					}
 				}
 			}
 		}
 
 		// Used to write logbuffer
-		private static bool LogToFileLogBuffer(List<string> logtext, bool addDateTime = false)
+		private async static Task<bool> LogToFileLogBuffer(List<string> logtext, bool addDateTime = false)
 		{
 			bool loggingOK = true;
 			try
@@ -127,13 +127,13 @@ namespace WinApp.Code
 				if (Config.Settings.showDBErrors)
 				{
 					// Add list of Strings
-					if (CreateFileIfNotExist())
+					if (await CreateFileIfNotExist())
 					{
 						using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 						{
 							foreach (var s in logtext)
 							{
-								sw.WriteLine(s);
+								await sw.WriteLineAsync(s);
 							}
 						}
 					}
@@ -149,7 +149,7 @@ namespace WinApp.Code
 
 		#endregion
 
-		public static void CheckLogFileSize()
+		public async static Task CheckLogFileSize()
 		{
 			if (File.Exists(Config.AppDataLogFolder + filename))
 			{
@@ -159,16 +159,16 @@ namespace WinApp.Code
 					string movefilename = "Log_" + DateTime.Now.ToString("yyyy-MM-dd_HHmm") + ".txt";
 					file.CopyTo(Config.AppDataLogFolder + movefilename);
 					file.Delete();
-					CreateFileIfNotExist();
+					await CreateFileIfNotExist();
 				}
 			}
 			else
 			{
-				CreateFileIfNotExist();
+				await CreateFileIfNotExist();
 			}
 		}
 
-		private static bool CreateFileIfNotExist()
+		private async static Task<bool> CreateFileIfNotExist()
 		{
 			bool ok = true;
 			// This text is added only once to the file. 
@@ -179,15 +179,15 @@ namespace WinApp.Code
 					// Create a file to write to. 
 					using (StreamWriter sw = File.CreateText(Config.AppDataLogFolder + filename))
 					{
-						sw.WriteLine("**************************************************");
-						sw.WriteLine("Start logging: " + DateTime.Now.ToString());
-						sw.WriteLine("**************************************************");
-						sw.WriteLine("");
+						await sw.WriteLineAsync("**************************************************");
+                        await sw.WriteLineAsync("Start logging: " + DateTime.Now.ToString());
+                        await sw.WriteLineAsync("**************************************************");
+                        await sw.WriteLineAsync("");
 					}
 				}
 				catch (Exception ex)
 				{
-					Code.MsgBox.Show("Error creating log file: " + Config.AppDataLogFolder + filename + Environment.NewLine + Environment.NewLine +
+					MsgBox.Show("Error creating log file: " + Config.AppDataLogFolder + filename + Environment.NewLine + Environment.NewLine +
 						ex.Message + Environment.NewLine + Environment.NewLine, "Log file error");
 					ok = false;
 				}

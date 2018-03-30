@@ -26,7 +26,7 @@ namespace WinApp.Code
 			Float = 6,
 		}
 		
-		public static DataTable FetchData(string sql, bool ShowError = true)
+		public async static Task<DataTable> FetchData(string sql, bool ShowError = true)
 		{
 			ConfigData.dbType SelecteDbType = Config.Settings.databaseType;
 			DataTable dt = new DataTable();
@@ -35,26 +35,32 @@ namespace WinApp.Code
 				string dbcon = Config.DatabaseConnection();
 				if (SelecteDbType == ConfigData.dbType.MSSQLserver)
 				{
-					SqlConnection con = new SqlConnection(dbcon);
-					con.Open();
-					SqlCommand command = new SqlCommand(sql, con);
-					SqlDataAdapter adapter = new SqlDataAdapter(command);
-					adapter.Fill(dt);
-					con.Close();
+                    using (SqlConnection con = new SqlConnection(dbcon))
+                    {
+                        await con.OpenAsync();
+                        using (SqlCommand command = new SqlCommand(sql, con))
+                        {
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            await Task.Run(() => adapter.Fill(dt));
+                        }
+                    }
 				}
 				else if (SelecteDbType == ConfigData.dbType.SQLite)
 				{
-					SQLiteConnection con = new SQLiteConnection(dbcon);
-					con.Open();
-					SQLiteCommand command = new SQLiteCommand(sql, con);
-					SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
-					adapter.Fill(dt);
-					con.Close();
+                    using (SQLiteConnection con = new SQLiteConnection(dbcon))
+                    {
+                        await con.OpenAsync();
+                        using (SQLiteCommand command = new SQLiteCommand(sql, con))
+                        {
+                            SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+                            await Task.Run(() => adapter.Fill(dt));
+                        }
+                    }
 				}
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex, sql);
+				await Log.LogToFile(ex, sql);
 				if (ShowError)
 				{
 					MsgBox.Show("Error fetching data from database. Please check your database settings." +
@@ -65,7 +71,7 @@ namespace WinApp.Code
 			return dt;
 		}
 
-        public static bool HasColumn(string tableName, string columnName)
+        public async static Task<bool> HasColumn(string tableName, string columnName)
         {
             bool hasColumn = false;
             DataTable dt = new DataTable();
@@ -74,30 +80,36 @@ namespace WinApp.Code
             {
                 if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
                 {
-                    SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-                    con.Open();
-                    string sql = "SELECT Name FROM sys.columns WHERE Name = N'" + columnName + "' AND Object_ID = Object_ID(N'" + tableName + "'); ";
-                    SqlCommand command = new SqlCommand(sql, con);
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    adapter.Fill(dt);
-                    con.Close();
-                    colNameIndex = 0;
+                    using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
+                    {
+                        await con.OpenAsync();
+                        string sql = "SELECT Name FROM sys.columns WHERE Name = N'" + columnName + "' AND Object_ID = Object_ID(N'" + tableName + "'); ";
+                        using (SqlCommand command = new SqlCommand(sql, con))
+                        {
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            await Task.Run(() => adapter.Fill(dt));
+                            colNameIndex = 0;
+                        }
+                    }
                 }
                 else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
                 {
-                    SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
-                    con.Open();
-                    string sql = "PRAGMA table_info(" + tableName + ");";
-                    SQLiteCommand command = new SQLiteCommand(sql, con);
-                    SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
-                    adapter.Fill(dt);
-                    con.Close();
-                    colNameIndex = 1;
+                    using (SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection()))
+                    {
+                        await con.OpenAsync();
+                        string sql = "PRAGMA table_info(" + tableName + ");";
+                        using (SQLiteCommand command = new SQLiteCommand(sql, con))
+                        {
+                            SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+                            await Task.Run(() => adapter.Fill(dt));
+                            colNameIndex = 1;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Check if column exists in table");
+                await Log.LogToFile(ex, "Check if column exists in table");
             }
             if (dt.Rows.Count > 0)
             {
@@ -113,7 +125,7 @@ namespace WinApp.Code
             return hasColumn;
         }
 
-		public async static Task<bool> ExecuteNonQueryAsync(string sql, bool ShowError = true, bool RunInBatch = false)
+		public async static Task<bool> ExecuteNonQuery(string sql, bool ShowError = true, bool RunInBatch = false)
 		{
 			string lastRunnedSQL = "";
 			bool ok = false;
@@ -122,63 +134,65 @@ namespace WinApp.Code
 			{
 				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 				{
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-					con.Open();
-					if (RunInBatch)
-					{
-						lastRunnedSQL = sql;
-						sql = "BEGIN TRANSACTION; " + sql + "COMMIT TRANSACTION; ";
-						SqlCommand command = new SqlCommand(sql, con);
-						await command.ExecuteNonQueryAsync();
-					}
-					else
-					{
-						foreach (string s in sqlList)
-						{
-							if (s.Trim().Length > 0)
-							{
-								lastRunnedSQL = s;
-								SqlCommand command = new SqlCommand(s, con);
-								await command.ExecuteNonQueryAsync();
-							}
-						}
-					}
-					con.Close();
-					ok = true;
+                    using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
+                    {
+                        await con.OpenAsync();
+                        if (RunInBatch)
+                        {
+                            lastRunnedSQL = sql;
+                            sql = "BEGIN TRANSACTION; " + sql + "COMMIT TRANSACTION; ";
+                            using (SqlCommand command = new SqlCommand(sql, con))
+                                await command.ExecuteNonQueryAsync();
+                        }
+                        else
+                        {
+                            foreach (string s in sqlList)
+                            {
+                                if (s.Trim().Length > 0)
+                                {
+                                    lastRunnedSQL = s;
+                                    using (SqlCommand command = new SqlCommand(s, con))
+                                        await command.ExecuteNonQueryAsync();
+                                }
+                            }
+                        }
+                    }
+                    ok = true;
 				}
 				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 				{
-					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
-					con.Open();
-					if (RunInBatch)
-					{
-						lastRunnedSQL = sql;
-						sql = "BEGIN TRANSACTION; " + sql + "; END TRANSACTION; ";
-						SQLiteCommand command = new SQLiteCommand(sql, con);
-						await command.ExecuteNonQueryAsync();
-					}
-					else
-					{
-						foreach (string s in sqlList)
-						{
-							if (s.Trim().Length > 0)
-							{
-								lastRunnedSQL = s;
-								SQLiteCommand command = new SQLiteCommand(s, con);
-								await command.ExecuteNonQueryAsync();
-							}
-						}
-					}
-					con.Close();
-					ok = true;
+                    using (SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection()))
+                    {
+                        await con.OpenAsync();
+                        if (RunInBatch)
+                        {
+                            lastRunnedSQL = sql;
+                            sql = "BEGIN TRANSACTION; " + sql + "; END TRANSACTION; ";
+                            using (SQLiteCommand command = new SQLiteCommand(sql, con))
+                                await command.ExecuteNonQueryAsync();
+                        }
+                        else
+                        {
+                            foreach (string s in sqlList)
+                            {
+                                if (s.Trim().Length > 0)
+                                {
+                                    lastRunnedSQL = s;
+                                    using (SQLiteCommand command = new SQLiteCommand(s, con))
+                                        await command.ExecuteNonQueryAsync();
+                                }
+                            }
+                        }
+                        ok = true;
+                    }
 				}
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex, lastRunnedSQL);
+				await Log.LogToFile(ex, lastRunnedSQL);
 				if (ShowError)
 				{
-					Code.MsgBox.Show("Error execute query to database. Please check your input parameters." +
+					MsgBox.Show("Error execute query to database. Please check your input parameters." +
 						Environment.NewLine + Environment.NewLine + lastRunnedSQL +
 						Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
 					ok = false;
@@ -186,82 +200,8 @@ namespace WinApp.Code
 			}
 			return ok;
 		}
-
-        public static bool ExecuteNonQuery(string sql, bool ShowError = true, bool RunInBatch = false)
-        {
-            string lastRunnedSQL = "";
-            bool ok = false;
-            string[] sqlList = sql.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            try
-            {
-                if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
-                {
-                    SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-                    con.Open();
-                    if (RunInBatch)
-                    {
-                        lastRunnedSQL = sql;
-                        sql = "BEGIN TRANSACTION; " + sql + "COMMIT TRANSACTION; ";
-                        SqlCommand command = new SqlCommand(sql, con);
-                        command.ExecuteNonQuery();
-                    }
-                    else
-                    {
-                        foreach (string s in sqlList)
-                        {
-                            if (s.Trim().Length > 0)
-                            {
-                                lastRunnedSQL = s;
-                                SqlCommand command = new SqlCommand(s, con);
-                                command.ExecuteNonQuery();
-                            }
-                        }
-                    }
-                    con.Close();
-                    ok = true;
-                }
-                else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
-                {
-                    SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
-                    con.Open();
-                    if (RunInBatch)
-                    {
-                        lastRunnedSQL = sql;
-                        sql = "BEGIN TRANSACTION; " + sql + "; END TRANSACTION; ";
-                        SQLiteCommand command = new SQLiteCommand(sql, con);
-                        command.ExecuteNonQuery();
-                    }
-                    else
-                    {
-                        foreach (string s in sqlList)
-                        {
-                            if (s.Trim().Length > 0)
-                            {
-                                lastRunnedSQL = s;
-                                SQLiteCommand command = new SQLiteCommand(s, con);
-                                command.ExecuteNonQuery();
-                            }
-                        }
-                    }
-                    con.Close();
-                    ok = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.LogToFile(ex, lastRunnedSQL);
-                if (ShowError)
-                {
-                    Code.MsgBox.Show("Error execute query to database. Please check your input parameters." +
-                        Environment.NewLine + Environment.NewLine + lastRunnedSQL +
-                        Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
-                    ok = false;
-                }
-            }
-            return ok;
-        }
-
-        public static bool ExecuteNonQuery(string sql, string imgParameter, Image img, bool ShowError = true)
+        
+        public async static Task<bool> ExecuteNonQuery(string sql, string imgParameter, Image img, bool ShowError = true)
 		{
 			string lastRunnedSQL = "";
 			bool ok = false;
@@ -270,49 +210,55 @@ namespace WinApp.Code
 			{
 				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 				{
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-					con.Open();
-					foreach (string s in sqlList)
-					{
-						if (s.Trim().Length > 0)
-						{
-							lastRunnedSQL = s;
-							SqlCommand cmd = new SqlCommand(s, con);
-							byte[] imgByte = ImageHelper.ImageToByteArray(img, ImageFormat.Png);
-							cmd.Parameters.Add(imgParameter, SqlDbType.VarBinary, imgByte.Length).Value = imgByte;
-							cmd.ExecuteNonQuery();
-						}
-					}
-					con.Close();
-					ok = true;
+                    using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
+                    {
+                        await con.OpenAsync();
+                        foreach (string s in sqlList)
+                        {
+                            if (s.Trim().Length > 0)
+                            {
+                                lastRunnedSQL = s;
+                                using (SqlCommand cmd = new SqlCommand(s, con))
+                                {
+                                    byte[] imgByte = ImageHelper.ImageToByteArray(img, ImageFormat.Png);
+                                    cmd.Parameters.Add(imgParameter, SqlDbType.VarBinary, imgByte.Length).Value = imgByte;
+                                    await cmd.ExecuteNonQueryAsync();
+                                }
+                            }
+                        }
+                        ok = true;
+                    }
 				}
 				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 				{
-					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
-					con.Open();
-					foreach (string s in sqlList)
-					{
-						if (s.Trim().Length > 0)
-						{
-							lastRunnedSQL = s;
-							SQLiteCommand cmd = con.CreateCommand();
-							cmd.CommandText = s;
-							SQLiteParameter imgParam = new SQLiteParameter(imgParameter, System.Data.DbType.Binary);
-							imgParam.Value = ImageHelper.ImageToByteArray(img, ImageFormat.Png);
-							cmd.Parameters.Add(imgParam);
-							cmd.ExecuteNonQuery();
-						}
-					}
-					con.Close();
-					ok = true;
+                    using (SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection()))
+                    {
+                        con.Open();
+                        foreach (string s in sqlList)
+                        {
+                            if (s.Trim().Length > 0)
+                            {
+                                lastRunnedSQL = s;
+                                using (SQLiteCommand cmd = con.CreateCommand())
+                                {
+                                    cmd.CommandText = s;
+                                    SQLiteParameter imgParam = new SQLiteParameter(imgParameter, DbType.Binary);
+                                    imgParam.Value = ImageHelper.ImageToByteArray(img, ImageFormat.Png);
+                                    cmd.Parameters.Add(imgParam);
+                                    await cmd.ExecuteNonQueryAsync();
+                                }
+                            }
+                        }
+                        ok = true;
+                    }
 				}
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex, lastRunnedSQL);
+				await Log.LogToFile(ex, lastRunnedSQL);
 				if (ShowError)
 				{
-					Code.MsgBox.Show("Error execute query to database. Please check your input parameters." +
+					MsgBox.Show("Error execute query to database. Please check your input parameters." +
 						Environment.NewLine + Environment.NewLine + lastRunnedSQL +
 						Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
 					ok = false;
@@ -321,7 +267,7 @@ namespace WinApp.Code
 			return ok;
 		}
 
-		public static DataTable ListTables()
+		public async static Task<DataTable> ListTables()
 		{
 			DataTable dt = new DataTable();
 			try
@@ -329,29 +275,29 @@ namespace WinApp.Code
 				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 				{
 					string sql = "SELECT TABLE_NAME AS TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME";
-					dt = FetchData(sql);
+					dt = await FetchData(sql);
 				}
 				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 				{
-					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
-					con.Open();
-					DataTable TableList = new DataTable();
-					TableList = con.GetSchema("tables"); // Returns list of tables in column "TABLE_NAME"
-					con.Clone();
-					TableList.DefaultView.Sort = "TABLE_NAME";
-					dt = TableList.DefaultView.ToTable();
+                    using (SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection()))
+                    {
+                        await con.OpenAsync();
+                        DataTable TableList = new DataTable();
+                        TableList = con.GetSchema("tables"); // Returns list of tables in column "TABLE_NAME"
+                        con.Clone();
+                        TableList.DefaultView.Sort = "TABLE_NAME";
+                        dt = TableList.DefaultView.ToTable();
+                    }
 				}
-
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
-				//throw;
+				await Log.LogToFile(ex);
 			}
 			return dt;
 		}
 
-		public static bool CreateDatabase(string databaseName, string fileLocation, ConfigData.dbType dbType)
+		public async static Task<bool> CreateDatabase(string databaseName, string fileLocation, ConfigData.dbType dbType)
 		{
 			bool dbOk = false;
 			// Check database file location
@@ -371,7 +317,7 @@ namespace WinApp.Code
 					if (!Directory.GetParent(prevPath.FullName).Exists)
 					{
 						fileLocationExsits = false;
-						Code.MsgBox.Show("Error creating database, file path does not exist", "Error creating database");
+						MsgBox.Show("Error creating database, file path does not exist", "Error creating database");
 					}
 					else
 					{
@@ -391,49 +337,51 @@ namespace WinApp.Code
 					string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", Config.Settings.databaseServer, "master", winAuth, Config.Settings.databaseUid, Config.Settings.databasePwd);
 					using (SqlConnection con = new SqlConnection(connectionstring))
 					{
-						con.Open();
+						await con.OpenAsync();
 						string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE [name] = '" + databaseName + "'";
-						SqlCommand cmd = new SqlCommand(sql, con);
-						SqlDataReader reader = cmd.ExecuteReader();
-						if (reader.HasRows) dbExists = true;
-						con.Close();
+                        using (SqlCommand cmd = new SqlCommand(sql, con))
+                        {
+                            SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                            if (reader.HasRows) dbExists = true;
+                        }
 					}
 					if (dbExists)
 					{
-						Code.MsgBox.Show("Database with this name alreade exists, choose another database name.", "Cannot create database");
+						MsgBox.Show("Database with this name alreade exists, choose another database name.", "Cannot create database");
 					}
 					else
 					{
-						SqlConnection myConn = new SqlConnection(connectionstring);
-						string sql = "CREATE DATABASE " + databaseName + " ON PRIMARY " +
-									"(NAME = " + databaseName + ", " +
-									"FILENAME = '" + fileLocation + databaseName + ".mdf', " +
-									"SIZE = 5MB, FILEGROWTH = 10%) " +
-									"LOG ON (NAME = " + databaseName + "_Log, " +
-									"FILENAME = '" + fileLocation + databaseName + "_log.ldf', " +
-									"SIZE = 1MB, " +
-									"FILEGROWTH = 10%)";
-
-						SqlCommand myCommand = new SqlCommand(sql, myConn);
-						try
-						{
-							// Create db now
-							myConn.Open();
-							myCommand.ExecuteNonQuery();
-							myConn.Close();
-							// Save new db into settings
-							Config.Settings.databaseName = databaseName;
-							string msg = "";
-							Config.SaveConfig(out msg);
-							dbOk = true;
-						}
-						catch (System.Exception ex)
-						{
-							Log.LogToFile(ex);
-							dbOk = false;
-							Code.MsgBox.Show("Error creating database, check that valid databasename is selected." + 
-								Environment.NewLine + Environment.NewLine + ex.ToString(), "Error creating database");
-						}
+                        using (SqlConnection myConn = new SqlConnection(connectionstring))
+                        {
+                            string sql = "CREATE DATABASE " + databaseName + " ON PRIMARY " +
+                                        "(NAME = " + databaseName + ", " +
+                                        "FILENAME = '" + fileLocation + databaseName + ".mdf', " +
+                                        "SIZE = 5MB, FILEGROWTH = 10%) " +
+                                        "LOG ON (NAME = " + databaseName + "_Log, " +
+                                        "FILENAME = '" + fileLocation + databaseName + "_log.ldf', " +
+                                        "SIZE = 1MB, " +
+                                        "FILEGROWTH = 10%)";
+                            using (SqlCommand myCommand = new SqlCommand(sql, myConn))
+                            {
+                                try
+                                {
+                                    // Create db now
+                                    await myConn.OpenAsync();
+                                    await myCommand.ExecuteNonQueryAsync();
+                                    // Save new db into settings
+                                    Config.Settings.databaseName = databaseName;
+                                    await Config.SaveConfig();
+                                    dbOk = true;
+                                }
+                                catch (Exception ex)
+                                {
+                                    await Log.LogToFile(ex);
+                                    dbOk = false;
+                                    MsgBox.Show("Error creating database, check that valid databasename is selected." +
+                                        Environment.NewLine + Environment.NewLine + ex.ToString(), "Error creating database");
+                                }
+                            }
+                        }
 					}
 				}
 				else if (dbType == ConfigData.dbType.SQLite)
@@ -441,7 +389,7 @@ namespace WinApp.Code
 					// Check if database exists
 					if (File.Exists(fileLocation + databaseName + ".db"))
 					{
-						Code.MsgBox.Show("Error creating database, databasefile already exists, select another database name", "Error creating database");
+						MsgBox.Show("Error creating database, databasefile already exists, select another database name", "Error creating database");
 					}
 					else
 					{
@@ -450,9 +398,8 @@ namespace WinApp.Code
 						SQLiteConnection.CreateFile(db);
 						// Save new db file into settings
 						Config.Settings.databaseFileName = fileLocation + databaseName + ".db";
-						string msg = "";
-						Config.SaveConfig(out msg);
-						dbOk = true;
+                        await Config.SaveConfig();
+                        dbOk = true;
 					}
 				}
 			}
@@ -542,7 +489,7 @@ namespace WinApp.Code
 			return Sql;
 		}
 
-		public static bool CheckConnection(bool showErrorIfNotExists = true)
+		public async static Task<bool> CheckConnection(bool showErrorIfNotExists = true)
 		{
 			bool ok = false;
 			DataTable dt = new DataTable();
@@ -552,24 +499,27 @@ namespace WinApp.Code
 				// Check data
 				if (Config.Settings.databaseServer == null || Config.Settings.databaseServer == "" || Config.Settings.databaseName == "")
 				{
-					if (showErrorIfNotExists) Code.MsgBox.Show("Missing database server and/or database name, check Database Settings.", "Config error");
+					if (showErrorIfNotExists) MsgBox.Show("Missing database server and/or database name, check Database Settings.", "Config error");
 				}
 				else
 				{
 					try
 					{
-						SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-						con.Open();
-						SqlCommand command = new SqlCommand("SELECT * FROM player", con);
-						SqlDataAdapter adapter = new SqlDataAdapter(command);
-						adapter.Fill(dt);
-						con.Close();
-						ok = true;
+                        using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
+                        {
+                            await con.OpenAsync();
+                            using (SqlCommand command = new SqlCommand("SELECT * FROM player", con))
+                            {
+                                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                                await Task.Run(() => adapter.Fill(dt));
+                                ok = true;
+                            }
+                        }
 					}
 					catch (Exception ex)
 					{
-						Log.LogToFile(ex);
-						if (showErrorIfNotExists) Code.MsgBox.Show("Error connecting to database or test on accessing table data falied. Please check Database Settings.", "Config error");
+						await Log.LogToFile(ex);
+						if (showErrorIfNotExists) MsgBox.Show("Error connecting to database or test on accessing table data falied. Please check Database Settings.", "Config error");
 					}
 				}
 			}
@@ -578,24 +528,27 @@ namespace WinApp.Code
 				// Check data
 				if (Config.Settings.databaseFileName == "" )
 				{
-					if (showErrorIfNotExists) Code.MsgBox.Show("Missing database file name, check Database Settings.", "Config error");
+					if (showErrorIfNotExists) MsgBox.Show("Missing database file name, check Database Settings.", "Config error");
 				}
 				else
 				{
 					try
 					{
-						SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
-						con.Open();
-						SQLiteCommand command = new SQLiteCommand("SELECT * FROM player", con);
-						SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
-						adapter.Fill(dt);
-						con.Close();
-						ok = true;
+                        using (SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection()))
+                        {
+                            await con.OpenAsync();
+                            using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM player", con))
+                            {
+                                SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+                                await Task.Run(() => adapter.Fill(dt));
+                                ok = true;
+                            }
+                        }
 					}
 					catch (Exception ex)
 					{
-						Log.LogToFile(ex);
-						if (showErrorIfNotExists) Code.MsgBox.Show("Error connecting to database or test on accessing table data falied. Please check Database Settingse", "Config error");
+						await Log.LogToFile(ex);
+						if (showErrorIfNotExists) MsgBox.Show("Error connecting to database or test on accessing table data falied. Please check Database Settingse", "Config error");
 					}
 				}
 			}

@@ -9,7 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Management;
 using WinApp.Code;
-
+using System.Threading.Tasks;
 
 namespace WinApp.Forms.Settings
 {
@@ -20,12 +20,12 @@ namespace WinApp.Forms.Settings
             InitializeComponent();
         }
 
-        private void AppSettingsWoT_Load(object sender, EventArgs e)
+        private async void AppSettingsWoT_Load(object sender, EventArgs e)
         {
-            DataBind();
+            await DataBind();
         }
 
-        private void DataBind()
+        private async Task DataBind()
         {
             //Find num of cores
             int coreCount = Environment.ProcessorCount;
@@ -50,8 +50,7 @@ namespace WinApp.Forms.Settings
                 else if (Directory.Exists("D:\\Games\\World_of_Tanks"))
                     txtFolder.Text = "D:\\Games\\World_of_Tanks";
                 Config.Settings.wotGameFolder = txtFolder.Text;
-                string msg = "";
-                Config.SaveConfig(out msg);
+                await Config.SaveConfig();
             }
             txtBatchFile.Text = Config.Settings.wotGameRunBatchFile;
             chkAutoRun.Checked = Config.Settings.wotGameAutoStart;
@@ -88,18 +87,18 @@ namespace WinApp.Forms.Settings
         }
 
         private static string currentStartApp = "";
-        private void ddStartApp_Click(object sender, EventArgs e)
+        private async void ddStartApp_Click(object sender, EventArgs e)
         {
             currentStartApp = ddStartApp.Text;
-            Code.DropDownGrid.Show(ddStartApp, Code.DropDownGrid.DropDownGridType.List, "Do not start WoT,WoT Launcher,Wot Game");
+            await Code.DropDownGrid.Show(ddStartApp, Code.DropDownGrid.DropDownGridType.List, "Do not start WoT,WoT Launcher,Wot Game");
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private async void btnSave_Click(object sender, EventArgs e)
         {
-            SaveChanges();
+            await SaveChanges();
         }
 
-        public void SaveChanges()
+        public async Task SaveChanges()
         {
             long wotGameAffinity = 0;
             if (chkOptimizeOn.Checked)
@@ -149,14 +148,13 @@ namespace WinApp.Forms.Settings
             Config.Settings.wotGameAffinity = wotGameAffinity;
             Config.Settings.CheckForBrrOnStartup = chkBrrStarupCheck.Checked;
             Config.Settings.res_mods_subfolder = txtResModsSubFolder.Text.Trim();
-            String msg = "";
-            Config.SaveConfig(out msg);
+            await Config.SaveConfig();
             EditChangesApply(false);
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private async void btnCancel_Click(object sender, EventArgs e)
         {
-            DataBind();
+            await DataBind();
             EditChangesApply(false);
         }
 
@@ -220,13 +218,13 @@ namespace WinApp.Forms.Settings
             lblBRRStatus.Text = BRRstatus;
         }
 
-        private void btnBrrInstall_Click(object sender, EventArgs e)
+        private async void btnBrrInstall_Click(object sender, EventArgs e)
         {
             string msg = "";
             if (!BRRdeactivated)
             {
                 Config.Settings.wotGameFolder = txtFolder.Text;
-                Config.SaveConfig(out msg);
+                await Config.SaveConfig();
                 CheckForBrr();
             }
             if (BRRdeactivated)

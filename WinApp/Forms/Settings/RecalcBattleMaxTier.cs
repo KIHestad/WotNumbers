@@ -55,7 +55,7 @@ namespace WinApp.Forms
                 "group by battle.id, battle.battleTime " +
                 "ORDER BY battle.id";
 				
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			int tot = dt.Rows.Count;
 			badProgressBar.ValueMax = tot + 2;
 			sql = "";
@@ -72,14 +72,14 @@ namespace WinApp.Forms
                 {
                     battleTime = dr["battleTime"].ToString();
                     UpdateProgressBar("Calc Max Tier " + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
-                    await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+                    await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
                     loopCount = 0;
                 }
 			}
             if (updateSQL != "") // Update last batch of sql's
 			{
                 UpdateProgressBar("Calc Max Tier " + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
-                await DB.ExecuteNonQueryAsync(sql, Config.Settings.showDBErrors, true);
+                await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
 			}
 
 			// Done

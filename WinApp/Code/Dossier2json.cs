@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using IronPython.Hosting;
@@ -13,21 +14,23 @@ using Microsoft.Scripting.Hosting;
 
 namespace WinApp.Code
 {
-	public class dossier2json
+	public class Dossier2json
 	{
-		public BackgroundWorker bwDossierProcess;
 		public static FileSystemWatcher dossierFileWatcher = new FileSystemWatcher();
+        public static Forms.Main _frmMain = null;
 
-		public static string UpdateDossierFileWatcher(Form parentForm)
+		public async static Task<string> UpdateDossierFileWatcher(Forms.Main frmMain)
 		{
-			string logtext = "Automatically fetch new battles stopped";
+            _frmMain = frmMain;
+            string logText = "Automatically fetch new battles stopped";
 			bool run = (Config.Settings.dossierFileWathcherRun == 1);
 			if (run)
 			{
 				try
 				{
-					logtext = "Automatically fetch new battles started";
-					dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.dossierFilePath + "\\");
+                    logText = "Automatically fetch new battles started";
+                    frmMain.SetStatus2(logText);
+                    dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.dossierFilePath + "\\");
 					dossierFileWatcher.Filter = "*.dat";
 					dossierFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
 					dossierFileWatcher.Changed += new FileSystemEventHandler(DossierFileChanged);
@@ -35,96 +38,78 @@ namespace WinApp.Code
 				}
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex, "Error on: " + logtext);
-					Code.MsgBox.Show("Error in dossier file path, please check your application settings", "Error in dossier file path", parentForm);
+					await Log.LogToFile(ex, "Error on: " + logText);
+					MsgBox.Show("Error in dossier file path, please check your application settings", "Error in dossier file path", frmMain);
 					run = false;
 				}
 			}
 			dossierFileWatcher.EnableRaisingEvents = run;
-			Log.LogToFile("// " + logtext, true);
-			return logtext;
+			await Log.LogToFile("// " + logText, true);
+			return logText;
 		}
 
-		public static string GetLatestUpdatedDossierFile()
+		public async static Task<string> GetLatestUpdatedDossierFile()
 		{
-			// Get all dossier files, find latest
-			string dossierFile = "";
-			if (Directory.Exists(Config.Settings.dossierFilePath))
-			{
-				string[] files = Directory.GetFiles(Config.Settings.dossierFilePath, "*.dat");
-				DateTime dossierFileDate = new DateTime(1970, 1, 1);
-				foreach (string file in files)
-				{
-					FileInfo checkFile = new FileInfo(file);
-					if (checkFile.LastWriteTime > dossierFileDate)
-					{
-						dossierFile = checkFile.FullName;
-						dossierFileDate = checkFile.LastWriteTime;
-					}
-				}
-			}
+            string dossierFile = "";
+            await Task.Run(() =>
+            {
+                // Get all dossier files, find latest
+                if (Directory.Exists(Config.Settings.dossierFilePath))
+                {
+                    string[] files = Directory.GetFiles(Config.Settings.dossierFilePath, "*.dat");
+                    DateTime dossierFileDate = new DateTime(1970, 1, 1);
+                    foreach (string file in files)
+                    {
+                        FileInfo checkFile = new FileInfo(file);
+                        if (checkFile.LastWriteTime > dossierFileDate)
+                        {
+                            dossierFile = checkFile.FullName;
+                            dossierFileDate = checkFile.LastWriteTime;
+                        }
+                    }
+                }
+            });
 			return dossierFile;
 		}
+        
+        public async static Task Wait(Forms.Main frmMain)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                await Task.Delay(1000);
+                frmMain.SetStatus2("Tick " + i);
+            }
+        }
 
-		private static bool _ForceUpdate;
-		public void ManualRunInBackground(string Status2Message, bool ForceUpdate = false)
+		public async static Task ManualRunInBackground(string Status2Message, bool ForceUpdate, Forms.Main frmMain)
 		{
-			_ForceUpdate = ForceUpdate;
-			StatusBarHelper.ClearAfterNextShow = false;
-			StatusBarHelper.Message = Status2Message;
-			bwDossierProcess = new BackgroundWorker();
-			bwDossierProcess.WorkerSupportsCancellation = false;
-			bwDossierProcess.WorkerReportsProgress = false;
-			bwDossierProcess.DoWork += new DoWorkEventHandler(bwDossierProcess_DoWork);
-			if (bwDossierProcess.IsBusy != true)
-			{
-				bwDossierProcess.RunWorkerAsync();
-			}
+            await Log.CheckLogFileSize();
+            List<string> logText = new List<string>();
+            Log.AddToLogBuffer("// Manual run, looking for new dossier file");
+            string dossierFile = await GetLatestUpdatedDossierFile();
+            string resultMessage = "";
+            if (dossierFile == "")
+            {
+                Log.AddToLogBuffer(" > No dossier file found");
+                resultMessage = "No dossier file found - check application settings";
+            }
+            else
+            {
+                Log.AddToLogBuffer(" > Start analyze dossier file");
+                resultMessage = await RunDossierRead(dossierFile, ForceUpdate);
+                if (ForceUpdate)
+                {
+                    Config.Settings.doneRunForceDossierFileCheck = DateTime.Now;
+                    await Config.SaveConfig();
+                }
+            }
+            frmMain.SetStatus2(resultMessage);
+            await frmMain.GridViewRefresh();
 		}
-
-		private async void bwDossierProcess_DoWork(object sender, DoWorkEventArgs e)
-		{
-			string result = await ManualRun(_ForceUpdate);
-			StatusBarHelper.ClearAfterNextShow = true;
-			StatusBarHelper.Message = result;
-			// Update config if force update is run
-			if (_ForceUpdate)
-			{
-				Config.Settings.doneRunForceDossierFileCheck = DateTime.Now;
-				string msg = "";
-				Config.SaveConfig(out msg);
-			}
-		}
-
-		// Always run in separate thread to avoid Main form application hang
-		public async static Task<string> ManualRun(bool ForceUpdate = false)
-		{
-			string returVal = "Manual battle check started...";
-			Log.CheckLogFileSize();
-			List<string> logText = new List<string>();
-			bool ok = true;
-			Log.AddToLogBuffer("// Manual run, looking for new dossier file");
-			string dossierFile = GetLatestUpdatedDossierFile();
-			if (dossierFile == "")
-			{
-				Log.AddToLogBuffer(" > No dossier file found");
-				returVal = "No dossier file found - check application settings";
-				ok = false;
-			}
-			else
-			{
-				Log.AddToLogBuffer(" > Start analyze dossier file");
-			}
-			if (ok)
-			{
-				returVal = await RunDossierRead(dossierFile, ForceUpdate);
-			}
-			return returVal;
-		}
-
+        
 		private async static void DossierFileChanged(object source, FileSystemEventArgs e)
 		{
-			Log.CheckLogFileSize();
+			await Log.CheckLogFileSize();
 			Log.AddToLogBuffer("// Dossier file listener detected updated dossier file");
 			// Dossier file automatic handling
 			// Stop listening to dossier file
@@ -134,41 +119,44 @@ namespace WinApp.Code
 			string dossierFile = e.FullPath;
 			FileInfo file = new FileInfo(dossierFile);
 			// Wait until file is ready to read, 
-			WaitUntilFileReadyToRead(dossierFile, 4000);
+			bool fileOk = await WaitUntilFileReadyToRead(dossierFile, 4);
 			// Perform file conversion from picle to json
-			string statusResult = await RunDossierRead(dossierFile);
-			// Continue listening to dossier file
-			dossierFileWatcher.EnableRaisingEvents = true;
-            // Check for recalc grinding progress
-            await GrindingHelper.CheckForDailyRecalculateGrindingProgress();
+            if (fileOk)
+            {
+                string resultMessage = await RunDossierRead(dossierFile);
+                // Continue listening to dossier file
+                dossierFileWatcher.EnableRaisingEvents = true;
+                // Display result
+                _frmMain.SetStatus2(resultMessage);
+                await _frmMain.GridViewRefresh();
+                // Check for recalc grinding progress
+                await GrindingHelper.CheckForDailyRecalculateGrindingProgress();
+            }
         }
 
-        private static void WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
+        private async static Task<bool> WaitUntilFileReadyToRead(string filePath, int maxWaitTimeInSeconds)
 		{
 			// Checks file is readable
 			bool fileOK = false;
-			int waitInterval = 100; // time to wait in ms per read operation to check filesize
-			Stopwatch stopWatch = new Stopwatch();
-			stopWatch.Start();
-			while (stopWatch.ElapsedMilliseconds < maxWaitTime && !fileOK)
+            int waitedSeconds = 0;
+			while (waitedSeconds < maxWaitTimeInSeconds && !fileOK)
 			{
 				try
 				{
 					using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
 					{
 						fileOK = true;
-						TimeSpan ts = stopWatch.Elapsed;
-						Log.AddToLogBuffer(String.Format(" > Dossierfile read successful (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString()));
+						Log.AddToLogBuffer($" > Dossierfile read successful (waited: {waitedSeconds} seconds)");
 					}
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
-					// could not read file - do not log as error, this is normal behavior
-					Log.AddToLogBuffer(String.Format(" > Dossierfile not ready yet (waited: {0:0000}ms) - " + ex.Message, stopWatch.ElapsedMilliseconds.ToString()));
-					System.Threading.Thread.Sleep(waitInterval);
+                    // could not read file - do not log as error, this is normal behavior
+                    await Task.Delay(1000);
+                    waitedSeconds++;
 				}
 			}
-			stopWatch.Stop();
+            return fileOK;
 		}
 
 		private async static Task<string> RunDossierRead(string dossierFile, bool forceUpdate = false)
@@ -196,7 +184,7 @@ namespace WinApp.Code
                 bool playerExists = false;
 				string sql = "select id from player where name=@name";
 				DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-				DataTable dt = DB.FetchData(sql);
+				DataTable dt = await DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
                 {
                     playerId = Convert.ToInt32(dt.Rows[0][0]);
@@ -210,15 +198,15 @@ namespace WinApp.Code
                     DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
                     DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
                     DB.AddWithValue(ref sql, "@playerServer", playerServer, DB.SqlDataType.VarChar);
-                    DB.ExecuteNonQuery(sql);
+                    await DB.ExecuteNonQuery(sql);
 					sql = "select id from player where name=@name";
 					DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-					dt = DB.FetchData(sql);
+					dt = await DB.FetchData(sql);
 					if (dt.Rows.Count > 0)
 						playerId = Convert.ToInt32(dt.Rows[0][0]);
 				}
-				// If still not identified player break with error
-				if (playerId == 0)
+                // If still not identified player break with error
+                if (playerId == 0)
 				{
 					ok = false;
 					Log.AddToLogBuffer(" > > Error identifying player, dossier file check terminated");
@@ -230,10 +218,9 @@ namespace WinApp.Code
 					Config.Settings.playerId = playerId;
 					Config.Settings.playerName = playerName;
 					Config.Settings.playerServer = playerServer;
-					string msg = "";
-					Config.SaveConfig(out msg);
-				}
-				if (ok)
+                    await Config.SaveConfig();
+                }
+                if (ok)
 				{
 					// Copy dossier file and perform file conversion to json format
 					string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
@@ -243,8 +230,8 @@ namespace WinApp.Code
 					string dossierJsonFile = Config.AppDataBaseFolder + "dossier.json"; // output file
 					FileInfo fileDossierOriginal = new FileInfo(dossierFile); // the original dossier file
 					fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier file and rename it for analyze
-					ok = dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
-					if (!ok) // error occured
+                    ok = await Dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
+                    if (!ok) // error occured
 					{
 						returVal = "Error converting dossier file to json - check log file";
 					}
@@ -262,7 +249,7 @@ namespace WinApp.Code
 						catch (Exception ex)
 						{
 							Log.AddToLogBuffer(" > > Could not copy dossierfile, probably in use");
-							Log.LogToFile(ex);
+							await Log.LogToFile(ex);
 							// throw;
 						}
 
@@ -285,13 +272,12 @@ namespace WinApp.Code
 				Dossier2db.Running = false;
 				if (forceUpdate)
 				{
-					string msg = "";
 					Config.Settings.doneRunForceDossierFileCheck = DateTime.Now;
-					Config.SaveConfig(out msg);
-				}
+                    await Config.SaveConfig();
+                }
 				// Check for battle result
 				Log.AddToLogBuffer(" > Reading battle files started after successfully dossier file check");
-				Battle2json.RunBattleResultRead();
+				await Battle2json.RunBattleResultRead();
 				// If new battle saved and not in process of reading battles, create alert file
 				if (Dossier2db.battleSaved || GridView.scheduleGridRefresh)
 				{
@@ -321,11 +307,11 @@ namespace WinApp.Code
 				Log.AddToLogBuffer(" > > Dossier file check terminated, already running");
 				returVal = "Battle check already running";
 			}
-			Log.WriteLogBuffer();
+			await Log.WriteLogBuffer();
 			return returVal;
 		}
 
-		private static bool ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
+		private async static Task<bool> ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
 		{
             if (PythonEngine.LockPython(timeout: 60))
             {
@@ -340,24 +326,28 @@ namespace WinApp.Code
                         //dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
                         //ipyrun.main();
                         Log.AddToLogBuffer(" > > Start converting Dossier DAT-file to json");
-                        ScriptScope scope = PythonEngine.Engine.ExecuteFile(dossier2jsonScript); // this is your python program
-                        dynamic result = scope.GetVariable("main")();
+                        await Task.Run(() =>
+                        {
+                            ScriptScope scope = PythonEngine.Engine.ExecuteFile(dossier2jsonScript); // this is your python program
+                            // dynamic result = scope.GetVariable("main")();
+                        });
                         Log.AddToLogBuffer(" > > Finish converted Dossier DAT-file to json");
                     }
                     catch (Exception ex)
                     {
-                        Log.LogToFile(ex, "Dossier2json exception running: " + dossier2jsonScript);
+                        await Log.LogToFile(ex, "Dossier2json exception running: " + dossier2jsonScript);
                         convertResult = false;
                     }
                     Log.AddIpyToLogBuffer(PythonEngine.ipyOutput);
-                    Log.WriteLogBuffer();
+                    await Log.WriteLogBuffer();
                     return convertResult;
                 }
                 finally
                 {
                     PythonEngine.UnlockPython();
                 }
-            } else
+            }
+            else
             {
                 Log.AddToLogBuffer(" > > Unable to lock Python environment for Dossier DAT-file conversion");
                 return false;

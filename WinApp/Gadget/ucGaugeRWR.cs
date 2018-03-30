@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using WinApp.Code;
 using System.Diagnostics;
 using WinApp.Code.FormLayout;
+using System.Threading.Tasks;
 
 namespace WinApp.Gadget
 {
@@ -29,7 +30,7 @@ namespace WinApp.Gadget
 			SelectTimeRangeButton(); 
 		}
 
-		public void DataBind()
+		public async Task DataBind()
 		{
 			// Init Gauge
 			aGauge1.ValueMin = -20;
@@ -65,7 +66,7 @@ namespace WinApp.Gadget
 			// Overall stats team
             if (_battleTimeSpan == GadgetHelper.TimeRangeEnum.Total)
 			{
-				double? RWR = Code.Rating.RWR.RWRtotal(_battleMode);
+				double? RWR = await Code.Rating.RWR.RWRtotal(_battleMode);
                 if (RWR != null)
                     end_val = Convert.ToDouble(RWR);
 			}
@@ -101,7 +102,7 @@ namespace WinApp.Gadget
 					default:
 						break;
 				}
-				double? RWR = Code.Rating.RWR.RWRbattle(battleTimeFilter, battleRevert, _battleMode);
+				double? RWR = await Code.Rating.RWR.RWRbattle(battleTimeFilter, battleRevert, _battleMode);
                 if (RWR != null)
                     end_val = Convert.ToDouble(RWR);
 			}
@@ -166,7 +167,7 @@ namespace WinApp.Gadget
 			aGauge1.Value = (float)gaugeVal;
 		}
 
-		private void btnTime_Click(object sender, EventArgs e)
+		private async void btnTime_Click(object sender, EventArgs e)
 		{
 			BadButton b = (BadButton)sender;
 			switch (b.Name)
@@ -178,7 +179,7 @@ namespace WinApp.Gadget
                 case "btnToday": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeToday; break;
 			}
 			SelectTimeRangeButton();
-			DataBind();
+            await DataBind();
 		}
 
 		private void SelectTimeRangeButton()

@@ -94,8 +94,7 @@ namespace WinApp.Forms
                 UpdateProgressBar(100, "File copy finished");
                 // Save backup time
                 Config.Settings.databaseBackupLastPerformed = backupTime;
-                string msg = "";
-                Config.SaveConfig(out msg);
+                await Config.SaveConfig();
             }
 			// Done
             btnStart.Text = "Start";
@@ -220,7 +219,7 @@ namespace WinApp.Forms
                 }
                 catch (Exception ex)
                 {
-                    Log.LogToFile(ex, "Database Backup failed");
+                    await Log.LogToFile(ex, "Database Backup failed");
                     MsgBox.Show("Error performing database backup: " + ex.Message + Environment.NewLine + Environment.NewLine, "Database Backup Error");
                     return false;
                 }

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -28,20 +29,20 @@ namespace WinApp.Gadget
             _useDefault = useDefault;
 		}
 
-        private void paramTotalStats_Load(object sender, EventArgs e)
+        private async void paramTotalStats_Load(object sender, EventArgs e)
 		{
             // All colums section
             // Style toolbar and set buttons
             toolAllColumns.Renderer = new StripRenderer();
             //toolAllColumns.BackColor = ColorTheme.FormBack;
-            toolAllColumns = ColListHelper.SetToolStripColType(toolAllColumns, GridView.Views.Tank, true);
+            toolAllColumns = await ColListHelper.SetToolStripColType(toolAllColumns, GridView.Views.Tank, true);
             toolAvailableCol_All.Checked = true;
             // Mouse scrolling
             dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
             // Style datagrid
             GridHelper.StyleDataGrid(dataGridAllColumns);
             // Get all columns data source
-            SetAllColumnsDataGrid();
+            await SetAllColumnsDataGrid();
 
             // Selected columns section
             // Style toolbar 
@@ -56,7 +57,7 @@ namespace WinApp.Gadget
                 // Lookup value for current gadget
 				string sql = "select * from gadgetParameter where gadgetId=@gadgetId order by paramNum;";
 				DB.AddWithValue(ref sql, "@gadgetId", _gadgetId, DB.SqlDataType.Int);
-				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+				DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 				foreach (DataRow dr in dt.Rows)
 				{
 		 			object paramValue = dr["value"];
@@ -105,9 +106,9 @@ namespace WinApp.Gadget
             }
 		}
 
-        private void SetAllColumnsDataGrid()
+        private async Task SetAllColumnsDataGrid()
         {
-            dataGridAllColumns.DataSource = ColListHelper.GetDataGridColums(toolAllColumns, GridView.Views.Tank, true);
+            dataGridAllColumns.DataSource = await ColListHelper.GetDataGridColums(toolAllColumns, GridView.Views.Tank, true);
             dataGridAllColumns.Columns["id"].Visible = false;
             dataGridAllColumns.Columns["colWidth"].Visible = false;
             dataGridAllColumns.Columns["Description"].Width = 300;
@@ -199,7 +200,7 @@ namespace WinApp.Gadget
             }
         }
 
-        private void toolAvaliableCol_Group_Click(object sender, EventArgs e)
+        private async void toolAvaliableCol_Group_Click(object sender, EventArgs e)
         {
             foreach (ToolStripButton button in toolAllColumns.Items)
 			{
@@ -207,12 +208,12 @@ namespace WinApp.Gadget
 			}
             ToolStripButton selectedButton = (ToolStripButton)sender;
             selectedButton.Checked = true;
-            SetAllColumnsDataGrid();
+            await SetAllColumnsDataGrid();
         }
 
-		private void ddBattleMode_Click(object sender, EventArgs e)
+		private async void ddBattleMode_Click(object sender, EventArgs e)
 		{
-			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, BattleMode.GetDropDownList(true));
+            await DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, BattleMode.GetDropDownList(true));
 		}
 
 		private async void btnSelect_Click(object sender, EventArgs e)
@@ -294,14 +295,14 @@ namespace WinApp.Gadget
 				GadgetHelper.DrawBorderOnGadget(sender, e);
 		}
 
-        private void ddTimeSpan_Click(object sender, EventArgs e)
+        private async void ddTimeSpan_Click(object sender, EventArgs e)
         {
-            DropDownGrid.Show(ddTimeSpan, DropDownGrid.DropDownGridType.List, GadgetHelper.GetTimeDropDownList());
+            await DropDownGrid.Show(ddTimeSpan, DropDownGrid.DropDownGridType.List, GadgetHelper.GetTimeDropDownList());
         }
 
-        private void ddGridCount_Click(object sender, EventArgs e)
+        private async void ddGridCount_Click(object sender, EventArgs e)
         {
-            DropDownGrid.Show(ddGridCount, DropDownGrid.DropDownGridType.List, "1,2,3,4,5,6,7,8,9,10");
+            await DropDownGrid.Show(ddGridCount, DropDownGrid.DropDownGridType.List, "1,2,3,4,5,6,7,8,9,10");
         }
 
         private void ddGridCount_TextChanged(object sender, EventArgs e)
@@ -403,7 +404,7 @@ namespace WinApp.Gadget
         }
 
         // Enable mouse wheel scrolling for datagrid
-        private void dataGridAllColumns_MouseWheel(object sender, MouseEventArgs e)
+        private async void dataGridAllColumns_MouseWheel(object sender, MouseEventArgs e)
         {
             try
             {
@@ -423,7 +424,7 @@ namespace WinApp.Gadget
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
                 // throw;
             }
         }
@@ -812,7 +813,7 @@ namespace WinApp.Gadget
             {
                 int currentColumn = dataGridSelectedColumns.SelectedCells[0].ColumnIndex;
                 string defaultText = dataGridSelectedColumns.Columns[currentColumn].HeaderText;
-                InputBox.ResultClass result = Code.InputBox.Show(title: "Column Header Name", defaultText: defaultText, owner: this);
+                InputBox.ResultClass result = InputBox.Show(title: "Column Header Name", defaultText: defaultText, owner: this);
                 if (result.Button == InputBox.InputButton.OK)
                 {
                     dataGridSelectedColumns.Columns[currentColumn].HeaderText = result.InputText;

@@ -22,9 +22,9 @@ namespace WinApp.Code
 		
         private class ClanInfo
         {
-            public int clanDBID { get; set; }
-            public string clanAbbrev { get; set;  }
-            public int count { get; set; }
+            public int ClanDBID { get; set; }
+            public string ClanAbbrev { get; set;  }
+            public int Count { get; set; }
         }
 
         private class BattlePlayer
@@ -45,7 +45,7 @@ namespace WinApp.Code
             public object value;
         }
 
-        public static void UpdateBattleResultFileWatcher()
+        public async static Task UpdateBattleResultFileWatcher()
         {
             try
             {
@@ -65,7 +65,7 @@ namespace WinApp.Code
             catch (Exception ex)
             {
                 battleResultFileWatcher.EnableRaisingEvents = false;
-                Log.LogToFile(ex, "Incorrect dossier file path");
+                await Log.LogToFile(ex, "Incorrect dossier file path");
             }
 
         }
@@ -75,10 +75,10 @@ namespace WinApp.Code
             if (!Dossier2db.Running)
             {
                 Log.AddToLogBuffer("// New battle file detected");
-                RunBattleResultRead();
+                RunBattleResultRead().ConfigureAwait(false);
             }
             else
-                Log.LogToFile("// New battle file detected, reading is terminated due to dossier file process is running");
+                Log.LogToFile("// New battle file detected, reading is terminated due to dossier file process is running").ConfigureAwait(false);
         }
 
         public static void GetExistingBattleFiles()
@@ -97,7 +97,7 @@ namespace WinApp.Code
             }
         }
 
-        public static bool ConvertBattleFilesToJson()
+        public async static Task<bool> ConvertBattleFilesToJson()
         {
             bool ok = true;
             try
@@ -105,7 +105,7 @@ namespace WinApp.Code
                 // Upload prev unsuccsessful uploads to vBAddict 
                 if (vBAddictHelper.Settings.UploadActive)
                 {
-                    vBAddictBattleResultToUpload();
+                    await VBAddictBattleResultToUpload();
                 }
                 // Get WoT top level battle_result folder for getting dat-files
                 if (Directory.Exists(Path.GetDirectoryName(Config.Settings.battleFilePath)))
@@ -151,7 +151,7 @@ namespace WinApp.Code
                             }
                             catch (Exception ex)
                             {
-                                Log.LogToFile(ex, " > Error copying battle DAT-file " + file + " to json");
+                                await Log.LogToFile(ex, " > Error copying battle DAT-file " + file + " to json");
                                 ok = false;
                             }
                         }
@@ -160,7 +160,7 @@ namespace WinApp.Code
                         if (filesDat.Length == 0)
                             Log.AddToLogBuffer(" > No battle DAT-files found");
                     }
-                    Log.WriteLogBuffer();
+                    await Log.WriteLogBuffer();
                     // Loop through all dat-files copied to local folder
                     string[] filesDatCopied = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.dat");
                     int totFilesDat = filesDatCopied.Count();
@@ -171,15 +171,13 @@ namespace WinApp.Code
                         {
                             try {
                                 // Convert file to json
-                                bool deleteFile = false;
-                                bool okConvert = ConvertBattleUsingPython(file, out deleteFile);
+                                var result = await ConvertBattleUsingPython(file);
                                 // Upload battle to vBAddict if OK
-                                if (okConvert && vBAddictHelper.Settings.UploadActive)
+                                if (result.Success && vBAddictHelper.Settings.UploadActive)
                                 {
                                     try
                                     {
-                                        string msg = "";
-                                        bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out msg);
+                                        bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out string msg);
                                         if (uploadOK)
                                             Log.AddToLogBuffer(" > > > Uploaded battle to vBAddict successfully");
                                         else
@@ -195,15 +193,15 @@ namespace WinApp.Code
                                         }
                                     } catch (Exception ex)
                                     {
-                                        Log.LogToFile(ex, " > > > Error uploading to vBAddict, copy file for later upload");
+                                        await Log.LogToFile(ex, " > > > Error uploading to vBAddict, copy file for later upload");
                                     }
                                 }
-                                if (deleteFile)
+                                if (result.DeleteFile)
                                 {
                                     // Success, json file is now created, clean up by delete dat file
                                     FileInfo fileBattleDatCopied = new FileInfo(file); // the original file
                                     fileBattleDatCopied.Delete(); // delete original DAT file
-                                    if (okConvert)
+                                    if (result.Success)
                                         Log.AddToLogBuffer(" > > > Deleted successfully converted battle DAT-file: " + file);
                                     else
                                         Log.AddToLogBuffer(" > > > Deleted faulty battle DAT-file: " + file);
@@ -211,7 +209,7 @@ namespace WinApp.Code
                             }
                             catch (Exception ex)
                             {
-                                Log.LogToFile(ex, " > Error converting battle file " + file + " to json");
+                                await Log.LogToFile(ex, " > Error converting battle file " + file + " to json");
                                 ok = false;
                             }
                         }
@@ -222,7 +220,7 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, " > Error converting battle files to json");
+                await Log.LogToFile(ex, " > Error converting battle files to json");
                 ok = false;
             }
             return ok;
@@ -258,7 +256,7 @@ namespace WinApp.Code
             return fileOK;
         }
 
-        private static void vBAddictBattleResultToUpload()
+        private async static Task VBAddictBattleResultToUpload()
         {
             try
             {
@@ -270,8 +268,7 @@ namespace WinApp.Code
                     Log.AddToLogBuffer(" > > Start uploading previous unsuccessful vBAddict uploads, " + totFilesDat.ToString() + " battle DAT-files found");
                     foreach (string file in filesDatCopied)
                     {
-                        string msg = "";
-                        bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out msg);
+                        bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out string msg);
                         if (uploadOK)
                         {
                             Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully file: " + file);
@@ -292,7 +289,7 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Function for uploaded previous unsuccessful vBAddict uploads failed.");
+                await Log.LogToFile(ex, "Function for uploaded previous unsuccessful vBAddict uploads failed.");
             }
         }
 
@@ -305,14 +302,14 @@ namespace WinApp.Code
 
         private static string lastFile = "";
 
-        public async static void RunBattleResultRead()
+        public async static Task RunBattleResultRead()
         {
             bool deleteLastFileOnError = false;
             try
             {
                 Log.AddToLogBuffer(" > Start looking for battle result");
                 // Look for new files
-                bool convertOK = ConvertBattleFilesToJson();
+                bool convertOK = await ConvertBattleFilesToJson();
                 // Get all json files
                 Log.AddToLogBuffer(" > Start looking for converted json battle files");
                 string[] filesJson = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.json");
@@ -384,12 +381,12 @@ namespace WinApp.Code
                                 "from battle b left join playerTank pt on b.playerTankId = pt.id " +
                                 "where b.arenaUniqueID=@arenaUniqueID;";
                             DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Int);
-                            dt = DB.FetchData(sql);
+                            dt = await DB.FetchData(sql);
                             // check if battle exists
                             if (dt.Rows.Count == 0)
                             {
                                 // Create battle, do not exists
-                                int playerTankId = TankHelper.GetPlayerTankId(tankId);
+                                int playerTankId = await TankHelper.GetPlayerTankId(tankId);
                                 sql =
                                     "insert into battle " +
                                     "(playerTankId,  battleMode, battlesCount, battleTime,  battleTimeStart, battleResultId, battleSurviveId) values " +
@@ -397,7 +394,7 @@ namespace WinApp.Code
                                 DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sql, "@battleTime", battleTime, DB.SqlDataType.DateTime);
                                 DB.AddWithValue(ref sql, "@battleTimeStart", battleTimeStart, DB.SqlDataType.DateTime);
-                                await DB.ExecuteNonQueryAsync(sql);
+                                await DB.ExecuteNonQuery(sql);
                             }
                         }
                         // Fetch battle
@@ -408,7 +405,7 @@ namespace WinApp.Code
                         DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
                         DB.AddWithValue(ref sql, "@battleTimeFrom", battleTime.AddSeconds(-30), DB.SqlDataType.DateTime);
                         DB.AddWithValue(ref sql, "@battleTimeTo", battleTime.AddSeconds(30), DB.SqlDataType.DateTime);
-                        dt = DB.FetchData(sql);
+                        dt = await DB.FetchData(sql);
                         // If battle found from DB add enhanced values from battle file now
                         if (dt.Rows.Count > 0)
                         {
@@ -421,9 +418,11 @@ namespace WinApp.Code
                                 //string battleMode = dt.Rows[0]["battleMode"].ToString();
                                 int grindXP = Convert.ToInt32(dt.Rows[0]["gGrindXP"]);
                                 // Get values
-                                List<BattleValue> battleValues = new List<BattleValue>();
-                                // common initial values
-                                battleValues.Add(new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") });
+                                List<BattleValue> battleValues = new List<BattleValue>
+                                {
+                                    // common initial values
+                                    new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") }
+                                };
                                 int playerTeam = (int)token_personel.SelectToken("team");
                                 int enemyTeam = 1;
                                 if (playerTeam == 1) enemyTeam = 2;
@@ -491,8 +490,10 @@ namespace WinApp.Code
                                 battleValues.Add(new BattleValue() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
                                 battleValues.Add(new BattleValue() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
                                 // Rating values, more adds later
-                                Rating.WNHelper.RatingParameters rp = new Rating.WNHelper.RatingParameters();
-                                rp.DEF = (int)token_personel.SelectToken("droppedCapturePoints");
+                                Rating.WNHelper.RatingParameters rp = new Rating.WNHelper.RatingParameters
+                                {
+                                    DEF = (int)token_personel.SelectToken("droppedCapturePoints")
+                                };
                                 battleValues.Add(new BattleValue() { colname = "def", value = rp.DEF }); // override def - might be above 100
                                                                                                          // field returns null
                                 if (getFortResource)
@@ -611,7 +612,7 @@ namespace WinApp.Code
                                     battleValues.Add(new BattleValue() { colname = "dmgBlocked", value = (int)token_personel.SelectToken("damageBlockedByArmor") });
                                     battleValues.Add(new BattleValue() { colname = "potentialDmgReceived", value = (int)token_personel.SelectToken("potentialDamageReceived") });
                                     //Ratings
-                                    rp.TIER = TankHelper.GetTankTier(tankId);
+                                    rp.TIER = await TankHelper.GetTankTier(tankId);
                                     rp.BATTLES = 1;
                                     double eff = Code.Rating.EFF.EffBattle(tankId, rp);
                                     battleValues.Add(new BattleValue() { colname = "EFF", value = Math.Round(eff,0) });
@@ -619,8 +620,7 @@ namespace WinApp.Code
                                     battleValues.Add(new BattleValue() { colname = "WN7", value = Math.Round(wn7, 0) });
                                     double wn8 = Code.Rating.WN8.CalcBattle(tankId, rp);
                                     battleValues.Add(new BattleValue() { colname = "WN8", value = Math.Round(wn8, 0) });
-                                    double wn9maxhist = 0; // not in used for battles
-                                    double wn9 = Code.Rating.WN9.CalcBattle(tankId, rp, out wn9maxhist);
+                                    double wn9 = (await Rating.WN9.CalcBattle(tankId, rp)).WN9;
                                     battleValues.Add(new BattleValue() { colname = "WN9", value = Math.Round(wn9, 0) });
                                 }
                                 // insert data
@@ -639,7 +639,7 @@ namespace WinApp.Code
                                 sql = "update battle set " + fields + " arenaUniqueID=@arenaUniqueID where id=@battleId";
                                 DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Float);
-                                await DB.ExecuteNonQueryAsync(sql);
+                                await DB.ExecuteNonQuery(sql);
 
                                 // Add Battle Players *******************************
 
@@ -694,27 +694,29 @@ namespace WinApp.Code
                                         bool foundPlayerClan = false;
                                         foreach (ClanInfo item in clanCount)
                                         {
-                                            if (item.clanDBID == newPlayer.clanDBID)
+                                            if (item.ClanDBID == newPlayer.clanDBID)
                                             {
-                                                item.count++;
+                                                item.Count++;
                                                 foundPlayerClan = true;
                                             }
                                         }
                                         if (!foundPlayerClan)
                                         {
                                             clanCount.Add(new ClanInfo() {
-                                                clanDBID = newPlayer.clanDBID,
-                                                clanAbbrev = newPlayer.clanAbbrev,
-                                                count = 1
+                                                ClanDBID = newPlayer.clanDBID,
+                                                ClanAbbrev = newPlayer.clanAbbrev,
+                                                Count = 1
                                             });
                                         }
                                     }
                                     if (getPlatoon && newPlayer.platoonID > 0) // Get platoon info
                                     {
-                                        Platoon p = new Platoon();
-                                        p.platoonID = newPlayer.platoonID;
-                                        p.team = newPlayer.team;
-                                        p.platoonNum = 0;
+                                        Platoon p = new Platoon
+                                        {
+                                            platoonID = newPlayer.platoonID,
+                                            team = newPlayer.team,
+                                            platoonNum = 0
+                                        };
                                         platoon.Add(p);
                                     }
                                 }
@@ -865,7 +867,7 @@ namespace WinApp.Code
                                         teamFortResources[player.team] += fortResourceValue;
                                         // Create SQL and update db
                                         sql = "insert into battlePlayer (" + fields + ") values (" + values + ")";
-                                        bool success = await DB.ExecuteNonQueryAsync(sql,false);
+                                        bool success = await DB.ExecuteNonQuery(sql,false);
                                         if (!success)
                                         {
                                             // Add tank if missing
@@ -873,7 +875,7 @@ namespace WinApp.Code
                                             if (!TankHelper.TankExists(tankId))
                                             {
                                                 await TankHelper.CreateUnknownTank(tankId, "Unknown");
-                                                await DB.ExecuteNonQueryAsync(sql, false);
+                                                await DB.ExecuteNonQuery(sql, false);
                                             }
                                         }
                                     }
@@ -916,16 +918,16 @@ namespace WinApp.Code
                                 ClanInfo foundClan = new ClanInfo();
                                 foreach (ClanInfo item in clanCount)
                                 {
-                                    if (item.count > maxClanCount)
+                                    if (item.Count > maxClanCount)
                                     {
-                                        maxClanCount = item.count;
+                                        maxClanCount = item.Count;
                                         foundClan = item;
                                     }
                                 }
                                 if (getEnemyClan && maxClanCount > 0)
                                 {
-                                    DB.AddWithValue(ref sql, "@enemyClanAbbrev", foundClan.clanAbbrev, DB.SqlDataType.VarChar);
-                                    DB.AddWithValue(ref sql, "@enemyClanDBID", foundClan.clanDBID, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@enemyClanAbbrev", foundClan.ClanAbbrev, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@enemyClanDBID", foundClan.ClanDBID, DB.SqlDataType.Int);
                                 }
                                 else
                                 {
@@ -957,7 +959,7 @@ namespace WinApp.Code
                                     DB.AddWithValue(ref sql, "@killedByAccountId", killedByAccountId, DB.SqlDataType.Int);
                                 }
                                 // Max Battle Tier
-                                int? maxBattleTier = GetMaxBattleTier(battleId);
+                                int? maxBattleTier = await GetMaxBattleTier(battleId);
                                 if (maxBattleTier == null)
                                     DB.AddWithValue(ref sql, "@maxBattleTier", DBNull.Value, DB.SqlDataType.Int);
                                 else
@@ -973,7 +975,7 @@ namespace WinApp.Code
                                 DB.AddWithValue(ref sql, "@fragsenemy", fragsCount[enemyTeam], DB.SqlDataType.Int);
                                 // Add Battle ID and run sql if any values
                                 DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-                                await DB.ExecuteNonQueryAsync(sql);
+                                await DB.ExecuteNonQuery(sql);
                                 // If grinding, adjust grogress
                                 if (grindXP > 0)
                                     await GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));
@@ -995,13 +997,12 @@ namespace WinApp.Code
                                     if (fi != null)
                                     {
                                         string replayFilename = fi.FullName;
-                                        string msg = "";
-                                        bool uploadOK = vBAddictHelper.UploadReplay(battleId, replayFilename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out msg);
-                                        if (uploadOK)
-                                            Log.AddToLogBuffer(" > > Uploaded replay to vBAddict successfully: " + msg);
+                                        var uploadResult = await vBAddictHelper.UploadReplay(battleId, replayFilename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token);
+                                        if (uploadResult.Success)
+                                            Log.AddToLogBuffer(" > > Uploaded replay to vBAddict successfully: " + uploadResult.Message);
                                         else
                                         {
-                                            Log.AddToLogBuffer(" > > Error uploading replay to vBAddict: " + msg);
+                                            Log.AddToLogBuffer(" > > Error uploading replay to vBAddict: " + uploadResult.Message);
                                         }
                                     }
                                 }
@@ -1045,7 +1046,7 @@ namespace WinApp.Code
                 if (battleListSuccess.Count > 0)
                 {
                     string uploadResult = await new Services.AppBattleUpload().RunForBattles(battleListSuccess);
-                    Log.LogToFile($" > > Battle upload status: {uploadResult}");
+                    await Log.LogToFile($" > > Battle upload status: {uploadResult}");
                 }
 
                 // Result logging
@@ -1058,12 +1059,12 @@ namespace WinApp.Code
                     else
                         Log.AddToLogBuffer(" > > " + processed.ToString() + " files checked, " + added + " files added as battle result");
                 }
-                Log.WriteLogBuffer();
+                await Log.WriteLogBuffer();
             }
             catch (Exception ex)
             {
                 Log.AddToLogBuffer(" > > Battle file analyze terminated for file: " + lastFile);
-                Log.LogToFile(ex, "Battle result file analyze process terminated due to faulty file structure or content");
+                await Log.LogToFile(ex, "Battle result file analyze process terminated due to faulty file structure or content");
                 deleteLastFileOnError = true;
             }
             try
@@ -1098,18 +1099,21 @@ namespace WinApp.Code
                 "WHERE  (playerTank.id = @playerTankId) " +
                 "GROUP BY tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, gCompleationDate, gProgressGoal ";
             DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-            DataRow grinding = DB.FetchData(sql).Rows[0];
+            DataTable dt = await DB.FetchData(sql);
+            DataRow grinding = dt.Rows[0];
             // Get parameters for grinding calc
-            GrindingHelper.Progress progress = new GrindingHelper.Progress();
-            progress.ProgressXP = Convert.ToInt32(grinding["gProgressXP"]) + XP; // Added XP to previous progress
-            progress.TargetXP = Convert.ToInt32(grinding["gGrindXP"]);
-            progress.Battles = Convert.ToInt32(grinding["battles"]);
-            progress.Wins = Convert.ToInt32(grinding["wins"]);
-            progress.TotalXP = Convert.ToInt32(grinding["totalXP"]);
-            progress.AvgXP = Convert.ToInt32(grinding["avgXP"]);
-            // Set current progress
-            progress.ProgressGoal = Convert.ToInt32(grinding["gProgressGoal"]);
-            progress.CompleationDate = null;
+            GrindingHelper.Progress progress = new GrindingHelper.Progress
+            {
+                ProgressXP = Convert.ToInt32(grinding["gProgressXP"]) + XP, // Added XP to previous progress
+                TargetXP = Convert.ToInt32(grinding["gGrindXP"]),
+                Battles = Convert.ToInt32(grinding["battles"]),
+                Wins = Convert.ToInt32(grinding["wins"]),
+                TotalXP = Convert.ToInt32(grinding["totalXP"]),
+                AvgXP = Convert.ToInt32(grinding["avgXP"]),
+                // Set current progress
+                ProgressGoal = Convert.ToInt32(grinding["gProgressGoal"]),
+                CompleationDate = null
+            };
             if (grinding["gCompleationDate"] != DBNull.Value)
                 progress.CompleationDate = Convert.ToDateTime(grinding["gCompleationDate"]);
             progress.BtlPerDay = Convert.ToInt32(grinding["gBattlesDay"]);
@@ -1129,13 +1133,22 @@ namespace WinApp.Code
             DB.AddWithValue(ref sql, "@CompleationDate", new DateTime(date.Year, date.Month, date.Day), DB.SqlDataType.DateTime);
             DB.AddWithValue(ref sql, "@BattlesDay", progress.BtlPerDay, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
         }
 
-        private static bool ConvertBattleUsingPython(string filename, out bool deleteFile)
+        private class ConvBtlUsingPythonResult
         {
-            bool ok = false;
-            deleteFile = false;
+            public bool Success { get; set; }
+            public bool DeleteFile { get; set; }
+        }
+
+        private async static Task<ConvBtlUsingPythonResult> ConvertBattleUsingPython(string filename)
+        {
+            ConvBtlUsingPythonResult result = new ConvBtlUsingPythonResult()
+            {
+                Success = false,
+                DeleteFile = false
+            };
             // Locate Python script
             string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
             string battle2jsonScript = appPath + "\\dossier2json\\wotbr2j.py"; // python-script for converting dossier file
@@ -1152,14 +1165,19 @@ namespace WinApp.Code
                         //ipyrun.main();
 
                         Log.AddToLogBuffer(" > > Starting to converted battle DAT-file to JSON file: " + filename);
-                        var argv = new List();
-                        argv.Add(battle2jsonScript); // Have to add filename to run as first arg
-                        argv.Add(filename);
-                        argv.Add("-f");
+                        var argv = new List
+                        {
+                            battle2jsonScript, // Have to add filename to run as first arg
+                            filename,
+                            "-f"
+                        };
 
-                        PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
-                        ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
-                        dynamic result = scope.GetVariable("main")();
+                        await Task.Run(() =>
+                        {
+                            PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
+                            ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
+                            //dynamic scopeResult = scope.GetVariable("main")();
+                        });
 
                         //ScriptRuntimeSetup setup = new ScriptRuntimeSetup();
                         //setup.DebugMode = true;
@@ -1172,18 +1190,18 @@ namespace WinApp.Code
                         //script.Execute(scope);
 
                         Log.AddToLogBuffer(" > > > Converted battle DAT-file to JSON file: " + filename);
-                        ok = true;
-                        deleteFile = true;
+                        result.Success = true;
+                        result.DeleteFile = true;
                     }
                     catch (Exception ex)
                     {
                         Log.AddToLogBuffer(" > > IronPython exception thrown converted battle DAT-file to JSON file: " + filename);
-                        Log.LogToFile(ex, "ConvertBattleUsingPython exception running: " + battle2jsonScript + " with args: " + filename + " -f");
+                        await Log.LogToFile(ex, "ConvertBattleUsingPython exception running: " + battle2jsonScript + " with args: " + filename + " -f");
                         // Cleanup
-                        deleteFile = true;
+                        result.DeleteFile = true;
                     }
                     Log.AddIpyToLogBuffer(PythonEngine.ipyOutput);
-                    Log.WriteLogBuffer();
+                    await Log.WriteLogBuffer();
                 }
                 finally
                 {
@@ -1194,10 +1212,10 @@ namespace WinApp.Code
             {
                 Log.AddToLogBuffer(" > > Unable to lock Python environment for Dossier DAT-file conversion");
             }
-            return ok;
+            return result;
         }
 
-        private static int? GetMaxBattleTier(int battleId)
+        private async static Task<int?> GetMaxBattleTier(int battleId)
         {
             // TODO
             int? maxBattleTier = null;
@@ -1205,7 +1223,7 @@ namespace WinApp.Code
                 "select max(tank.tier) " +
                 "from battlePlayer left join tank on battleplayer.tankid=tank.id " +
                 "where battleid=" + battleId;
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             if (dt.Rows.Count > 0)
                 maxBattleTier = Convert.ToInt32(dt.Rows[0][0]);
             return maxBattleTier;

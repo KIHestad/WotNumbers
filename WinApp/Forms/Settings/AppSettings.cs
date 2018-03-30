@@ -136,15 +136,15 @@ namespace WinApp.Forms.Settings
             {
                 case AppSettingsHelper.Tabs.Main:
                     Forms.Settings.AppSettingsMain controlAppSettingsMain = (Forms.Settings.AppSettingsMain)lastSelectedControl;
-                    controlAppSettingsMain.SaveChanges();
+                    await controlAppSettingsMain.SaveChanges();
                     break;
                 case AppSettingsHelper.Tabs.Layout:
                     Forms.Settings.AppSettingsLayout controlAppSettingsLayout = (Forms.Settings.AppSettingsLayout)lastSelectedControl;
-                    controlAppSettingsLayout.SaveChanges();
+                    await controlAppSettingsLayout.SaveChanges();
                     break;
                 case AppSettingsHelper.Tabs.WoTGameClient:
                     Forms.Settings.AppSettingsWoT controlAppSettingsWoT = (Forms.Settings.AppSettingsWoT)lastSelectedControl;
-                    controlAppSettingsWoT.SaveChanges();
+                    await controlAppSettingsWoT.SaveChanges();
                     break;
                 case AppSettingsHelper.Tabs.vBAddict:
                     Forms.Settings.AppSettingsvBAddict controlAppSettingsvBAddict = (Forms.Settings.AppSettingsvBAddict)lastSelectedControl;
@@ -156,7 +156,7 @@ namespace WinApp.Forms.Settings
                     break;
                 case AppSettingsHelper.Tabs.Options:
                     Forms.Settings.AppSettingsOptions controlAppSettingsOptions = (Forms.Settings.AppSettingsOptions)lastSelectedControl;
-                    controlAppSettingsOptions.SaveChanges();
+                    await controlAppSettingsOptions.SaveChanges();
                     break;
                 
             }

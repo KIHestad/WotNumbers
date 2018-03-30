@@ -75,7 +75,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				string msg =
                     "Could not connect to " + url + ", please check your Internet access." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
@@ -87,14 +87,14 @@ namespace WinApp.Code
 			// Execute update statements
 			try
 			{
-                await DB.ExecuteNonQueryAsync(sql, true, true);
+                await DB.ExecuteNonQuery(sql, true, true);
 				sql = "update _version_ set version=@version where id=3;";
                 DB.AddWithValue(ref sql, "@version", WN9Version * 100, DB.SqlDataType.Float);
-                await DB.ExecuteNonQueryAsync(sql, true, true);
+                await DB.ExecuteNonQuery(sql, true, true);
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				MsgBox.Show(ex.Message, "Error occured", parentForm);
                 return "";
             }

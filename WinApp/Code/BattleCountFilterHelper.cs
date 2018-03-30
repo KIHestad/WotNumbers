@@ -12,22 +12,24 @@ namespace WinApp.Code
 
         #region battle count filter menu
 
-        public static DataTable Get()
+        public async static Task<DataTable> Get()
         {
             string sql = "SELECT id, count FROM battleFilterCount ORDER BY count";
-            return DB.FetchData(sql);
+            return await DB.FetchData(sql);
         }
 
-        public static DataRow Get(string id)
+        public async static Task<DataRow> Get(string id)
         {
             string sql = "SELECT id, count FROM battleFilterCount WHERE id=@id ORDER BY count";
             DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
-            return DB.FetchData(sql).Rows[0];
+            DataTable dt = await DB.FetchData(sql);
+            return dt.Rows[0];
         }
 
-        public static int GetBattleLimitFromid(string id)
+        public async static Task<int> GetBattleLimitFromid(string id)
         {
-            return Convert.ToInt32(Get(id)["count"]);
+            DataRow dr = await Get(id);
+            return Convert.ToInt32(dr["count"]);
         }
 
         public async static Task Save(string id, int newCount)
@@ -35,7 +37,7 @@ namespace WinApp.Code
             string sql = "UPDATE battleFilterCount SET count = @count WHERE id = @id";
             DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@count", newCount, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
         }
 
         #endregion
@@ -45,10 +47,10 @@ namespace WinApp.Code
         {
             // reset battles
             string sql = "UPDATE battle SET battlesCountTotal = NULL; ";
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
             // get battles from other filters
             sql = "SELECT battle.id, battle.battlesCount " + from + where + " ORDER BY battle.battleTime DESC";
-            DataTable dtBattle = DB.FetchData(sql);
+            DataTable dtBattle = await DB.FetchData(sql);
             string sqlUpdate = "";
             int rowCount = 0;
             int rowTotal = dtBattle.Rows.Count;
@@ -59,7 +61,7 @@ namespace WinApp.Code
                 sqlUpdate += "UPDATE battle SET battlesCountTotal=1 WHERE id=" + dtBattle.Rows[rowCount]["id"] + ";";
                 rowCount++;
             }
-            await DB.ExecuteNonQueryAsync(sqlUpdate, false, true);
+            await DB.ExecuteNonQuery(sqlUpdate, false, true);
         }
         #endregion
         

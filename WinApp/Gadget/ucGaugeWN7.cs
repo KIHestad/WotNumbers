@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using WinApp.Code;
 using System.Diagnostics;
 using WinApp.Code.FormLayout;
+using System.Threading.Tasks;
 
 namespace WinApp.Gadget
 {
@@ -27,7 +28,7 @@ namespace WinApp.Gadget
 			SelectTimeRangeButton();
 		}
 
-		public void DataBind()
+		public async Task DataBind()
 		{
 			// Init Gauge
 			aGauge1.ValueMin = 0;
@@ -58,7 +59,7 @@ namespace WinApp.Gadget
             // Overall stats team
             if (_battleTimeSpan == GadgetHelper.TimeRangeEnum.Total)
 			{
-                end_val = Code.Rating.WN7.WN7total();
+                end_val = await Code.Rating.WN7.WN7total();
 			}
 			else // Check time range
 			{
@@ -92,7 +93,7 @@ namespace WinApp.Gadget
 					default:
 						break;
 				}
-                end_val = Code.Rating.WN7.WN7battle(battleTimeFilter, maxBattles);
+                end_val = await Code.Rating.WN7.WN7battle(battleTimeFilter, maxBattles);
 			}
 			// Show in center text
 			aGauge1.CenterText = Math.Round(end_val, 2).ToString();
@@ -156,7 +157,7 @@ namespace WinApp.Gadget
 			aGauge1.Value = (float)gaugeVal;
 		}
 
-		private void btnTime_Click(object sender, EventArgs e)
+		private async void btnTime_Click(object sender, EventArgs e)
 		{
 			BadButton b = (BadButton)sender;
 			switch (b.Name)
@@ -168,7 +169,7 @@ namespace WinApp.Gadget
                 case "btnToday": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeToday; break;
 			}
 			SelectTimeRangeButton();
-			DataBind();
+            await DataBind();
 		}
 
 		private void SelectTimeRangeButton()

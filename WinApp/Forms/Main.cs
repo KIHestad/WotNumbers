@@ -24,8 +24,7 @@ namespace WinApp.Forms
 		#region Init Content and Layout
 
 		private bool Init = true;
-		private bool LoadConfigOK = true;
-		private string LoadConfigMsg = "";
+		private ConfigData.Result LoadConfigDataResult = null;
 		private ConfigData.PosSize mainFormPosSize = new ConfigData.PosSize();
 		private int currentPlayerId = 0;
 		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
@@ -48,14 +47,14 @@ namespace WinApp.Forms
 		public Main()
 		{
             InitializeComponent();
-			// Get Config
-			LoadConfigOK = Config.GetConfig(out LoadConfigMsg);
-			currentPlayerId = Config.Settings.playerId;
-			mainFormPosSize = Config.Settings.posSize;
         }
 
-        private void Main_Load(object sender, EventArgs e)
+        private async void Main_Load(object sender, EventArgs e)
 		{
+            // Get Config
+            LoadConfigDataResult = await Config.GetConfig();
+            currentPlayerId = Config.Settings.playerId;
+            mainFormPosSize = Config.Settings.posSize;
             // Get PosSize
             if (mainFormPosSize != null)
             {
@@ -104,9 +103,9 @@ namespace WinApp.Forms
             mHomeViewEditMode.Visible = true;
             mBattleGroup.Visible = false;
             // Check config
-            if (DB.CheckConnection(false))
+            if (await DB.CheckConnection(false))
             {
-                TankHelper.GetAllLists();
+                await TankHelper.GetAllLists();
                 // Check DB Version an dupgrade if needed
                 bool versionOK = await DBVersion.CheckForDbUpgrade(this);
             }
@@ -178,7 +177,7 @@ namespace WinApp.Forms
 
                 // Start WoT if autoRun is enabled
                 if (Config.Settings.wotGameAutoStart)
-                    StartWoTGame();
+                    await StartWoTGame();
                 // Ready to draw form
                 Init = false;
 
@@ -189,7 +188,7 @@ namespace WinApp.Forms
                 PythonEngine.CreateEngine();
 
                 // Startup settings
-                if (!LoadConfigOK)
+                if (!LoadConfigDataResult.Success)
                 {
                     Log.AddToLogBuffer(" > No config MsgBox", true);
                     MsgBox.Button answer = Code.MsgBox.Show(
@@ -199,12 +198,12 @@ namespace WinApp.Forms
                         Environment.NewLine + Environment.NewLine,
                         "Welcome to Wot Numbers", MsgBox.Type.OKCancel, this);
                     if (answer == MsgBox.Button.OK)
-                        AutoSetup();
-                    if (!LoadConfigOK)
+                        await AutoSetup();
+                    if (!LoadConfigDataResult.Success)
                     {
                         Config.Settings.dossierFileWathcherRun = 0;
-                        SetListener(false);
-                        Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
+                        await SetListener(false);
+                        MsgBox.Show(LoadConfigDataResult.Message, "Could not load config data", this);
                         Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.Main);
                         frm.ShowDialog(this);
                     }
@@ -212,12 +211,13 @@ namespace WinApp.Forms
 
                 // Init form
                 SetFormTitle();
-                SetListener(false);
+                await SetListener(false);
+                await MainSettings.SetDefaultGridFilters();
                 BattleChartHelper.Settings = new BattleChartHelper.BattleChartSettings(); // Set default battle chart settings
                 // TODO: Set new blank current view, add feature for getting latest used favourite from config settings
                 BattleChartHelper.CurrentChartView = new List<BattleChartHelper.BattleChartItem>(); 
                 Code.Rating.WN9.SetTierAvgList();
-                if (DB.CheckConnection())
+                if (await DB.CheckConnection())
                 {
                     // Moved to Page Load - to run this and make sure db upgrades are done before app starts
                     // TankHelper.GetAllLists();
@@ -225,25 +225,25 @@ namespace WinApp.Forms
                     // bool versionOK = DBVersion.CheckForDbUpgrade(this);
 
                     // Add init items to Form
-                    SetFavListMenu();
+                    await SetFavListMenu();
                     // Check for res_mods folder
-                    WoThelper.CheckForNewResModsFolder();
+                    await WoThelper.CheckForNewResModsFolder();
                     // Get vBAddict settings
-                    vBAddictHelper.GetSettings();
+                    await vBAddictHelper.GetSettings();
                     // Get Images
                     ImageHelper.CreateTankImageTable();
-                    ImageHelper.LoadTankImages();
+                    await ImageHelper.LoadTankImages();
                     ImageHelper.CreateMasteryBageImageTable();
                     ImageHelper.CreateTankTypeImageTable();
                     ImageHelper.CreateNationImageTable();
                     ImageHelper.CheckedMenuIcon = imageListToolStrip.Images[0];
                     // Home view recent list
-                    GetHomeViewRecentList();
+                    await GetHomeViewRecentList();
                     mHomeView.Text = Config.Settings.currentHomeView;
                     // Battle Count Filter init 
-                    BattleCountFilterSet();
+                    await BattleCountFilterSet();
                     // Check if current Home View has gadgets, if not use default
-                    DataTable dtHomeView = DB.FetchData("select * from gadget");
+                    DataTable dtHomeView = await DB.FetchData("select * from gadget");
                     if (dtHomeView == null || dtHomeView.Rows.Count == 0)
                     {
                         string file = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\New_Default_Setup.json";
@@ -252,14 +252,13 @@ namespace WinApp.Forms
                         {
                             mHomeView.Text = "Default";
                             Config.Settings.currentHomeView = mHomeView.Text;
-                            string msg = "";
-                            Config.SaveConfig(out msg);
+                            await Config.SaveConfig();
                         }
                         else
                         {
                             await GadgetHelper.RemoveGadgetAll();
-                            HomeViewCreate("Could not load Home View");
-                            HomeViewRefresh("Refresh Home View");
+                            await HomeViewCreate("Could not load Home View");
+                            await HomeViewRefresh("Refresh Home View");
                         }
                     }
                     // Set current submenu checked
@@ -273,7 +272,7 @@ namespace WinApp.Forms
                         bool brrOK = true;
                         if (String.IsNullOrEmpty(Config.Settings.wotGameFolder))
                         {
-                            brrOK = BattleResultRetriever.IsWoTGameFolderOK();
+                            brrOK = await BattleResultRetriever.IsWoTGameFolderOK();
                             if (!brrOK)
                             {
                                 MsgBox.Show(
@@ -319,7 +318,7 @@ namespace WinApp.Forms
                 else
                 {
                     Config.Settings.dossierFileWathcherRun = 0;
-                    SetListener(false);
+                    await SetListener(false);
                     mAppSettings.Enabled = true;
                     mShowDbTables.Enabled = false;
                     StatusBarHelper.Message = "Database connection failed";
@@ -341,11 +340,11 @@ namespace WinApp.Forms
                 // Ready 
                 MainTheme.Cursor = Cursors.Default;
                 // Write log
-                Log.WriteLogBuffer();
+                await Log.WriteLogBuffer();
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
                 MsgBox.Show("Error occured initializing application:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine, "Startup error", this);
             }
 
@@ -526,7 +525,7 @@ namespace WinApp.Forms
 			dataGridMain.ContextMenuStrip = dataGridMainPopup;
 		}
 
-		private void AutoSetup()
+		private async Task AutoSetup()
 		{
 			// TODO:
 			// Autodetect dossier file from default location, save to config
@@ -537,16 +536,16 @@ namespace WinApp.Forms
 				Config.Settings.dossierFilePath = dossierFolder;
 				Form frm = new Forms.DatabaseNew(true);
 				frm.ShowDialog(this);
-				LoadConfigOK = AutoSetupHelper.AutoSetupCompleteOK;
-				if (LoadConfigOK)
+				LoadConfigDataResult.Success = AutoSetupHelper.AutoSetupCompleteOK;
+				if (LoadConfigDataResult.Success)
 				{
 					Config.Settings.dossierFileWathcherRun = 1;
-                    Config.SaveConfig(out string msg);
+                    await Config.SaveConfig();
                 }
 			}
 			else
 			{
-				LoadConfigMsg = "Could not locate dossier file path, please select manually from Application Settings.";
+                LoadConfigDataResult.Message = "Could not locate dossier file path, please select manually from Application Settings.";
 			}
 		}
 
@@ -644,7 +643,7 @@ namespace WinApp.Forms
                         string msg =
                             "New version is available: " + appStartupResult.ReleaseVersion.AppVersion + Environment.NewLine + Environment.NewLine +
                             "Click OK to go to the download site." + Environment.NewLine + Environment.NewLine;
-                        MsgBox.Show(msg, "Upgrade to new version reqired", MsgBox.Type.Close, this);
+                        MsgBox.Show(msg, "Upgrade to new version reqired", MsgBox.Type.OK, this);
                         Process.Start(appStartupResult.DownloadUrl);
                         this.Close();
                         Application.Exit();
@@ -688,7 +687,7 @@ namespace WinApp.Forms
                             MsgBox.Show(appStartupResult.ReleaseVersion.Message + Environment.NewLine + Environment.NewLine, "Message published " + Convert.ToDateTime(appStartupResult.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
                             // Save read message
                             Config.Settings.readMessage = DateTime.Now;
-                            Config.SaveConfig(out string msg);
+                            await Config.SaveConfig();
                         }
                         // Action: Run force wot api
                         if (appStartupResult.ReleaseVersion.RunWotApi != null && appStartupResult.ReleaseVersion.RunWotApi <= DateTime.Now) // Avoid running future planned updates
@@ -714,7 +713,7 @@ namespace WinApp.Forms
                             MsgBox.Show(appStartupResult.PilotVersion.Message + Environment.NewLine + Environment.NewLine, "Message to test pilot published " + Convert.ToDateTime(appStartupResult.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
                             // Save read message
                             Config.Settings.readMessage = DateTime.Now;
-                            Config.SaveConfig(out string msg);
+                            await Config.SaveConfig();
                         }
                         // Action: Run force wot api
                         if (appStartupResult.PilotVersion.RunWotApi != null && appStartupResult.PilotVersion.RunWotApi <= DateTime.Now) // Avoid running future planned updates
@@ -772,15 +771,15 @@ namespace WinApp.Forms
 					string msg = "Running initial battle fetch...";
 					if (DBVersion.RunDossierFileCheckWithForceUpdate)
 						msg = "Running initial battle fetch with force update all data...";
-					RunDossierFileCheck(msg, DBVersion.RunDossierFileCheckWithForceUpdate);
+                    await RunDossierFileCheck(msg, DBVersion.RunDossierFileCheckWithForceUpdate);
 				}
 
                 // Upload battles to website
                 string result = await new Services.AppBattleUpload().Run(DBVersion.RunUploadAllToWotNumWeb);
                 if (DBVersion.RunUploadAllToWotNumWeb)
-                    Log.LogToFile($" > > Battle upload to Wot Numbers webside for all battles done. Status: {result}");
+                    await Log.LogToFile($" > > Battle upload to Wot Numbers webside for all battles done. Status: {result}");
                 else
-                    Log.LogToFile($" > > Battle upload to Wot Numbers webside for new battles done. status: {result}");
+                    await Log.LogToFile($" > > Battle upload to Wot Numbers webside for new battles done. status: {result}");
                 // Start wot num web toolbar button pulsating
                 timerWotNumMenuItem.Interval = 20000;
                 timerWotNumMenuItem.Enabled = wotNumWebMenuItemPulsatingEnabled;
@@ -824,18 +823,21 @@ namespace WinApp.Forms
         private int status2DefaultColor = 200;
 		private int status2fadeColor = 200;
 		
+        public async Task GridViewRefresh()
+        {
+            if (!GridView.refreshRunning)
+            {
+                GridView.refreshRunning = true;
+                await ShowView("New battle data fetched, view refreshed");
+                if (notifyIcon.Visible)
+                    notifyIcon.ShowBalloonTip(1000);
+                GridView.refreshRunning = false;
+            }
+        }
 
 		private async void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
-			// New battle saved
-			if (!GridView.refreshRunning)
-			{
-				GridView.refreshRunning = true;
-                await ShowView("New battle data fetched, view refreshed");
-				if (notifyIcon.Visible)
-					notifyIcon.ShowBalloonTip(1000);
-				GridView.refreshRunning = false;
-			}
+            await GridViewRefresh();
 		}
 
         [DebuggerNonUserCode]
@@ -868,7 +870,7 @@ namespace WinApp.Forms
 		}
 
 		private bool Status2AutoEnabled = true;
-		private void SetStatus2(string txt = "")
+		public void SetStatus2(string txt = "")
 		{
 			if (Status2AutoEnabled)
 			{
@@ -903,7 +905,7 @@ namespace WinApp.Forms
 			Refresh();
 		}
 
-		private void SetListener(bool showStatus2Message = true)
+		private async Task SetListener(bool showStatus2Message = true)
 		{
 			mSettingsRun.Checked = (Config.Settings.dossierFileWathcherRun == 1);
 			if (Config.Settings.dossierFileWathcherRun == 1)
@@ -916,11 +918,11 @@ namespace WinApp.Forms
 			{
 				lblStatus1.Text = "Stopped";
 				notifyIcon.Text = "Wot Numbers - Stopped";
-				lblStatus1.ForeColor = System.Drawing.Color.DarkRed;
+				lblStatus1.ForeColor = Color.DarkRed;
 				
 			}
-			string result = dossier2json.UpdateDossierFileWatcher(this);
-			Battle2json.UpdateBattleResultFileWatcher();
+			string result = await Dossier2json.UpdateDossierFileWatcher(this);
+			await Battle2json.UpdateBattleResultFileWatcher();
 			SetFormBorder();
 			if (showStatus2Message)
 				SetStatus2(result);
@@ -944,7 +946,7 @@ namespace WinApp.Forms
 
 		#region Resize, Move or Close Form
 
-		private void Main_FormClosing(object sender, FormClosingEventArgs e)
+		private async void Main_FormClosing(object sender, FormClosingEventArgs e)
 		{
             // Check for running backup if the database backup if SQLite db, period is greater than zero and file path added
             if (Config.Settings.databaseBackupPeriod > 0 &&
@@ -965,11 +967,10 @@ namespace WinApp.Forms
             notifyIcon.Visible = false;
             // Save config to save current screen pos and size
             Config.Settings.posSize.WindowState = this.WindowState;
-			string msg = "";
-			Config.SaveConfig(out msg);
+			await Config.SaveConfig();
 			// Log exit
 			Log.AddToLogBuffer("// Application Exit", true);
-			Log.WriteLogBuffer();
+			await Log.WriteLogBuffer();
 		}
 
 		private void Main_Resize(object sender, EventArgs e)
@@ -1173,8 +1174,8 @@ namespace WinApp.Forms
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Tank View...";
 						mColumnSelect.ToolTipText = "Select Tank View";
-						// Get Column Setup List - also finds correct tank filter/fav list
-						SetColListMenu();
+                        // Get Column Setup List - also finds correct tank filter/fav list
+                        await SetColListMenu();
 						// Get Battle mode
 						SetBattleModeMenu();
 						// Add datagrid context menu (right click on datagrid)
@@ -1210,8 +1211,8 @@ namespace WinApp.Forms
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Battle View...";
 						mColumnSelect.ToolTipText = "Select Battle View";
-						// Get Column Setup List  - also finds correct tank filter/fav list
-						SetColListMenu();
+                        // Get Column Setup List  - also finds correct tank filter/fav list
+                        await SetColListMenu();
 						// Get Battle mode
 						SetBattleModeMenu();
 						// Add datagrid context menu (right click on datagrid)
@@ -1248,7 +1249,7 @@ namespace WinApp.Forms
                         mColumnSelect_Edit.Text = "Edit Map View...";
                         mColumnSelect.ToolTipText = "Select Map View";
                         // Get Column Setup List  - also finds correct tank filter/fav list
-                        SetColListMenu();
+                        await SetColListMenu();
                         // Get Battle mode
                         SetBattleModeMenu();
                         // Add datagrid context menu (right click on datagrid)
@@ -1283,7 +1284,7 @@ namespace WinApp.Forms
 						if (runState == 1)
 						{
 							Config.Settings.dossierFileWathcherRun = 0;
-							SetListener();
+                            await SetListener();
 						}
 						currentPlayerId = Config.Settings.playerId;
 						SetFormTitle();
@@ -1292,7 +1293,7 @@ namespace WinApp.Forms
 						if (runState != Config.Settings.dossierFileWathcherRun)
 						{
 							Config.Settings.dossierFileWathcherRun = runState;
-							SetListener();
+                            await SetListener();
 						}
 					}
 					switch (MainSettings.View)
@@ -1301,15 +1302,15 @@ namespace WinApp.Forms
 							// New home view
 							if (!homeViewCreated)
 							{
-								HomeViewCreate("Creating Home View...");
+                                await HomeViewCreate("Creating Home View...");
 								homeViewCreated = true;
 							}
 							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Home view selected";
-							HomeViewRefresh(Status2Message);
+                            await HomeViewRefresh(Status2Message);
 							break;
 						case GridView.Views.Tank:
 							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Tank view selected";
-							GridShowTank(Status2Message);
+                            await GridShowTank(Status2Message);
 							break;
 						case GridView.Views.Battle:
 							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Battle view selected";
@@ -1326,7 +1327,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				if (Config.Settings.showDBErrors)
 					MsgBox.Show(ex.Message + Environment.NewLine + Environment.NewLine + ex.InnerException, "Error initializing view", this);
 			}
@@ -1337,7 +1338,7 @@ namespace WinApp.Forms
 
 		#region Menu Items: Col List
 
-		private void SetColListMenu()
+		private async Task SetColListMenu()
 		{
 			// Hide and uncheck all colum setup list menu items
 			for (int i = 1; i <= 15; i++)
@@ -1349,7 +1350,7 @@ namespace WinApp.Forms
 			// Add colum lists according to database
 			string sql = "select id, name, position from columnList where colType=@colType and position is not null order by position; ";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+			DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
 				int menuItemNum = 1;
@@ -1380,7 +1381,7 @@ namespace WinApp.Forms
 			// Selected a colList from toolbar
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
 			// Get colListId for the selected colList
-			int newColListId = ColListHelper.GetColList(selectedMenu.Text);
+			int newColListId = await ColListHelper.GetColListId(selectedMenu.Text);
 			// Check if changed
 			if (MainSettings.GetCurrentGridFilter().ColListId != newColListId)
 			{
@@ -1395,7 +1396,7 @@ namespace WinApp.Forms
 				selectedMenu.Checked = true;
 				mColumnSelect.Text = selectedMenu.Text;
 				// Get this colList to find what favList to show
-				GridFilter.Settings newColListSettings = ColListHelper.GetSettingsForColList(newColListId);
+				GridFilter.Settings newColListSettings = await ColListHelper.GetSettingsForColList(newColListId);
 				// Save selected column setup list to current
 				GridFilter.Settings currentColListSettings = MainSettings.GetCurrentGridFilter();
 				currentColListSettings.ColListId = newColListId;
@@ -1419,7 +1420,7 @@ namespace WinApp.Forms
 		{
 			Form frm = new Forms.ColList();
 			frm.ShowDialog(this);
-			SetColListMenu(); // Refresh column setup list now
+            await SetColListMenu(); // Refresh column setup list now
             await ShowView("Refreshed grid after column setup change"); // Refresh grid now
 		}
 
@@ -1495,7 +1496,7 @@ namespace WinApp.Forms
 			mTankFilter.Text = s;
 		}
 		
-		private void SetFavListMenu()
+		private async Task SetFavListMenu()
 		{
 			// Uncheck favlist from menu
 			FavListMenuUncheck();
@@ -1508,7 +1509,7 @@ namespace WinApp.Forms
 			// Add favlist to menu
 			GridFilter.FavListShowType newShowType = GridFilter.FavListShowType.MyTanks;
 			string sql = "select * from favList where position is not null and name is not null order by position";
-			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+			DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
 				foreach (DataRow dr in dt.Rows)
@@ -1595,7 +1596,7 @@ namespace WinApp.Forms
 			// Selected favList from toolbar
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
 			// Get favListId for selected favList
-			int newFavListId = FavListHelper.GetId(selectedMenu.Text);
+			int newFavListId = await FavListHelper.GetId(selectedMenu.Text);
 			// Changed FavList
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 			gf.FavListId = newFavListId;
@@ -1851,8 +1852,8 @@ namespace WinApp.Forms
 			// Show fal list editor
 			Form frm = new Forms.FavList();
 			frm.ShowDialog(this);
-			// After fav list changes reload menu
-			SetFavListMenu(); // Reload fav list items
+            // After fav list changes reload menu
+            await SetFavListMenu(); // Reload fav list items
             await ShowView("Refreshed grid after fovourite tank list change"); // Refresh grid now
 		}
 
@@ -1860,10 +1861,10 @@ namespace WinApp.Forms
 
         #region Menu Items: Home View / Recent List
 
-        private void GetHomeViewRecentList()
+        private async Task GetHomeViewRecentList()
         {
             string sql = "SELECT * FROM homeViewRecent ORDER BY id DESC;";
-            DataTable dt = DB.FetchData(sql);
+            DataTable dt = await DB.FetchData(sql);
             int recentItemsCount = dt.Rows.Count;
             mHomeViewRecent1.Visible = (recentItemsCount > 0);
             mHomeViewRecent2.Visible = (recentItemsCount > 1);
@@ -1926,7 +1927,7 @@ namespace WinApp.Forms
                 MsgBox.Show("Please select a battle count filter first.");
                 return;
             }
-            DataRow dr = BattleCountFilterHelper.Get(id);
+            DataRow dr = await BattleCountFilterHelper.Get(id);
             string count = dr["count"].ToString();
             InputBox.ResultClass answer = InputBox.Show("Select battle count:", "Edit Battle Count Filter", count, this);
             if (answer.Button == InputBox.InputButton.OK)
@@ -1935,7 +1936,7 @@ namespace WinApp.Forms
                 if (Int32.TryParse(answer.InputText, out newCount))
                 {
                     await BattleCountFilterHelper.Save(id, newCount);
-                    BattleCountFilterSet(id);
+                    await BattleCountFilterSet(id);
                     await ShowView("Edited battle count filter: " + mBattlesCountSelected.Text);
                 }
                 else
@@ -1945,9 +1946,9 @@ namespace WinApp.Forms
             }
         }
 
-        private void BattleCountFilterSet(string id = "0")
+        private async Task BattleCountFilterSet(string id = "0")
         {
-            DataTable dt = BattleCountFilterHelper.Get();
+            DataTable dt = await BattleCountFilterHelper.Get();
             int menuId = 0;
             foreach (DataRow dr in dt.Rows)
             {
@@ -2533,7 +2534,7 @@ namespace WinApp.Forms
             }
         }
 
-		private void GridShowTank(string Status2Message)
+		private async Task GridShowTank(string Status2Message)
 		{
 			// Grid init placement
 			int gridAreaTop = 0; // Start below info panel
@@ -2542,15 +2543,9 @@ namespace WinApp.Forms
 			// Init
 			mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
 			mainGridFormatting = false;
-			if (!DB.CheckConnection(false)) return;
+			if (!await DB.CheckConnection(false)) return;
 			// Get Columns
-			string select = "";
-			List<ColListHelper.ColListClass> colList = new List<ColListHelper.ColListClass>();
-			int img;
-			int smallimg;
-			int contourimg;
-			int masterybadgeimg;
-			ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg, out masterybadgeimg);
+			var selectedColList = await ColListHelper.GetSelectedColumnList();
 			// Get Tank filter
 			string message = "";
 			string tankFilter = "";
@@ -2561,7 +2556,7 @@ namespace WinApp.Forms
 			string battleModeSQL = "";
             GetTankBattleMode(out battleModeSQL, out battleModeFilter);
 			// Get soring
-			GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
+			GridSortingHelper.Sorting sorting = await GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
 			// Default values for painting glyph as sort order direction on column header
 			if (sorting.ColumnName == "")
 			{
@@ -2586,12 +2581,12 @@ namespace WinApp.Forms
 			string sql = "";
 			if (MainSettings.GridFilterTank.BattleMode == GridFilter.BattleModeType.All)
 			{
-				// Use playerTankBattleTotalsView in stead of playerTankBattle to show totals
-				select = select.Replace("playerTankBattle", "playerTankBattleTotalsView");
+                // Use playerTankBattleTotalsView in stead of playerTankBattle to show totals
+                selectedColList.ColListItems.Select = selectedColList.ColListItems.Select.Replace("playerTankBattle", "playerTankBattleTotalsView");
 				sortOrder = sortOrder.Replace("playerTankBattle", "playerTankBattleTotalsView");
 				// Get SUM for playerTankBattle as several battleModes might appear
 				sql =
-					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id, tank.name as tank_name, playerTank.markOfMastery as mb_id " + Environment.NewLine +
+					"SELECT   " + selectedColList.ColListItems.Select + " playerTank.Id as player_Tank_Id, tank.id as tank_id, tank.name as tank_name, playerTank.markOfMastery as mb_id " + Environment.NewLine +
 					"FROM     tank LEFT JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId AND playerTank.playerId=@playerid INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
@@ -2607,7 +2602,7 @@ namespace WinApp.Forms
 			{
 				// Only gets one row from playerTankBattle for an explisit battleMode
 				sql =
-					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id, tank.name as tank_name, playerTank.markOfMastery as mb_id " + Environment.NewLine +
+					"SELECT   " + selectedColList.ColListItems.Select + " playerTank.Id as player_Tank_Id, tank.id as tank_id, tank.name as tank_name, playerTank.markOfMastery as mb_id " + Environment.NewLine +
 					"FROM     tank LEFT JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId AND playerTank.playerId=@playerid INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
@@ -2623,24 +2618,24 @@ namespace WinApp.Forms
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			// Set row height in template before rendering to fit images
 			dataGridMain.RowTemplate.Height = 23;
-			if (smallimg >= 0)
+			if (selectedColList.Smallimg >= 0)
 				dataGridMain.RowTemplate.Height = 31;
-			if (img >= 0)
+			if (selectedColList.Img >= 0)
 				dataGridMain.RowTemplate.Height = 60;
 			DataSet ds = new DataSet("DataSet");
 			DataTable dtTankData = new DataTable("TankData");
-			dtTankData = DB.FetchData(sql, Config.Settings.showDBErrors);
+			dtTankData = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			// If tank images add cols in datatable containing the image
-			if (contourimg + smallimg + img > -3)
+			if (selectedColList.Contourimg + selectedColList.Smallimg + selectedColList.Img > -3)
 			{
 				// Use ImageHelper to add columns in use
 				List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
-				if (contourimg >= 0)
-					imgPosition.Add(new ImageHelper.ImgColumns("Tank Icon", contourimg));
-				if (smallimg >= 0)
-					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image", smallimg));
-				if (img >= 0)
-					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image Large", img));
+				if (selectedColList.Contourimg >= 0)
+					imgPosition.Add(new ImageHelper.ImgColumns("Tank Icon", selectedColList.Contourimg));
+				if (selectedColList.Smallimg >= 0)
+					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image", selectedColList.Smallimg));
+				if (selectedColList.Img >= 0)
+					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image Large", selectedColList.Img));
 				// Sort images to get right position
 				imgPosition.Sort();
 				// Add columns
@@ -2652,20 +2647,20 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dtTankData.Rows)
 				{
 					int tankId = Convert.ToInt32(dr["tank_id"]);
-					if (contourimg >= 0)
+					if (selectedColList.Contourimg >= 0)
 						dr["Tank Icon"] = ImageHelper.GetTankImage(tankId, "contourimg");
-					if (smallimg >= 0)
+					if (selectedColList.Smallimg >= 0)
 						dr["Tank Image"] = ImageHelper.GetTankImage(tankId, "smallimg");
-					if (img >= 0)
+					if (selectedColList.Img >= 0)
 						dr["Tank Image Large"] = ImageHelper.GetTankImage(tankId, "img");
 				}
 			}
 			// If Mastery badge image add it
-			if (masterybadgeimg > -1)
+			if (selectedColList.Masterybadgeimg > -1)
 			{
 				// Use ImageHelper to add columns in use
 				List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
-				imgPosition.Add(new ImageHelper.ImgColumns("Mastery Badge", masterybadgeimg));
+				imgPosition.Add(new ImageHelper.ImgColumns("Mastery Badge", selectedColList.Masterybadgeimg));
 				// Sort images to get right position
 				imgPosition.Sort();
 				// Add column
@@ -2694,7 +2689,7 @@ namespace WinApp.Forms
                         if (dr["player_Tank_Id"] != DBNull.Value)
                         {
                             int playerTankId = Convert.ToInt32(dr["player_Tank_Id"]);
-                            dr["Battles Today"] = BattleHelper.GetBattleCount(playerTankId, battleTimeFilter);
+                            dr["Battles Today"] = await BattleHelper.GetBattleCount(playerTankId, battleTimeFilter);
                         }
                     }
                     dtTankData.AcceptChanges();
@@ -2715,7 +2710,7 @@ namespace WinApp.Forms
 			dataGridMain.Columns["mb_id"].Visible = false;
 			// Grid col size and formatting
 			int colNum = 0;
-			foreach (ColListHelper.ColListClass colListItem in colList)
+			foreach (ColListHelper.ColListItem colListItem in selectedColList.ColListItems.ColListItemList)
 			{
 				// Minimum widht and separator back color
 				if (colListItem.name.Length > 13 && colListItem.name.Substring(0, 13) == " - Separator ")
@@ -2777,20 +2772,14 @@ namespace WinApp.Forms
 				dataGridMain.DataSource = null;
 				int rowTotalsIndex = 0;
 				int rowAverageIndex = 0;
-				if (!DB.CheckConnection(false)) return;
+				if (!await DB.CheckConnection(false)) return;
 				// Find if grouping 
 				bool groupingActive = (!mBattleGroup_No.Checked);
 				bool groupingSum = (mBattleGroup_TankSum.Checked);
 				// Get Columns
-				string select = "";
-				List<ColListHelper.ColListClass> colList = new List<ColListHelper.ColListClass>();
-				int img;
-				int smallimg;
-				int contourimg;
-				int masterybadgeimg;
-				ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg, out masterybadgeimg, groupingActive, groupingSum);
+				var selectedColList = await ColListHelper.GetSelectedColumnList(groupingActive, groupingSum);
 				// Get soring
-				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
+				GridSortingHelper.Sorting sorting = await GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
 				// Default values for painting glyph as sort order direction on column header
 				if (sorting.ColumnHeader == "")
 				{
@@ -2877,13 +2866,13 @@ namespace WinApp.Forms
                 DB.AddWithValue(ref where, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
                 if (battleCountFilter)
                 {
-                    await BattleCountFilterHelper.SetBattleFilter(from, where, BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
+                    await BattleCountFilterHelper.SetBattleFilter(from, where, await BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
                     where = " WHERE battlesCountTotal = 1 ";
                 }
 
                 // Create SQL
                 string sql =
-					"SELECT " + select + " " + selectFixed + " " +
+					"SELECT " + selectedColList.ColListItems.Select + " " + selectFixed + " " +
 					from +
 					where +
                     groupBy + " " +
@@ -2891,21 +2880,21 @@ namespace WinApp.Forms
 				
                 // Get data
 				DataTable dt = new DataTable();
-				dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+				dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 
                 
 
 				// If images add cols in datatable containing the image
-				if (contourimg + smallimg + img > -3)
+				if (selectedColList.Contourimg + selectedColList.Smallimg + selectedColList.Img > -3)
 				{
 					// Use ImageHelper to add columns in use
 					List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
-					if (contourimg >= 0)
-						imgPosition.Add(new ImageHelper.ImgColumns("Tank Icon", contourimg));
-					if (smallimg >= 0)
-						imgPosition.Add(new ImageHelper.ImgColumns("Tank Image", smallimg));
-					if (img >= 0)
-						imgPosition.Add(new ImageHelper.ImgColumns("Tank Image Large", img));
+					if (selectedColList.Contourimg >= 0)
+						imgPosition.Add(new ImageHelper.ImgColumns("Tank Icon", selectedColList.Contourimg));
+					if (selectedColList.Smallimg >= 0)
+						imgPosition.Add(new ImageHelper.ImgColumns("Tank Image", selectedColList.Smallimg));
+					if (selectedColList.Img >= 0)
+						imgPosition.Add(new ImageHelper.ImgColumns("Tank Image Large", selectedColList.Img));
 					// Sort images to get right position
 					imgPosition.Sort();
 					// Add columns
@@ -2917,20 +2906,20 @@ namespace WinApp.Forms
 					foreach (DataRow dr in dt.Rows)
 					{
 						int tankId = Convert.ToInt32(dr["tank_id"]);
-						if (contourimg >= 0)
+						if (selectedColList.Contourimg >= 0)
 							dr["Tank Icon"] = ImageHelper.GetTankImage(tankId, "contourimg");
-						if (smallimg >= 0)
+						if (selectedColList.Smallimg >= 0)
 							dr["Tank Image"] = ImageHelper.GetTankImage(tankId, "smallimg");
-						if (img >= 0)
+						if (selectedColList.Img >= 0)
 							dr["Tank Image Large"] = ImageHelper.GetTankImage(tankId, "img");
 					}
 				}
 				// If Mastery badge image add it
-				if (masterybadgeimg > -1)
+				if (selectedColList.Masterybadgeimg > -1)
 				{
 					// Use ImageHelper to add columns in use
 					List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
-					imgPosition.Add(new ImageHelper.ImgColumns("Mastery Badge", masterybadgeimg));
+					imgPosition.Add(new ImageHelper.ImgColumns("Mastery Badge", selectedColList.Masterybadgeimg));
 					// Sort images to get right position
 					imgPosition.Sort();
 					// Add column
@@ -2977,7 +2966,7 @@ namespace WinApp.Forms
 					{ 
 						"ID", "Premium", "Mastery Badge", "Mastery Badge ID", "Battle Count" , "Platoon", "Killed By Player ID", "Enemy Clan ID"
 					};
-					foreach (ColListHelper.ColListClass colListItem in colList)
+					foreach (ColListHelper.ColListItem colListItem in selectedColList.ColListItems.ColListItemList)
 					{
 						if (colListItem.colType == "Int" || colListItem.colType == "Float")
 						{
@@ -2996,15 +2985,15 @@ namespace WinApp.Forms
 								}
 								if (count > 0)
                                     if (count > 1 && colListItem.name == "WN9") // Special calculation for WN8
-                                        rowAverage[colListItem.name] = Code.Rating.WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
+                                        rowAverage[colListItem.name] = (await Code.Rating.WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin)).WN9;
                                     else if (count > 1 && colListItem.name == "WN8") // Special calculation for WN8
-                                        rowAverage[colListItem.name] = Code.Rating.WN8.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
+                                        rowAverage[colListItem.name] = await Code.Rating.WN8.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
 									else if (count > 1 && colListItem.name == "WN7") // Special calculation for WN7
-                                        rowAverage[colListItem.name] =Code.Rating.WN7.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
+                                        rowAverage[colListItem.name] = await Code.Rating.WN7.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
 									else if (count > 1 && colListItem.name == "EFF") // Special calculation for EFF
-                                        rowAverage[colListItem.name] = Code.Rating.EFF.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
+                                        rowAverage[colListItem.name] = await Code.Rating.EFF.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
 									else if (count > 1 && colListItem.name == "Dmg C/R") // Special calculation Dmg C/R
-                                        rowAverage[colListItem.name] = Math.Round(CalcAvgDmgCR(battleTimeFilter, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+                                        rowAverage[colListItem.name] = Math.Round(await CalcAvgDmgCR(battleTimeFilter, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else
 										rowAverage[colListItem.name] = sum / count;
 								else
@@ -3057,7 +3046,7 @@ namespace WinApp.Forms
 						"Killed Count", "Victory" ,"Draw","Defeat","Survival Count","Clan","Company","Battle Count"
 					};
 
-					foreach (ColListHelper.ColListClass colListItem in colList)
+					foreach (ColListHelper.ColListItem colListItem in selectedColList.ColListItems.ColListItemList)
 					{
 						// Format column
 						if (colListItem.colType == "Int" || colListItem.colType == "Float")
@@ -3133,9 +3122,9 @@ namespace WinApp.Forms
 				}
 				// Set row height in template before rendering to fit images
 				dataGridMain.RowTemplate.Height = 23;
-				if (smallimg >= 0)
+				if (selectedColList.Smallimg >= 0)
 					dataGridMain.RowTemplate.Height = 31;
-				if (img >= 0)
+				if (selectedColList.Img >= 0)
 					dataGridMain.RowTemplate.Height = 60;
 				// populate datagrid 
 				dataGridMain.Columns.Clear();
@@ -3170,7 +3159,7 @@ namespace WinApp.Forms
 				dataGridMain.Columns["arenaUniqueID"].Visible = false;
 				dataGridMain.Columns["mb_id"].Visible = false;
 				// Format grid 
-				foreach (ColListHelper.ColListClass colListItem in colList)
+				foreach (ColListHelper.ColListItem colListItem in selectedColList.ColListItems.ColListItemList)
 				{
 					// MInimum width and separator back color
 					if (colListItem.name.Length > 13 && colListItem.name.Substring(0, 13) == " - Separator ")
@@ -3249,13 +3238,13 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				//throw;
 			}
 			
 		}
 
-		private double CalcAvgDmgCR(string battleTimeFilter, string battleMode, string tankFilter, string battleModeFilter, string tankJoin = "")
+		private async Task<double> CalcAvgDmgCR(string battleTimeFilter, string battleMode, string tankFilter, string battleModeFilter, string tankJoin = "")
 		{
 			double result = 0;
 			if (battleMode == "")
@@ -3266,7 +3255,7 @@ namespace WinApp.Forms
 					"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-			DataTable dtBattles = DB.FetchData(sql);
+			DataTable dtBattles = await DB.FetchData(sql);
 			if (dtBattles.Rows.Count > 0)
 			{
 				double dmg = Convert.ToDouble(dtBattles.Rows[0]["dmg"]);
@@ -3299,7 +3288,7 @@ namespace WinApp.Forms
                 mainGridFormatting = false;
                 dataGridMain.DataSource = null;
                 // Check
-                if (!DB.CheckConnection(false)) return;
+                if (!await DB.CheckConnection(false)) return;
 
                 // Show old maps?
                 string sqlWhereOldMaps = "";
@@ -3389,7 +3378,7 @@ namespace WinApp.Forms
                 DB.AddWithValue(ref from, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
                 if (battleCountFilter)
                 {
-                    await BattleCountFilterHelper.SetBattleFilter(from, where, BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
+                    await BattleCountFilterHelper.SetBattleFilter(from, where, await BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
                     from =
                     " FROM    map " +
                     "  INNER JOIN battle ON map.id = battle.mapId AND battle.battlesCountTotal = 1 " +
@@ -3411,7 +3400,7 @@ namespace WinApp.Forms
                     sqlOrderBy;
 
                 DataTable dt = new DataTable();
-                dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+                dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 
                 // Row count, battle count and calc frequency
                 int rowcount = dt.Rows.Count;
@@ -3449,7 +3438,7 @@ namespace WinApp.Forms
                         "FROM map " +
                         sqlWhereRemainingMaps + 
                         sqlOrderBy;
-                    DataTable dtRest = DB.FetchData(sqlRemainingMaps);
+                    DataTable dtRest = await DB.FetchData(sqlRemainingMaps);
                     if (dtRest.Rows.Count > 0)
                     {
                         if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver )
@@ -3495,7 +3484,7 @@ namespace WinApp.Forms
                 foreach (DataRow dr in dt.Rows)
                 {
                     int map_id = Convert.ToInt32(dr["Map_ID"]);
-                    Image img = ImageHelper.GetMap(map_id, imageIllustration, imageHeight);
+                    Image img = await ImageHelper.GetMap(map_id, imageIllustration, imageHeight);
                     dr["Image"] = img;
                     imgWidth = img.Width;
                 }
@@ -3575,7 +3564,7 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
                 MsgBox.Show(ex.Message, "Error on Map beta feature");
                 //throw;
             }
@@ -3664,9 +3653,9 @@ namespace WinApp.Forms
 				if (MainSettings.View != GridView.Views.Overall && MainSettings.View != GridView.Views.Map)
 				{
 					// Find colName
-					ColListHelper.ColListClass clc = ColListHelper.GetColListItem(dataGridMain.Columns[e.ColumnIndex].Name, MainSettings.View);
+					ColListHelper.ColListItem clc = await ColListHelper.GetColListItem(dataGridMain.Columns[e.ColumnIndex].Name, MainSettings.View);
 					// Find current sort
-					GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
+					GridSortingHelper.Sorting sorting = await GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
 					// Check if this is first sorting
 					if (sorting == null)
 						sorting = new GridSortingHelper.Sorting();
@@ -3714,7 +3703,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				if (Config.Settings.showDBErrors)
 					MsgBox.Show("Error on grid header mouse click event, see log file", "Grid error", this);
 
@@ -3726,7 +3715,7 @@ namespace WinApp.Forms
 
 		#region Grid Formatting
 
-		private void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+		private async void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
 			if (mainGridFormatting)
 			{
@@ -3845,7 +3834,7 @@ namespace WinApp.Forms
                             DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
                             // Get values
                             int playerTankId = Convert.ToInt32(dataGridMain["player_Tank_Id", e.RowIndex].Value);
-                            int victoryCount = BattleHelper.GetBattleVictoryCount(playerTankId, battleTimeFilter);
+                            int victoryCount = await BattleHelper.GetBattleVictoryCount(playerTankId, battleTimeFilter);
                             // add back color
                             if (victoryCount > 0)
                             {
@@ -3940,7 +3929,7 @@ namespace WinApp.Forms
 
 		private int dataGridRightClickCol = -1;
 		private int dataGridRightClickRow = -1;
-		private void dataGridMain_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+		private async void dataGridMain_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
 		{
 			try
 			{
@@ -3969,7 +3958,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex, "Error on grid mouse down event");
+				await Log.LogToFile(ex, "Error on grid mouse down event");
 				if (Config.Settings.showDBErrors)
 					MsgBox.Show("Error on grid mouse down event, see log file", "Grid error", this);
 			}
@@ -4079,7 +4068,7 @@ namespace WinApp.Forms
 				"from battle inner join playerTank on battle.playerTankId=playerTank.id inner join tank on playerTank.tankId=tank.Id " +
 				"where battle.Id=@id ";
 			DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+			DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
 				DateTime battleTime = Convert.ToDateTime(dt.Rows[0]["battleTime"]);
@@ -4096,7 +4085,7 @@ namespace WinApp.Forms
 						"delete from battleplayer where battleId=@battleId; " +
 						"delete from battle where id=@battleId; ";
 					DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.VarChar);
-					await DB.ExecuteNonQueryAsync(sql);
+					await DB.ExecuteNonQuery(sql);
                     await ShowView("Deleted battle, grid refreshed");
 				}
 			}
@@ -4141,7 +4130,7 @@ namespace WinApp.Forms
 		}
 
 
-		private void dataGridMainPopup_TankWN8_Click(object sender, EventArgs e)
+		private async void dataGridMainPopup_TankWN8_Click(object sender, EventArgs e)
 		{
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
@@ -4156,7 +4145,7 @@ namespace WinApp.Forms
 					"where t.expDmg is not null and ptb.battleMode='15' and pt.id=@playerTankId ";
 				DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				DataTable dt = DB.FetchData(sql);
+				DataTable dt = await DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
 				{
 					DataRow dr = dt.Rows[0];
@@ -4202,7 +4191,7 @@ namespace WinApp.Forms
 		private async void dataGridMainPopup_FilterOnTank_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			int tankId = TankHelper.GetTankID(playerTankId);
+			int tankId = await TankHelper.GetTankID(playerTankId);
 			if (tankId != 0)
 			{
 				//TankFilterMenuUncheck(true, true, true, false);
@@ -4240,26 +4229,26 @@ namespace WinApp.Forms
 			CreateDataGridContextMenu(); // Recreate context menu
 		}
 
-		private void dataGridMainPopup_FavListCreateNew_Click(object sender, EventArgs e)
+		private async void dataGridMainPopup_FavListCreateNew_Click(object sender, EventArgs e)
 		{
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
 				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-				int tankId = TankHelper.GetTankID(playerTankId);
+				int tankId = await TankHelper.GetTankID(playerTankId);
 				Form frm = new Forms.FavListNewEdit(0, "", tankId);
 				frm.ShowDialog(this);
-				// After fav list changes reload menu
-				SetFavListMenu(); // Reload fav list items
+                // After fav list changes reload menu
+                await SetFavListMenu(); // Reload fav list items
 			}
 		}
 
-		private void dataGridMainPopup_FavListAddTank_Click(object sender, EventArgs e)
+		private async void dataGridMainPopup_FavListAddTank_Click(object sender, EventArgs e)
 		{
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
 				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-				int tankId = TankHelper.GetTankID(playerTankId);
-				if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, true))
+				int tankId = await TankHelper.GetTankID(playerTankId);
+				if (tankId != 0 && await FavListHelper.CheckIfAnyFavList(this, tankId, true))
 				{
 					Form frm = new Forms.FavListAddRemoveTank(tankId, true);
 					frm.ShowDialog(this);
@@ -4272,8 +4261,8 @@ namespace WinApp.Forms
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
 				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-				int tankId = TankHelper.GetTankID(playerTankId);
-				if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, false))
+				int tankId = await TankHelper.GetTankID(playerTankId);
+				if (tankId != 0 && await FavListHelper.CheckIfAnyFavList(this, tankId, false))
 				{
 					Form frm = new FavListAddRemoveTank(tankId, false);
 					frm.ShowDialog(this);
@@ -4321,7 +4310,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex, "Error saving column resize: [" + colName +  "]");
+				await Log.LogToFile(ex, "Error saving column resize: [" + colName +  "]");
 				if (Config.Settings.showDBErrors)
 					MsgBox.Show("Error occured saving resized column, see log file.", "Error resizing column", this);
 			}
@@ -4382,15 +4371,15 @@ namespace WinApp.Forms
 			scrollCorner.Visible = (scrollX.ScrollNecessary && scrollY.ScrollNecessary);
 		}
 
-		private void scrollY_MouseDown(object sender, MouseEventArgs e)
+		private async void scrollY_MouseDown(object sender, MouseEventArgs e)
 		{
 			scrollingY = true;
-			ScrollY();
+            await ScrollY();
 		}
 
-		private void scrollY_MouseMove(object sender, MouseEventArgs e)
+		private async void scrollY_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (scrollingY) ScrollY();
+			if (scrollingY) await ScrollY();
 		}
 
 		private void scrollY_MouseUp(object sender, MouseEventArgs e)
@@ -4398,7 +4387,7 @@ namespace WinApp.Forms
 			scrollingY = false;
 		}
 
-		private void ScrollY()
+		private async Task ScrollY()
 		{
 			try
 			{
@@ -4408,13 +4397,13 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 			
 		}
 
-		private void dataGridMain_MouseWheel(object sender, MouseEventArgs e)
+		private async void dataGridMain_MouseWheel(object sender, MouseEventArgs e)
 		{
 			// Enable mouse wheel scrolling for datagrid
 			try
@@ -4451,15 +4440,15 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 		}
 
-		private void scrollX_MouseDown(object sender, MouseEventArgs e)
+		private async void scrollX_MouseDown(object sender, MouseEventArgs e)
 		{
 			scrollingX = true;
-			ScrollX();
+            await ScrollX();
 		}
 
 		private void scrollX_MouseUp(object sender, MouseEventArgs e)
@@ -4467,12 +4456,12 @@ namespace WinApp.Forms
 			scrollingX = false;
 		}
 
-		private void scrollX_MouseMove(object sender, MouseEventArgs e)
+		private async void scrollX_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (scrollingX) ScrollX();
+			if (scrollingX) await ScrollX();
 		}
 
-		private void ScrollX()
+		private async Task ScrollX()
 		{
 			try
 			{
@@ -4482,7 +4471,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -4516,7 +4505,7 @@ namespace WinApp.Forms
             if (runState == 1)
             {
                 Config.Settings.dossierFileWathcherRun = 0;
-                SetListener();
+                await SetListener();
             }
 
             string databaseFilename = Config.Settings.databaseFileName;
@@ -4536,7 +4525,7 @@ namespace WinApp.Forms
                 await RunWotApi(true);
 
             // Check if new database is created, database should be present but no player should exist
-            if (DB.CheckConnection(true))
+            if (await DB.CheckConnection(true))
             {
                 bool runDossier = false;
                 // If no player selected, or changed db type run dosser check
@@ -4571,11 +4560,11 @@ namespace WinApp.Forms
                 Config.Settings.dossierFileWathcherRun = runState;
             }
             // Update main form
-            SetListener();
+            await SetListener();
             currentPlayerId = Config.Settings.playerId;
             SetFormTitle();
-            SetFavListMenu(); // Reload fav list items
-            SetColListMenu(); // Refresh column setup list now
+            await SetFavListMenu(); // Reload fav list items
+            await SetColListMenu(); // Refresh column setup list now
             mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu); // Show vbAddict Player Profil toolbar if upload activated
 
             // Upload battles to wotnumweb
@@ -4599,12 +4588,12 @@ namespace WinApp.Forms
 
 		private async Task RunWotApi(bool autoRun = false)
 		{
-            double WNcurrentVer8 = DBVersion.GetWNVersion(8);
-            double WNcurrentVer9 = DBVersion.GetWNVersion(9);
+            double WNcurrentVer8 = await DBVersion.GetWNVersion(8);
+            double WNcurrentVer9 = await DBVersion.GetWNVersion(9);
             Form frm = new Forms.UpdateFromApi(autoRun);
 			frm.ShowDialog(this);
             //bool WNnewVer8 = (DBVersion.GetWNVersion(8) > WNcurrentVer8);
-            bool WNnewVer9 = (DBVersion.GetWNVersion(9) > WNcurrentVer9);
+            bool WNnewVer9 = (await DBVersion.GetWNVersion(9) > WNcurrentVer9);
             if (WNnewVer9) //
             {
                 await RunRecalcBattleWN8or9(true, false, WNnewVer9); // Disabled auto update WN8 because new version is set per day
@@ -4620,7 +4609,7 @@ namespace WinApp.Forms
 			if (runState == 1)
 			{
 				Config.Settings.dossierFileWathcherRun = 0;
-				SetListener();
+                await SetListener();
 			}
             // Get What rating to recalc
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
@@ -4635,7 +4624,7 @@ namespace WinApp.Forms
 			if (runState != Config.Settings.dossierFileWathcherRun)
 			{
 				Config.Settings.dossierFileWathcherRun = runState;
-				SetListener();
+                await SetListener();
 			}
             await ShowView("Refreshed grid");
         }
@@ -4647,7 +4636,7 @@ namespace WinApp.Forms
             if (runState == 1)
             {
                 Config.Settings.dossierFileWathcherRun = 0;
-                SetListener();
+                await SetListener();
             }
             // Show dialog
             Form frm = new Forms.RecalcBattleCreditPerTank();
@@ -4656,7 +4645,7 @@ namespace WinApp.Forms
             if (runState != Config.Settings.dossierFileWathcherRun)
             {
                 Config.Settings.dossierFileWathcherRun = runState;
-                SetListener();
+                await SetListener();
             }
             await ShowView("Refreshed grid");
         }
@@ -4690,7 +4679,7 @@ namespace WinApp.Forms
         }
 
 
-		private void toolItemSettingsRun_Click(object sender, EventArgs e)
+		private async void toolItemSettingsRun_Click(object sender, EventArgs e)
 		{
 			mSettingsRun.Checked = !mSettingsRun.Checked;
 			// Set Start - Stop button properties
@@ -4702,34 +4691,23 @@ namespace WinApp.Forms
 			{
 				Config.Settings.dossierFileWathcherRun = 0;
 			}
-			string msg = "";
-			Config.SaveConfig(out msg);
-			SetListener();
+            await Config.SaveConfig();
+            await SetListener();
 		}
 
-		private void mSettingsRunBattleCheck_Click(object sender, EventArgs e)
+		private async void mSettingsRunBattleCheck_Click(object sender, EventArgs e)
 		{
-			if (Dossier2db.Running)
-				MsgBox.Show("Process is already running, cannot run twice at the same time.", "Process already Running", this);
-			else
-			{
-                // Immediate run dossier file check
-                RunDossierFileCheck("Check for new battle...", false);
-			}				
+			// Immediate run dossier file check
+            await RunDossierFileCheck("Check for new battle...", false);
 		}
 
-        private void mRecalcTankStatistics_Click(object sender, EventArgs e)
+        private async void mRecalcTankStatistics_Click(object sender, EventArgs e)
         {
-            if (Dossier2db.Running)
-                MsgBox.Show("Process is already running, cannot run twice at the same time.", "Process already Running", this);
-            else
-            {
-                // Immediate run dossier file check with force update
-                RunDossierFileCheck("Recalculate Tank Stats...", true);
-            }
+            // Immediate run dossier file check with force update
+            await RunDossierFileCheck("Recalculate Tank Stats...", true);
         }
 
-		private void RunDossierFileCheck(string message, bool forceUpdate)
+		private async Task RunDossierFileCheck(string message, bool forceUpdate)
 		{
 			if (Dossier2db.Running)
 				SetStatus2("Terminated new battle check, already running...");
@@ -4737,9 +4715,8 @@ namespace WinApp.Forms
 			{
 				SetStatus2(message);
 				Log.AddToLogBuffer("// " + message, true);
-				dossier2json d2j = new dossier2json();
-				d2j.ManualRunInBackground(message, forceUpdate);
-				Log.WriteLogBuffer();
+                await Dossier2json.ManualRunInBackground(message, forceUpdate, this);
+                await Log.WriteLogBuffer();
 			}
 		}
 
@@ -4786,7 +4763,7 @@ namespace WinApp.Forms
                     MsgBox.Show(appStartupResult.ReleaseVersion.Message + Environment.NewLine + Environment.NewLine, "Message published " + Convert.ToDateTime(appStartupResult.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
                     // Save read message
                     Config.Settings.readMessage = DateTime.Now;
-                    Config.SaveConfig(out string msg);
+                    await Config.SaveConfig();
                 }
                 // Pilot version, and message exits and not set to be shown in the future
                 else if (currentVersion > latestReleaseVersion && appStartupResult.PilotVersion.Message != null && appStartupResult.PilotVersion.MessageDate != null && appStartupResult.PilotVersion.MessageDate <= DateTime.Now)
@@ -4795,7 +4772,7 @@ namespace WinApp.Forms
                     MsgBox.Show(appStartupResult.PilotVersion.Message + Environment.NewLine + Environment.NewLine, "Message to test pilot published " + Convert.ToDateTime(appStartupResult.PilotVersion.MessageDate).ToString("dd.MM.yyyy"), this);
                     // Save read message
                     Config.Settings.readMessage = DateTime.Now;
-                    Config.SaveConfig(out string msg);
+                    await Config.SaveConfig();
                 }
                 else
                 {
@@ -4815,8 +4792,8 @@ namespace WinApp.Forms
 				frm.ShowDialog(this);
 				if (InGarageApiResult.changeFavList)
 				{
-					// After fav list changes reload menu
-					SetFavListMenu(); // Reload fav list items
+                    // After fav list changes reload menu
+                    await SetFavListMenu(); // Reload fav list items
                     await ShowView("Refreshed grid after 'In Garage' tank list updated"); // Refresh grid now
 				}
 			}
@@ -4837,13 +4814,13 @@ namespace WinApp.Forms
 			this.Close();
 		}
 
-		private void mWoT_Click(object sender, EventArgs e)
+		private async void mWoT_Click(object sender, EventArgs e)
 		{
-			StartWoTGame();
+            await StartWoTGame();
 		}
 
 
-		private void StartWoTGame()
+		private async Task StartWoTGame()
 		{
 			string err = "";
 			string msg = "";
@@ -4930,13 +4907,13 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				MsgBox.Show(err + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine, "Error running programs", this);
 			}
 		}
 
 		private int timerWotAffnityCount = 0;
-		private void timerWoTAffnity_Tick(object sender, EventArgs e)
+		private async void timerWoTAffnity_Tick(object sender, EventArgs e)
 		{
 			try
 			{
@@ -4974,7 +4951,7 @@ namespace WinApp.Forms
 			{
 				timerWoTAffnity.Enabled = false;
 				SetStatus2("Could not change WoT using optimization settings, check log file for details");
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 			}
 
 		}
@@ -5029,7 +5006,7 @@ namespace WinApp.Forms
 
 		#region Gadgets
 
-        private void HomeViewCreate(string Status2Message)
+        private async Task HomeViewCreate(string Status2Message)
 		{
 			ResizeNow();
 			// First remove current controls
@@ -5066,9 +5043,9 @@ namespace WinApp.Forms
 			picGrid.Name = "userControlPicGrid";
 			picGrid.Visible = false;
 			panelMainArea.Controls.Add(picGrid);
-			
-			// Add current gadgets
-			GadgetHelper.GetGadgets();
+
+            // Add current gadgets
+            await GadgetHelper.GetGadgets();
 			foreach (GadgetHelper.GadgetItem gadget in GadgetHelper.gadgets)
 			{
 				panelMainArea.Controls.Add(gadget.control);
@@ -5079,14 +5056,14 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void HomeViewRefresh(string Status2Message)
+		private async Task HomeViewRefresh(string Status2Message)
 		{
 			List<Control> controls = new List<Control>();
 			foreach (Control c in panelMainArea.Controls)
 			{
 				if (c.Name.Substring(0, 2) == "uc")
 				{
-                    GadgetHelper.ControlDataBind(c);
+                    await GadgetHelper.ControlDataBind(c);
 				}
 			}
 			SetStatus2(Status2Message);
@@ -5171,7 +5148,7 @@ namespace WinApp.Forms
 		private bool gadgetMoveOrRezizeMode = false;
         private bool gadgetLockMode = false;
 
-		private void panelEditor_MouseMove(object sender, MouseEventArgs e)
+		private async void panelEditor_MouseMove(object sender, MouseEventArgs e)
 		{
 			string actionText = "";
 			// Check if move or resize mode
@@ -5192,7 +5169,7 @@ namespace WinApp.Forms
 						}
 						gadgetPontedAt = newSelectedGadget;
 						gadgetPontedAt.control.BackColor = ColorTheme.FormBackSelectedGadget;
-						bool hasParam = GadgetHelper.HasGadetParameter(gadgetPontedAt);
+						bool hasParam = await GadgetHelper.HasGadetParameter(gadgetPontedAt);
 						CreateGadgetContextMenu(hasParam);
 						panelMainArea.Refresh(); // force paint event
 						actionText = " - Selected gadget: " + gadgetPontedAt.name.ToString();
@@ -5336,8 +5313,8 @@ namespace WinApp.Forms
 
 		private async void mHomeViewRefresh_Click(object sender, EventArgs e)
 		{
-			HomeViewCreate("Redrawn gadgets");
-            HomeViewRefresh("Refresh redrawn gadgets");
+            await HomeViewCreate("Redrawn gadgets");
+            await HomeViewRefresh("Refresh redrawn gadgets");
 			await GadgetEditModeChange();
 		}
 
@@ -5494,7 +5471,7 @@ namespace WinApp.Forms
                 // Create new gadget
                 if (gadgetId == -1)
                 {
-                    gadgetControl = GadgetHelper.GetGadgetControl(controlName, GadgetHelper.newParameters);
+                    gadgetControl = await GadgetHelper.GetGadgetControl(controlName, GadgetHelper.newParameters);
                     gadget = new GadgetHelper.GadgetItem();
                     gadget.control = gadgetControl;
                     gadget.controlName = controlName;
@@ -5520,7 +5497,7 @@ namespace WinApp.Forms
                     // Remove Current added instance of gadget
                     panelMainArea.Controls.Remove(gadget.control);
                     // get updated control
-                    gadgetControl = GadgetHelper.GetGadgetControl(gadget.controlName, GadgetHelper.newParameters);
+                    gadgetControl = await GadgetHelper.GetGadgetControl(gadget.controlName, GadgetHelper.newParameters);
                     gadgetControl.Name = "uc" + gadget.id.ToString();
                     gadgetControl.Tag = gadget.name;
                     gadgetControl.Top = gadget.posY;
@@ -5577,7 +5554,7 @@ namespace WinApp.Forms
                 panelControl.Enabled = false;
                 panelControl.Tag = gadget.controlName;
                 // DataBind
-                GadgetHelper.ControlDataBind(panelControl);
+                await GadgetHelper.ControlDataBind(panelControl);
             }
             gadgetSelected = null;
 		}
@@ -5588,8 +5565,8 @@ namespace WinApp.Forms
 			if (answer == MsgBox.Button.OK)
 			{
                 await GadgetHelper.RemoveGadgetAll();
-				HomeViewCreate("Removed all gadgets");
-                HomeViewRefresh("Refresh Home View");
+                await HomeViewCreate("Removed all gadgets");
+                await HomeViewRefresh("Refresh Home View");
 			}
 		}
         
@@ -5619,7 +5596,7 @@ namespace WinApp.Forms
             {
                 MsgBox.Show("Cannot locate file: " + file + Environment.NewLine + Environment.NewLine + "The menu item will be removed." + Environment.NewLine + Environment.NewLine, "Missing file", this);
                 await GadgetHelper.RemoveRecentHomeView(file);
-                GetHomeViewRecentList();
+                await GetHomeViewRecentList();
             }
         }
 
@@ -5644,10 +5621,9 @@ namespace WinApp.Forms
                     menuitem.Checked = true;
                     mHomeView.Text = menuitem.Text;
                     Config.Settings.currentHomeView = mHomeView.Text;
-                    string msg = "";
-                    Config.SaveConfig(out msg);
-                    HomeViewCreate("Change to: '" + menuitem.Text + "' home view");
-                    HomeViewRefresh("Refreshed home view");
+                    await Config.SaveConfig();
+                    await HomeViewCreate("Change to: '" + menuitem.Text + "' home view");
+                    await HomeViewRefresh("Refreshed home view");
                 }
                 
             }
@@ -5669,15 +5645,14 @@ namespace WinApp.Forms
             if (result == DialogResult.OK)
             {
                 string fileName = Path.GetFileName(saveFileDialog1.FileName);
-                GadgetHelper.HomeViewSaveToFile(saveFileDialog1.FileName);
+                await GadgetHelper.HomeViewSaveToFile(saveFileDialog1.FileName);
                 bool updatedRecentList = await GadgetHelper.UpdateRecentHomeView(saveFileDialog1.FileName);
                 if (updatedRecentList)
-                    GetHomeViewRecentList();
+                    await GetHomeViewRecentList();
                 mHomeView.Text = fileName.Replace(".json", "");
                 Config.Settings.currentHomeView = mHomeView.Text;
                 CheckCurrentHomeViewSubMenu();
-                string msg = "";
-                Config.SaveConfig(out msg);
+                await Config.SaveConfig();
                 return true;
             }
             return false;
@@ -5705,15 +5680,14 @@ namespace WinApp.Forms
                     await GadgetHelper.HomeViewLoadFromFile(openFileDialog1.FileName, true);
                     bool updatedRecentList = await GadgetHelper.UpdateRecentHomeView(openFileDialog1.FileName);
                     if (updatedRecentList)
-                        GetHomeViewRecentList();
+                        await GetHomeViewRecentList();
                     string fileName = Path.GetFileName(openFileDialog1.FileName);
                     mHomeView.Text = fileName.Replace(".json", "");
                     Config.Settings.currentHomeView = mHomeView.Text;
                     CheckCurrentHomeViewSubMenu();
-                    string msg = "";
-                    Config.SaveConfig(out msg);
-                    HomeViewCreate("Redraw loaded Home View from file");
-                    HomeViewRefresh("Refresh loaded Home View from file");
+                    await Config.SaveConfig();
+                    await HomeViewCreate("Redraw loaded Home View from file");
+                    await HomeViewRefresh("Refresh loaded Home View from file");
                 }
             }
             
@@ -5722,7 +5696,7 @@ namespace WinApp.Forms
         private async void mHomeViewClearRecentList_Click(object sender, EventArgs e)
         {
             await GadgetHelper.RemoveRecentHomeView("");
-            GetHomeViewRecentList();
+            await GetHomeViewRecentList();
         }
 
         private void RemoveHomeViewSelectedMenuItems()
@@ -5760,8 +5734,8 @@ namespace WinApp.Forms
 
 
 
-        #endregion
 
+        #endregion
         
     }
 }

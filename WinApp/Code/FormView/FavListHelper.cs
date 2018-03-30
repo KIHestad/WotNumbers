@@ -14,12 +14,12 @@ namespace WinApp.Code
 		public static int lastAddFavListFromPopup = 0;
 		public static bool refreshGridAfterAddRemove = false;
 
-		public static int GetId(string FavListName)
+		public async static Task<int> GetId(string FavListName)
 		{
 			int favListId = 0;
 			string sql = "select id from favList where name=@name;";
 			DB.AddWithValue(ref sql, "@name", FavListName, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				favListId = Convert.ToInt32(dt.Rows[0]["id"]);
@@ -30,7 +30,7 @@ namespace WinApp.Code
 		public async static Task FavListSort()
 		{
 			string sql = "select * from favList where position is not null order by position;";
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				sql = "";
@@ -42,7 +42,7 @@ namespace WinApp.Code
 					DB.AddWithValue(ref sql, "@pos", pos, DB.SqlDataType.Int);
 					pos++;
 				}
-				await DB.ExecuteNonQueryAsync(sql);
+				await DB.ExecuteNonQuery(sql);
 			}
 		}
 
@@ -50,7 +50,7 @@ namespace WinApp.Code
 		{
 			string sql = "select tankId from favListTank order by sortorder";
 			DB.AddWithValue(ref sql, "@tankId", favListId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			// Modify sort order generate sql
 			sql = "";
 			int pos = 1;
@@ -60,10 +60,10 @@ namespace WinApp.Code
 				DB.AddWithValue(ref sql, "@sortorder", pos, DB.SqlDataType.Int);
 			}
 			// Update
-			await DB.ExecuteNonQueryAsync(sql);
+			await DB.ExecuteNonQuery(sql);
 		}
 
-		public static bool CheckIfAnyFavList(Form parentForm, int tankId, bool add)
+		public async static Task<bool> CheckIfAnyFavList(Form parentForm, int tankId, bool add)
 		{
 			bool found = true;
 			string sql = "select id from favList ";
@@ -72,7 +72,7 @@ namespace WinApp.Code
 			else
 				sql += "where id in (select favListId from favListTank where tankId=@tankId) ";
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			// Check if any favList is available
 			if (dt.Rows.Count == 0)
 			{

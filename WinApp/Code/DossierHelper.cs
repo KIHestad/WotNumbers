@@ -23,8 +23,10 @@ namespace WinApp.Code
         // Gets the names of the player from name of dossier file
         public static DossierFileInfo GetDossierFileInfo(string dossierFileName)
         {
-            DossierFileInfo dfi = new DossierFileInfo();
-            dfi.Success = true;
+            DossierFileInfo dfi = new DossierFileInfo
+            {
+                Success = true
+            };
             try
             {
                 // First decode filename

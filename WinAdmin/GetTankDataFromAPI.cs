@@ -97,17 +97,17 @@ namespace WinAdmin
                 //else if (WotAPi == WotApiType.Turret)
                 //{
                 //    url = "https://api.worldoftanks.eu/wot/encyclopedia/tankturrets/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
-                //    // itemsInDB = DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
+                //    // itemsInDB = await DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
                 //}
                 //else if (WotAPi == WotApiType.Gun)
                 //{
                 //    url = "https://api.worldoftanks.eu/wot/encyclopedia/tankguns/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
-                //    // itemsInDB = DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
+                //    // itemsInDB = await DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
                 //}
                 //else if (WotAPi == WotApiType.Radio)
                 //{
                 //    url = "https://api.worldoftanks.eu/wot/encyclopedia/tankradios/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
-                //    // itemsInDB = DB.FetchData("select id from modRadio");   // Fetch id of radios already existing in db
+                //    // itemsInDB = await DB.FetchData("select id from modRadio");   // Fetch id of radios already existing in db
                 //}
                 //else if (WotAPi == WotApiType.Achievement)
                 //{

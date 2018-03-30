@@ -76,7 +76,7 @@ namespace WinApp.Forms
 			Refresh();
 		}
 
-		private void popupDatabase_Click(object sender, EventArgs e)
+		private async void popupDatabase_Click(object sender, EventArgs e)
 		{
 			// Do not use standard conn here, supply alternate sql conn string
 			string winAuth = "Win";
@@ -100,22 +100,20 @@ namespace WinApp.Forms
 				if (dbList.Length > 0)
 				{
 					dbList = dbList.Substring(0, dbList.Length - 1);
-					Code.DropDownGrid.Show(popupDatabase, Code.DropDownGrid.DropDownGridType.List, dbList);
+                    await Code.DropDownGrid.Show(popupDatabase, Code.DropDownGrid.DropDownGridType.List, dbList);
 				}
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				MsgBox.Show("Error connecting to database, please check server name and authentication" + Environment.NewLine + Environment.NewLine + ex.Message, "Database error", this);
 			}
 			
 		}
 			
-		private void SaveConfig()
+		private async Task SaveConfig()
 		{
 			// Get ready to save new settings to config
-			string msg = "";
-			bool saveOk = false;
 			Config.Settings.databaseType = selectedDbType;
 			// Save Db settings settings according to dbtype
 			if (selectedDbType == ConfigData.dbType.SQLite)
@@ -130,17 +128,17 @@ namespace WinApp.Forms
 				Config.Settings.databasePwd = txtPW.Text;
 				Config.Settings.databaseName = popupDatabase.Text;
 			}
-			saveOk = Config.SaveConfig(out msg);
+			await Config.SaveConfig();
 		}
 
 		private async void btnSave_Click_1(object sender, EventArgs e)
 		{
-			SaveConfig();
+			await SaveConfig();
 			// Check if Connection to DB is OK, and get base data
-			if (DB.CheckConnection()) // check db config, displays message if error
+			if (await DB.CheckConnection()) // check db config, displays message if error
 			{
 				// Check if current plyer exists in current database, if not remove it
-				DataTable dt = DB.FetchData("SELECT * FROM player WHERE name='" + Config.Settings.playerNameAndServer + "'");
+				DataTable dt = await DB.FetchData("SELECT * FROM player WHERE name='" + Config.Settings.playerNameAndServer + "'");
 				if (dt.Rows.Count == 0)
 				{
 					Config.Settings.playerId = 0;
@@ -153,22 +151,21 @@ namespace WinApp.Forms
 						playerId = Convert.ToInt32(dt.Rows[0]["id"]);
 					Config.Settings.playerId = playerId;
 				}
-				string msg = "";
-				Config.SaveConfig(out msg);
-				// Init
-				TankHelper.GetAllLists();
+				await Config.SaveConfig();
+                // Init
+                await TankHelper.GetAllLists();
                 // Check for upgrade
                 await DBVersion.CheckForDbUpgrade(this);
 				// Startup with default settings
-				MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
-				MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
+				MainSettings.GridFilterTank = await GridFilter.GetDefault(GridView.Views.Tank);
+				MainSettings.GridFilterBattle = await GridFilter.GetDefault(GridView.Views.Battle);
 				// Done
 				Code.MsgBox.Show("Database settings successfully saved", "Saved Database Settings", this);
 				this.Close();
 			}
 		}
 
-		private void btnNewDb_Click(object sender, EventArgs e)
+		private async void btnNewDb_Click(object sender, EventArgs e)
 		{
 			// If SQL Server, check if database settings is OK
 			bool ok = true;
@@ -191,7 +188,7 @@ namespace WinApp.Forms
 				}
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					await Log.LogToFile(ex);
 					MsgBox.Show("Error connecting to MS SQL Server, please check server name and authentication." + Environment.NewLine + Environment.NewLine + ex.Message, "Database error", this);
 					ok = false;
 				}
@@ -202,7 +199,7 @@ namespace WinApp.Forms
 				Config.LastWorkingSettings = Config.Settings; 
 				// Must save databasetype and db settings before entering form for creating new database
 				// All database handling uses current config settings to access correct database
-				SaveConfig();
+				await SaveConfig();
 				// Open Create new db form
 				Form frm = new Forms.DatabaseNew();
 				frm.ShowDialog();
@@ -222,9 +219,9 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void popupDbAuth_Click(object sender, EventArgs e)
+		private async void popupDbAuth_Click(object sender, EventArgs e)
 		{
-			Code.DropDownGrid.Show(popupDbAuth, Code.DropDownGrid.DropDownGridType.List, "Windows Authentication,SQL Server Authentication");
+            await Code.DropDownGrid.Show(popupDbAuth, Code.DropDownGrid.DropDownGridType.List, "Windows Authentication,SQL Server Authentication");
 		}
 
 		private void popupDbAuth_TextChanged(object sender, EventArgs e)
@@ -233,9 +230,9 @@ namespace WinApp.Forms
 		}
 
 
-		private void popupDatabaseType_Click(object sender, EventArgs e)
+		private async void popupDatabaseType_Click(object sender, EventArgs e)
 		{
-			Code.DropDownGrid.Show(popupDatabaseType, Code.DropDownGrid.DropDownGridType.List, "SQLite,MS SQL Server");
+            await Code.DropDownGrid.Show(popupDatabaseType, Code.DropDownGrid.DropDownGridType.List, "SQLite,MS SQL Server");
 		}
 
 		private void popupDatabaseType_TextChanged(object sender, EventArgs e)

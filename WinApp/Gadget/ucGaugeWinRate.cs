@@ -10,6 +10,7 @@ using WinApp.Code;
 using System.Diagnostics;
 using WinApp.Gadget;
 using WinApp.Code.FormLayout;
+using System.Threading.Tasks;
 
 namespace WinApp.Gadget
 {
@@ -31,7 +32,7 @@ namespace WinApp.Gadget
 			SelectTimeRangeButton();
 		}
 
-		public void DataBind()
+		public async Task DataBind()
 		{
 			// Init Gauge
 			aGauge1.ValueMin = 30;
@@ -81,7 +82,7 @@ namespace WinApp.Gadget
 					"  playerTank pt on ptb.playerTankId=pt.id " +
 					"where pt.playerId=@playerId " + sqlBattlemode;
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				DataTable dt = DB.FetchData(sql);
+				DataTable dt = await DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
 				{
 					DataRow dr = dt.Rows[0];
@@ -131,7 +132,7 @@ namespace WinApp.Gadget
 					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id " +
 					"where playerId=@playerId " + sqlBattlemode + " " + battleTimeFilter + " order by battleTime DESC";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				DataTable dtBattles = DB.FetchData(sql);
+				DataTable dtBattles = await DB.FetchData(sql);
 				if (dtBattles.Rows.Count > 0)
 				{
 					if (battleRevert == 0) battleRevert = dtBattles.Rows.Count;
@@ -215,7 +216,7 @@ namespace WinApp.Gadget
 			aGauge1.Value = (float)gaugeVal;
 		}
 
-		private void btnTime_Click(object sender, EventArgs e)
+		private async void btnTime_Click(object sender, EventArgs e)
 		{
 			BadButton b = (BadButton)sender;
 			switch (b.Name)
@@ -227,7 +228,7 @@ namespace WinApp.Gadget
                 case "btnToday": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeToday; break;
 			}
 			SelectTimeRangeButton();
-			DataBind();
+			await DataBind();
 		}
 
 		private void SelectTimeRangeButton()

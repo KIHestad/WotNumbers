@@ -31,14 +31,14 @@ namespace WinApp.Code
             sql += "INSERT INTO replayFolder (path, subfolder) VALUES (@path, @subfolder);";
             DB.AddWithValue(ref sql, "@path", path, DB.SqlDataType.VarChar);
             DB.AddWithValue(ref sql, "@subfolder", subfolder, DB.SqlDataType.Boolean);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
         }
 
         public async static Task RemoveReplayFolder(int id)
         {
             string sql = "DELETE FROM replayFolder WHERE id=@id";
             DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
         }
 
         public async static Task<FileInfo> GetReplayFile(int battleId)
@@ -48,7 +48,7 @@ namespace WinApp.Code
                 "select tank.id, battle.battleTime, battle.battleLifeTime, tank.name as tankName, tank.imgpath , map.arena_id as mapArenaId " + 
                 "from battle inner join playerTank pt on battle.playerTankId = pt.id inner join tank on pt.tankId = tank.Id left join map on battle.mapId = map.id  " +
                 "where battle.id=" + battleId.ToString();
-            DataTable dtBattle = DB.FetchData(sql);
+            DataTable dtBattle = await DB.FetchData(sql);
             FileInfo fi = null;
             if (dtBattle.Rows.Count > 0)
             {
@@ -87,7 +87,7 @@ namespace WinApp.Code
             string filename2 = fileprefix2 + "_*" + fileName;
             // Search for files now
             List<FileInfo> fileList = new List<FileInfo>();
-            DataTable dtReplayFolder = DB.FetchData("select * from replayFolder order by path");
+            DataTable dtReplayFolder = await DB.FetchData("select * from replayFolder order by path");
             foreach (DataRow dr in dtReplayFolder.Rows)
             {
                 // Check that folder still exists, if not remove it for folder to search

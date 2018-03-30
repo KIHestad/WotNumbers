@@ -63,7 +63,7 @@ namespace WinApp.Forms.Chart
             {
                 string sqlCheckName = "SELECT COUNT(id) FROM chartFav WHERE favouriteName = @favouriteName ";
                 DB.AddWithValue(ref sqlCheckName, "@favouriteName", chartFavNameToSave, DB.SqlDataType.VarChar);
-                DataTable dt = DB.FetchData(sqlCheckName);
+                DataTable dt = await DB.FetchData(sqlCheckName);
                 if (dt != null && dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0][0]) > 0)
                 {
                     MsgBox.Show("A favourit already exists with this name, please select another");
@@ -88,7 +88,7 @@ namespace WinApp.Forms.Chart
                 DB.AddWithValue(ref sqlUpdate, "@spline", BattleChartHelper.Settings.Spline, DB.SqlDataType.Boolean);
                 DB.AddWithValue(ref sqlUpdate, "@chartFavId", _chartFavId, DB.SqlDataType.Int);
                 DB.AddWithValue(ref sqlUpdate, "@id", _chartFavId, DB.SqlDataType.Int);
-                await DB.ExecuteNonQueryAsync(sqlUpdate);
+                await DB.ExecuteNonQuery(sqlUpdate);
                 // Done
                 BattleChartHelper.SaveFavouriteNewFavId = _chartFavId;
             }
@@ -104,11 +104,11 @@ namespace WinApp.Forms.Chart
                 DB.AddWithValue(ref sqlInsert, "@xAxis", BattleChartHelper.Settings.Xaxis, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sqlInsert, "@bullet", BattleChartHelper.Settings.Bullet, DB.SqlDataType.Boolean);
                 DB.AddWithValue(ref sqlInsert, "@spline", BattleChartHelper.Settings.Spline, DB.SqlDataType.Boolean);
-                await DB.ExecuteNonQueryAsync(sqlInsert);
+                await DB.ExecuteNonQuery(sqlInsert);
                 // Get the new id
                 sqlInsert = "SELECT Id FROM chartFav WHERE favouriteName = @favouriteName; ";
                 DB.AddWithValue(ref sqlInsert, "@favouriteName", chartFavNameToSave, DB.SqlDataType.VarChar);
-                _chartFavId = Convert.ToInt32(DB.FetchData(sqlInsert).Rows[0][0]);
+                _chartFavId = Convert.ToInt32((await DB.FetchData(sqlInsert)).Rows[0][0]);
             }
             // Now add chart lines
             string sql = "";
@@ -123,7 +123,7 @@ namespace WinApp.Forms.Chart
                 DB.AddWithValue(ref newsql, "@use2ndYaxis", item.use2ndYaxis, DB.SqlDataType.Boolean);
                 sql += newsql;
             }
-            await DB.ExecuteNonQueryAsync(sql, true, true);
+            await DB.ExecuteNonQuery(sql, true, true);
             // Done
             BattleChartHelper.SaveFavouriteNewFavName = chartFavNameToSave;
             BattleChartHelper.SaveFavouriteNewFavId = _chartFavId;

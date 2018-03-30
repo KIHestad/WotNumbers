@@ -52,7 +52,7 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex, "Error opening inputbox");
+                Log.LogToFile(ex, "Error opening inputbox").ConfigureAwait(false);
                 InputResult.InputText = "";
                 InputResult.Button = InputButton.Cancel;
                 return InputResult;

@@ -51,7 +51,7 @@ namespace WinApp.Code
 
 		public static bool BattleTimeFilterCustomApply = false; // Used for form: BattleTimeFilterCustom
 
-		public static Settings GetDefault(GridView.Views gridView)
+		public async static Task<Settings> GetDefault(GridView.Views gridView)
 		{
 			// Gets default settings for tank and battle filter
 			Settings defaultGridFilter = new Settings();
@@ -61,13 +61,13 @@ namespace WinApp.Code
 						 "     favList ON columnList.defaultFavListId = favList.id " +
 						 "WHERE (columnList.colDefault=1) AND (columnList.colType=@colType); ";
 			DB.AddWithValue(ref sql, "@colType", (int)gridView, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql, false);
+			DataTable dt = await DB.FetchData(sql, false);
 			if (dt.Rows.Count == 0)
 			{
-				// No default is selected, choose first colList
-				string colListName = "";
-				defaultGridFilter.ColListId = GetFirstColListId(gridView, out colListName);
-				defaultGridFilter.ColListName = colListName;
+                // No default is selected, choose first colList
+                var item = await GetFirstColListItem(gridView);
+                defaultGridFilter.ColListId = item.Id;
+				defaultGridFilter.ColListName = item.Name;
 			}
 			else
 			{
@@ -95,23 +95,33 @@ namespace WinApp.Code
 			return defaultGridFilter;
 		}
 
-		private static int GetFirstColListId(GridView.Views gridView, out string ColListName)
+        private class ColListItem
+        {
+            public ColListItem()
+            {
+                Id = 0;
+                Name = "";
+            }
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+		private async static Task<ColListItem> GetFirstColListItem(GridView.Views gridView)
 		{
-			string sql = "SELECT columnList.id AS colListId, columnList.name AS colListName, columnList.defaultFavListId AS colListDefaultFavList, " +
+            string sql = "SELECT columnList.id AS colListId, columnList.name AS colListName, columnList.defaultFavListId AS colListDefaultFavList, " +
 						 "       favList.id AS favListId, favList.name AS favListName " +
 						 "FROM columnList LEFT OUTER JOIN " +
 						 "     favList ON columnList.defaultFavListId = favList.id " +
 						 "WHERE (columnList.colType=@colType); ";
 			DB.AddWithValue(ref sql, "@colType", (int)gridView, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql, false);
-			int colListId = 0;
-			ColListName = "";
+			DataTable dt = await DB.FetchData(sql, false);
+            ColListItem item = new ColListItem();
 			if (dt.Rows.Count > 0)
 			{
-				colListId = Convert.ToInt32(dt.Rows[0]["colListId"]);
-				ColListName = dt.Rows[0]["colListName"].ToString();
+				item.Id = Convert.ToInt32(dt.Rows[0]["colListId"]);
+				item.Name = dt.Rows[0]["colListName"].ToString();
 			}
-			return colListId;
+			return item;
 
 		}
 	}

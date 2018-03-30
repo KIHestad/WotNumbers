@@ -19,13 +19,13 @@ namespace WinApp.Forms
 			playerTankId = selectedPlayerTankId;
 		}
 
-		private void GrindingSetup_Load(object sender, EventArgs e)
+		private async void GrindingSetup_Load(object sender, EventArgs e)
 		{
-			GetTankData();
+            await GetTankData();
 			dataChanged = false;
 		}
 
-		private void GetTankData()
+		private async Task GetTankData()
 		{
 			_init = true;
 			txtGrindComment.Focus();
@@ -34,7 +34,7 @@ namespace WinApp.Forms
 						 "        playerTank ON tank.id = playerTank.tankId " +
 						 "WHERE  (playerTank.id = @playerTankId) ";
 			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				DataRow tank = dt.Rows[0];
@@ -65,7 +65,7 @@ namespace WinApp.Forms
 					"        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
 					"WHERE  (playerTank.id = @playerTankId) ";
 			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-			dt = DB.FetchData(sql);
+			dt = await DB.FetchData(sql);
 			if (dt.Rows.Count > 0 && dt.Rows[0]["battles"] != DBNull.Value)
 			{
 				DataRow tank = dt.Rows[0];
@@ -153,14 +153,14 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void btnCancel_Click(object sender, EventArgs e)
+		private async void btnCancel_Click(object sender, EventArgs e)
 		{
 			if (dataChanged)
 			{
                 MsgBox.Button answer = MsgBox.Show("Do you want to cancel your changes and revert to last saved values?", "Cancel and revert data?", MsgBox.Type.OKCancel, this);
 				if (answer == MsgBox.Button.OK)
 				{
-					GetTankData();
+                    await GetTankData();
 					dataChanged = false;
 				}
 			}
@@ -226,7 +226,7 @@ namespace WinApp.Forms
                     progressGoal = 1;
                 DB.AddWithValue(ref sql, "@ProgressGoal", progressGoal, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
-				if (await DB.ExecuteNonQueryAsync(sql))
+				if (await DB.ExecuteNonQuery(sql))
 					dataChanged = false;
 			}
 		}

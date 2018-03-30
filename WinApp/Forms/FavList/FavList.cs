@@ -22,7 +22,7 @@ namespace WinApp.Forms
 
 		#region Load and Style
 		
-		private void FavList_Load(object sender, EventArgs e)
+		private async void FavList_Load(object sender, EventArgs e)
 		{
 			// Make sure borderless form do not cover task bar when maximized
 			Screen screen = Screen.FromControl(this);
@@ -36,9 +36,9 @@ namespace WinApp.Forms
 			GridHelper.StyleDataGrid(dataGridFavList);
 			GridHelper.StyleDataGrid(dataGridAllTanks);
 			GridHelper.StyleDataGrid(dataGridSelectedTanks);
-			// Show content
-			ShowFavList();
-			ShowAllTanks();
+            // Show content
+            await ShowFavList();
+            await ShowAllTanks();
 			// Select an initial fav list
 			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.MyTanks)
 			{
@@ -91,9 +91,9 @@ namespace WinApp.Forms
 
 		#region Fav List
 
-		private void ShowFavList(bool selectNewestFavList = false)
+		private async Task ShowFavList(bool selectNewestFavList = false)
 		{
-			DataTable dt = DB.FetchData("select position as '#', name as 'Name', '' as 'Show', id from favList order by COALESCE(position,99), name");
+			DataTable dt = await DB.FetchData("select position as '#', name as 'Name', '' as 'Show', id from favList order by COALESCE(position,99), name");
 			// Modify datatable by adding values to Show
 			foreach (DataRow row in dt.Rows)
 			{
@@ -153,7 +153,7 @@ namespace WinApp.Forms
 			dataGridAllTanks.Focus();
 		}
 
-		private void SelectFavList(int FavListId = 0)
+		private async void SelectFavList(int FavListId = 0)
 		{
 			// Toggle show/hide
 			if (dataGridFavList.SelectedRows.Count > 0)
@@ -162,8 +162,8 @@ namespace WinApp.Forms
 				string showButton = "Hide";
 				if (isHidden) showButton = "Show";
 				toolFavListVisible.Text = showButton;
-				// Get tanks for this fav list now
-				GetSelectedTanksFromFavList();
+                // Get tanks for this fav list now
+                await GetSelectedTanksFromFavList();
 			}
 		}
 
@@ -197,10 +197,10 @@ namespace WinApp.Forms
 				sql += insertsql;
 			}
 			DB.AddWithValue(ref sql, "@favListId", SelectedFavListId, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 
-			// Refresh Grid
-			ShowFavList();
+            // Refresh Grid
+            await ShowFavList();
 		}
 
 		private void scrollFavList_MouseDown(object sender, MouseEventArgs e)
@@ -290,7 +290,7 @@ namespace WinApp.Forms
 
 		private DataTable dtFavListTank = new DataTable();
 		private bool selectedTanksColumnSetupDone = false;
-		private void GetSelectedTanksFromFavList()
+		private async Task GetSelectedTanksFromFavList()
 		{
 			string sql =
 				"SELECT favListTank.sortorder AS '#', tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, tank.id as ID " +
@@ -302,7 +302,7 @@ namespace WinApp.Forms
 				"WHERE  (favList.id = @id) " +
                 "ORDER BY favListTank.sortorder ";
 			DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
-			dtFavListTank = DB.FetchData(sql);
+			dtFavListTank = await DB.FetchData(sql);
 			ShowSelectedTanks();
 			if (!selectedTanksColumnSetupDone)
 			{
@@ -628,7 +628,7 @@ namespace WinApp.Forms
 		}
 
 		// Enable mouse wheel scrolling for datagrid
-		private void dataGridSelTanks_MouseWheel(object sender, MouseEventArgs e)
+		private async void dataGridSelTanks_MouseWheel(object sender, MouseEventArgs e)
 		{
 			try
 			{
@@ -648,7 +648,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -668,7 +668,7 @@ namespace WinApp.Forms
 		#region All Tanks
 
 		private bool allTanksColumnSetupDone = false;
-		private void ShowAllTanks()
+		private async Task ShowAllTanks()
 		{
 			string sql =
 				"SELECT   tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, playerTank.lastBattleTime AS 'Last Battle', tank.id AS ID " +
@@ -698,7 +698,7 @@ namespace WinApp.Forms
 				filter = AddAndToWhere(filter,"playerTank.lastBattleTime is not null");
 			if (filter.Length > 0)
 				filter = " WHERE " + filter;
-			DataTable dt = DB.FetchData(sql + filter);
+			DataTable dt = await DB.FetchData(sql + filter);
 			dataGridAllTanks.DataSource = dt;
 			if (!allTanksColumnSetupDone)
 			{
@@ -722,35 +722,35 @@ namespace WinApp.Forms
 			return s + AddNewAndPart;
 		}
 
-		private void toolAllTanks_Nation_Click(object sender, EventArgs e)
+		private async void toolAllTanks_Nation_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
 			menu.Checked = !menu.Checked;
-			ShowAllTanks();
+            await ShowAllTanks();
 		}
 
-		private void toolAllTanks_Type_Click(object sender, EventArgs e)
+		private async void toolAllTanks_Type_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
 			menu.Checked = !menu.Checked;
-			ShowAllTanks();
+            await ShowAllTanks();
 		}
 
-		private void toolAllTanks_Tier_Click(object sender, EventArgs e)
+		private async void toolAllTanks_Tier_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
 			menu.Checked = !menu.Checked;
-			ShowAllTanks();
+            await ShowAllTanks();
 		}
 
-		private void toolAllTanks_Used_Click(object sender, EventArgs e)
+		private async void toolAllTanks_Used_Click(object sender, EventArgs e)
 		{
 			ToolStripButton menu = (ToolStripButton)sender;
-			menu.Checked = !menu.Checked; 
-			ShowAllTanks();
+			menu.Checked = !menu.Checked;
+            await ShowAllTanks();
 		}
 
-		private void toolAllTanks_All_Click(object sender, EventArgs e)
+		private async void toolAllTanks_All_Click(object sender, EventArgs e)
 		{
 			foreach (ToolStripMenuItem menu in toolAllTanks_Nation.DropDown.Items)
 				menu.Checked = false;
@@ -759,7 +759,7 @@ namespace WinApp.Forms
 			foreach (ToolStripMenuItem menu in toolAllTanks_Type.DropDown.Items)
 				menu.Checked = false;
 			toolAllTanks_Used.Checked = false;
-			ShowAllTanks();
+            await ShowAllTanks();
 		}
 
 		
@@ -796,7 +796,7 @@ namespace WinApp.Forms
 		}
 
 		// Enable mouse wheel scrolling for datagrid
-		private void dataGridAllTanks_MouseWheel(object sender, MouseEventArgs e)
+		private async void dataGridAllTanks_MouseWheel(object sender, MouseEventArgs e)
 		{
 			try
 			{
@@ -816,7 +816,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -862,7 +862,7 @@ namespace WinApp.Forms
 				}
 
 				DB.AddWithValue(ref sql, "@position", Convert.ToInt32(FavListSelectedListPos), DB.SqlDataType.Int);
-				DataTable dt = DB.FetchData(sql);
+				DataTable dt = await DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
 				{
 					int rowNextToPos = Convert.ToInt32(dt.Rows[0]["position"]);
@@ -873,10 +873,10 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@position", Convert.ToInt32(FavListSelectedListPos), DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToId", rowNextToId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
-                    await DB.ExecuteNonQueryAsync(sql);
+                    await DB.ExecuteNonQuery(sql);
 				}
                 await FavListHelper.FavListSort();
-				ShowFavList();
+                await ShowFavList();
 			}
 		}
 
@@ -888,23 +888,23 @@ namespace WinApp.Forms
 			if (toolFavListVisible.Text == "Hide")
 				sql = "update favList set position=NULL where id=@id";
 			DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
             await FavListHelper.FavListSort();
-			ShowFavList();
+            await ShowFavList();
 		}
 
-		private void toolFavListAdd_Click(object sender, EventArgs e)
+		private async void toolFavListAdd_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.FavListNewEdit(0);
 			frm.ShowDialog();
-			ShowFavList(true);
+            await ShowFavList(true);
 		}
 
-		private void toolFavListModify_Click(object sender, EventArgs e)
+		private async void toolFavListModify_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.FavListNewEdit(SelectedFavListId);
 			frm.ShowDialog();
-			ShowFavList();
+            await ShowFavList();
 		}
 
 		private async void toolFavListDelete_Click(object sender, EventArgs e)
@@ -917,17 +917,17 @@ namespace WinApp.Forms
 
 				string sql = "delete from favListTank where favListId=@id; delete from favList where id=@id;";
 				DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
-                await DB.ExecuteNonQueryAsync(sql);
+                await DB.ExecuteNonQuery(sql);
 				SelectedFavListId = 0;
 				if (dataGridFavList.RowCount > 0)
 					SelectedFavListId = Convert.ToInt32(dataGridFavList.Rows[0].Cells["id"].Value);
-				ShowFavList();
+                await ShowFavList();
 			}
 		}
 
-		private void toolFavListRefresh_Click(object sender, EventArgs e)
+		private async void toolFavListRefresh_Click(object sender, EventArgs e)
 		{
-			ShowFavList();
+            await ShowFavList();
 		}
 
 		private void btnClose_Click(object sender, EventArgs e)
@@ -942,7 +942,7 @@ namespace WinApp.Forms
 
 		}
 
-		private void FavList2_FormClosing(object sender, FormClosingEventArgs e)
+		private async void FavList2_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			try
 			{
@@ -954,7 +954,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 				gf.FavListId = 0;
 				gf.FavListName = "";

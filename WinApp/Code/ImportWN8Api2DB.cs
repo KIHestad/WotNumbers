@@ -41,7 +41,7 @@ namespace WinApp.Code
             try
             {
                 // First reset flag for fetched from api
-                await DB.ExecuteNonQueryAsync("UPDATE tank SET wn8ExpApiFetch=0;");
+                await DB.ExecuteNonQuery("UPDATE tank SET wn8ExpApiFetch=0;");
                 // Get data from API
                 string url = urlBase + "?GUID=" + Convert.ToBase64String(Guid.NewGuid().ToByteArray());
                 HttpClient client = new HttpClient()
@@ -101,7 +101,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				string msg = 
 					"Could not connect to " + urlBase + ", please check your Internet access." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
@@ -113,14 +113,14 @@ namespace WinApp.Code
 			// Execute update statements
 			try
 			{
-                await DB.ExecuteNonQueryAsync(sql, true, true);
+                await DB.ExecuteNonQuery(sql, true, true);
                 int wn8LastUpdated = DateTime.Now.Year * 10000 + DateTime.Now.Month * 100 + DateTime.Now.Day;
 				sql = "update _version_ set version=" + wn8LastUpdated + " where id=2;";
-                await DB.ExecuteNonQueryAsync(sql, true, true);
+                await DB.ExecuteNonQuery(sql, true, true);
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				await Log.LogToFile(ex);
 				MsgBox.Show(ex.Message, "Error occured", parentForm);
                 return "";
             }
@@ -136,7 +136,7 @@ namespace WinApp.Code
 
         public async static Task<String> FixMissingWN8(Form parentForm)
         {
-            DataTable dtMissing = DB.FetchData(@"
+            DataTable dtMissing = await DB.FetchData(@"
                 SELECT tier, tankTypeId
                 FROM tank
                 WHERE wn8ExpApiFetch=0 and tier > 0
@@ -152,7 +152,7 @@ namespace WinApp.Code
                     ORDER BY count(id) DESC";
                 DB.AddWithValue(ref sql, "@tier", Convert.ToInt32(drMissing["tier"]), DB.SqlDataType.Int);
                 DB.AddWithValue(ref sql, "@tankTypeId", Convert.ToInt32(drMissing["tankTypeId"]), DB.SqlDataType.Int);
-                DataTable dtExp = DB.FetchData(sql);
+                DataTable dtExp = await DB.FetchData(sql);
                 if (dtExp.Rows.Count > 0)
                 {
                     string newsql = @"
@@ -169,7 +169,7 @@ namespace WinApp.Code
                     DB.AddWithValue(ref newsql, "@tankTypeId", drMissing["tankTypeId"], DB.SqlDataType.Int);
                     updateSQL += newsql;
                 }
-                await DB.ExecuteNonQueryAsync(updateSQL, true, true);
+                await DB.ExecuteNonQuery(updateSQL, true, true);
             }
             return "Done adding WN8 exp values for tanks with missing values";
         }

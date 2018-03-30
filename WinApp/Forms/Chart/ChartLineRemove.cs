@@ -97,7 +97,7 @@ namespace WinApp.Forms
             scrollChartValues.ScrollPosition = dataGridChartValues.FirstDisplayedScrollingRowIndex;
         }
 
-        private void dataGridChartValues_MouseWheel(object sender, MouseEventArgs e)
+        private async void dataGridChartValues_MouseWheel(object sender, MouseEventArgs e)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                Log.LogToFile(ex);
+                await Log.LogToFile(ex);
                 // throw;
             }
         }

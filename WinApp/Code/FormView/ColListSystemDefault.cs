@@ -26,7 +26,7 @@ namespace WinApp.Code.FormView
 			string sql =
 				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=1); " +
 				"delete from columnList where sysCol=1 and colType=1; ";
-			await DB.ExecuteNonQueryAsync(sql);
+			await DB.ExecuteNonQuery(sql);
 			// Create lists all over
 			string newDefaultColListId = "";
 			newDefaultColListId = await NewSystemTankColList_Default(-10);
@@ -38,16 +38,16 @@ namespace WinApp.Code.FormView
             // Set default if missing
             await SetFavListAsDefaultIfMissing(newDefaultColListId, 1);
 			// get default gridfilter, might be new
-			MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
+			MainSettings.GridFilterTank = await GridFilter.GetDefault(GridView.Views.Tank);
 		}
 
 		private async static Task<string> NewSystemTankColList_Default(int position)
 		{
 			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Default', 0, " + position.ToString() + ", 1, -1); ";
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			// Find id for new list
 			sql = "select min(id) from columnList where sysCol=1 and colType=1 and name='Default';";
-			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			string id = (await DB.FetchData(sql)).Rows[0][0].ToString();
 			// Insert columns
 			sql =
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" + // Tier
@@ -72,17 +72,17 @@ namespace WinApp.Code.FormView
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",20,50);" + // WN8
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (187," + id + ",21,50);" + // WN7
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (48," + id + ",22,50);"; // EFF
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			return id;
 		}
 
 		private async static Task<string> NewSystemTankColList_Grinding(int position)
 		{
 			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Grinding', 0, " + position.ToString() + ", 1, -1); ";
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			// Find id for new list
 			sql = "select min(id) from columnList where sysCol=1 and colType=1 and name='Grinding';";
-			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			string id = (await DB.FetchData(sql)).Rows[0][0].ToString();
 			// Insert columns
 			sql =
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" +    // tier
@@ -96,17 +96,17 @@ namespace WinApp.Code.FormView
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (178," + id + ",9,40);" +   // gRestBattles
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (174," + id + ",10,40);" +  // gBattlesDay
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (179," + id + ",11,40);";   // gRestDays
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			return id;
 		}
 
 		private async static Task<string> NewSystemTankColList_WN8(int position)
 		{
 			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'WN8', 0, " + position.ToString() + ", 1, -1); ";
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			// Find id for new list
 			sql = "select min(id) from columnList where sysCol=1 and colType=1 and name='WN8';";
-			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			string id = (await DB.FetchData(sql)).Rows[0][0].ToString();
 			// Insert columns
 			sql =
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" + // Tier
@@ -129,17 +129,17 @@ namespace WinApp.Code.FormView
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (904," + id + ",18,3);" + //  - Separator 4 -
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (204," + id + ",19,40);" + // Avg Def
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (196," + id + ",20,40);"; // Exp Def
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			return id;
 		}
 
         private async static Task<string> NewSystemTankColList_Credit(int position)
 		{
 			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Credits', 0, " + position.ToString() + ", 1, -1); ";
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			// Find id for new list
             sql = "select min(id) from columnList where sysCol=1 and colType=1 and name='Credits';";
-			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			string id = (await DB.FetchData(sql)).Rows[0][0].ToString();
 			// Insert columns
             sql =
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" + // Tier
@@ -165,7 +165,7 @@ namespace WinApp.Code.FormView
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (904," + id + ",21,3);" + //  - Separator 4 -
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (543," + id + ",22,54);" + // Avg Btl Lifetime
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (544," + id + ",23,54);"; // Earned per min
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			return id;
 		}
 
@@ -177,7 +177,7 @@ namespace WinApp.Code.FormView
 			string sql =
 				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=2); " +
 				"delete from columnList where sysCol=1 and colType=2; ";
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			// Create lists all over
 			string newDefaultColListId = "";
 			 newDefaultColListId = await NewSystemBattleColList_Default(-10);
@@ -188,7 +188,7 @@ namespace WinApp.Code.FormView
             // Set default if missing
             await SetFavListAsDefaultIfMissing(newDefaultColListId, 2);
 			// Change to default in case selected no longer exists
-			MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
+			MainSettings.GridFilterBattle = await GridFilter.GetDefault(GridView.Views.Battle);
 
 		}
 
@@ -196,10 +196,10 @@ namespace WinApp.Code.FormView
 		{
 			// Create new default colList
 			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'Default', 0, " + position.ToString() + ", 1, -1); ";
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			// Find id for new list
 			sql = "select max(id) from columnList where sysCol=1 and colType=2 and name='Default';";
-			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			string id = (await DB.FetchData(sql)).Rows[0][0].ToString();
 			// Insert columns
 			sql =
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" + // Tier
@@ -226,17 +226,17 @@ namespace WinApp.Code.FormView
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",23,47);" + // WN8
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (186," + id + ",24,47);" + // WN7
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (512," + id + ",25,97);"; // Map
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			return id;
 		}
 
 		private async static Task<string> NewSystemBattleColList_WN8(int position)
 		{
 			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'WN8', 0, " + position.ToString() + ", 1, -1); ";
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			// Find id for new list
 			sql = "select min(id) from columnList where sysCol=1 and colType=2 and name='WN8';";
-			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			string id = (await DB.FetchData(sql)).Rows[0][0].ToString();
 			// Insert columns
 			sql =
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" + // Tier
@@ -256,7 +256,7 @@ namespace WinApp.Code.FormView
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",15,3);" + //  - Separator 3 -
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",16,40);" + // Def
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (201," + id + ",17,40);"; // Exp Def
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			return id;
 		}
 
@@ -265,10 +265,10 @@ namespace WinApp.Code.FormView
 			// Create new default colList
 			string sql =
 				"insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'Skirmish', 0, " + position.ToString() + ", 1, -1); ";
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			// Find id for new list
 			sql = "select min(id) from columnList where sysCol=1 and colType=2 and name='Skirmish';";
-			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			string id = (await DB.FetchData(sql)).Rows[0][0].ToString();
 			// Insert columns
 			sql =
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" + // Tier
@@ -294,7 +294,7 @@ namespace WinApp.Code.FormView
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",21,3);" + //  - Separator 3 -
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",23,47);" + // WN8
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (512," + id + ",25,97);"; // Map
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 			return id;
 		}
 
@@ -304,11 +304,11 @@ namespace WinApp.Code.FormView
 		private async static Task SetFavListAsDefaultIfMissing(string favListId, int colTypeId)
 		{
 			string sql = "select count(id) from columnList where colDefault=1 and colType=" + colTypeId.ToString() + ";";
-			int count = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
+			int count = Convert.ToInt32((await DB.FetchData(sql)).Rows[0][0]);
 			if (count == 0)
 			{
 				sql = "update columnList set colDefault=1 where id=" + favListId + "; ";
-                await DB.ExecuteNonQueryAsync(sql);
+                await DB.ExecuteNonQuery(sql);
 				MainSettings.GridFilterBattle.ColListId = Convert.ToInt32(favListId);
 				MainSettings.GridFilterBattle.ColListName = "Default";
 			}
@@ -316,7 +316,7 @@ namespace WinApp.Code.FormView
 
 		private async static Task AddMissingTank(int tankId, string name, int countryid, int tier, int tanktypeid, int premium)
 		{
-			DataRow dr = DB.FetchData("select count(id) from tank where id=" + tankId.ToString()).Rows[0];
+			DataRow dr = (await DB.FetchData("select count(id) from tank where id=" + tankId.ToString())).Rows[0];
 			string sql = "insert into tank (id, name, countryid, tier, tanktypeid, premium) values (@id, @name, @countryid, @tier, @tanktypeid, @premium);";
 			if (dr[0] != DBNull.Value && Convert.ToInt32(dr[0]) > 0)
 			{
@@ -328,7 +328,7 @@ namespace WinApp.Code.FormView
 			DB.AddWithValue(ref sql, "@tier", tier, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@tanktypeid", tanktypeid, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@premium", premium, DB.SqlDataType.Int);
-            await DB.ExecuteNonQueryAsync(sql);
+            await DB.ExecuteNonQuery(sql);
 		}
 	}
 }

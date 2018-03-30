@@ -67,7 +67,7 @@ namespace WinApp.Forms
 				"  playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 				"  player ON playerTank.playerId = player.id " +
 				"GROUP BY battle.id, battle.battleTime, player.name;";
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = await DB.FetchData(sql);
 			string updatesql = "";
 			// Progress
 			badProgressBar.ValueMax = dt.Rows.Count;
@@ -81,7 +81,7 @@ namespace WinApp.Forms
 				UpdateProgressBar("Battle #" + battleId + " - " + Convert.ToDateTime(dr["battleTime"]));
 				// Get all battlePlayers
 				sql = "SELECT team, deathReason, name FROM battlePlayer WHERE battleId=" + battleId;
-				DataTable battlePlayers = DB.FetchData(sql);
+				DataTable battlePlayers = await DB.FetchData(sql);
 				// Find players team (1/2) and enemy team (1/2) for battle
 				DataRow[] drTemp = battlePlayers.Select("name = '" + playerName + "'");
 				int playerTeam = 1;
@@ -90,7 +90,7 @@ namespace WinApp.Forms
 
 				//sql = "SELECT team FROM battlePlayer WHERE battleid=" + battleId + " AND name=@playerName";
 				//DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
-				//dtTemp = DB.FetchData(sql);
+				//dtTemp = await DB.FetchData(sql);
 				//if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
 				//	playerTeam = Convert.ToInt32(dtTemp.Rows[0][0]);
 				int enemyTeam = 1;
@@ -112,7 +112,7 @@ namespace WinApp.Forms
 					"WHERE id = " + dr["battleId"].ToString() + ";";
 			}
 			if (updatesql != "")
-                await DB.ExecuteNonQueryAsync(updatesql, RunInBatch: true);
+                await DB.ExecuteNonQuery(updatesql, RunInBatch: true);
 		}
 	}
 }
