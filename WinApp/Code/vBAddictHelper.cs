@@ -350,7 +350,7 @@ namespace WinApp.Code
                 httpRequest.Timeout = timeout;
                 httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
                 httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
+                WebResponse webResponse = await httpRequest.GetResponseAsync();
                 StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
                 string xmlResult = responseStream.ReadToEnd(); // Read result into string
                 XmlDocument xmlDoc = new XmlDocument();

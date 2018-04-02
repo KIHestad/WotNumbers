@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 472; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 473; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3149,6 +3149,15 @@ namespace WinApp.Code
                     mssql =
                         "INSERT INTO map (id, name, arena_id) VALUES (76, 'Glacier', '115_sweden'); " +
                         "DELETE FROM map WHERE id = 83";
+                    sqlite = mssql;
+                    break;
+                case 473:
+                    // Deactivate vbAddict features because of site currently not working
+                    Config.Settings.vBAddictUploadActive = false;
+                    Config.Settings.vBAddictUploadReplayActive = false;
+                    Config.Settings.vBAddictShowToolBarMenu = false;
+                    await Config.SaveConfig();
+                    mssql = "UPDATE player SET vbaddictUploadActive=0, vbaddictUploadReplayActive=0";
                     sqlite = mssql;
                     break;
 

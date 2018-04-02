@@ -118,9 +118,9 @@ namespace WinApp.Forms.Chart
                     "INSERT INTO chartFavLine (chartFavId, tankId, chartTypeName, use2ndYaxis) " +
                     "VALUES (@chartFavId, @tankId, @chartTypeName, @use2ndYaxis);";
                 DB.AddWithValue(ref newsql, "@chartFavId", _chartFavId, DB.SqlDataType.Int);
-                DB.AddWithValue(ref newsql, "@tankId", item.tankId, DB.SqlDataType.Int);
-                DB.AddWithValue(ref newsql, "@chartTypeName", item.chartTypeName, DB.SqlDataType.VarChar);
-                DB.AddWithValue(ref newsql, "@use2ndYaxis", item.use2ndYaxis, DB.SqlDataType.Boolean);
+                DB.AddWithValue(ref newsql, "@tankId", item.TankId, DB.SqlDataType.Int);
+                DB.AddWithValue(ref newsql, "@chartTypeName", item.ChartTypeName, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref newsql, "@use2ndYaxis", item.Use2ndYaxis, DB.SqlDataType.Boolean);
                 sql += newsql;
             }
             await DB.ExecuteNonQuery(sql, true, true);

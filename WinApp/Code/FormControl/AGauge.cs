@@ -305,11 +305,8 @@ namespace AGaugeApp
 						{
 							if (!m_valueIsInRange[counter])
 							{
-								if (ValueInRangeChanged != null)
-								{
-									ValueInRangeChanged(this, new ValueInRangeChangedEventArgs(counter));
-								}
-							}
+                                ValueInRangeChanged?.Invoke(this, new ValueInRangeChangedEventArgs(counter));
+                            }
 						}
 						else
 						{

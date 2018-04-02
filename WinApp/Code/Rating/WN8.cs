@@ -16,19 +16,19 @@ namespace WinApp.Code.Rating
         {
             public RatingParametersWN8()
             {
-                rp = new WNHelper.RatingParameters();
-                expDmg = 0;
-                expSpot = 0;
-                expFrag = 0;
-                expDef = 0;
-                expWinRate = 0;
+                RP = new WNHelper.RatingParameters();
+                ExpDmg = 0;
+                ExpSpot = 0;
+                ExpFrag = 0;
+                ExpDef = 0;
+                ExpWinRate = 0;
             }
-            public WNHelper.RatingParameters rp { get; set; }
-            public double expWinRate { get; set; }
-            public double expDmg { get; set; }
-            public double expFrag { get; set; }
-            public double expSpot { get; set; }
-            public double expDef { get; set; }
+            public WNHelper.RatingParameters RP { get; set; }
+            public double ExpWinRate { get; set; }
+            public double ExpDmg { get; set; }
+            public double ExpFrag { get; set; }
+            public double ExpSpot { get; set; }
+            public double ExpDef { get; set; }
         }
 
 
@@ -41,12 +41,12 @@ namespace WinApp.Code.Rating
             {
                 // Get player totals
                 rpWN = new RatingParametersWN8();
-                rpWN.rp.BATTLES = Convert.ToDouble(playerTankBattle.Compute("SUM([battles])", ""));
-                rpWN.rp.DAMAGE = Convert.ToDouble(playerTankBattle.Compute("SUM([dmg])", ""));
-                rpWN.rp.SPOT = Convert.ToDouble(playerTankBattle.Compute("SUM([spot])", ""));
-                rpWN.rp.FRAGS = Convert.ToDouble(playerTankBattle.Compute("SUM([frags])", ""));
-                rpWN.rp.DEF = Convert.ToDouble(playerTankBattle.Compute("SUM([def])", ""));
-                rpWN.rp.WINS = Convert.ToDouble(playerTankBattle.Compute("SUM([wins])", ""));
+                rpWN.RP.BATTLES = Convert.ToDouble(playerTankBattle.Compute("SUM([battles])", ""));
+                rpWN.RP.DAMAGE = Convert.ToDouble(playerTankBattle.Compute("SUM([dmg])", ""));
+                rpWN.RP.SPOT = Convert.ToDouble(playerTankBattle.Compute("SUM([spot])", ""));
+                rpWN.RP.FRAGS = Convert.ToDouble(playerTankBattle.Compute("SUM([frags])", ""));
+                rpWN.RP.DEF = Convert.ToDouble(playerTankBattle.Compute("SUM([def])", ""));
+                rpWN.RP.WINS = Convert.ToDouble(playerTankBattle.Compute("SUM([wins])", ""));
                 // Get tanks with battle count per tank and expected values from db
                 foreach (DataRow ptbRow in playerTankBattle.Rows)
                 {
@@ -56,11 +56,11 @@ namespace WinApp.Code.Rating
                     DataRow expected = TankHelper.TankInfo(tankId);
                     if (battlecount > 0 && expected != null && expected["expDmg"] != DBNull.Value)
                     {
-                        rpWN.expDmg += Convert.ToDouble(expected["expDmg"]) * battlecount;
-                        rpWN.expSpot += Convert.ToDouble(expected["expSpot"]) * battlecount;
-                        rpWN.expFrag += Convert.ToDouble(expected["expFrags"]) * battlecount;
-                        rpWN.expDef += Convert.ToDouble(expected["expDef"]) * battlecount;
-                        rpWN.expWinRate += Convert.ToDouble(expected["expWR"]) * battlecount;
+                        rpWN.ExpDmg += Convert.ToDouble(expected["expDmg"]) * battlecount;
+                        rpWN.ExpSpot += Convert.ToDouble(expected["expSpot"]) * battlecount;
+                        rpWN.ExpFrag += Convert.ToDouble(expected["expFrags"]) * battlecount;
+                        rpWN.ExpDef += Convert.ToDouble(expected["expDef"]) * battlecount;
+                        rpWN.ExpWinRate += Convert.ToDouble(expected["expWR"]) * battlecount;
                     }
                 }
             }
@@ -69,10 +69,12 @@ namespace WinApp.Code.Rating
 
         public async static Task<RatingParametersWN8> GetParamForPlayerTotal(string battleMode)
         {
-            RatingParametersWN8 rpWN = new RatingParametersWN8();
             // Get player totals from db
-            rpWN.rp = await WNHelper.GetParamForPlayerTankBattle(battleMode, excludeIfWN8ExpDmgIsNull: true);
-            if (rpWN.rp == null)
+            RatingParametersWN8 rpWN = new RatingParametersWN8
+            {
+                RP = await WNHelper.GetParamForPlayerTankBattle(battleMode, excludeIfWN8ExpDmgIsNull: true)
+            };
+            if (rpWN.RP == null)
                 return null;
             // Get tanks with battle count per tank and expected values from db
             string battleModeWhere = "";
@@ -96,11 +98,11 @@ namespace WinApp.Code.Rating
                 double battlecount = Convert.ToDouble(expected["battles"]);
                 if (battlecount > 0 && expected["expDmg"] != DBNull.Value)
                 {
-                    rpWN.expDmg += Convert.ToDouble(expected["expDmg"]) * battlecount;
-                    rpWN.expSpot += Convert.ToDouble(expected["expSpot"]) * battlecount;
-                    rpWN.expFrag += Convert.ToDouble(expected["expFrags"]) * battlecount;
-                    rpWN.expDef += Convert.ToDouble(expected["expDef"]) * battlecount;
-                    rpWN.expWinRate += Convert.ToDouble(expected["expWR"]) * battlecount;
+                    rpWN.ExpDmg += Convert.ToDouble(expected["expDmg"]) * battlecount;
+                    rpWN.ExpSpot += Convert.ToDouble(expected["expSpot"]) * battlecount;
+                    rpWN.ExpFrag += Convert.ToDouble(expected["expFrags"]) * battlecount;
+                    rpWN.ExpDef += Convert.ToDouble(expected["expDef"]) * battlecount;
+                    rpWN.ExpWinRate += Convert.ToDouble(expected["expWR"]) * battlecount;
                 }
             }
             return rpWN;
@@ -141,8 +143,10 @@ namespace WinApp.Code.Rating
         {
             Double WN8 = 0;
             WNHelper.RatingParameters rp = new WNHelper.RatingParameters(ratingParameters); // clone it to not affect input class
-            RatingParametersWN8 rpWN = new RatingParametersWN8();
-            rpWN.rp = rp;
+            RatingParametersWN8 rpWN = new RatingParametersWN8
+            {
+                RP = rp
+            };
             // get tankdata for current tank
             DataRow tankInfo = TankHelper.TankInfo(tankId);
             if (tankInfo != null && rp.BATTLES > 0 && tankInfo["expDmg"] != DBNull.Value)
@@ -151,11 +155,11 @@ namespace WinApp.Code.Rating
                 if (WN8WRx)
                     rp.WINS = Convert.ToDouble(tankInfo["expWR"]) / 100 * rp.BATTLES;
                 // get wn8 exp values for tank
-                rpWN.expDmg = Convert.ToDouble(tankInfo["expDmg"]) * rp.BATTLES;
-                rpWN.expSpot = Convert.ToDouble(tankInfo["expSpot"]) * rp.BATTLES;
-                rpWN.expFrag = Convert.ToDouble(tankInfo["expFrags"]) * rp.BATTLES;
-                rpWN.expDef = Convert.ToDouble(tankInfo["expDef"]) * rp.BATTLES;
-                rpWN.expWinRate = Convert.ToDouble(tankInfo["expWR"]) * rp.BATTLES;
+                rpWN.ExpDmg = Convert.ToDouble(tankInfo["expDmg"]) * rp.BATTLES;
+                rpWN.ExpSpot = Convert.ToDouble(tankInfo["expSpot"]) * rp.BATTLES;
+                rpWN.ExpFrag = Convert.ToDouble(tankInfo["expFrags"]) * rp.BATTLES;
+                rpWN.ExpDef = Convert.ToDouble(tankInfo["expDef"]) * rp.BATTLES;
+                rpWN.ExpWinRate = Convert.ToDouble(tankInfo["expWR"]) * rp.BATTLES;
                 // Use WN8 formula to calculate result
                 WN8 = UseFormula(rpWN);
             }
@@ -187,14 +191,14 @@ namespace WinApp.Code.Rating
         private static double UseFormula(RatingParametersWN8 rpWN)
         {
             double WN8 = 0;
-            if (rpWN != null && rpWN.rp.BATTLES > 0)
+            if (rpWN != null && rpWN.RP.BATTLES > 0)
             {
                 // Step 1
-                double rDAMAGE = rpWN.rp.DAMAGE / rpWN.expDmg;
-                double rSPOT = rpWN.rp.SPOT / rpWN.expSpot;
-                double rFRAG = rpWN.rp.FRAGS / rpWN.expFrag;
-                double rDEF = rpWN.rp.DEF / rpWN.expDef;
-                double rWIN = (rpWN.rp.WINS / rpWN.rp.BATTLES * 100) / (rpWN.expWinRate / rpWN.rp.BATTLES);
+                double rDAMAGE = rpWN.RP.DAMAGE / rpWN.ExpDmg;
+                double rSPOT = rpWN.RP.SPOT / rpWN.ExpSpot;
+                double rFRAG = rpWN.RP.FRAGS / rpWN.ExpFrag;
+                double rDEF = rpWN.RP.DEF / rpWN.ExpDef;
+                double rWIN = (rpWN.RP.WINS / rpWN.RP.BATTLES * 100) / (rpWN.ExpWinRate / rpWN.RP.BATTLES);
                 // Step 2
                 double rWINc = Math.Max(0, (rWIN - 0.71) / (1 - 0.71));
                 double rDAMAGEc = Math.Max(0, (rDAMAGE - 0.22) / (1 - 0.22));

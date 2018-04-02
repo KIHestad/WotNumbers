@@ -13,25 +13,25 @@ namespace WinApp.Code.Rating
         {
             public RatingParametersPR()
             {
-                bc = 0;
-                win = 0;
-                surv = 0;
-                dmg = 0;
-                hit = 0;
-                bc88 = 0;
-                xp88 = 0;
-                radio88 = 0;
-                track88 = 0;
+                BC = 0;
+                Win = 0;
+                Surv = 0;
+                Dmg = 0;
+                Hit = 0;
+                BC88 = 0;
+                Xp88 = 0;
+                Radio88 = 0;
+                Track88 = 0;
             }
-            public double bc { get; set; } // ptb.battles          - battle.battlesCount 
-            public double win { get; set; } // ptb.wins            - battle.victory 
-            public double surv { get; set; } // ptb.survived       - battle.survived 
-            public double dmg { get; set; } // ptb.dmg             - battle.dmg 
-            public double hit { get; set; } // ptb.hits            - battle.hits 
-            public double bc88 { get; set; } // ptb.battles8p      - battle.battlesCount 
-            public double xp88 { get; set; } // ptb.xp8p           - battle.xp       
-            public double radio88 { get; set; } // ptb.assistSpot  - battle.assistSpot 
-            public double track88 { get; set; } // ptb.assistTrack - battle.assistTrack 
+            public double BC { get; set; } // ptb.battles          - battle.battlesCount 
+            public double Win { get; set; } // ptb.wins            - battle.victory 
+            public double Surv { get; set; } // ptb.survived       - battle.survived 
+            public double Dmg { get; set; } // ptb.dmg             - battle.dmg 
+            public double Hit { get; set; } // ptb.hits            - battle.hits 
+            public double BC88 { get; set; } // ptb.battles8p      - battle.battlesCount 
+            public double Xp88 { get; set; } // ptb.xp8p           - battle.xp       
+            public double Radio88 { get; set; } // ptb.assistSpot  - battle.assistSpot 
+            public double Track88 { get; set; } // ptb.assistTrack - battle.assistTrack 
         }
 
         private async static Task<RatingParametersPR> GetParamForPlayerTotal(string battleMode)
@@ -55,15 +55,15 @@ namespace WinApp.Code.Rating
             if (playerTotalsTable.Rows.Count > 0)
             {
                 DataRow stats = playerTotalsTable.Rows[0];
-                rpPR.bc = WNHelper.ConvertDbVal2Double(stats["bc"]);
-                rpPR.win = WNHelper.ConvertDbVal2Double(stats["win"]) / rpPR.bc;
-                rpPR.surv = WNHelper.ConvertDbVal2Double(stats["surv"]) / rpPR.bc;
-                rpPR.dmg = WNHelper.ConvertDbVal2Double(stats["dmg"]) / rpPR.bc;
-                rpPR.hit = WNHelper.ConvertDbVal2Double(stats["hit"]) / rpPR.bc;
-                rpPR.bc88 = WNHelper.ConvertDbVal2Double(stats["bc88"]);
-                rpPR.xp88 = WNHelper.ConvertDbVal2Double(stats["xp88"]) / rpPR.bc88;
-                rpPR.radio88 = WNHelper.ConvertDbVal2Double(stats["radio88"]) / rpPR.bc;
-                rpPR.track88 = WNHelper.ConvertDbVal2Double(stats["track88"]) / rpPR.bc;
+                rpPR.BC = WNHelper.ConvertDbVal2Double(stats["bc"]);
+                rpPR.Win = WNHelper.ConvertDbVal2Double(stats["win"]) / rpPR.BC;
+                rpPR.Surv = WNHelper.ConvertDbVal2Double(stats["surv"]) / rpPR.BC;
+                rpPR.Dmg = WNHelper.ConvertDbVal2Double(stats["dmg"]) / rpPR.BC;
+                rpPR.Hit = WNHelper.ConvertDbVal2Double(stats["hit"]) / rpPR.BC;
+                rpPR.BC88 = WNHelper.ConvertDbVal2Double(stats["bc88"]);
+                rpPR.Xp88 = WNHelper.ConvertDbVal2Double(stats["xp88"]) / rpPR.BC88;
+                rpPR.Radio88 = WNHelper.ConvertDbVal2Double(stats["radio88"]) / rpPR.BC;
+                rpPR.Track88 = WNHelper.ConvertDbVal2Double(stats["track88"]) / rpPR.BC;
             }
             return rpPR;
         }
@@ -87,20 +87,20 @@ namespace WinApp.Code.Rating
         private static double UseFormula(RatingParametersPR rp)
         {
             double PR = 0;
-            if (rp != null && rp.bc > 0)
+            if (rp != null && rp.BC > 0)
             {
                 // from: http://wiki.wargaming.net/en/Player_Ratings_(WoT)
                 // calculate inner parts
-                double inner1 = 3500d / (1d + Math.Exp(16 - (31 * rp.win)));
-                double inner2 = 1400d / (1d + Math.Exp(8 - (27 * rp.surv)));
-                double inner3 = 3700d * Asinh(0.0006 * rp.dmg);
-                double inner4 = Math.Tanh(0.002 * rp.bc88) * (3900 * Asinh(0.0015 * rp.xp88));
-                double inner5 = 1.4 * rp.radio88;
-                double inner6 = 1.1 * rp.track88;
+                double inner1 = 3500d / (1d + Math.Exp(16 - (31 * rp.Win)));
+                double inner2 = 1400d / (1d + Math.Exp(8 - (27 * rp.Surv)));
+                double inner3 = 3700d * Asinh(0.0006 * rp.Dmg);
+                double inner4 = Math.Tanh(0.002 * rp.BC88) * (3900 * Asinh(0.0015 * rp.Xp88));
+                double inner5 = 1.4 * rp.Radio88;
+                double inner6 = 1.1 * rp.Track88;
                 // calculate inner
                 double inner = inner1 + inner2 + inner3 + inner4 + inner5 + inner6;
                 // total formula using inner
-                PR = 540d * Math.Pow(rp.bc, 0.37) * Math.Tanh(0.00163 * Math.Pow(rp.bc, -0.37) * (inner));
+                PR = 540d * Math.Pow(rp.BC, 0.37) * Math.Tanh(0.00163 * Math.Pow(rp.BC, -0.37) * (inner));
 
                 ////from: http://ftr.wot-news.com/2013/09/12/new-wg-personal-rating-analysis/
                 //// calculate inner parts

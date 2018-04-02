@@ -179,9 +179,9 @@ namespace WinApp.Forms
             bool yAxix2 = false;
             foreach (BattleChartHelper.BattleChartItem item in BattleChartHelper.CurrentChartView)
             {
-                if (item.use2ndYaxis == false)
+                if (item.Use2ndYaxis == false)
                     yAxix1 = true;
-                if (item.use2ndYaxis == true)
+                if (item.Use2ndYaxis == true)
                     yAxix2 = true;
             }
             // Clear chart and prepare for yaxis
@@ -190,9 +190,9 @@ namespace WinApp.Forms
             foreach (BattleChartHelper.BattleChartItem item in BattleChartHelper.CurrentChartView)
             {
                 if (yAxix1 && yAxix2)
-                    await AddChartValuesToChart(item.tankId, item.tankName, item.chartTypeName, item.use2ndYaxis); // Both Y-axis in use
+                    await AddChartValuesToChart(item.TankId, item.TankName, item.ChartTypeName, item.Use2ndYaxis); // Both Y-axis in use
                 else
-                    await AddChartValuesToChart(item.tankId, item.tankName, item.chartTypeName, false); // Only one Y-axis
+                    await AddChartValuesToChart(item.TankId, item.TankName, item.ChartTypeName, false); // Only one Y-axis
             }
         }
 
@@ -1131,10 +1131,10 @@ namespace WinApp.Forms
                     if (dr["chartFavLineId"] != DBNull.Value)
                     {
                         BattleChartHelper.BattleChartItem item = new BattleChartHelper.BattleChartItem();
-                        item.chartTypeName = dr["chartTypeName"].ToString();
-                        item.tankId = Convert.ToInt32(dr["tankId"]);
-                        item.tankName = TankHelper.GetTankName(item.tankId, true);
-                        item.use2ndYaxis = Convert.ToBoolean(dr["use2ndYaxis"]);
+                        item.ChartTypeName = dr["chartTypeName"].ToString();
+                        item.TankId = Convert.ToInt32(dr["tankId"]);
+                        item.TankName = TankHelper.GetTankName(item.TankId, true);
+                        item.Use2ndYaxis = Convert.ToBoolean(dr["use2ndYaxis"]);
                         BattleChartHelper.CurrentChartView.Add(item);
                     }
                 }

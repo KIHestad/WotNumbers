@@ -63,8 +63,10 @@ namespace WinApp.Code
 		{
             try
             {
-                Form frm = new Forms.Message(Title, Message, MessageType);
-                frm.FormBorderStyle = FormBorderStyle.None;
+                Form frm = new Forms.Message(Title, Message, MessageType)
+                {
+                    FormBorderStyle = FormBorderStyle.None
+                };
                 if (owner == null)
                     frm.ShowDialog();
                 else

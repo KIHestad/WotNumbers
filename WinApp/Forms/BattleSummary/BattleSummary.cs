@@ -141,21 +141,21 @@ namespace WinApp.Forms
             CreateDataGridContextMenu();
 		}
 
-		private void chkAvg_Click(object sender, EventArgs e)
+		private async void chkAvg_Click(object sender, EventArgs e)
 		{
 			chkAvg.Checked = true;
 			chkSum.Checked = false;
-			ShowTeam();
+			await ShowTeam();
 		}
 
-		private void chkSum_Click(object sender, EventArgs e)
+		private async void chkSum_Click(object sender, EventArgs e)
 		{
 			chkAvg.Checked = false;
 			chkSum.Checked = true;
-			ShowTeam();
+			await ShowTeam();
 		}
 
-		private void btnTab_Click(object sender, EventArgs e)
+		private async void btnTab_Click(object sender, EventArgs e)
 		{
 			// deselect tabs
 			btnEnemyTeam.Checked = false;
@@ -190,13 +190,13 @@ namespace WinApp.Forms
 					chkSum.Visible = true;
 					chkAvg.Visible = true;
 					playerTeam = 1; // My team
-					ShowTeam();
+					await ShowTeam();
 					break;
 				case "btnEnemyTeam":
 					chkSum.Visible = true;
 					chkAvg.Visible = true;
 					playerTeam = 0; // Enemy team
-					ShowTeam();
+					await ShowTeam();
 					break;
 			}
 		}
@@ -364,16 +364,16 @@ namespace WinApp.Forms
 				FormatStandardDataGrid(dgvOther, "");
 
                 // Calculate avg ratings
-                wn9avg = Convert.ToInt32(WN9.CalcPlayerTotal(battleMode));
-                wn8avg = Convert.ToInt32(WN8.CalcPlayerTotal(battleMode));
-				wn7avg = Convert.ToInt32(WN7.WN7total(battleMode));
-				effavg = Convert.ToInt32(EFF.EffTotal(battleMode));
+                wn9avg = Convert.ToInt32(await WN9.CalcPlayerTotal(battleMode));
+                wn8avg = Convert.ToInt32(await WN8.CalcPlayerTotal(battleMode));
+				wn7avg = Convert.ToInt32(await WN7.WN7total(battleMode));
+				effavg = Convert.ToInt32(await EFF.EffTotal(battleMode));
                 wravg = await WR.WinrateTank(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
                 // Calc current battle ratings
-                wn9 = Convert.ToInt32(WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
-                wn8 = Convert.ToInt32(WN8.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
-                wn7 = Convert.ToInt32(WN7.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
-                eff = Convert.ToInt32(EFF.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+                wn9 = Convert.ToInt32((await WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter)).WN9);
+                wn8 = Convert.ToInt32(await WN8.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+                wn7 = Convert.ToInt32(await WN7.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+                eff = Convert.ToInt32(await EFF.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
                 wr = await WR.WinrateBattle(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
 				// Add rows to Ratings grid
 				DataTable dtRating = dt.Clone();
@@ -531,19 +531,14 @@ namespace WinApp.Forms
 					exp_def += DbConvert.ToDouble(dr["expDef"]);
 					exp_wr += DbConvert.ToDouble(dr["expWR"]);
 				}
-				// Get result and total expected values
-				double rWINc;
-				double rDAMAGEc;
-				double rFRAGSc;
-				double rSPOTc;
-				double rDEFc;
+                // Get result and total expected values
                 WN8.UseFormulaReturnResult(
-						rp, wr,
-						exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
-						out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
-				
-				// Create table for showing WN8 details
-				DataTable dtWN8 = new DataTable();
+                        rp, wr,
+                        exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
+                        out double rWINc, out double rDAMAGEc, out double rFRAGSc, out double rSPOTc, out double rDEFc);
+
+                // Create table for showing WN8 details
+                DataTable dtWN8 = new DataTable();
 				dtWN8.Columns.Add("Parameter", typeof(string));
 				dtWN8.Columns.Add("Image", typeof(Image));
 				dtWN8.Columns.Add("Result", typeof(string));
@@ -771,9 +766,9 @@ namespace WinApp.Forms
 
 		#region Teams
 
-		private void ShowTeam()
+		private async Task ShowTeam()
 		{
-			dgvTeam1.DataSource = GetDataGridSource();
+			dgvTeam1.DataSource = await GetDataGridSource();
 			ResizeNow();
 			scroll.ScrollPosition = 0;
 			FormatDataGrid(dgvTeam1);
@@ -804,7 +799,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void dgvColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+		private async void dgvColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
 			// Sorting
 			DataGridView dgv = (DataGridView)sender;
@@ -829,7 +824,7 @@ namespace WinApp.Forms
 			bool sortDirection = true;
 			if (column.HeaderCell.SortGlyphDirection == SortOrder.Descending)
 				sortDirection = false; ;
-			dgv.DataSource = GetDataGridSource(columnName, sortDirection);
+			dgv.DataSource = await GetDataGridSource(columnName, sortDirection);
 			if ((btnEnemyTeam.Checked || btnOurTeam.Checked) && scroll.ScrollPosition > 0)
 			{
 				Refresh();
@@ -1078,10 +1073,10 @@ namespace WinApp.Forms
 		#region GridScrollbar
 
 		bool scrollingY = false;
-		private async void scroll_MouseDown(object sender, MouseEventArgs e)
+		private void scroll_MouseDown(object sender, MouseEventArgs e)
 		{
 			scrollingY = true;
-            await ScrollY();
+            ScrollY();
 		}
 
 		private void scroll_MouseUp(object sender, MouseEventArgs e)
@@ -1089,12 +1084,12 @@ namespace WinApp.Forms
 			scrollingY = false;
 		}
 
-		private async void scroll_MouseMove(object sender, MouseEventArgs e)
+		private void scroll_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (scrollingY) await ScrollY();
+			if (scrollingY) ScrollY();
 		}
 
-		private async Task ScrollY()
+		private void ScrollY()
 		{
 			try
 			{
@@ -1103,7 +1098,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				await Log.LogToFile(ex);
+				Log.LogToFile(ex).ConfigureAwait(false);
 				// throw;
 			}
 		}

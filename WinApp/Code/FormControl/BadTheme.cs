@@ -232,14 +232,16 @@ abstract class BadThemeContainerControl : ContainerControl
 
 	public void SetMainAreaSize()
 	{
-		MainAreaClass calcMainArea = new MainAreaClass();
-		calcMainArea.Top = FormMargin + TitleHeight + 1;
-		calcMainArea.Left = FormMargin + 1 + FormInnerBorder;
-		calcMainArea.Right = ClientRectangle.Width - FormMargin - FormInnerBorder - 1;
-		calcMainArea.Width = ClientRectangle.Width - (FormMargin * 2) - (FormInnerBorder * 2) - 2;
-		calcMainArea.Height = ClientRectangle.Height - (FormMargin * 2) - FormInnerBorder - 2 - TitleHeight;
-		calcMainArea.Bottom = ClientRectangle.Height - FormMargin - FormInnerBorder - 1;
-		if (FormFooter) calcMainArea.Height -= FormFooterHeight;
+        MainAreaClass calcMainArea = new MainAreaClass
+        {
+            Top = FormMargin + TitleHeight + 1,
+            Left = FormMargin + 1 + FormInnerBorder,
+            Right = ClientRectangle.Width - FormMargin - FormInnerBorder - 1,
+            Width = ClientRectangle.Width - (FormMargin * 2) - (FormInnerBorder * 2) - 2,
+            Height = ClientRectangle.Height - (FormMargin * 2) - FormInnerBorder - 2 - TitleHeight,
+            Bottom = ClientRectangle.Height - FormMargin - FormInnerBorder - 1
+        };
+        if (FormFooter) calcMainArea.Height -= FormFooterHeight;
 		MainArea = calcMainArea;
 	}
 
@@ -1401,12 +1403,12 @@ class BadTextBox : BadThemeControl
 		textBox.Top = 5;
 		textBox.Left = 6;
 		this.Controls.Add(textBox);
-		textBox.TextChanged += new EventHandler(textBox_TextChanged);
-		textBox.KeyPress += new KeyPressEventHandler(textBox_KeyPress);
-		textBox.MouseHover += new EventHandler(textBox_MouseHover);
-		textBox.MouseLeave += new EventHandler(textBox_MouseLeave);
-		textBox.MouseDown += new MouseEventHandler(textBox_MouseDown);
-		textBox.Click += new EventHandler(textBox_Click);
+		textBox.TextChanged += new EventHandler(TextBox_TextChanged);
+		textBox.KeyPress += new KeyPressEventHandler(TextBox_KeyPress);
+		textBox.MouseHover += new EventHandler(TextBox_MouseHover);
+		textBox.MouseLeave += new EventHandler(TextBox_MouseLeave);
+		textBox.MouseDown += new MouseEventHandler(TextBox_MouseDown);
+		textBox.Click += new EventHandler(TextBox_Click);
 	}
 
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
@@ -1436,7 +1438,7 @@ class BadTextBox : BadThemeControl
 		textBox.Height = ClientRectangle.Height -8;
 	}
 
-	private void textBox_TextChanged(object sender, EventArgs e)
+	private void TextBox_TextChanged(object sender, EventArgs e)
 	{
 		Text = textBox.Text;
 	}
@@ -1459,13 +1461,13 @@ class BadTextBox : BadThemeControl
 		base.OnLeave(e);
 	}
 
-	protected void textBox_KeyPress(object sender, KeyPressEventArgs e)
+	protected void TextBox_KeyPress(object sender, KeyPressEventArgs e)
 	{
 		base.OnKeyPress(e);
 	}
 
 
-	protected void textBox_MouseHover(object sender, EventArgs e)
+	protected void TextBox_MouseHover(object sender, EventArgs e)
 	{
 		Point p = PointToClient(MousePosition);
 		p.X += 15;
@@ -1474,7 +1476,7 @@ class BadTextBox : BadThemeControl
 		base.OnMouseHover(e);
 	}
 
-	protected void textBox_MouseLeave(object sender, EventArgs e)
+	protected void TextBox_MouseLeave(object sender, EventArgs e)
 	{
 		try
 		{
@@ -1484,7 +1486,7 @@ class BadTextBox : BadThemeControl
 		catch (Exception) {	}
 	}
 
-	protected void textBox_MouseDown(object sender, MouseEventArgs e)
+	protected void TextBox_MouseDown(object sender, MouseEventArgs e)
 	{
 		try
 		{
@@ -1494,7 +1496,7 @@ class BadTextBox : BadThemeControl
 		catch (Exception) {	}
 	}
 
-	protected void textBox_Click(object sender, EventArgs e)
+	protected void TextBox_Click(object sender, EventArgs e)
 	{
 		base.OnClick(e);
 	}

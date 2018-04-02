@@ -136,7 +136,7 @@ namespace WinApp.Forms
             
 		}
 
-		private void btnTab_Click(object sender, EventArgs e)
+		private async void btnTab_Click(object sender, EventArgs e)
 		{
 			// deselect tabs
 			btnEnemyTeam.Checked = false;
@@ -173,13 +173,13 @@ namespace WinApp.Forms
 					panelMyResult.Visible = true;
 					break;
 				case "btnTeams":
-					ShowTeams();
+					await ShowTeams();
 					break;
 				case "btnOurTeam":
-					ShowOwnTeam();
+					await ShowOwnTeam();
 					break;
 				case "btnEnemyTeam":
-					ShowEnemyTeam();
+					await ShowEnemyTeam();
 					break;
 				case "btnBattleReview":
 					ShowBattleReview();
@@ -415,15 +415,17 @@ namespace WinApp.Forms
 			if (dt.Rows.Count > 0)
 			{
 				DataRow dr = dt.Rows[0];
-				//int tankId = Convert.ToInt32(dr["tankId"]);
-				//int battlesCount = Convert.ToInt32(dr["battlesCount"]);
-                Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
-                rp.BATTLES = Convert.ToDouble(dr["battlesCount"]);
-                rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
-				rp.SPOT = Convert.ToDouble(dr["spotted"]);
-				rp.FRAGS = Convert.ToDouble(dr["frags"]);
-				rp.DEF = Convert.ToDouble(dr["def"]);
-				double exp_dmg = DbConvert.ToDouble(dr["expDmg"]);
+                //int tankId = Convert.ToInt32(dr["tankId"]);
+                //int battlesCount = Convert.ToInt32(dr["battlesCount"]);
+                Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters
+                {
+                    BATTLES = Convert.ToDouble(dr["battlesCount"]),
+                    DAMAGE = Convert.ToDouble(dr["dmg"]),
+                    SPOT = Convert.ToDouble(dr["spotted"]),
+                    FRAGS = Convert.ToDouble(dr["frags"]),
+                    DEF = Convert.ToDouble(dr["def"])
+                };
+                double exp_dmg = DbConvert.ToDouble(dr["expDmg"]);
 				double exp_spotted = DbConvert.ToDouble(dr["expSpot"]);
 				double exp_frags = DbConvert.ToDouble(dr["expFrags"]);
                 double exp_def = DbConvert.ToDouble(dr["expDef"]);
@@ -432,16 +434,11 @@ namespace WinApp.Forms
                 if (rp.BATTLES > 1)
                     wr = rp.WINS / rp.BATTLES;
                 //string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
-                double rWINc;
-				double rDAMAGEc;
-				double rFRAGSc;
-				double rSPOTc;
-				double rDEFc;
                 Code.Rating.WN8.UseFormulaReturnResult(
-					rp, wr,
-					exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
-					out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
-				DataTable dtWN8 = new DataTable();
+                    rp, wr,
+                    exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
+                    out double rWINc, out double rDAMAGEc, out double rFRAGSc, out double rSPOTc, out double rDEFc);
+                DataTable dtWN8 = new DataTable();
 				dtWN8.Columns.Add("Parameter", typeof(string));
 				dtWN8.Columns.Add("Image", typeof(Image));
 				dtWN8.Columns.Add("Result", typeof(string));
@@ -864,11 +861,11 @@ namespace WinApp.Forms
 
 		#region Teams
 
-		private void ShowTeams()
+		private async Task ShowTeams()
 		{
 			showAllColumns = false;
-			dgvTeam1.DataSource = GetDataGridSource(team1);
-			dgvTeam2.DataSource = GetDataGridSource(team2);
+			dgvTeam1.DataSource = await GetDataGridSource(team1);
+			dgvTeam2.DataSource = await GetDataGridSource(team2);
 			ResizeNow();
 			FormatDataGrid(dgvTeam1);
 			FormatDataGrid(dgvTeam2);
@@ -878,10 +875,10 @@ namespace WinApp.Forms
 			pnlBack.Visible = true;
 		}
 
-		private void ShowOwnTeam()
+		private async Task ShowOwnTeam()
 		{
 			showAllColumns = true;
-			dgvTeam1.DataSource = GetDataGridSource(team1);
+			dgvTeam1.DataSource = await GetDataGridSource(team1);
 			ResizeNow();
 			scroll.ScrollPosition = 0;
 			FormatDataGrid(dgvTeam1);
@@ -891,10 +888,10 @@ namespace WinApp.Forms
 			MoveScrollBar();
 		}
 
-		private void ShowEnemyTeam()
+		private async Task ShowEnemyTeam()
 		{
 			showAllColumns = true;
-			dgvTeam2.DataSource = GetDataGridSource(team2);
+			dgvTeam2.DataSource = await GetDataGridSource(team2);
 			ResizeNow();
 			scroll.ScrollPosition = 0;
 			FormatDataGrid(dgvTeam2);
@@ -908,9 +905,11 @@ namespace WinApp.Forms
 		{
 			if (!fetchedMapAndComment)
 			{
-				controlBattleReview = new Forms.BattleReview(battleId, parentForm);
-				controlBattleReview.Name = "controlBattleReview";
-				panelBattleReview.Controls.Add(controlBattleReview);
+                controlBattleReview = new Forms.BattleReview(battleId, parentForm)
+                {
+                    Name = "controlBattleReview"
+                };
+                panelBattleReview.Controls.Add(controlBattleReview);
 				controlBattleReview.Dock = DockStyle.Fill;
 				Control[] c = panelBattleReview.Controls.Find("controlBattleReview", false);
 				c[0].BringToFront();
@@ -1203,7 +1202,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void dgvColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+		private async void dgvColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
 			// Sorting
 			DataGridView dgv = (DataGridView)sender;
@@ -1229,7 +1228,7 @@ namespace WinApp.Forms
 			if (column.HeaderCell.SortGlyphDirection == SortOrder.Descending)
 				sortDirection = false; ;
 			int team = Convert.ToInt32(dgv.Rows[0].Cells["Team"].Value);
-			dgv.DataSource = GetDataGridSource(team, columnName, sortDirection);
+			dgv.DataSource = await GetDataGridSource(team, columnName, sortDirection);
 			if ((btnEnemyTeam.Checked || btnOurTeam.Checked) && scroll.ScrollPosition > 0)
 			{
 				Refresh();

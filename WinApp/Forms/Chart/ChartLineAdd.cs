@@ -169,10 +169,10 @@ namespace WinApp.Forms
                         continue;
                     }
                     BattleChartHelper.BattleChartItem newChartItemAllTanks = new BattleChartHelper.BattleChartItem();
-                    newChartItemAllTanks.tankId = 0;
-                    newChartItemAllTanks.tankName = "All Tanks";
-                    newChartItemAllTanks.chartTypeName = chartTypeItem.ChartTypeName;
-                    newChartItemAllTanks.use2ndYaxis = chartTypeItem.Use2ndYaxis;
+                    newChartItemAllTanks.TankId = 0;
+                    newChartItemAllTanks.TankName = "All Tanks";
+                    newChartItemAllTanks.ChartTypeName = chartTypeItem.ChartTypeName;
+                    newChartItemAllTanks.Use2ndYaxis = chartTypeItem.Use2ndYaxis;
                     AddToNewChartItemIfNotExists(newChartItemAllTanks);
                 }
                 // Check if tanks any selected
@@ -180,10 +180,10 @@ namespace WinApp.Forms
                 foreach (TankItem tankItem in selectedTank)
                 {
                     BattleChartHelper.BattleChartItem newChartItem = new BattleChartHelper.BattleChartItem();
-                    newChartItem.tankId = tankItem.Id;
-                    newChartItem.tankName = tankItem.TankName;
-                    newChartItem.chartTypeName = chartTypeItem.ChartTypeName;
-                    newChartItem.use2ndYaxis = chartTypeItem.Use2ndYaxis;
+                    newChartItem.TankId = tankItem.Id;
+                    newChartItem.TankName = tankItem.TankName;
+                    newChartItem.ChartTypeName = chartTypeItem.ChartTypeName;
+                    newChartItem.Use2ndYaxis = chartTypeItem.Use2ndYaxis;
                     AddToNewChartItemIfNotExists(newChartItem);
                 }
             }
@@ -194,7 +194,7 @@ namespace WinApp.Forms
         private void AddToNewChartItemIfNotExists(BattleChartHelper.BattleChartItem newChartItem)
         {
             // Check if exists
-            if (!BattleChartHelper.CurrentChartView.Exists(x => x.tankId == newChartItem.tankId && x.chartTypeName == newChartItem.chartTypeName))
+            if (!BattleChartHelper.CurrentChartView.Exists(x => x.TankId == newChartItem.TankId && x.ChartTypeName == newChartItem.ChartTypeName))
                 BattleChartHelper.NewChartItem.Add(newChartItem);
         }
 

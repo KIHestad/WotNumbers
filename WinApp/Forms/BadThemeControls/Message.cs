@@ -52,21 +52,23 @@ namespace WinApp.Forms
 
 		private void Message_Load(object sender, EventArgs e)
 		{
-			string msg = txtMessage.Text;
-			int lines = Convert.ToInt32((Convert.ToDouble(msg.Length) / 45));
-			int pos = 0;
-			// search for to LF = add lines
-			while (msg.IndexOf(Environment.NewLine, pos) > 0)
-			{
-				pos = msg.IndexOf(Environment.NewLine, pos) + 2;
-				if (msg.Length > pos && msg.Substring(pos, 2) == Environment.NewLine)
-				{
-					lines++;
-					pos = pos + 2;
-				}
-			}
-			if (lines > 12) lines = 12; // max size
-			this.Height = txtMessage.Top + (lines * 25) + 50; // resize initial height of form to fit content
+            using (Graphics g = CreateGraphics())
+            {
+                SizeF size = g.MeasureString(txtMessage.Text, txtMessage.Font, txtMessage.Width);
+                var h = txtMessage.Top + (int)Math.Ceiling(size.Height) + 90;
+                if (h > 300)
+                {
+                    this.Width = 550;
+                    size = g.MeasureString(txtMessage.Text, txtMessage.Font, txtMessage.Width);
+                    h = txtMessage.Top + (int)Math.Ceiling(size.Height) + 90;
+                }
+                if (h > 300)
+                {
+                    h = 300;
+                }
+                this.Height = h;
+            }
+                                   
 			if (this.Top == 0)
 			{
 				Form lastForm = null;
@@ -83,7 +85,8 @@ namespace WinApp.Forms
                     this.Left = parentForm.Left + (parentForm.Width / 2) - (this.Width / 2);
                 }
 			}
-		}
+            ResizeNow();
+        }
 
         private void btn1_Click(object sender, EventArgs e)
         {
@@ -121,7 +124,31 @@ namespace WinApp.Forms
 
         private void btnCopyText_Click(object sender, EventArgs e)
         {
+            
+        }
+
+        private void lblStatus_Click(object sender, EventArgs e)
+        {
             Clipboard.SetText(MessageTheme.Text + Environment.NewLine + Environment.NewLine + txtMessage.Text);
+            lblStatus.Text = "Text copied to clipboard";
+        }
+
+        private void MessageTheme_Resize(object sender, EventArgs e)
+        {
+            ResizeNow();
+        }
+
+        private void ResizeNow()
+        {
+            using (Graphics g = CreateGraphics())
+            {
+                SizeF size = g.MeasureString(txtMessage.Text, txtMessage.Font, txtMessage.Width);
+                var height = Math.Ceiling(size.Height);
+                if (txtMessage.Height < height)
+                    lblStatusRowCount.Text = "Form needs resizing";
+                else
+                    lblStatusRowCount.Text = "";
+            }
         }
     }
 }

@@ -22,14 +22,16 @@ namespace WinApp.Code.Rating
         {
             Double? RWR = null;
             WNHelper.RatingParameters rp = new WNHelper.RatingParameters(rpBattle); // clone it to not affect input class
-            WN8.RatingParametersWN8 rpWN8 = new WN8.RatingParametersWN8();
-            rpWN8.rp = rp;
+            WN8.RatingParametersWN8 rpWN8 = new WN8.RatingParametersWN8
+            {
+                RP = rp
+            };
             // get tankdata for current tank
             DataRow tankInfo = TankHelper.TankInfo(tankId);
             if (tankInfo != null && rp.BATTLES > 0 && tankInfo["expDmg"] != DBNull.Value)
             {
                 // get wn8 exp values for tank
-                rpWN8.expWinRate = Convert.ToDouble(tankInfo["expWR"]) * rp.BATTLES;
+                rpWN8.ExpWinRate = Convert.ToDouble(tankInfo["expWR"]) * rp.BATTLES;
                 // Use WN8 formula to calculate result
                 RWR = RWRuseFormula(rpWN8);
             }
@@ -161,8 +163,8 @@ namespace WinApp.Code.Rating
             {
                 // Get player totals
                 WN8.RatingParametersWN8 rpWN8 = new WN8.RatingParametersWN8();
-                rpWN8.rp.BATTLES = Convert.ToDouble(playerTankBattle.Compute("SUM([battles])", ""));
-                rpWN8.rp.WINS = Convert.ToDouble(playerTankBattle.Compute("SUM([wins])", ""));
+                rpWN8.RP.BATTLES = Convert.ToDouble(playerTankBattle.Compute("SUM([battles])", ""));
+                rpWN8.RP.WINS = Convert.ToDouble(playerTankBattle.Compute("SUM([wins])", ""));
                 // Get tanks with battle count per tank and expected values from db
                 foreach (DataRow ptbRow in playerTankBattle.Rows)
                 {
@@ -172,11 +174,11 @@ namespace WinApp.Code.Rating
                     DataRow expected = TankHelper.TankInfo(tankId);
                     if (battlecount > 0 && expected != null && expected["expWR"] != DBNull.Value)
                     {
-                        rpWN8.expWinRate += Convert.ToDouble(expected["expWR"]) * battlecount;
+                        rpWN8.ExpWinRate += Convert.ToDouble(expected["expWR"]) * battlecount;
                     }
                 }
                 // Use RWR formula to calculate result
-                if (rpWN8.rp.BATTLES > 0)
+                if (rpWN8.RP.BATTLES > 0)
                 {
                     RWR = RWRuseFormula(rpWN8);
                 }
@@ -189,8 +191,8 @@ namespace WinApp.Code.Rating
         private static double? RWRuseFormula(WN8.RatingParametersWN8 rpWN8)
         {
             double? RWR = null;
-            if (rpWN8.rp.BATTLES > 0)
-                RWR = (((rpWN8.rp.WINS / rpWN8.rp.BATTLES * 100) / (rpWN8.expWinRate / rpWN8.rp.BATTLES)) - 1) * 100;
+            if (rpWN8.RP.BATTLES > 0)
+                RWR = (((rpWN8.RP.WINS / rpWN8.RP.BATTLES * 100) / (rpWN8.ExpWinRate / rpWN8.RP.BATTLES)) - 1) * 100;
             return RWR;
         }
 

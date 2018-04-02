@@ -298,8 +298,7 @@ namespace WinApp.Forms
                             );
                             if (result == MsgBox.Button.OK)
                             {
-                                string msg = "";
-                                if (!BattleResultRetriever.Install(out msg))
+                                if (!BattleResultRetriever.Install(out string msg))
                                 {
                                     MsgBox.Show(msg, "Error installing BRR");
                                 }
@@ -363,73 +362,103 @@ namespace WinApp.Forms
 
 		private void CreateDataGridContextMenu()
 		{
-			// Datagrid context menu (Right click on Grid)
-			ContextMenuStrip dataGridMainPopup = new ContextMenuStrip();
-			dataGridMainPopup.Renderer = new StripRenderer();
-			dataGridMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
-			ToolStripSeparator dataGridMainPopup_Separator = new ToolStripSeparator();
-			
-			ToolStripMenuItem dataGridMainPopup_TankDetails = new ToolStripMenuItem("Tank Details");
-			dataGridMainPopup_TankDetails.Image = imageListToolStrip.Images[1];
-			dataGridMainPopup_TankDetails.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
+            // Datagrid context menu (Right click on Grid)
+            ContextMenuStrip dataGridMainPopup = new ContextMenuStrip
+            {
+                Renderer = new StripRenderer(),
+                BackColor = ColorTheme.ToolGrayMainBack
+            };
+            ToolStripSeparator dataGridMainPopup_Separator = new ToolStripSeparator();
+
+            ToolStripMenuItem dataGridMainPopup_TankDetails = new ToolStripMenuItem("Tank Details")
+            {
+                Image = imageListToolStrip.Images[1]
+            };
+            dataGridMainPopup_TankDetails.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
 
             ToolStripMenuItem dataGridMainPopup_EditTankInfo = new ToolStripMenuItem("Edit Tank Info");
             dataGridMainPopup_EditTankInfo.Click += new EventHandler(dataGridMainPopup_EditTankInfo_Click);
 
-            ToolStripMenuItem dataGridMainPopup_BattleChart = new ToolStripMenuItem("Chart");
-			dataGridMainPopup_BattleChart.Image = imageListToolStrip.Images[2];
-			dataGridMainPopup_BattleChart.Click += new EventHandler(dataGridMainPopup_BattleChart_Click);
-			
-			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup");
-			dataGridMainPopup_GrindingSetup.Image = imageListToolStrip.Images[3];
-			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
+            ToolStripMenuItem dataGridMainPopup_BattleChart = new ToolStripMenuItem("Chart")
+            {
+                Image = imageListToolStrip.Images[2]
+            };
+            dataGridMainPopup_BattleChart.Click += new EventHandler(dataGridMainPopup_BattleChart_Click);
+
+            ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup")
+            {
+                Image = imageListToolStrip.Images[3]
+            };
+            dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
 
             ToolStripMenuItem dataGridMainPopup_GrindingSetupRecalculate = new ToolStripMenuItem("Recalculate Grinding Progress");
             dataGridMainPopup_GrindingSetupRecalculate.Click += new EventHandler(dataGridMainPopup_GrindingSetupRecalculate_Click);
 
-            ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
-			dataGridMainPopup_FilterOnTank.Image = imageListToolStrip.Images[17];
-			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
+            ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank")
+            {
+                Image = imageListToolStrip.Images[17]
+            };
+            dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
 
-            ToolStripMenuItem dataGridMainPopup_FilterOnTankSearch = new ToolStripMenuItem("Search for tank...");
-			dataGridMainPopup_FilterOnTankSearch.Image = imageListToolStrip.Images[4];
+            ToolStripMenuItem dataGridMainPopup_FilterOnTankSearch = new ToolStripMenuItem("Search for tank...")
+            {
+                Image = imageListToolStrip.Images[4]
+            };
             dataGridMainPopup_FilterOnTankSearch.Click += new EventHandler(dataGridMainPopup_FilterOnTankSearch_Click);
 
-			ToolStripMenuItem dataGridMainPopup_FilterOnTankClear = new ToolStripMenuItem("Remove filter on tank");
-			dataGridMainPopup_FilterOnTankClear.Image = imageListToolStrip.Images[11];
-			dataGridMainPopup_FilterOnTankClear.Click += new EventHandler(dataGridMainPopup_FilterOnTankClear_Click);
+            ToolStripMenuItem dataGridMainPopup_FilterOnTankClear = new ToolStripMenuItem("Remove filter on tank")
+            {
+                Image = imageListToolStrip.Images[11]
+            };
+            dataGridMainPopup_FilterOnTankClear.Click += new EventHandler(dataGridMainPopup_FilterOnTankClear_Click);
 
-			ToolStripMenuItem dataGridMainPopup_FavListAddTank = new ToolStripMenuItem("Add tank to favourite tank list");
-			dataGridMainPopup_FavListAddTank.Image = imageListToolStrip.Images[5];
-			dataGridMainPopup_FavListAddTank.Click += new EventHandler(dataGridMainPopup_FavListAddTank_Click);
-			
-			ToolStripMenuItem dataGridMainPopup_FavListRemoveTank = new ToolStripMenuItem("Remove tank from favourite tank list");
-			dataGridMainPopup_FavListRemoveTank.Image = imageListToolStrip.Images[6];
-			dataGridMainPopup_FavListRemoveTank.Click += new EventHandler(dataGridMainPopup_FavListRemoveTank_Click);
-			
-			ToolStripMenuItem dataGridMainPopup_FavListCreateNew = new ToolStripMenuItem("Create new favourite tank list");
-			dataGridMainPopup_FavListCreateNew.Image = imageListToolStrip.Images[7];
-			dataGridMainPopup_FavListCreateNew.Click += new EventHandler(dataGridMainPopup_FavListCreateNew_Click);
-			
-			ToolStripMenuItem dataGridMainPopup_DeleteBattle = new ToolStripMenuItem("Delete this battle");
-			dataGridMainPopup_DeleteBattle.Image = imageListToolStrip.Images[8];
-			dataGridMainPopup_DeleteBattle.Click += new EventHandler(dataGridMainPopup_DeleteBattle_Click);
+            ToolStripMenuItem dataGridMainPopup_FavListAddTank = new ToolStripMenuItem("Add tank to favourite tank list")
+            {
+                Image = imageListToolStrip.Images[5]
+            };
+            dataGridMainPopup_FavListAddTank.Click += new EventHandler(dataGridMainPopup_FavListAddTank_Click);
 
-			ToolStripMenuItem dataGridMainPopup_BattleDetails = new ToolStripMenuItem("Battle Details");
-			dataGridMainPopup_BattleDetails.Image = imageListToolStrip.Images[9];
-			dataGridMainPopup_BattleDetails.Click += new EventHandler(dataGridMainPopup_BattleDetails_Click);
+            ToolStripMenuItem dataGridMainPopup_FavListRemoveTank = new ToolStripMenuItem("Remove tank from favourite tank list")
+            {
+                Image = imageListToolStrip.Images[6]
+            };
+            dataGridMainPopup_FavListRemoveTank.Click += new EventHandler(dataGridMainPopup_FavListRemoveTank_Click);
 
-			ToolStripMenuItem dataGridMainPopup_BattleSummary = new ToolStripMenuItem("Summary of Battles");
-			dataGridMainPopup_BattleSummary.Image = imageListToolStrip.Images[12];
-			dataGridMainPopup_BattleSummary.Click += new EventHandler(dataGridMainPopup_BattleSummary_Click);
+            ToolStripMenuItem dataGridMainPopup_FavListCreateNew = new ToolStripMenuItem("Create new favourite tank list")
+            {
+                Image = imageListToolStrip.Images[7]
+            };
+            dataGridMainPopup_FavListCreateNew.Click += new EventHandler(dataGridMainPopup_FavListCreateNew_Click);
 
-			ToolStripMenuItem dataGridMainPopup_TankWN8 = new ToolStripMenuItem("WN8 Tank Details");
-			dataGridMainPopup_TankWN8.Image = imageListToolStrip.Images[10];
-			dataGridMainPopup_TankWN8.Click += new EventHandler(dataGridMainPopup_TankWN8_Click);
+            ToolStripMenuItem dataGridMainPopup_DeleteBattle = new ToolStripMenuItem("Delete this battle")
+            {
+                Image = imageListToolStrip.Images[8]
+            };
+            dataGridMainPopup_DeleteBattle.Click += new EventHandler(dataGridMainPopup_DeleteBattle_Click);
 
-			ToolStripMenuItem dataGridMainPopup_CopyRowToClipboard = new ToolStripMenuItem("Copy Row to Clipboard");
-			dataGridMainPopup_CopyRowToClipboard.Image = imageListToolStrip.Images[13];
-			dataGridMainPopup_CopyRowToClipboard.Click += new EventHandler(dataGridMainPopup_CopyRowToClipboard_Click);
+            ToolStripMenuItem dataGridMainPopup_BattleDetails = new ToolStripMenuItem("Battle Details")
+            {
+                Image = imageListToolStrip.Images[9]
+            };
+            dataGridMainPopup_BattleDetails.Click += new EventHandler(dataGridMainPopup_BattleDetails_Click);
+
+            ToolStripMenuItem dataGridMainPopup_BattleSummary = new ToolStripMenuItem("Summary of Battles")
+            {
+                Image = imageListToolStrip.Images[12]
+            };
+            dataGridMainPopup_BattleSummary.Click += new EventHandler(dataGridMainPopup_BattleSummary_Click);
+
+            ToolStripMenuItem dataGridMainPopup_TankWN8 = new ToolStripMenuItem("WN8 Tank Details")
+            {
+                Image = imageListToolStrip.Images[10]
+            };
+            dataGridMainPopup_TankWN8.Click += new EventHandler(dataGridMainPopup_TankWN8_Click);
+
+            ToolStripMenuItem dataGridMainPopup_CopyRowToClipboard = new ToolStripMenuItem("Copy Row to Clipboard")
+            {
+                Image = imageListToolStrip.Images[13]
+            };
+            dataGridMainPopup_CopyRowToClipboard.Click += new EventHandler(dataGridMainPopup_CopyRowToClipboard_Click);
 
             ToolStripMenuItem dataGridMainPopup_RecalculateTankCredit = new ToolStripMenuItem("Recalculate Tank Credits");
             dataGridMainPopup_RecalculateTankCredit.Click += new EventHandler(dataGridMainPopup_RecalculateTankCredit_Click);
@@ -440,13 +469,15 @@ namespace WinApp.Forms
             ToolStripMenuItem dataGridMainPopup_RecalculateBattleRating = new ToolStripMenuItem("Recalculate Battle Rating");
             dataGridMainPopup_RecalculateBattleRating.Click += new EventHandler(dataGridMainPopup_RecalculateBattleRating_Click);
 
-            ToolStripMenuItem dataGridMainPopup_Replay = new ToolStripMenuItem("Search for Replay");
-            dataGridMainPopup_Replay.Image = imageListToolStrip.Images[14];
+            ToolStripMenuItem dataGridMainPopup_Replay = new ToolStripMenuItem("Search for Replay")
+            {
+                Image = imageListToolStrip.Images[14]
+            };
             dataGridMainPopup_Replay.Click += new EventHandler(dataGridMainPopup_Replay_Click);
 
 
 			// Add events
-			dataGridMainPopup.Opening += new System.ComponentModel.CancelEventHandler(dataGridMainPopup_Opening);
+			dataGridMainPopup.Opening += new CancelEventHandler(dataGridMainPopup_Opening);
 			//Add to main context menu
 			GridView.Views view = MainSettings.View;
 			switch (view)
@@ -1820,12 +1851,9 @@ namespace WinApp.Forms
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 			gf.TankId = -1; // Remove tank filter
 			MainSettings.UpdateCurrentGridFilter(gf);
-			// Get Tank filter
-			string tankFilterMessage = "";
-			string tankJoin = "";
-			string whereSQL = "";
-			Tankfilter(out whereSQL, out tankJoin, out tankFilterMessage);
-			SetTankFilterMenuName();
+            // Get Tank filter
+            Tankfilter(out string whereSQL, out string tankJoin, out string tankFilterMessage);
+            SetTankFilterMenuName();
 			status2message = "Selected tank filter: " + tankFilterMessage;
 			mTankFilter.ShowDropDown();
 			parentMenuItem.ShowDropDown();
@@ -1963,8 +1991,7 @@ namespace WinApp.Forms
                 int i = 1;
                 foreach (DataRow dr in dt.Rows)
                 {
-                    ToolStripMenuItem m = (ToolStripMenuItem)mHomeView.DropDownItems["mHomeViewRecent" + i.ToString()] as ToolStripMenuItem;
-                    if (m != null)
+                    if ((ToolStripMenuItem)mHomeView.DropDownItems["mHomeViewRecent" + i.ToString()] is ToolStripMenuItem m)
                     {
                         string fileName = dr["fileName"].ToString();
                         string folder = dr["folder"].ToString();
@@ -2018,8 +2045,7 @@ namespace WinApp.Forms
             InputBox.ResultClass answer = InputBox.Show("Select battle count:", "Edit Battle Count Filter", count, this);
             if (answer.Button == InputBox.InputButton.OK)
             {
-                int newCount = 0;
-                if (Int32.TryParse(answer.InputText, out newCount))
+                if (Int32.TryParse(answer.InputText, out int newCount))
                 {
                     await BattleCountFilterHelper.Save(id, newCount);
                     await BattleCountFilterSet(id);
@@ -2100,10 +2126,7 @@ namespace WinApp.Forms
 			{
 				string message = mBattles.Text; // Selected menu item
                 // Get Battle Time filer
-                string battleTimeFilter = "";
-                string battleTimeReadable = "";
-                bool battleCountFilter = false;
-                BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable, out battleCountFilter);
+                BattleTimeAndCountFilter(out string battleTimeFilter, out string battleTimeReadable, out bool battleCountFilter);
                 // Show info
                 SetStatus2("Current battle time filter: " + message + battleTimeReadable);
 			}
@@ -2160,20 +2183,18 @@ namespace WinApp.Forms
 			// Remove current menu checked
 			foreach (var dropDownItem in mMode.DropDownItems)
 			{
-				if (dropDownItem is ToolStripMenuItem)
-				{
-					ToolStripMenuItem menuItem = (ToolStripMenuItem)dropDownItem;
-					menuItem.Checked = false;
-				}
-			}
+                if (dropDownItem is ToolStripMenuItem menuItem)
+                {
+                    menuItem.Checked = false;
+                }
+            }
 			foreach (var dropDownItem in mModeRandomSoloPlatoon.DropDownItems)
 			{
-				if (dropDownItem is ToolStripMenuItem)
-				{
-					ToolStripMenuItem menuItem = (ToolStripMenuItem)dropDownItem;
-					menuItem.Checked = false;
-				}
-			}
+                if (dropDownItem is ToolStripMenuItem menuItem)
+                {
+                    menuItem.Checked = false;
+                }
+            }
 
 			// check battle mode list menu select
 			selectedMenu.Checked = true;
@@ -2190,40 +2211,38 @@ namespace WinApp.Forms
 			foreach (var dropDownItem in mMode.DropDownItems)
 			{
 				string battleMode = MainSettings.GetCurrentGridFilter().BattleMode.ToString();
-				if (dropDownItem is ToolStripMenuItem)
-				{
-					ToolStripMenuItem menuItem = (ToolStripMenuItem)dropDownItem;
-					if (menuItem.Tag != null && battleMode == menuItem.Tag.ToString())
-					{
-						menuItem.Checked = true;
-						mMode.Text = menuItem.Text;
-						done = true;
-					}
-					else
-					{
-						menuItem.Checked = false;
-					}
-				}
-			}
+                if (dropDownItem is ToolStripMenuItem menuItem)
+                {
+                    if (menuItem.Tag != null && battleMode == menuItem.Tag.ToString())
+                    {
+                        menuItem.Checked = true;
+                        mMode.Text = menuItem.Text;
+                        done = true;
+                    }
+                    else
+                    {
+                        menuItem.Checked = false;
+                    }
+                }
+            }
 			if (!done)
 			{
 				foreach (var dropDownItem in mModeRandomSoloPlatoon.DropDownItems)
 				{
 					string battleMode = MainSettings.GetCurrentGridFilter().BattleMode.ToString();
-					if (dropDownItem is ToolStripMenuItem)
-					{
-						ToolStripMenuItem menuItem = (ToolStripMenuItem)dropDownItem;
-						if (menuItem.Tag != null && battleMode == menuItem.Tag.ToString())
-						{
-							menuItem.Checked = true;
-							mMode.Text = menuItem.Text;
-						}
-						else
-						{
-							menuItem.Checked = false;
-						}
-					}
-				}
+                    if (dropDownItem is ToolStripMenuItem menuItem)
+                    {
+                        if (menuItem.Tag != null && battleMode == menuItem.Tag.ToString())
+                        {
+                            menuItem.Checked = true;
+                            mMode.Text = menuItem.Text;
+                        }
+                        else
+                        {
+                            menuItem.Checked = false;
+                        }
+                    }
+                }
 			}
 		}
 
@@ -2632,17 +2651,12 @@ namespace WinApp.Forms
 			if (!await DB.CheckConnection(false)) return;
 			// Get Columns
 			var selectedColList = await ColListHelper.GetSelectedColumnList();
-			// Get Tank filter
-			string message = "";
-			string tankFilter = "";
-			string join = "";
-			Tankfilter(out tankFilter, out join, out message);
-			// Create Battle mode filter
-			string battleModeFilter = "";
-			string battleModeSQL = "";
-            GetTankBattleMode(out battleModeSQL, out battleModeFilter);
-			// Get soring
-			GridSortingHelper.Sorting sorting = await GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
+            // Get Tank filter
+            Tankfilter(out string tankFilter, out string join, out string message);
+            // Create Battle mode filter
+            GetTankBattleMode(out string battleModeSQL, out string battleModeFilter);
+            // Get soring
+            GridSortingHelper.Sorting sorting = await GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
 			// Default values for painting glyph as sort order direction on column header
 			if (sorting.ColumnName == "")
 			{
@@ -2744,11 +2758,13 @@ namespace WinApp.Forms
 			// If Mastery badge image add it
 			if (selectedColList.Masterybadgeimg > -1)
 			{
-				// Use ImageHelper to add columns in use
-				List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
-				imgPosition.Add(new ImageHelper.ImgColumns("Mastery Badge", selectedColList.Masterybadgeimg));
-				// Sort images to get right position
-				imgPosition.Sort();
+                // Use ImageHelper to add columns in use
+                List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>
+                {
+                    new ImageHelper.ImgColumns("Mastery Badge", selectedColList.Masterybadgeimg)
+                };
+                // Sort images to get right position
+                imgPosition.Sort();
 				// Add column
 				dtTankData.Columns.Add(imgPosition[0].colName, typeof(Image)).SetOrdinal(imgPosition[0].colPosition);
 				// Fill with images
@@ -2920,23 +2936,15 @@ namespace WinApp.Forms
 						"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id ";
 					sortOrder = "ORDER BY " + sorting.ColumnName + " " + sortDirection + " ";
 				}
-				
-				// Get Battle Time filer or battle count filter
-				string battleTimeFilter = "";
-                string battleTimeReadable = "";
-                bool battleCountFilter = false;
-				BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable, out battleCountFilter);
-                                
+
+                // Get Battle Time filer or battle count filter
+                BattleTimeAndCountFilter(out string battleTimeFilter, out string battleTimeReadable, out bool battleCountFilter);
+
                 // Get Battle mode filter
-                string battleModeFilter = "";
-				string battleMode = "";
-				BattleModeFilter(out battleModeFilter, out battleMode);
-				
-				// Get Tank filter
-				string tankFilterMessage = "";
-				string tankFilter = "";
-				string tankJoin = "";
-				Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
+                BattleModeFilter(out string battleModeFilter, out string battleMode);
+
+                // Get Tank filter
+                Tankfilter(out string tankFilter, out string tankJoin, out string tankFilterMessage);
 
                 // Create where part, and check for battle count filter
                 string from =
@@ -3003,11 +3011,13 @@ namespace WinApp.Forms
 				// If Mastery badge image add it
 				if (selectedColList.Masterybadgeimg > -1)
 				{
-					// Use ImageHelper to add columns in use
-					List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
-					imgPosition.Add(new ImageHelper.ImgColumns("Mastery Badge", selectedColList.Masterybadgeimg));
-					// Sort images to get right position
-					imgPosition.Sort();
+                    // Use ImageHelper to add columns in use
+                    List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>
+                    {
+                        new ImageHelper.ImgColumns("Mastery Badge", selectedColList.Masterybadgeimg)
+                    };
+                    // Sort images to get right position
+                    imgPosition.Sort();
 					// Add column
 					dt.Columns.Add(imgPosition[0].colName, typeof(Image)).SetOrdinal(imgPosition[0].colPosition);
 					// Fill with images
@@ -3386,15 +3396,10 @@ namespace WinApp.Forms
                 }
 
                 // Get Battle Time filer
-                string sqlBattleTimeFilter = "";
-                string battleTimeReadable = "";
-                bool battleCountFilter = false;
-                BattleTimeAndCountFilter(out sqlBattleTimeFilter, out battleTimeReadable, out battleCountFilter);
+                BattleTimeAndCountFilter(out string sqlBattleTimeFilter, out string battleTimeReadable, out bool battleCountFilter);
 
                 // Get Battle mode filter
-                string sqlBattleModeFilter = "";
-                string battleMode = "";
-                BattleModeFilter(out sqlBattleModeFilter, out battleMode);
+                BattleModeFilter(out string sqlBattleModeFilter, out string battleMode);
 
                 // Get sorting
                 string sortDirection = "";
@@ -3410,12 +3415,8 @@ namespace WinApp.Forms
                 string sqlOrderBy = "ORDER BY [" + mapSorting.ColumnName + "] " + sortDirection + " ";
 
                 // Get Tank filter
-                string tankFilterMessage = "";
-                string sqlTankFilter = "";
-                string sqlPlayerTankFilter = "";
-                string tankJoin = "";
-                Tankfilter(out sqlTankFilter, out tankJoin, out tankFilterMessage, onlyTankFilter: true);
-                Tankfilter(out sqlPlayerTankFilter, out tankJoin, out tankFilterMessage, onlyPlayerTankFilter: true);
+                Tankfilter(out string sqlTankFilter, out string tankJoin, out string tankFilterMessage, onlyTankFilter: true);
+                Tankfilter(out string sqlPlayerTankFilter, out tankJoin, out tankFilterMessage, onlyPlayerTankFilter: true);
 
                 // Get cols - Default
                 string sqlSelect =
@@ -3690,10 +3691,12 @@ namespace WinApp.Forms
 					}
 					using (SolidBrush br = new SolidBrush(battleCountColor))
 					{
-						StringFormat sf = new StringFormat();
-						sf.Alignment = StringAlignment.Center;
-						sf.LineAlignment = StringAlignment.Center;
-						e.Graphics.DrawString((e.RowIndex + offset).ToString(), e.CellStyle.Font, br, e.CellBounds, sf);
+                        StringFormat sf = new StringFormat
+                        {
+                            Alignment = StringAlignment.Center,
+                            LineAlignment = StringAlignment.Center
+                        };
+                        e.Graphics.DrawString((e.RowIndex + offset).ToString(), e.CellStyle.Font, br, e.CellBounds, sf);
 					}
 					e.Handled = true;
 				}
@@ -3719,10 +3722,12 @@ namespace WinApp.Forms
 				e.PaintBackground(e.CellBounds, true);
 				using (SolidBrush br = new SolidBrush(ColorTheme.ControlDimmedFont))
 				{
-					StringFormat sf = new StringFormat();
-					sf.Alignment = StringAlignment.Center;
-					sf.LineAlignment = StringAlignment.Center;
-					e.Graphics.DrawString("", e.CellStyle.Font, br, e.CellBounds, sf);
+                    StringFormat sf = new StringFormat
+                    {
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center
+                    };
+                    e.Graphics.DrawString("", e.CellStyle.Font, br, e.CellBounds, sf);
 				}
 				e.Handled = true;
 			}
@@ -4031,8 +4036,7 @@ namespace WinApp.Forms
                     if (dataGridMain.Rows[dataGridRightClickRow].Cells["footer"].Value != null)
                     {
                         string s = dataGridMain.Rows[dataGridRightClickRow].Cells["footer"].Value.ToString();
-                        int i = 0;
-                        Int32.TryParse(s, out i);
+                        Int32.TryParse(s, out int i);
                         if (i > 0)
                         {
                             dataGridRightClickCol = -1;
@@ -4108,25 +4112,17 @@ namespace WinApp.Forms
 
 		private void dataGridMainPopup_BattleSummary_Click(object sender, EventArgs e)
 		{
-			// Get Battle Time filer
-			string battleTimeFilter = "";
-            string battleTimeReadable = "";
-            bool battleCountFilter = false;
-            BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable, out battleCountFilter);
+            // Get Battle Time filer
+            BattleTimeAndCountFilter(out string battleTimeFilter, out string battleTimeReadable, out bool battleCountFilter);
 
-			// Get Battle mode filter
-			string battleModeFilter = "";
-			string battleMode = "";
-			BattleModeFilter(out battleModeFilter, out battleMode);
+            // Get Battle mode filter
+            BattleModeFilter(out string battleModeFilter, out string battleMode);
 
-			// Get Tank filter
-			string tankFilterMessage = "";
-			string tankFilter = "";
-			string tankJoin = "";
-			Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
+            // Get Tank filter
+            Tankfilter(out string tankFilter, out string tankJoin, out string tankFilterMessage);
 
-			// Show form
-			Form frm = new BattleSummary(battleTimeFilter, battleCountFilter, battleModeFilter, battleMode, tankFilter, tankJoin); // TODO: add battle count filter
+            // Show form
+            Form frm = new BattleSummary(battleTimeFilter, battleCountFilter, battleModeFilter, battleMode, tankFilter, tankJoin); // TODO: add battle count filter
 			FormHelper.OpenFormCenterOfParent(this, frm);
 		}
 
@@ -4236,19 +4232,15 @@ namespace WinApp.Forms
 				{
 					DataRow dr = dt.Rows[0];
 					int tankId = Convert.ToInt32(dr["tankId"]);
-                    Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
-					rp.BATTLES = Convert.ToInt32(dr["battles"]);
-					rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
-					rp.SPOT = Convert.ToDouble(dr["spot"]);
-					rp.FRAGS = Convert.ToDouble(dr["frags"]);
-					rp.DEF = Convert.ToDouble(dr["def"]);
-					rp.WINS = Convert.ToDouble(dr["Wins"]);
-                    double wn8 = Math.Round(Code.Rating.WN8.CalcTank(tankId, rp), 0);
-                    double rWINc;
-					double rDAMAGEc;
-					double rFRAGSc;
-					double rSPOTc;
-					double rDEFc;
+                    Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters
+                    {
+                        BATTLES = Convert.ToInt32(dr["battles"]),
+                        DAMAGE = Convert.ToDouble(dr["dmg"]),
+                        SPOT = Convert.ToDouble(dr["spot"]),
+                        FRAGS = Convert.ToDouble(dr["frags"]),
+                        DEF = Convert.ToDouble(dr["def"]),
+                        WINS = Convert.ToDouble(dr["Wins"])
+                    };
                     rp.DAMAGE = rp.DAMAGE / rp.BATTLES;
                     rp.SPOT = rp.SPOT / rp.BATTLES;
                     rp.FRAGS = rp.FRAGS / rp.BATTLES;
@@ -4259,10 +4251,11 @@ namespace WinApp.Forms
 					double exp_frags = Convert.ToDouble(dr["expFrags"]);
 					double exp_def = Convert.ToDouble(dr["expDef"]);
 					double exp_wr = Convert.ToDouble(dr["expWR"]);
-                    Code.Rating.WN8.UseFormulaReturnResult(rp, wr, exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr, out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
+                    Code.Rating.WN8.UseFormulaReturnResult(rp, wr, exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr, out double rWINc, out double rDAMAGEc, out double rFRAGSc, out double rSPOTc, out double rDEFc);
 					string message = "WN8 Rating for this tank in Random/TC: ";
-					message += wn8 + Environment.NewLine + Environment.NewLine;
-					message += "Value" + "\t  " + "Result" + "\t" + "Expected" + "\t " + "WN8" + "\t " + "%" + Environment.NewLine;
+                    double wn8 = Math.Round(Code.Rating.WN8.CalcTank(tankId, rp), 0);
+                    message += wn8 + Environment.NewLine + Environment.NewLine;
+                    message += "Value" + "\t  " + "Result" + "\t" + "Expected" + "\t " + "WN8" + "\t " + "%" + Environment.NewLine;
 					message += "-------------" + "\t  " + "----------" + "\t" + "------------" + "\t " + "------------" + "\t " + "-------" + Environment.NewLine;
                     message += "Damage:" + "\t  " + Math.Round(rp.DAMAGE, 1).ToString() + "\t" + Math.Round(exp_dmg, 1).ToString() + "\t " + Math.Round(rDAMAGEc, 2) + "\t " + Math.Round(rDAMAGEc/wn8*100, 1) + Environment.NewLine;
                     message += "Frags:" + "\t  " + Math.Round(rp.FRAGS, 1).ToString() + "\t" + Math.Round(exp_frags, 1).ToString() + "\t " + Math.Round(rFRAGSc, 2) + "\t " + Math.Round(rFRAGSc / wn8 * 100, 1) + Environment.NewLine;
@@ -4971,16 +4964,18 @@ namespace WinApp.Forms
 						else
 							msg += ", starting additional programs";
 						err = "Error trying to start additional programs, check WoT game start settings.";
-						//Create process
-						ProcessStartInfo psi = new ProcessStartInfo();
-						psi.RedirectStandardInput = true;
-						psi.RedirectStandardOutput = true;
-						psi.UseShellExecute = false;
-						psi.WindowStyle = ProcessWindowStyle.Hidden;
-						psi.CreateNoWindow = true;
-						psi.FileName = Config.Settings.wotGameRunBatchFile;
-						//Start the process
-						Process p = Process.Start(psi);
+                        //Create process
+                        ProcessStartInfo psi = new ProcessStartInfo
+                        {
+                            RedirectStandardInput = true,
+                            RedirectStandardOutput = true,
+                            UseShellExecute = false,
+                            WindowStyle = ProcessWindowStyle.Hidden,
+                            CreateNoWindow = true,
+                            FileName = Config.Settings.wotGameRunBatchFile
+                        };
+                        //Start the process
+                        Process p = Process.Start(psi);
 					}
 					// No action message
 					if (Config.Settings.wotGameStartType == ConfigData.WoTGameStartType.None && Config.Settings.wotGameRunBatchFile == "")
@@ -5120,15 +5115,17 @@ namespace WinApp.Forms
 				}
 			}
 			Image result = bm;
-			PictureBox picGrid = new PictureBox();
-			picGrid.Width = 2000;
-			picGrid.Height = 1500;
-			picGrid.Top = 2;
-			picGrid.Left = 2;
-			picGrid.Image = result;
-			picGrid.Name = "userControlPicGrid";
-			picGrid.Visible = false;
-			panelMainArea.Controls.Add(picGrid);
+            PictureBox picGrid = new PictureBox
+            {
+                Width = 2000,
+                Height = 1500,
+                Top = 2,
+                Left = 2,
+                Image = result,
+                Name = "userControlPicGrid",
+                Visible = false
+            };
+            panelMainArea.Controls.Add(picGrid);
 
             // Add current gadgets
             await GadgetHelper.GetGadgets();
@@ -5406,12 +5403,14 @@ namespace WinApp.Forms
 
 		private void CreateGadgetContextMenu(bool customizeAvailable)
 		{
-			// Datagrid context menu (Right click on Grid)
-			ContextMenuStrip gadgetMainPopup = new ContextMenuStrip();
-			gadgetMainPopup.Renderer = new StripRenderer();
-			gadgetMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
-			// Items
-			ToolStripSeparator gadgetMainPopup_Separator1 = new ToolStripSeparator();
+            // Datagrid context menu (Right click on Grid)
+            ContextMenuStrip gadgetMainPopup = new ContextMenuStrip
+            {
+                Renderer = new StripRenderer(),
+                BackColor = ColorTheme.ToolGrayMainBack
+            };
+            // Items
+            ToolStripSeparator gadgetMainPopup_Separator1 = new ToolStripSeparator();
 			ToolStripMenuItem gadgetMainPopup_Remove = new ToolStripMenuItem("Remove Gadget");
 			gadgetMainPopup_Remove.Click += new EventHandler(gadgetMainPopup_Remove_Click);
 			ToolStripMenuItem gadgetMainPopup_Customize = new ToolStripMenuItem("Customize Gadget");
@@ -5558,13 +5557,15 @@ namespace WinApp.Forms
                 if (gadgetId == -1)
                 {
                     gadgetControl = await GadgetHelper.GetGadgetControl(controlName, GadgetHelper.newParameters);
-                    gadget = new GadgetHelper.GadgetItem();
-                    gadget.control = gadgetControl;
-                    gadget.controlName = controlName;
-                    gadget.height = gadgetControl.Height;
-                    gadget.width = gadgetControl.Width;
-                    gadget.posX = 2;
-                    gadget.posY = 2;
+                    gadget = new GadgetHelper.GadgetItem
+                    {
+                        control = gadgetControl,
+                        controlName = controlName,
+                        height = gadgetControl.Height,
+                        width = gadgetControl.Width,
+                        posX = 2,
+                        posY = 2
+                    };
                     gadget.control.Top = gadget.posX;
                     gadget.control.Left = gadget.posY;
                     gadget.sortorder = -1;

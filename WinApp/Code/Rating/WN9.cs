@@ -14,13 +14,13 @@ namespace WinApp.Code.Rating
 
         public class TierAvg
         {
-            public double win { get; set; }
-            public double dmg { get; set; }
-            public double frag { get; set; }
-            public double spot { get; set; }
-            public double def { get; set; }
-            public double cap { get; set; }
-            public double weight { get; set; }
+            public double Win { get; set; }
+            public double Dmg { get; set; }
+            public double Frag { get; set; }
+            public double Spot { get; set; }
+            public double Def { get; set; }
+            public double Cap { get; set; }
+            public double Weight { get; set; }
         }
 
         public static List<TierAvg> tierAvg = new List<TierAvg>();
@@ -47,19 +47,19 @@ namespace WinApp.Code.Rating
         {
             public RatingParametersWN9()
             {
-                rp = new WNHelper.RatingParameters();
-                tier = 0;
-                mmrange = 0;
-                wn9exp = 0;
-                wn9nerf = 0;
-                wn9scale = 0;
+                RP = new WNHelper.RatingParameters();
+                Tier = 0;
+                MmRange = 0;
+                WN9exp = 0;
+                WN9nerf = 0;
+                WN9scale = 0;
             }
-            public WNHelper.RatingParameters rp { get; set; }
-            public int tier { get; set; }
-            public int mmrange { get; set; }
-            public double wn9exp { get; set; }
-            public double wn9scale { get; set; }
-            public double wn9nerf { get; set; }
+            public WNHelper.RatingParameters RP { get; set; }
+            public int Tier { get; set; }
+            public int MmRange { get; set; }
+            public double WN9exp { get; set; }
+            public double WN9scale { get; set; }
+            public double WN9nerf { get; set; }
         }
 
         //public static RatingParametersWN9 GetParamForPlayerTotal(string battleMode)
@@ -109,12 +109,12 @@ namespace WinApp.Code.Rating
             {
                 // Get player totals
                 rpWN = new RatingParametersWN9();
-                rpWN.rp.BATTLES = Convert.ToDouble(playerTankBattle.Compute("SUM([battles])", ""));
-                rpWN.rp.DAMAGE = Convert.ToDouble(playerTankBattle.Compute("SUM([dmg])", ""));
-                rpWN.rp.SPOT = Convert.ToDouble(playerTankBattle.Compute("SUM([spot])", ""));
-                rpWN.rp.FRAGS = Convert.ToDouble(playerTankBattle.Compute("SUM([frags])", ""));
-                rpWN.rp.DEF = Convert.ToDouble(playerTankBattle.Compute("SUM([def])", ""));
-                rpWN.rp.WINS = Convert.ToDouble(playerTankBattle.Compute("SUM([wins])", ""));
+                rpWN.RP.BATTLES = Convert.ToDouble(playerTankBattle.Compute("SUM([battles])", ""));
+                rpWN.RP.DAMAGE = Convert.ToDouble(playerTankBattle.Compute("SUM([dmg])", ""));
+                rpWN.RP.SPOT = Convert.ToDouble(playerTankBattle.Compute("SUM([spot])", ""));
+                rpWN.RP.FRAGS = Convert.ToDouble(playerTankBattle.Compute("SUM([frags])", ""));
+                rpWN.RP.DEF = Convert.ToDouble(playerTankBattle.Compute("SUM([def])", ""));
+                rpWN.RP.WINS = Convert.ToDouble(playerTankBattle.Compute("SUM([wins])", ""));
                 // Get tanks with battle count per tank and expected values from db
                 double totalBattleCount = 0;
                 foreach (DataRow ptbRow in playerTankBattle.Rows)
@@ -125,24 +125,24 @@ namespace WinApp.Code.Rating
                     DataRow expected = TankHelper.TankInfo(tankId);
                     if (battlecount > 0 && expected != null && expected["wn9exp"] != DBNull.Value)
                     {
-                        rpWN.mmrange += Convert.ToInt32(expected["mmrange"]) * Convert.ToInt32(battlecount);
-                        rpWN.wn9exp += Convert.ToDouble(expected["wn9exp"]) * battlecount;
-                        rpWN.wn9nerf += Convert.ToDouble(expected["wn9nerf"]) * battlecount;
-                        rpWN.wn9scale += Convert.ToDouble(expected["wn9scale"]) * battlecount;
-                        rpWN.tier += Convert.ToInt32(expected["tier"]) * Convert.ToInt32(battlecount);
+                        rpWN.MmRange += Convert.ToInt32(expected["mmrange"]) * Convert.ToInt32(battlecount);
+                        rpWN.WN9exp += Convert.ToDouble(expected["wn9exp"]) * battlecount;
+                        rpWN.WN9nerf += Convert.ToDouble(expected["wn9nerf"]) * battlecount;
+                        rpWN.WN9scale += Convert.ToDouble(expected["wn9scale"]) * battlecount;
+                        rpWN.Tier += Convert.ToInt32(expected["tier"]) * Convert.ToInt32(battlecount);
                         totalBattleCount += battlecount;
                     }
                 }
                 // Get average values
                 if (totalBattleCount > 0)
                 {
-                    double avg_mmrange = rpWN.mmrange / totalBattleCount;
-                    rpWN.mmrange = Convert.ToInt32(Math.Round(avg_mmrange, 0));
-                    rpWN.wn9exp = rpWN.wn9exp / totalBattleCount;
-                    rpWN.wn9nerf = rpWN.wn9nerf / totalBattleCount;
-                    rpWN.wn9scale = rpWN.wn9scale / totalBattleCount;
-                    double avg_tier = rpWN.tier / totalBattleCount;
-                    rpWN.tier = Convert.ToInt32(Math.Max(1, Math.Round(avg_tier, 0)));
+                    double avg_mmrange = rpWN.MmRange / totalBattleCount;
+                    rpWN.MmRange = Convert.ToInt32(Math.Round(avg_mmrange, 0));
+                    rpWN.WN9exp = rpWN.WN9exp / totalBattleCount;
+                    rpWN.WN9nerf = rpWN.WN9nerf / totalBattleCount;
+                    rpWN.WN9scale = rpWN.WN9scale / totalBattleCount;
+                    double avg_tier = rpWN.Tier / totalBattleCount;
+                    rpWN.Tier = Convert.ToInt32(Math.Max(1, Math.Round(avg_tier, 0)));
                 }
             }
             return rpWN;
@@ -152,10 +152,10 @@ namespace WinApp.Code.Rating
 
         #region calc
 
-        private class tankListWn9
+        private class TankListWn9
         {
-            public double wn9 { get; set; }
-            public double weight { get; set; }
+            public double WN9 { get; set; }
+            public double Weight { get; set; }
         }
 
         public async static Task<DataTable> GetPlayerTotalWN9TankStats(string battleMode = "")
@@ -183,7 +183,7 @@ namespace WinApp.Code.Rating
         public async static Task<double> CalcPlayerTotal(string battleMode = "", DataTable tankStats = null)
         {
             // compile list of valid tanks with battles & WN9
-            List<tankListWn9> tanklist = new List<tankListWn9>();
+            List<TankListWn9> tanklist = new List<TankListWn9>();
             double totbat = 0;
             // Replace loop in original formula, calling method to get player total tank stats if not provided
             if (tankStats == null)
@@ -202,20 +202,20 @@ namespace WinApp.Code.Rating
                     if (nerf > 0) batcap /= 2;
                     double wn9 = Convert.ToDouble(dr["wn9"]);
                     double weight = Math.Min(Convert.ToDouble(dr["battles"]), batcap);
-                    tanklist.Add(new tankListWn9() { wn9 = wn9, weight = weight });
+                    tanklist.Add(new TankListWn9() { WN9 = wn9, Weight = weight });
                     totweight += weight;
                 }
 
                 // add up account WN9 over top 65% of capped battles
                 totweight *= 0.65;
                 double wn9tot = 0; double usedweight = 0; int i = 0;
-                for (; usedweight + tanklist[i].weight <= totweight; i++)
+                for (; usedweight + tanklist[i].Weight <= totweight; i++)
                 {
-                    wn9tot += tanklist[i].wn9 * tanklist[i].weight;
-                    usedweight += tanklist[i].weight;
+                    wn9tot += tanklist[i].WN9 * tanklist[i].Weight;
+                    usedweight += tanklist[i].Weight;
                 }
                 // last tank before cutoff uses remaining weight, not its battle count
-                wn9tot += tanklist[i].wn9 * (totweight - usedweight);
+                wn9tot += tanklist[i].WN9 * (totweight - usedweight);
                 return wn9tot / totweight;
             }
             else
@@ -242,18 +242,18 @@ namespace WinApp.Code.Rating
             WNHelper.RatingParameters rp = new WNHelper.RatingParameters(ratingParameters); // clone it to not affect input class
             RatingParametersWN9 rpWN = new RatingParametersWN9
             {
-                rp = rp
+                RP = rp
             };
             // get tankdata for current tank
             DataRow tankInfo = TankHelper.TankInfo(tankId);
             if (tankInfo != null && rp.BATTLES > 0 && tankInfo["wn9exp"] != DBNull.Value)
             {
                 // get wn9 exp values for tank
-                rpWN.mmrange = Convert.ToInt32(tankInfo["mmrange"]);
-                rpWN.wn9exp = Convert.ToDouble(tankInfo["wn9exp"]);
-                rpWN.wn9nerf = Convert.ToDouble(tankInfo["wn9nerf"]);
-                rpWN.wn9scale = Convert.ToDouble(tankInfo["wn9scale"]);
-                rpWN.tier = Convert.ToInt32(tankInfo["tier"]);
+                rpWN.MmRange = Convert.ToInt32(tankInfo["mmrange"]);
+                rpWN.WN9exp = Convert.ToDouble(tankInfo["wn9exp"]);
+                rpWN.WN9nerf = Convert.ToDouble(tankInfo["wn9nerf"]);
+                rpWN.WN9scale = Convert.ToDouble(tankInfo["wn9scale"]);
+                rpWN.Tier = Convert.ToInt32(tankInfo["tier"]);
                 // Use WN8 formula to calculate result
 
                 result = await UseFormula(rpWN);
@@ -294,17 +294,17 @@ namespace WinApp.Code.Rating
                             DataTable playerTotalTankStats = await WNHelper.GetTotalTankStatsForPlayerTank(battleMode, tankJoin, tankId);
                             RatingParametersWN9 rpWN9 = GetParamForPlayerTankBattle(playerTotalTankStats);
                             // Subtract stats from range to find older totals = reversing the stats
-                            rpWN9.rp.BATTLES -= Convert.ToInt32(dr["battles"]);
-                            rpWN9.rp.CAP -= Convert.ToInt32(dr["cap"]);
-                            rpWN9.rp.DAMAGE -= Convert.ToInt32(dr["dmg"]);
-                            rpWN9.rp.DEF -= Convert.ToInt32(dr["def"]);
-                            rpWN9.rp.FRAGS -= Convert.ToInt32(dr["frags"]);
-                            rpWN9.rp.SPOT -= Convert.ToInt32(dr["spot"]);
-                            rpWN9.rp.WINS -= Convert.ToInt32(dr["wins"]);
+                            rpWN9.RP.BATTLES -= Convert.ToInt32(dr["battles"]);
+                            rpWN9.RP.CAP -= Convert.ToInt32(dr["cap"]);
+                            rpWN9.RP.DAMAGE -= Convert.ToInt32(dr["dmg"]);
+                            rpWN9.RP.DEF -= Convert.ToInt32(dr["def"]);
+                            rpWN9.RP.FRAGS -= Convert.ToInt32(dr["frags"]);
+                            rpWN9.RP.SPOT -= Convert.ToInt32(dr["spot"]);
+                            rpWN9.RP.WINS -= Convert.ToInt32(dr["wins"]);
                             // Calc new WN9 for tank with adjusted stats
-                            Wn9Result adjResult = await CalcTank(tankId, rpWN9.rp);
+                            Wn9Result adjResult = await CalcTank(tankId, rpWN9.RP);
                             // Adjust now
-                            drToAdjust[0]["battles"] = rpWN9.rp.BATTLES;
+                            drToAdjust[0]["battles"] = rpWN9.RP.BATTLES;
                             drToAdjust[0]["wn9"] = adjResult.WN9;
                         }
                     }
@@ -347,19 +347,19 @@ namespace WinApp.Code.Rating
             Wn9Result result = new Wn9Result();
             try
             {
-                if (rpWN != null && rpWN.rp.BATTLES > 0)
+                if (rpWN != null && rpWN.RP.BATTLES > 0)
                 {
                     // Using same variable name as in formula description explained at http://jaj22.org.uk/wn9implement.html
-                    WNHelper.RatingParameters tank = rpWN.rp;
+                    WNHelper.RatingParameters tank = rpWN.RP;
                     RatingParametersWN9 exp = rpWN;
                     // Array [0-9] corresponds with tier [1-10], subtract 1 from exp.tier to locate correct avg values from array
-                    int tierInArray = (exp.tier - 1);
+                    int tierInArray = (exp.Tier - 1);
                     // Select tier average from table, adding +1 to tier if tank has +3 tier MM.
-                    TierAvg avg = tierAvg[exp.mmrange >= 3 ? tierInArray + 1 : tierInArray];
-                    double rdmg = tank.DAMAGE / (tank.BATTLES * avg.dmg);
-                    double rfrag = tank.FRAGS / (tank.BATTLES * avg.frag);
-                    double rspot = tank.SPOT / (tank.BATTLES * avg.spot);
-                    double rdef = tank.DEF / (tank.BATTLES * avg.def);
+                    TierAvg avg = tierAvg[exp.MmRange >= 3 ? tierInArray + 1 : tierInArray];
+                    double rdmg = tank.DAMAGE / (tank.BATTLES * avg.Dmg);
+                    double rfrag = tank.FRAGS / (tank.BATTLES * avg.Frag);
+                    double rspot = tank.SPOT / (tank.BATTLES * avg.Spot);
+                    double rdef = tank.DEF / (tank.BATTLES * avg.Def);
 
                     // Calculate raw winrate-correlated wn9base
                     // Use different formula for low battle counts
@@ -370,25 +370,25 @@ namespace WinApp.Code.Rating
                         wn9base += 0.25 * Math.Sqrt(rfrag * rspot) + 0.05 * Math.Sqrt(rfrag * Math.Sqrt(rdef));
 
                     // Calc with maxhist, Adjust expected value when generating maximum historical value
-                    double wn9expMaxhist = exp.wn9exp * (1 + exp.wn9nerf);
-                    result.WN9maxhist = 666 * Math.Max(0, 1 + (wn9base / wn9expMaxhist - 1) / exp.wn9scale);
+                    double wn9expMaxhist = exp.WN9exp * (1 + exp.WN9nerf);
+                    result.WN9maxhist = 666 * Math.Max(0, 1 + (wn9base / wn9expMaxhist - 1) / exp.WN9scale);
 
                     // Calculate final WN9 based on tank expected value & skill scaling 
-                    result.WN9 = 666 * Math.Max(0, 1 + (wn9base / exp.wn9exp - 1) / exp.wn9scale);
+                    result.WN9 = 666 * Math.Max(0, 1 + (wn9base / exp.WN9exp - 1) / exp.WN9scale);
                 }
             }
             catch (Exception ex)
             {
                 await Log.LogToFile(ex, 
                     "Error calculationg WN9, rating params: {" +
-                    " Battles:" + rpWN.rp.BATTLES +
-                    " Cap:" + rpWN.rp.CAP +
-                    " Dmg:" + rpWN.rp.DAMAGE +
-                    " Def:" + rpWN.rp.DEF +
-                    " Frags:" + rpWN.rp.FRAGS +
-                    " Spot:" + rpWN.rp.SPOT +
-                    " Tier:" + rpWN.rp.TIER +
-                    " Wins:" + rpWN.rp.WINS +
+                    " Battles:" + rpWN.RP.BATTLES +
+                    " Cap:" + rpWN.RP.CAP +
+                    " Dmg:" + rpWN.RP.DAMAGE +
+                    " Def:" + rpWN.RP.DEF +
+                    " Frags:" + rpWN.RP.FRAGS +
+                    " Spot:" + rpWN.RP.SPOT +
+                    " Tier:" + rpWN.RP.TIER +
+                    " Wins:" + rpWN.RP.WINS +
                     " }"
                 );
             }           

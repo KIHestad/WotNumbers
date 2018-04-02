@@ -259,13 +259,15 @@ namespace WinApp.Code
                     // Check for adding calculated column "Battles today" after column "Battles Day"
                     if (colAlias == "Battles Day")
                     {
-                        colListItem = new ColListItem();
-                        colListItem.name = "Battles Today";
-                        colListItem.colName = "Battles Today";
-                        colListItem.colNameSelect = "0";
-                        colListItem.colWidth = Convert.ToInt32(dr["colWidth"]); // Same as prev column = "Battles Day"
-                        colListItem.colType = "Int";
-                        colListItem.colNameSort = "Battles Today";
+                        colListItem = new ColListItem
+                        {
+                            name = "Battles Today",
+                            colName = "Battles Today",
+                            colNameSelect = "0",
+                            colWidth = Convert.ToInt32(dr["colWidth"]), // Same as prev column = "Battles Day"
+                            colType = "Int",
+                            colNameSort = "Battles Today"
+                        };
                         selectedColumnList.ColListItems.ColListItemList.Add(colListItem);
                         selectedColumnList.ColListItems.Select += "0 as 'Battles Today', ";
                     }
@@ -288,13 +290,15 @@ namespace WinApp.Code
 			foreach (DataRow dr in dt.Rows)
 			{
 				string colName = dr["colName"].ToString(); // Get default colName
-				ColListItem colListItem = new ColListItem();
-				colListItem.name = dr["name"].ToString();
-				colListItem.description = dr["description"].ToString();
-				colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
-				colListItem.colGroup = dr["colGroup"].ToString();
-				colListItem.colType = dr["colDataType"].ToString();
-				if (dr["colnameSort"] != DBNull.Value)
+                ColListItem colListItem = new ColListItem
+                {
+                    name = dr["name"].ToString(),
+                    description = dr["description"].ToString(),
+                    colWidth = Convert.ToInt32(dr["colWidth"]),
+                    colGroup = dr["colGroup"].ToString(),
+                    colType = dr["colDataType"].ToString()
+                };
+                if (dr["colnameSort"] != DBNull.Value)
 					colListItem.colNameSort = dr["colnameSort"].ToString();
 				else
 					colListItem.colNameSort = colListItem.colName;

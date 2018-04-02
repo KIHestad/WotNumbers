@@ -13,7 +13,7 @@ namespace WinApp.Forms
 {
     public partial class TankSearch : FormCloseOnEsc
     {
-        private DataTable dt { get; set; }
+        private DataTable TankSearchData { get; set; }
         private bool MainModeAdvanced { get; set; }
 
         #region Init
@@ -81,39 +81,39 @@ namespace WinApp.Forms
         private void CreateEmptyResultSet()
         {
             // Create table to hold data
-            dt = new DataTable();
+            TankSearchData = new DataTable();
             if (MainModeAdvanced)
             {
                 // Advanced
-                dt.Columns.Add("LightID", typeof(Int32));
-                dt.Columns.Add("LightName", typeof(string));
-                dt.Columns.Add("Light", typeof(Image));
+                TankSearchData.Columns.Add("LightID", typeof(Int32));
+                TankSearchData.Columns.Add("LightName", typeof(string));
+                TankSearchData.Columns.Add("Light", typeof(Image));
 
-                dt.Columns.Add("MediumID", typeof(Int32));
-                dt.Columns.Add("MediumName", typeof(string));
-                dt.Columns.Add("Medium", typeof(Image));
+                TankSearchData.Columns.Add("MediumID", typeof(Int32));
+                TankSearchData.Columns.Add("MediumName", typeof(string));
+                TankSearchData.Columns.Add("Medium", typeof(Image));
 
-                dt.Columns.Add("HeavyID", typeof(Int32));
-                dt.Columns.Add("HeavyName", typeof(string));
-                dt.Columns.Add("Heavy", typeof(Image));
+                TankSearchData.Columns.Add("HeavyID", typeof(Int32));
+                TankSearchData.Columns.Add("HeavyName", typeof(string));
+                TankSearchData.Columns.Add("Heavy", typeof(Image));
 
-                dt.Columns.Add("TDID", typeof(Int32));
-                dt.Columns.Add("TDName", typeof(string));
-                dt.Columns.Add("TD", typeof(Image));
+                TankSearchData.Columns.Add("TDID", typeof(Int32));
+                TankSearchData.Columns.Add("TDName", typeof(string));
+                TankSearchData.Columns.Add("TD", typeof(Image));
 
-                dt.Columns.Add("SPGID", typeof(Int32));
-                dt.Columns.Add("SPGName", typeof(string));
-                dt.Columns.Add("SPG", typeof(Image));
+                TankSearchData.Columns.Add("SPGID", typeof(Int32));
+                TankSearchData.Columns.Add("SPGName", typeof(string));
+                TankSearchData.Columns.Add("SPG", typeof(Image));
             }
             else
             {
                 // Simple
-                dt.Columns.Add("ID", typeof(Int32));
-                dt.Columns.Add("Tier", typeof(string));
-                dt.Columns.Add("Name", typeof(string));
-                dt.Columns.Add("Tank", typeof(Image));
-                dt.Columns.Add("Type", typeof(string));
-                dt.Columns.Add("Nation", typeof(string));
+                TankSearchData.Columns.Add("ID", typeof(Int32));
+                TankSearchData.Columns.Add("Tier", typeof(string));
+                TankSearchData.Columns.Add("Name", typeof(string));
+                TankSearchData.Columns.Add("Tank", typeof(Image));
+                TankSearchData.Columns.Add("Type", typeof(string));
+                TankSearchData.Columns.Add("Nation", typeof(string));
             }
         }
 
@@ -153,7 +153,7 @@ namespace WinApp.Forms
                     }
                 }
                 dataGridTanks.ClearSelection();
-                scrollAllTanks.ScrollElementsTotals = dt.Rows.Count;
+                scrollAllTanks.ScrollElementsTotals = TankSearchData.Rows.Count;
                 scrollAllTanks.ScrollElementsVisible = dataGridTanks.DisplayedRowCount(false);
             }
             else
@@ -361,7 +361,7 @@ namespace WinApp.Forms
                     {
                         // No search to be performed, return empty result
                         AddTierHeading(11, 1);
-                        dataGridTanks.DataSource = dt;
+                        dataGridTanks.DataSource = TankSearchData;
                         FormatDataGrid();
                         return;
                     }
@@ -404,16 +404,16 @@ namespace WinApp.Forms
                         if (tierRowsUsedPerTankType[tankType] > tierRows)
                         {
                             DataRow drTank = GetEmptyRow();
-                            dt.Rows.Add(drTank);
-                            dt.AcceptChanges();
+                            TankSearchData.Rows.Add(drTank);
+                            TankSearchData.AcceptChanges();
                             tierRows++;
-                            lastRowNum = dt.Rows.Count - 1;
+                            lastRowNum = TankSearchData.Rows.Count - 1;
                         }
                         // Now an available row exists, add tank to it
                         int tankTypeCol = tankType * 3; // 3 cols per tank type in grid, first for id (hidden) second for name (hidden) last image
-                        dt.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol] = tankId;
-                        dt.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol + 1] = tankName;
-                        dt.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol + 2] = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.SmallImage);
+                        TankSearchData.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol] = tankId;
+                        TankSearchData.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol + 1] = tankName;
+                        TankSearchData.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol + 2] = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.SmallImage);
                     }
                     // Add remaining headers if any
                     if (currentTier >= 1)
@@ -427,7 +427,7 @@ namespace WinApp.Forms
                     {
                         // No search to be performed, return empty result
                         CreateEmptyResultSet();
-                        dataGridTanks.DataSource = dt;
+                        dataGridTanks.DataSource = TankSearchData;
                         FormatDataGrid();
                         return;
                     }
@@ -441,22 +441,22 @@ namespace WinApp.Forms
                         freeTextSearch +
                         "order by tank.short_name; ";
                     DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                    dt = await DB.FetchData(sql);
+                    TankSearchData = await DB.FetchData(sql);
                     // Add image column to datatable
                     // Use ImageHelper to add columns in use
                     ImageHelper.ImgColumns img = new ImageHelper.ImgColumns("Tank", 3);
-                    dt.Columns.Add(img.colName, typeof(Image)).SetOrdinal(img.colPosition);
+                    TankSearchData.Columns.Add(img.colName, typeof(Image)).SetOrdinal(img.colPosition);
                     // Add images to table
-                    foreach (DataRow dr in dt.Rows)
+                    foreach (DataRow dr in TankSearchData.Rows)
                     {
                         dr["Tank"] = ImageHelper.GetTankImage(Convert.ToInt32(dr["id"]), ImageHelper.TankImageType.SmallImage);
                     }
                 }
                 // Show Data
-                dataGridTanks.DataSource = dt;
+                dataGridTanks.DataSource = TankSearchData;
                 FormatDataGrid();
                 scrollAllTanks.ScrollElementsVisible = dataGridTanks.DisplayedRowCount(false);
-                scrollAllTanks.ScrollElementsTotals = dt.Rows.Count;
+                scrollAllTanks.ScrollElementsTotals = TankSearchData.Rows.Count;
                 dataGridTanks.ClearSelection();
             }
             catch (Exception ex)
@@ -475,21 +475,21 @@ namespace WinApp.Forms
                 DataRow drHeader = GetEmptyRow();
                 drHeader["LightID"] = -1; // Indicate Tier Header Row
                 drHeader["Heavy"] = imageListTierIcons.Images[i - 1];
-                dt.Rows.Add(drHeader);
+                TankSearchData.Rows.Add(drHeader);
                 // Add tanks header if several rows in sequence
                 if (i > toTier || forceEmptyRow)
                 {
                     DataRow drTank = GetEmptyRow();
-                    dt.Rows.Add(drTank);
+                    TankSearchData.Rows.Add(drTank);
                 }
             }
-            dt.AcceptChanges();
+            TankSearchData.AcceptChanges();
         }
 
         private DataRow GetEmptyRow()
         {
             Image img = new Bitmap(1, 1);
-            DataRow drTank = dt.NewRow();
+            DataRow drTank = TankSearchData.NewRow();
             drTank[2] = img;
             drTank[5] = img;
             drTank[8] = img;

@@ -46,9 +46,9 @@ namespace WinApp.Forms
                 chartValueList.Add(new ChartValueItem()
                 {
                     Select = false,
-                    TankId = item.tankId,
-                    TankName = item.tankName,
-                    ChartTypeName = item.chartTypeName
+                    TankId = item.TankId,
+                    TankName = item.TankName,
+                    ChartTypeName = item.ChartTypeName
                 });
             }
             // Show charts now
@@ -180,9 +180,9 @@ namespace WinApp.Forms
             {
                 // Remove Now
                 BattleChartHelper.BattleChartItem itemToRemove = BattleChartHelper.CurrentChartView.Find
-                    (x => x.chartTypeName == chartValueItem.ChartTypeName &&
-                        x.tankId == chartValueItem.TankId &&
-                        x.tankName == chartValueItem.TankName
+                    (x => x.ChartTypeName == chartValueItem.ChartTypeName &&
+                        x.TankId == chartValueItem.TankId &&
+                        x.TankName == chartValueItem.TankName
                     );
                 BattleChartHelper.CurrentChartView.Remove(itemToRemove);
             }

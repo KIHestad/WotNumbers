@@ -95,9 +95,8 @@ namespace WinApp.Forms
 		{
 			if (!_init)
 			{
-				int i;
-				bool ok = Int32.TryParse(txtTargetXP.Text, out i);
-				if (((ok && i > 0) || txtProgressXP.Text != "0") && txtBattlesPerDay.Text == "0")
+                bool ok = Int32.TryParse(txtTargetXP.Text, out int i);
+                if (((ok && i > 0) || txtProgressXP.Text != "0") && txtBattlesPerDay.Text == "0")
 					txtBattlesPerDay.Text = "1";
 				else if (txtProgressXP.Text == "0" && txtTargetXP.Text == "0")
 					txtBattlesPerDay.Text = "0";
@@ -110,9 +109,8 @@ namespace WinApp.Forms
 		{
 			if (!_init)
 			{
-				int i;
-				bool ok = Int32.TryParse(txtProgressXP.Text, out i);
-				if (((ok && i > 0) || txtTargetXP.Text != "0") && txtBattlesPerDay.Text == "0")
+                bool ok = Int32.TryParse(txtProgressXP.Text, out int i);
+                if (((ok && i > 0) || txtTargetXP.Text != "0") && txtBattlesPerDay.Text == "0")
 					txtBattlesPerDay.Text = "1";
 				else if (txtProgressXP.Text == "0" && txtTargetXP.Text == "0")
 					txtBattlesPerDay.Text = "0";
@@ -185,13 +183,12 @@ namespace WinApp.Forms
 		private bool CheckValidData()
 		{
 			bool ok = true;
-			int grindXP = 0;
-			int ProgressXP = 0;
-			int btlprDay = 0;
+            int ProgressXP = 0;
+            int btlprDay = 0;
 			if (txtTargetXP.Text == "") txtTargetXP.Text = "0";
 			if (txtProgressXP.Text == "") txtProgressXP.Text = "0";
 			if (txtBattlesPerDay.Text == "") txtBattlesPerDay.Text = "0";
-			ok = Int32.TryParse(txtTargetXP.Text, out grindXP);
+			ok = Int32.TryParse(txtTargetXP.Text, out int grindXP);
 			if (ok) Int32.TryParse(txtProgressXP.Text, out ProgressXP);
 			if (ok) Int32.TryParse(txtBattlesPerDay.Text, out btlprDay);
 			if (!ok)
@@ -235,10 +232,8 @@ namespace WinApp.Forms
 		{
             GrindingHelper.Progress progress = new GrindingHelper.Progress();
             // Get grinding parameters
-			int targetXP = 0;
-			Int32.TryParse(txtTargetXP.Text, out targetXP);
-			int progressXP = 0;
-			Int32.TryParse(txtProgressXP.Text, out progressXP);
+            Int32.TryParse(txtTargetXP.Text, out int targetXP);
+            Int32.TryParse(txtProgressXP.Text, out int progressXP);
             // Set progress parameters
             progress.TargetXP = targetXP;
             progress.ProgressXP = progressXP;
@@ -250,11 +245,9 @@ namespace WinApp.Forms
             // Set current progress
             progress.ProgressGoal = (chkComplDate.Checked ? 1 : 0);
             progress.CompleationDate = null;
-            DateTime getComplDate;
-            if (DateTime.TryParse(txtCompletionDate.Text, out getComplDate))
+            if (DateTime.TryParse(txtCompletionDate.Text, out DateTime getComplDate))
                 progress.CompleationDate = getComplDate;
-            int btlPerDay = 0;
-            Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
+            Int32.TryParse(txtBattlesPerDay.Text, out int btlPerDay);
             progress.BtlPerDay = btlPerDay;
             // Calc new progress
             progress = GrindingHelper.CalcProgress(progress);
@@ -290,9 +283,8 @@ namespace WinApp.Forms
 
 		private void btnSubtrDay_Click(object sender, EventArgs e)
 		{
-			int btlPerDay = 0;
-			Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
-			btlPerDay--;
+            Int32.TryParse(txtBattlesPerDay.Text, out int btlPerDay);
+            btlPerDay--;
 			if (btlPerDay < 1)
 				btlPerDay = 1;
 			txtBattlesPerDay.Text = btlPerDay.ToString();
@@ -300,9 +292,8 @@ namespace WinApp.Forms
 
 		private void btnAddDay_Click(object sender, EventArgs e)
 		{
-			int btlPerDay = 0;
-			Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
-			btlPerDay++;
+            Int32.TryParse(txtBattlesPerDay.Text, out int btlPerDay);
+            btlPerDay++;
 			txtBattlesPerDay.Text = btlPerDay.ToString();
 		}
 
@@ -341,8 +332,7 @@ namespace WinApp.Forms
         private void btnDatePopup_Click(object sender, EventArgs e)
         {
             DateTime? currentDate = null;
-            DateTime getDateTime;
-            if (DateTime.TryParse(txtCompletionDate.Text, out getDateTime))
+            if (DateTime.TryParse(txtCompletionDate.Text, out DateTime getDateTime))
                 currentDate = getDateTime;
             Form frm = new Forms.DatePopup(currentDate);
             frm.ShowDialog();
@@ -386,8 +376,7 @@ namespace WinApp.Forms
         {
             if (!_init)
             {
-                DateTime getDateTime;
-                if (DateTime.TryParse(txtCompletionDate.Text, out getDateTime))
+                if (DateTime.TryParse(txtCompletionDate.Text, out DateTime getDateTime))
                 {
                     CalcProgress();
                     dataChanged = true;

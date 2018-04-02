@@ -25,8 +25,8 @@ namespace WinApp.Forms
 				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")";
 			lblAppVer.Text = AppVersion.AssemblyVersion + " " + AppVersion.BuildVersion;
 			lblDBver.Text = (await DBVersion.GetDBVersion()).ToString("0000");
-			lblWN8ver.Text = DBVersion.GetWNVersion(8).ToString();
-            lblWN9ver.Text = DBVersion.GetWNVersion(9).ToString();
+			lblWN8ver.Text = (await DBVersion.GetWNVersion(8)).ToString();
+            lblWN9ver.Text = (await DBVersion.GetWNVersion(9)).ToString();
             linkWotNumbers.Text = Constants.WotNumWebUrl();
         }
 
