@@ -66,12 +66,7 @@ namespace WinApp.Forms
             // Make sure borderless form do not cover task bar when maximized
             Screen screen = Screen.FromControl(this);
             this.MaximumSize = screen.WorkingArea.Size;
-            // Maximize now if last settings
-            if (mainFormPosSize.WindowState == FormWindowState.Maximized)
-            {
-                this.WindowState = FormWindowState.Maximized;
-                mainFormWindowsState = FormWindowState.Maximized;
-            }
+            
             // Black Border on loading
             MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
             // Resize Form Theme Title Area to fit 125% or 150% font size in Win
@@ -86,6 +81,12 @@ namespace WinApp.Forms
             }
             this.ShowInTaskbar = !Config.Settings.notifyIconUse;
             Refresh();
+            // Maximize now if last settings
+            if (mainFormPosSize.WindowState == FormWindowState.Maximized)
+            {
+                this.WindowState = FormWindowState.Maximized;
+                mainFormWindowsState = FormWindowState.Maximized;
+            }
             this.Opacity = 100;
         }
 
@@ -166,7 +167,7 @@ namespace WinApp.Forms
             dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
             // Set Rating colors
             ColorRangeScheme.SetRatingColors();
-
+            
             try
             {
                 // Systray icon with context menu
@@ -337,7 +338,6 @@ namespace WinApp.Forms
                 await Log.LogToFile(ex);
                 MsgBox.Show("Error occured initializing application:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine, "Startup error", this);
             }
-
         }
 
 		private ContextMenu notifyIconContextMenu;
