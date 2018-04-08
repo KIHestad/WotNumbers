@@ -452,7 +452,7 @@ namespace WinApp.Forms
             {
                 Image = imageListToolStrip.Images[10]
             };
-            dataGridMainPopup_TankWN8.Click += new EventHandler(dataGridMainPopup_TankWN8_Click);
+            dataGridMainPopup_TankWN8.Click += async (s, e) => await dataGridMainPopup_TankWN8_Click(s, e);
 
             ToolStripMenuItem dataGridMainPopup_CopyRowToClipboard = new ToolStripMenuItem("Copy Row to Clipboard")
             {
@@ -4212,7 +4212,7 @@ namespace WinApp.Forms
 		}
 
 
-		private async void dataGridMainPopup_TankWN8_Click(object sender, EventArgs e)
+		private async Task dataGridMainPopup_TankWN8_Click(object sender, EventArgs e)
 		{
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
@@ -4265,6 +4265,10 @@ namespace WinApp.Forms
 					MsgBox.Show(message, "WN8 Tank Details");
 				}
 			}
+            else
+            {
+                MsgBox.Show("This option is only available for tanks you own or has owned, with at least one battle played.", "WN8 Tank Details");
+            }
 		}
 
 		private async void dataGridMainPopup_FilterOnTank_Click(object sender, EventArgs e)

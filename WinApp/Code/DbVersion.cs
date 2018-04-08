@@ -3152,13 +3152,13 @@ namespace WinApp.Code
                     sqlite = mssql;
                     break;
                 case 473:
-                    // Deactivate vbAddict features because of site currently not working
-                    Config.Settings.vBAddictUploadActive = false;
-                    Config.Settings.vBAddictUploadReplayActive = false;
-                    Config.Settings.vBAddictShowToolBarMenu = false;
-                    await Config.SaveConfig();
-                    mssql = "UPDATE player SET vbaddictUploadActive=0, vbaddictUploadReplayActive=0";
-                    sqlite = mssql;
+                    // Deactivate vbAddict features because of site currently not working - removed deactivation for releasing to prod, vbaddict fixed 4.4.2018
+                    //Config.Settings.vBAddictUploadActive = false;
+                    //Config.Settings.vBAddictUploadReplayActive = false;
+                    //Config.Settings.vBAddictShowToolBarMenu = false;
+                    //await Config.SaveConfig();
+                    //mssql = "UPDATE player SET vbaddictUploadActive=0, vbaddictUploadReplayActive=0";
+                    //sqlite = mssql;
                     break;
 
             }
