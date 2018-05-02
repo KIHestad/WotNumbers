@@ -680,7 +680,7 @@ namespace WinApp.Forms
 			// Check filter
 			string nationFilter = "";
 			foreach (ToolStripMenuItem menu in toolAllTanks_Nation.DropDown.Items)
-				if (menu.Checked) nationFilter += menu.Name.Substring(menu.Name.Length - 1, 1) + ",";
+				if (menu.Checked) nationFilter += menu.Tag + ",";
 			string tierFilter = "";
 			foreach (ToolStripMenuItem menu in toolAllTanks_Tier.DropDown.Items)
 				if (menu.Checked) tierFilter += menu.Name.Substring(menu.Name.Length - 2, 2) + ",";

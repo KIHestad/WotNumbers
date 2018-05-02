@@ -245,6 +245,7 @@ namespace WinApp.Code
                                     case "czech": countryId = 7; break;
                                     case "sweden": countryId = 8; break;
                                     case "poland": countryId = 9; break;
+                                    case "italy": countryId = 10; break;
                                 }
 
                                 // Tank name
@@ -404,6 +405,7 @@ namespace WinApp.Code
                                     case "czech": countryId = 7; break;
                                     case "sweden": countryId = 8; break;
                                     case "poland": countryId = 9; break;
+                                    case "italy": countryId = 10; break;
                                 }
 
                                 // Tank name
@@ -542,6 +544,7 @@ namespace WinApp.Code
                                     case "czech": foundTankInfo.nation = "Czechoslovakia"; break;
                                     case "sweden": foundTankInfo.nation = "Sweden"; break;
                                     case "poland": foundTankInfo.nation = "Poland"; break;
+                                    case "italy": foundTankInfo.nation = "Italy"; break;
                                 }
 
                                 // Tank name

@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 473; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 477; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3138,10 +3138,6 @@ namespace WinApp.Code
                         "INSERT INTO map (id, name, arena_id) VALUES (83, 'Glacier', '115_sweden'); ";
                     sqlite = mssql;
                     break;
-                case 470:
-                    RunDownloadAndUpdateTanks = true;
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
-                    break;
                 case 471:
                     RunInstallNewBrrVersion = true; // Force install BRR mod if activated in settings, even if no WoT game client is detected
                     break;
@@ -3159,6 +3155,14 @@ namespace WinApp.Code
                     //await Config.SaveConfig();
                     //mssql = "UPDATE player SET vbaddictUploadActive=0, vbaddictUploadReplayActive=0";
                     //sqlite = mssql;
+                    break;
+                case 474:
+                    mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (10, 'Italy', 'IT', 'italy', 95); ";
+                    sqlite = mssql;
+                    break;
+                case 477:
+                    RunDownloadAndUpdateTanks = true;
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
 
             }

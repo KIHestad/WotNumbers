@@ -82,7 +82,7 @@ namespace WinApp.Code
 						string logtext = Environment.NewLine;
 						logtext += "{" + Environment.NewLine; 
 						logtext += DateTime.Now + " ### EXCEPTION ###" + Environment.NewLine;
-						logtext += "   Source:          " + ex.Source + Environment.NewLine;
+                        logtext += "   Source:          " + ex.Source + Environment.NewLine;
 						logtext += "   TargetSite:      " + ex.TargetSite + Environment.NewLine;
 						logtext += "   Data:            " + ex.Data + Environment.NewLine;
 						logtext += "   Message:         " + ex.Message + Environment.NewLine;

@@ -92,6 +92,7 @@
             this.mTankFilter_CountryCzechoslovakia = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryPoland = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountrySweden = new System.Windows.Forms.ToolStripMenuItem();
+            this.mTankFilter_CountryItaly = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_Type = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_TypeLT = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_TypeMT = new System.Windows.Forms.ToolStripMenuItem();
@@ -358,6 +359,7 @@
             // 
             // fswBattle
             // 
+            this.fswBattle.EnableRaisingEvents = true;
             this.fswBattle.Filter = "*.dat";
             this.fswBattle.NotifyFilter = System.IO.NotifyFilters.LastWrite;
             this.fswBattle.SynchronizingObject = this;
@@ -806,7 +808,8 @@
             this.mTankFilter_CountryJapan,
             this.mTankFilter_CountryCzechoslovakia,
             this.mTankFilter_CountryPoland,
-            this.mTankFilter_CountrySweden});
+            this.mTankFilter_CountrySweden,
+            this.mTankFilter_CountryItaly});
             this.mTankFilter_Country.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Country.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Country.Image")));
             this.mTankFilter_Country.Name = "mTankFilter_Country";
@@ -818,7 +821,7 @@
             this.mTankFilter_CountryGermany.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryGermany.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryGermany.Image")));
             this.mTankFilter_CountryGermany.Name = "mTankFilter_CountryGermany";
-            this.mTankFilter_CountryGermany.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryGermany.Size = new System.Drawing.Size(180, 22);
             this.mTankFilter_CountryGermany.Text = "Germany";
             this.mTankFilter_CountryGermany.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryGermany.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -829,7 +832,7 @@
             this.mTankFilter_CountryUSSR.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryUSSR.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSSR.Image")));
             this.mTankFilter_CountryUSSR.Name = "mTankFilter_CountryUSSR";
-            this.mTankFilter_CountryUSSR.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryUSSR.Size = new System.Drawing.Size(180, 22);
             this.mTankFilter_CountryUSSR.Text = "U.S.S.R.";
             this.mTankFilter_CountryUSSR.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryUSSR.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -840,7 +843,7 @@
             this.mTankFilter_CountryUSA.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryUSA.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSA.Image")));
             this.mTankFilter_CountryUSA.Name = "mTankFilter_CountryUSA";
-            this.mTankFilter_CountryUSA.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryUSA.Size = new System.Drawing.Size(180, 22);
             this.mTankFilter_CountryUSA.Text = "U.S.A.";
             this.mTankFilter_CountryUSA.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryUSA.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -852,7 +855,7 @@
             this.mTankFilter_CountryFrance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryFrance.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryFrance.Image")));
             this.mTankFilter_CountryFrance.Name = "mTankFilter_CountryFrance";
-            this.mTankFilter_CountryFrance.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryFrance.Size = new System.Drawing.Size(180, 22);
             this.mTankFilter_CountryFrance.Text = "France";
             this.mTankFilter_CountryFrance.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryFrance.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -863,7 +866,7 @@
             this.mTankFilter_CountryUK.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryUK.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUK.Image")));
             this.mTankFilter_CountryUK.Name = "mTankFilter_CountryUK";
-            this.mTankFilter_CountryUK.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryUK.Size = new System.Drawing.Size(180, 22);
             this.mTankFilter_CountryUK.Text = "U.K.";
             this.mTankFilter_CountryUK.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryUK.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -874,7 +877,7 @@
             this.mTankFilter_CountryChina.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryChina.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryChina.Image")));
             this.mTankFilter_CountryChina.Name = "mTankFilter_CountryChina";
-            this.mTankFilter_CountryChina.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryChina.Size = new System.Drawing.Size(180, 22);
             this.mTankFilter_CountryChina.Text = "China";
             this.mTankFilter_CountryChina.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryChina.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -885,7 +888,7 @@
             this.mTankFilter_CountryJapan.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryJapan.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryJapan.Image")));
             this.mTankFilter_CountryJapan.Name = "mTankFilter_CountryJapan";
-            this.mTankFilter_CountryJapan.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryJapan.Size = new System.Drawing.Size(180, 22);
             this.mTankFilter_CountryJapan.Text = "Japan";
             this.mTankFilter_CountryJapan.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryJapan.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -896,7 +899,7 @@
             this.mTankFilter_CountryCzechoslovakia.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryCzechoslovakia.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryCzechoslovakia.Image")));
             this.mTankFilter_CountryCzechoslovakia.Name = "mTankFilter_CountryCzechoslovakia";
-            this.mTankFilter_CountryCzechoslovakia.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryCzechoslovakia.Size = new System.Drawing.Size(180, 22);
             this.mTankFilter_CountryCzechoslovakia.Text = "Czechoslovakia";
             this.mTankFilter_CountryCzechoslovakia.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryCzechoslovakia.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -907,7 +910,7 @@
             this.mTankFilter_CountryPoland.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryPoland.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryPoland.Image")));
             this.mTankFilter_CountryPoland.Name = "mTankFilter_CountryPoland";
-            this.mTankFilter_CountryPoland.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryPoland.Size = new System.Drawing.Size(180, 22);
             this.mTankFilter_CountryPoland.Text = "Poland";
             this.mTankFilter_CountryPoland.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryPoland.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -918,11 +921,22 @@
             this.mTankFilter_CountrySweden.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountrySweden.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountrySweden.Image")));
             this.mTankFilter_CountrySweden.Name = "mTankFilter_CountrySweden";
-            this.mTankFilter_CountrySweden.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountrySweden.Size = new System.Drawing.Size(180, 22);
             this.mTankFilter_CountrySweden.Text = "Sweden";
             this.mTankFilter_CountrySweden.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountrySweden.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
             this.mTankFilter_CountrySweden.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mTankFilter_CountryItaly
+            // 
+            this.mTankFilter_CountryItaly.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mTankFilter_CountryItaly.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryItaly.Image")));
+            this.mTankFilter_CountryItaly.Name = "mTankFilter_CountryItaly";
+            this.mTankFilter_CountryItaly.Size = new System.Drawing.Size(180, 22);
+            this.mTankFilter_CountryItaly.Text = "Italy";
+            this.mTankFilter_CountryItaly.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
+            this.mTankFilter_CountryItaly.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
+            this.mTankFilter_CountryItaly.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
             // mTankFilter_Type
             // 
@@ -2595,7 +2609,7 @@
             this.mWotNumWebStats.Image = ((System.Drawing.Image)(resources.GetObject("mWotNumWebStats.Image")));
             this.mWotNumWebStats.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mWotNumWebStats.Name = "mWotNumWebStats";
-            this.mWotNumWebStats.Size = new System.Drawing.Size(96, 22);
+            this.mWotNumWebStats.Size = new System.Drawing.Size(96, 20);
             this.mWotNumWebStats.Text = "Stats on Web";
             this.mWotNumWebStats.ToolTipText = "Go to the Stats page on Wot Numbers website";
             this.mWotNumWebStats.Click += new System.EventHandler(this.mWotNumWebStats_Click);
@@ -2607,7 +2621,7 @@
             this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
             this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
+            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
             this.mVBaddict.Text = "toolStripButton1";
             this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
             this.mVBaddict.Visible = false;
@@ -3057,6 +3071,7 @@
         private System.Windows.Forms.Timer timerWotNumMenuItem;
         private System.IO.FileSystemWatcher fswDossier;
         private System.IO.FileSystemWatcher fswBattle;
+        private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountryItaly;
     }
 }
 

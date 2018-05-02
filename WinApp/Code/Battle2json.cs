@@ -1183,16 +1183,24 @@ namespace WinApp.Code
 
         private async static Task<int?> GetMaxBattleTier(int battleId)
         {
-            // TODO
-            int? maxBattleTier = null;
-            string sql =
-                "select max(tank.tier) " +
-                "from battlePlayer left join tank on battleplayer.tankid=tank.id " +
-                "where battleid=" + battleId;
-            DataTable dt = await DB.FetchData(sql);
-            if (dt.Rows.Count > 0)
-                maxBattleTier = Convert.ToInt32(dt.Rows[0][0]);
-            return maxBattleTier;
+            try
+            {
+                int? maxBattleTier = null;
+                string sql =
+                    "select max(tank.tier) " +
+                    "from battlePlayer left join tank on battleplayer.tankid=tank.id " +
+                    "where battleid=" + battleId;
+                DataTable dt = await DB.FetchData(sql);
+                if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
+                    maxBattleTier = Convert.ToInt32(dt.Rows[0][0]);
+                return maxBattleTier;
+            }
+            catch (Exception ex)
+            {
+                await Log.LogToFile(ex, "Error getting max tier for tanks in battle: " + battleId);
+                return null;
+            }
+            
         }
     }
 }

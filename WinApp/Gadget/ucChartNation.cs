@@ -21,9 +21,9 @@ namespace WinApp.Gadget
 		// slide chart
 		private int timerStep = 0;
 		private int timerMaxStep = 20;
-		private double[] oldVal = new double[10];
-		private double[] newVal = new double[10];
-		private double[] move = new double[10];
+		private double[] oldVal = new double[11];
+		private double[] newVal = new double[11];
+		private double[] move = new double[11];
 
 		// image controls
 		List<Control> imgControls = new List<Control>();

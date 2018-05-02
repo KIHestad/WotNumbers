@@ -1792,6 +1792,7 @@ namespace WinApp.Forms
                 mTankFilter_CountryCzechoslovakia.Checked = false;
                 mTankFilter_CountrySweden.Checked = false;
                 mTankFilter_CountryPoland.Checked = false;
+                mTankFilter_CountryItaly.Checked = false;
                 mTankFilter_Country.Text = "Nation";
 			}
 			if (type)
@@ -1814,6 +1815,7 @@ namespace WinApp.Forms
             if (mTankFilter_CountryCzechoslovakia.Checked) tankFilterNation++;
             if (mTankFilter_CountrySweden.Checked) tankFilterNation++;
             if (mTankFilter_CountryPoland.Checked) tankFilterNation++;
+            if (mTankFilter_CountryItaly.Checked) tankFilterNation++;
 
             if (mTankFilter_TypeLT.Checked) tankFilterType++;
 			if (mTankFilter_TypeMT.Checked) tankFilterType++;
@@ -2364,6 +2366,7 @@ namespace WinApp.Forms
                 if (mTankFilter_CountryCzechoslovakia.Checked) { nation += "Czechoslovakia,"; nationId += "7,"; manualFilterCount++; }
                 if (mTankFilter_CountrySweden.Checked) { nation += "Sweden,"; nationId += "8,"; manualFilterCount++; }
                 if (mTankFilter_CountryPoland.Checked) { nation += "Poland,"; nationId += "9,"; manualFilterCount++; }
+                if (mTankFilter_CountryItaly.Checked) { nation += "Italy,"; nationId += "10,"; manualFilterCount++; }
 
                 if (mTankFilter_TypeLT.Checked) { type += "Light,"; typeId += "1,"; manualFilterCount++; }
 				if (mTankFilter_TypeMT.Checked) { type += "Medium,"; typeId += "2,"; manualFilterCount++; }
