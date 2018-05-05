@@ -21,7 +21,7 @@ namespace WinApp.Code
 		public class JsonItem
 		{
 			public string mainSection = "";
-			public string tank = "";
+			public string tankId = "";
 			public string subSection = "";
 			public string property = "";
 			public object value = null;
@@ -97,8 +97,7 @@ namespace WinApp.Code
 				DataRow NewPlayerTankBattleStrongholdRow = NewPlayerTankBattleTable.NewRow();
 				DataRow NewPlayerTankBattleGlobalMapRow = NewPlayerTankBattleTable.NewRow();
                 DataRow NewPlayerTankBattleGrandRow = NewPlayerTankBattleTable.NewRow();
-                string tankName = "";
-				JsonItem currentItem = new JsonItem();
+                JsonItem currentItem = new JsonItem();
 				string fragList = "";
 				List<AchItem> achList = new List<AchItem>();
 				// Loop through json file
@@ -260,11 +259,11 @@ namespace WinApp.Code
 								if (reader.Value != null) // ****************   found second level = tank level  *****************************************
 								{
 									// Tank data exist, save data found and log
-									if (tankName != "")
+									if (currentItem.tankId != "")
 									{
                                         // log.Add("  > Check for DB update - Tank: '" + tankName );
                                         result.NewBattlesCount += await CheckTankDataResult(
-                                            tankName,
+                                            currentItem.tankId,
                                             NewPlayerTankRow,
                                             NewPlayerTankBattle15Row,
                                             NewPlayerTankBattle7Row,
@@ -298,9 +297,7 @@ namespace WinApp.Code
 									// Get new tank name
 									if (currentItem.mainSection == "tanks_v2" || currentItem.mainSection == "tanks") // The only section containing tanks to be read
 									{
-										currentItem.tank = reader.Value.ToString(); // add to current item
-										tankName = reader.Value.ToString(); // add to current tank
-										string s = tankName;
+										currentItem.tankId = reader.Value.ToString(); // add to current item
 									}
 								}
 							}
@@ -318,7 +315,7 @@ namespace WinApp.Code
                 // log.Add("  > Check for DB update - Tank: '" + tankName );
                 // TODO 7Ranked
                 result.NewBattlesCount += await CheckTankDataResult(
-                    tankName, 
+                    currentItem.tankId, 
                     NewPlayerTankRow, 
                     NewPlayerTankBattle15Row, 
                     NewPlayerTankBattle7Row, 
@@ -369,7 +366,7 @@ namespace WinApp.Code
 			
 		}
 
-		public async static Task<int> CheckTankDataResult(string tankName, 
+		public async static Task<int> CheckTankDataResult(string getTankId, 
 												DataRow playerTankNewRow, 
 												DataRow playerTankBattle15NewRow,
 												DataRow playerTankBattle7NewRow,
@@ -387,9 +384,9 @@ namespace WinApp.Code
 			// Get Tank ID
 			int battleSave = 0; // Sets number of battle saved as return value
 			// int tankId = TankData.GetTankID(tankName); old code - get from name
-			if (playerTankNewRow["compactDescr"] == DBNull.Value)
+			if (playerTankNewRow["compactDescr"].ToString() != getTankId)
 			{
-				await Log.LogToFile("### Tank result terminated ### Did not find compactDescr in dossier file for tank: " + tankName,true);
+				await Log.LogToFile("### Tank result terminated ### Did not find correvt compactDescr in dossier file for tank to analyze: " + getTankId, true);
 				return 0;
 			}
 			int tankId = Convert.ToInt32(playerTankNewRow["compactDescr"]);
@@ -419,7 +416,7 @@ namespace WinApp.Code
 			if (playerTankOldTable.Rows.Count == 0)
 			{
                 // New tank detected, this parts only run when new tank is detected
-                await SaveNewPlayerTank(tankId, tankName); // Save new tank
+                await SaveNewPlayerTank(tankId); // Save new tank
 				playerTankOldTable = await TankHelper.GetPlayerTank(tankId); // Get data into DataTable once more now after row is added
 			}
 			// Get the get existing (old) tank data row
@@ -566,11 +563,11 @@ namespace WinApp.Code
 			return battleSave;
 		}
 
-		private async static Task SaveNewPlayerTank(int tankId, string tankName)
+		private async static Task SaveNewPlayerTank(int tankId)
 		{
 			// Check if this tank exists
 			if (!TankHelper.TankExists(tankId))
-                await TankHelper.CreateUnknownTank(tankId, tankName);
+                await TankHelper.CreateUnknownTank(tankId, "Unknown_" + tankId.ToString());
 
 			// Add to database
 			string sql = "INSERT INTO PlayerTank (tankId, playerId) VALUES (@tankId, @playerId); ";
