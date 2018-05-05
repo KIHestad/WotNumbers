@@ -913,8 +913,9 @@
     <None Include="Docs\New_Default_Setup.json" />
     <None Include="Docs\Old_Default_Setup.json" />
     <None Include="DevDocs\OLD_BRR\__init__.pyc" />
-    <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\structures_10.json" />
+    <None Include="Dossier2json\structures_101.json" />
+    <None Include="Dossier2json\structures_100.json" />
     <None Include="Dossier2json\structures_17.json" />
     <None Include="Dossier2json\structures_18.json" />
     <None Include="Dossier2json\structures_20.json" />
@@ -939,7 +940,6 @@
     <None Include="Dossier2json\structures_97.json" />
     <None Include="Dossier2json\structures_99.json" />
     <None Include="Dossier2json\structures_98.json" />
-    <None Include="Dossier2json\tanks.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

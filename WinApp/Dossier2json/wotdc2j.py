@@ -20,53 +20,17 @@ def main():
 	
 	import struct, json, time, sys, os, shutil, datetime, base64, cPickle
 
-	parserversion = "0.9.20.1"
+	parserversion = "1.0.1.0"
 	
 	global rawdata, tupledata, data, structures, numoffrags, working_directory
 	global filename_source, filename_target
-	global option_server, option_format, option_tanks, option_frags, option_raw
+	global option_format, option_frags, option_raw
 	
-	# IRONPYTHON MODIFIED: added manually input dossier filename
-	# filename_source = "dossier.dat"
 	filename_source = '%s\\Wot Numbers\\dossier.dat' %  os.environ['APPDATA']
-	# IRONPYTHON MODIFIED: 
-	# -s - option_server - By setting s the JSON will not include tank info and outputs to console
-	# -r - option_raw    - By setting r the JSON will contain all fields with their values and recognized names
-	# -f - option_format - By setting f the JSON will be formatted for better human readability
-	# -k - option_frags  - By setting k the JSON will not contain Kills/Frags
-	# -t - option_tanks  - By setting t the JSON will include tank information, use this in combination with -s
-	option_raw = 0
-	option_format = 1
-	option_server = 0
-	option_frags = 1
-	option_tanks = 0
-	
-	for argument in sys.argv[1:]:
-		if argument == "-s":
-			option_server = 1
-			#print '-- SERVER mode enabled'
-		elif argument == "-r":
-			option_raw = 1
-			#print '-- RAW mode enabled'
-		elif argument == "-f":
-			option_format = 1
-			#print '-- FORMAT mode enabled'
-		elif argument == "-k":
-			option_frags = 0
-			#print '-- FRAGS will be excluded'
-		elif argument == "-t":
-			option_tanks = 0
-			#print '-- TANK info will be included'
-		else:
-			# dossier file, if more than one get only first
-			if filename_source =='' and os.path.isfile(argument):
-				filename_source = argument
-	
-	#if filename_source == "":
-	#	usage()
-	#	sys.exit(2)
+	option_raw = 0 # Set to 1 and the JSON will contain all fields with their values and recognized names
+	option_format = 1 # Set to 1 and the JSON will be formatted for better human readability
+	option_frags = 0 # Set to 1 and the JSON will contain Kills/Frags
 		
-	# printmessage('############################################')
 	printmessage('') 
 	printmessage('###### WoTDC2J ' + parserversion + ' DOSSIER FILE CONVERT TO JSON')
 	printmessage('Time: ' + str(datetime.datetime.now())) 
@@ -121,28 +85,11 @@ def main():
 		
 	dossierheader = dict()
 	dossierheader['dossierversion'] = str(dossierversion)
-	dossierheader['parser'] = 'http://www.vbaddict.net'
+	dossierheader['parser'] = 'http://wotnumbers.com'
 	dossierheader['parserversion'] = parserversion
 	dossierheader['tankcount'] = len(tankitems)
+	dossierheader['date'] = time.mktime(time.localtime())
 	
-
-	#IRONPYTHON MODIFIED - NO NEED TO EXTRACT PLAYER NAME/SERVER
-	#base32name = "?;?"
-	#if option_server == 0:
-	#	filename_base = os.path.splitext(os.path.basename(filename_source))[0]
-	#	try:
-	#		base32name = base64.b32decode(filename_base)
-	#	except Exception, e:
-	#		pass
-	#		#printmessage('cannot decode filename ' + filename_base + ': ' + e.message)
-
-	dossierheader['server'] = '?' #base32name.split(';', 1)[0];
-	dossierheader['username'] = '?' #base32name.split(';', 1)[1];
-	
-	if option_server == 0:
-		dossierheader['date'] = time.mktime(time.localtime())
-	
-	tanksdata = load_tanksdata()
 	structures = load_structures()
 	
 	tanks = dict()
@@ -186,7 +133,7 @@ def main():
 		#	continue
 		
 		if tankversion not in structures:
-			write_to_log('unsupported tankversion ' + str(tankversion))
+			printmessage('Unsupported tankversion ' + str(tankversion))
 			continue				
 
 		if not isinstance(tankitem[0][1], (int)):
@@ -194,7 +141,7 @@ def main():
 			continue
 	
 		try:
-			tankid = tankitem[0][1] >> 8 & 65535
+			tankid = tankitem[0][1] #>> 8 & 65535
 		except Exception, e:
 			printmessage('cannot get tankid ' + e.message)
 			continue
@@ -215,44 +162,32 @@ def main():
 		if len(tupledata) == 0:
 			continue
 
-		if option_server == 0:
-			tanktitle = get_tank_data(tanksdata, countryid, tankid, "title")
-		else:
-			tanktitle = str(countryid) + '_' + str(tankid)
-
 		fragslist = []
 		if tankversion >= 65:
 			tank_v2 = dict()
 			
-			if tankversion == 65:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7')
-				
-			if tankversion == 69:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7')
-
-			if tankversion == 77:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical')
-
-			if tankversion == 81:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements')
-
-			if tankversion in [85, 87]:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements')
-
-			if tankversion in [88,89]:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7')
-
-			if tankversion == 92:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon')
-			
-			if tankversion in [94, 95, 96]:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon', 'fallout', 'maxFallout', 'falloutAchievements')
-			
-			if tankversion in [97, 98]:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon', 'fallout', 'maxFallout', 'falloutAchievements', 'ranked', 'maxRanked', 'rankedSeasons')
-				
-			if tankversion in [99]:
+			if tankversion in [100,101]:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon', 'fallout', 'maxFallout', 'falloutAchievements', 'ranked', 'maxRanked', 'rankedSeasons', 'a30x30', 'max30x30', 'epicBattle', 'maxEpicBattle', 'epicBattleAchievements')
+			elif tankversion in [99]:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon', 'fallout', 'maxFallout', 'falloutAchievements', 'ranked', 'maxRanked', 'rankedSeasons', 'a30x30', 'max30x30')
+			elif tankversion in [97, 98]:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon', 'fallout', 'maxFallout', 'falloutAchievements', 'ranked', 'maxRanked', 'rankedSeasons')
+			elif tankversion in [94, 95, 96]:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon', 'fallout', 'maxFallout', 'falloutAchievements')
+			elif tankversion == 92:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon')
+			elif tankversion in [88,89]:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7')
+			elif tankversion in [85, 87]:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements')
+			elif tankversion == 81:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements')
+			elif tankversion == 77:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical')
+			elif tankversion == 69:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7')
+			elif tankversion == 65:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7')
 			
 			blockcount = len(list(blocks))+1
 
@@ -282,8 +217,7 @@ def main():
 							for i in xrange((blocksizes[blocknumber]/6)):
 								compDescr, amount = (fragsdata[index], fragsdata[index + 1])
 								numoffrags_list += amount	
-								frag_countryid, frag_tankid, frag_tanktitle = get_tank_details(compDescr, tanksdata)
-								tankfrag = [frag_countryid, frag_tankid, amount, frag_tanktitle]
+								tankfrag = [compDescr, amount]
 								fragslist.append(tankfrag)
 								index += 2							
 
@@ -303,6 +237,7 @@ def main():
 						tank_v2[blockname] = structureddata 
 
 				blocknumber +=1
+
 			if contains_block('max15x15', tank_v2):
 				if 'maxXP' in tank_v2['max15x15']:
 					if tank_v2['max15x15']['maxXP']==0:
@@ -390,19 +325,13 @@ def main():
 				try:
 					if numoffrags_list <> (numoffrags_a15x15 + numoffrags_a7x7 + numoffrags_historical + numoffrags_fortBattles + numoffrags_fortSorties + numoffrags_rated7x7 + numoffrags_globalMap + numoffrags_fallout):
 						pass
-						#write_to_log('Wrong number of frags for ' + str(tanktitle) + ', ' + str(tankversion) + ': ' + str(numoffrags_list) + ' = ' + str(numoffrags_a15x15) + ' + ' + str(numoffrags_a7x7) + ' + ' + str(numoffrags_historical) + ' + ' + str(numoffrags_fortBattles) + ' + ' + str(numoffrags_fortSorties) + ' + ' + str(numoffrags_rated7x7))
+						#printmessage('Wrong number of frags for ' + str(tanktitle) + ', ' + str(tankversion) + ': ' + str(numoffrags_list) + ' = ' + str(numoffrags_a15x15) + ' + ' + str(numoffrags_a7x7) + ' + ' + str(numoffrags_historical) + ' + ' + str(numoffrags_fortBattles) + ' + ' + str(numoffrags_fortSorties) + ' + ' + str(numoffrags_rated7x7))
 				except Exception, e:
-						write_to_log('Error processing frags: ' + e.message)
-		
+						printmessage('Error processing frags: ' + e.message)
 			
 				
 			tank_v2['common'] = {"countryid": countryid,
-				"tankid": tankid,
-				"tanktitle": tanktitle,
 				"compactDescr": tankitem[0][1],
-				"type": get_tank_data(tanksdata, countryid, tankid, "type"),
-				"premium": get_tank_data(tanksdata, countryid, tankid, "premium"),
-				"tier": get_tank_data(tanksdata, countryid, tankid, "tier"),
 				"updated": tankitem[1][0],
 				"updatedR": datetime.datetime.fromtimestamp(int(tankitem[1][0])).strftime('%Y-%m-%d %H:%M:%S'),
 				"creationTime": tank_v2['total']['creationTime'],
@@ -429,95 +358,8 @@ def main():
 			if option_raw == 1:
 				tank_v2['rawdata'] = rawdata
 
-			tanks_v2[tanktitle] = tank_v2
+			tanks_v2[tankid] = tank_v2
 			
-			
-		if tankversion < 65:
-			if tankversion >= 20:
-				company = getstructureddata("company", tankversion)
-				battleCount_company += company['battlesCount']
-				clan = getstructureddata("clan", tankversion)
-				battleCount_clan += clan['battlesCount']
-			
-			numoffrags = 0
-	
-			structure = getstructureddata("structure", tankversion)
-
-
-			
-			if 'fragspos' not in structure:
-				write_to_log('tankversion ' + str(tankversion) + ' not in JSON')
-				continue
-			
-			if option_frags == 1 and tankversion >= 17:
-				fragslist = getdata_fragslist(tankversion, tanksdata, structure['fragspos'])
-	
-			tankdata = getstructureddata("tankdata", tankversion)
-			battleCount_15 += tankdata['battlesCount']
-	
-			if not "creationTime" in tankdata:
-				tankdata['creationTime'] = 1356998400
-	
-			common = {"countryid": countryid,
-				"tankid": tankid,
-				"tanktitle": tanktitle,
-				"compactDescr": tankitem[0][1],
-				"type": get_tank_data(tanksdata, countryid, tankid, "type"),
-				"premium": get_tank_data(tanksdata, countryid, tankid, "premium"),
-				"tier": get_tank_data(tanksdata, countryid, tankid, "tier"),
-				"updated": tankitem[1][0],
-				"updatedR": datetime.datetime.fromtimestamp(int(tankitem[1][0])).strftime('%Y-%m-%d %H:%M:%S'),
-				"creationTime": tankdata['creationTime'],
-				"creationTimeR": datetime.datetime.fromtimestamp(int(tankdata['creationTime'])).strftime('%Y-%m-%d %H:%M:%S'),
-				"lastBattleTime": tankdata['lastBattleTime'],
-				"lastBattleTimeR": datetime.datetime.fromtimestamp(int(tankdata['lastBattleTime'])).strftime('%Y-%m-%d %H:%M:%S'),
-				"basedonversion": tankversion,
-				"frags": tankdata['frags'],
-				"frags_compare": numoffrags
-			}
-	
-			if option_frags == 1 and tankversion >= 17:
-				try:
-					if tankdata['frags'] <> numoffrags:
-						printmessage('Wrong number of frags!')
-				except Exception, e:
-						write_to_log('Error processing frags: ' + e.message)
-	
-			series = getstructureddata("series", tankversion)
-	
-			special = getstructureddata("special", tankversion)
-	
-			battle = getstructureddata("battle", tankversion)
-	
-			major = getstructureddata("major", tankversion)
-	
-			epic = getstructureddata("epic", tankversion)
-	
-	
-	
-			tank = dict()
-			
-			tank['tankdata'] = tankdata
-			tank['common'] = common
-	
-			if tankversion >= 20:
-				tank['series'] = series
-				tank['battle'] = battle
-				tank['special'] = special
-				tank['epic'] = epic
-				tank['major'] = major
-				tank['clan'] = clan
-				tank['company'] = company
-				
-			if option_frags == 1:
-				tank['kills'] = fragslist
-			
-			if option_raw == 1:
-				tank['rawdata'] = rawdata
-			
-			tanks[tanktitle] = tank
-			#tanks = sorted(tanks.values())
-
 	
 	dossierheader['battleCount_15'] = battleCount_15	
 	dossierheader['battleCount_7'] = battleCount_7
@@ -561,27 +403,18 @@ def contains_block(blockname, blockdata):
 	
 	if blockname in blockdata:
 		return 1
-	
 	return 0
 
 
-def get_tank_details(compDescr, tanksdata):
+def get_tank_details(compDescr):
 
-	tankid = compDescr >> 8 & 65535
+	tankid = compDescr #>> 8 & 65535
 	countryid = compDescr >> 4 & 15
-		
-	if option_server == 0 or option_tanks == 1:
-		tankname = get_tank_data(tanksdata, countryid, tankid, "title")
-	else:
-		tankname = "-"	
-
+	tankname = ""
 	return countryid, tankid, tankname
 
 
 def printmessage(message):
-	global option_server
-	
-	#if option_server == 0: #IRONPYTHON MODIFIED, WRITE MESSAGE TO CONSOLE ANYWAY
 	print message
 
 
@@ -597,49 +430,28 @@ def exitwitherror(message):
 
 
 def dumpjson(dossier):
-	global option_format, option_server, filename_target
+	global option_format, filename_target
 	
 	try:
 		
-		if option_server == 0:
-			finalfile = open(filename_target, 'w')
+		finalfile = open(filename_target, 'w')
 		
-			if option_format == 1:
-				finalfile.write(json.dumps(dossier, sort_keys=True, indent=4))
-			else:
-				finalfile.write(json.dumps(dossier))
-
-			# IRONPYTHON MODIFIED: close dossier output file
-			finalfile.close()
-
+		if option_format == 1:
+			finalfile.write(json.dumps(dossier, sort_keys=True, indent=4))
 		else:
-			print json.dumps(dossier)
+			finalfile.write(json.dumps(dossier))
+
+		# IRONPYTHON MODIFIED: close dossier output file
+		finalfile.close()
+
 	except Exception, e:
 		finalfile.close()
 		printmessage(e)
 		
 
 def catch_fatal(message):
-	global option_server
 	import shutil
-		
-	write_to_log(str(message))
-
-
-def write_to_log(logtext):
-	global working_directory, option_server
-	import datetime, os
-	
-	printmessage(logtext)
-	now = datetime.datetime.now()
-	
-	if option_server == 1:
-		try:
-			logFile = open("wotdc2j.log", "a+b")
-			logFile.write(str(now.strftime("%Y-%m-%d %H:%M:%S")) + " # WOTDC2J: " + str(logtext) + " # " + str(filename_source) + "\r\n")
-			logFile.close()
-		except:
-			printmessage("Cannot write to wotdc2j.log")
+	printmessage(str(message))
 
 
 def getstructureddata(category, tankversion, baseoffset=0):
@@ -708,48 +520,6 @@ def get_json_data(filename):
 	return file_data
 
 
-def get_tank_data(tanksdata, countryid, tankid, dataname):
-
-	if option_server == 0 or option_tanks == 1:
-		key = str(countryid) + "." + str(tankid)
-		if key in tanksdata:
-			return tanksdata[key][dataname]
-	
-	if dataname == 'title':
-		return 'unknown_' + str(countryid) + '_' + str(tankid)
-	
-	return 0
-
-
-def getdata_fragslist(tankversion, tanksdata, offset):
-	global tupledata, numoffrags
-
-	fragslist = []
-
-	offset = offset + 2
-
-	if len(tupledata) > offset:
-
-		numfrags = getdata("Number of frags", offset-2, 2)
-
-		if numfrags > 0:
-			for m in xrange(0, numfrags):
-
-				tankoffset = offset + m*4
-				fragoffset = offset + numfrags*4+m*2
-
-				compDescr = getdata("Frag tankid", tankoffset, 2)
-				amount = getdata("Frag amount", fragoffset, 2)
-
-				countryid, tankid, tankname = get_tank_details(compDescr, tanksdata)
-				numoffrags = numoffrags + amount
-				
-				
-				tankfrag = [countryid, tankid, amount, tankname]
-				fragslist.append(tankfrag)
-
-	return fragslist
-
 
 def getdata(name, startoffset, offsetlength):
 	global rawdata, tupledata, data
@@ -781,8 +551,7 @@ def load_structures():
 	
 	structures = dict()
 	
-	#load_versions = [10,17,18,20,22,24,26,27,28,29,65,69,77,81,85,87,88,89,92,94,95,96,97,98];
-	load_versions = [77,81,85,87,88,89,92,94,95,96,97,98,99];
+	load_versions = [77,81,85,87,88,89,92,94,95,96,97,98,99,100,101];
 	for version in load_versions:
 		jsondata = get_json_data('structures_'+str(version)+'.json') # do not use sub folder for structures
 		structures[version] = dict()
@@ -793,18 +562,6 @@ def load_structures():
 			structures[version][category].append(item)
 	
 	return structures
-
-
-def load_tanksdata():
-	
-	tanksdata = dict()
-	if option_server == 0 or option_tanks == 1:
-		jsondata = get_json_data("tanks.json") # do not use parent folder for tanks
-		for item in jsondata:
-			key = str(item["countryid"])+"."+str(item["tankid"])
-			tanksdata[key] = item
-	
-	return tanksdata
 
 
 if __name__ == '__main__':

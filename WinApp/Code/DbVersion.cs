@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 477; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 478; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3163,6 +3163,12 @@ namespace WinApp.Code
                 case 477:
                     RunDownloadAndUpdateTanks = true;
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+                case 478:
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (77, 'Province (big)', '03_campania_big'); ";
+                    sqlite = mssql;
+                    
                     break;
 
             }
