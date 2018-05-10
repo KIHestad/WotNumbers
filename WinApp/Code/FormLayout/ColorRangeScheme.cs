@@ -21,7 +21,7 @@ namespace WinApp.Code.FormLayout
             {
                 // http://wiki.wnefficiency.net/pages/Color_Scale
                 case RatingColorScheme.WN_Official_Colors:
-                    RangeWN8 = new double[] { 0, 300, 600, 900, 1250, 1600, 1900, 1900, 2350, 2900 };
+                    RangeWN8 = new double[] { 0, 300, 600, 900, 1250, 1600, 1900, 2125, 2350, 2900 };
                     RangeWR = new double[]  { 0, 45, 47, 49, 52, 54, 56, 56, 60, 65 };
                     break;
 
@@ -32,8 +32,9 @@ namespace WinApp.Code.FormLayout
                     break;
 
                 // https://bitbucket.org/XVM/xvm/src/067589e31b0abeee26743043188b39fb05d683a1/release/configs/default/colors.xc?at=default&fileviewer=file-view-default
+                // https://modxvm.com/en/ratings/xvm-scale/colors/
                 case RatingColorScheme.XVM_Colors:
-                    RangeWN8 = new double[] { 0, 400, 620, 900, 1470, 1750, 2180, 2450, 2880, 3000 };
+                    RangeWN8 = new double[] { 0, 200, 432, 967, 1564, 1950, 2350, 2726, 3159, 3462 };
                     RangeWR = new double[]  { 0, 46.5, 48.5, 48.5, 52.5, 57.5, 57.5, 57.5, 64.5, 64.5 };
                     break;
             }            
@@ -95,16 +96,16 @@ namespace WinApp.Code.FormLayout
         
         public static Color WN8color(double wn8)
         {
-            Color wn8RatingColor =                          ColorTheme.Rating_very_bad;
-            if (wn8 >= RangeWN8[9]) wn8RatingColor =        ColorTheme.Rating_super_uniqum;
-            else if (wn8 >= RangeWN8[8]) wn8RatingColor =   ColorTheme.Rating_uniqum;
-            else if (wn8 >= RangeWN8[7]) wn8RatingColor = ColorTheme.Rating_very_great;
-            else if (wn8 >= RangeWN8[6]) wn8RatingColor = ColorTheme.Rating_great;
-            else if (wn8 >= RangeWN8[5]) wn8RatingColor =   ColorTheme.Rating_very_good;
-            else if (wn8 >= RangeWN8[4]) wn8RatingColor =   ColorTheme.Rating_good;
-            else if (wn8 >= RangeWN8[3]) wn8RatingColor =   ColorTheme.Rating_average;
-            else if (wn8 >= RangeWN8[2]) wn8RatingColor =   ColorTheme.Rating_below_average;
-            else if (wn8 >= RangeWN8[1]) wn8RatingColor =   ColorTheme.Rating_bad;
+            Color wn8RatingColor =                        ColorTheme.Rating_0_redDark;
+            if (wn8 >= RangeWN8[9]) wn8RatingColor =      ColorTheme.Rating_9_purpleDark;
+            else if (wn8 >= RangeWN8[8]) wn8RatingColor = ColorTheme.Rating_8_purple;
+            else if (wn8 >= RangeWN8[7]) wn8RatingColor = ColorTheme.Rating_7_blueDark;
+            else if (wn8 >= RangeWN8[6]) wn8RatingColor = ColorTheme.Rating_6_blue;
+            else if (wn8 >= RangeWN8[5]) wn8RatingColor = ColorTheme.Rating_5_greenDark;
+            else if (wn8 >= RangeWN8[4]) wn8RatingColor = ColorTheme.Rating_4_green;
+            else if (wn8 >= RangeWN8[3]) wn8RatingColor = ColorTheme.Rating_3_yellow;
+            else if (wn8 >= RangeWN8[2]) wn8RatingColor = ColorTheme.Rating_2_orange;
+            else if (wn8 >= RangeWN8[1]) wn8RatingColor = ColorTheme.Rating_1_red;
             return wn8RatingColor;
         }
 

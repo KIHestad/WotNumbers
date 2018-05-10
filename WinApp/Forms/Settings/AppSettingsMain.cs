@@ -38,9 +38,6 @@ namespace WinApp.Forms.Settings
             else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
                 databaseInfo = "Database Type: SQLite\nDatabase File: " + Path.GetFileName(Config.Settings.databaseFileName);
             lblDbSettings.Text = databaseInfo;
-            // Download path and settings
-            txtDownloadFilePath.Text = Config.Settings.downloadFilePath;
-            chkCreateDownloadSubFolders.Checked = Config.Settings.downloadFilePathAddSubfolder;
             // Player
             cboSelectPlayer.Text = Config.Settings.playerNameAndServer;
             chkShowDBError.Checked = Config.Settings.showDBErrors;
@@ -102,10 +99,6 @@ namespace WinApp.Forms.Settings
             }
             // vBAddict settings
             await vBAddictHelper.GetSettings();
-            // Download file path and settings
-            // Download path and settings
-            Config.Settings.downloadFilePath = txtDownloadFilePath.Text;
-            Config.Settings.downloadFilePathAddSubfolder = chkCreateDownloadSubFolders.Checked;
             // Save
             ConfigData.Result result = await Config.SaveConfig();
             if (result.Success)
@@ -171,27 +164,6 @@ namespace WinApp.Forms.Settings
         {
             if (currentSelectedPlayer != cboSelectPlayer.Text)
                 EditChangesApply(true);
-        }
-
-        private void btnSelectDownloadFilePath_Click(object sender, EventArgs e)
-        {
-            // Select download path
-            folderBrowserDialogDossier.ShowNewFolderButton = false;
-
-            if (txtDownloadFilePath.Text == "")
-            {
-                folderBrowserDialogDossier.SelectedPath = Config.AppDataDownloadFolder;
-            }
-            else
-            {
-                folderBrowserDialogDossier.SelectedPath = txtDownloadFilePath.Text;
-            }
-            DialogResult result = folderBrowserDialogDossier.ShowDialog();
-            // If file selected save config with new values
-            if (folderBrowserDialogDossier.SelectedPath != "" && result != DialogResult.Cancel)
-            {
-                txtDownloadFilePath.Text = folderBrowserDialogDossier.SelectedPath;
-            }
         }
 
         private void txtDownloadFilePath_TextChanged(object sender, EventArgs e)

@@ -32,7 +32,7 @@ namespace WinApp.Gadget
 		{
 			// Init Gauge
 			aGauge1.ValueMin = 0;
-			aGauge1.ValueMax = 3250;
+			aGauge1.ValueMax = 3750;
 			aGauge1.ValueScaleLinesMajorStepValue = 250;
 			aGauge1.CenterSubText = "WN8: Random/TC";
             // show correct timespan button as selected

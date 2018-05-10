@@ -32,10 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppSettingsMain));
             this.folderBrowserDialogDossier = new System.Windows.Forms.FolderBrowserDialog();
             this.btnMergePlayers = new BadButton();
-            this.txtDownloadFilePath = new BadTextBox();
-            this.chkCreateDownloadSubFolders = new BadCheckBox();
-            this.badLabel3 = new BadLabel();
-            this.btnSelectDownloadFilePath = new BadButton();
             this.txtDossierFilePath = new BadTextBox();
             this.badLabel1 = new BadLabel();
             this.chkShowDBError = new BadCheckBox();
@@ -55,7 +51,7 @@
             this.btnMergePlayers.BlackButton = false;
             this.btnMergePlayers.Checked = false;
             this.btnMergePlayers.Image = null;
-            this.btnMergePlayers.Location = new System.Drawing.Point(309, 215);
+            this.btnMergePlayers.Location = new System.Drawing.Point(309, 201);
             this.btnMergePlayers.Name = "btnMergePlayers";
             this.btnMergePlayers.Size = new System.Drawing.Size(119, 23);
             this.btnMergePlayers.TabIndex = 36;
@@ -63,65 +59,12 @@
             this.btnMergePlayers.ToolTipText = "";
             this.btnMergePlayers.Click += new System.EventHandler(this.btnMergePlayers_Click);
             // 
-            // txtDownloadFilePath
-            // 
-            this.txtDownloadFilePath.HasFocus = false;
-            this.txtDownloadFilePath.HideBorder = false;
-            this.txtDownloadFilePath.Image = null;
-            this.txtDownloadFilePath.Location = new System.Drawing.Point(17, 100);
-            this.txtDownloadFilePath.MultilineAllow = false;
-            this.txtDownloadFilePath.Name = "txtDownloadFilePath";
-            this.txtDownloadFilePath.PasswordChar = '\0';
-            this.txtDownloadFilePath.ReadOnly = false;
-            this.txtDownloadFilePath.Size = new System.Drawing.Size(383, 23);
-            this.txtDownloadFilePath.TabIndex = 32;
-            this.txtDownloadFilePath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.txtDownloadFilePath.ToolTipText = "";
-            this.txtDownloadFilePath.TextChanged += new System.EventHandler(this.txtDownloadFilePath_TextChanged);
-            // 
-            // chkCreateDownloadSubFolders
-            // 
-            this.chkCreateDownloadSubFolders.BackColor = System.Drawing.Color.Transparent;
-            this.chkCreateDownloadSubFolders.Checked = false;
-            this.chkCreateDownloadSubFolders.Image = ((System.Drawing.Image)(resources.GetObject("chkCreateDownloadSubFolders.Image")));
-            this.chkCreateDownloadSubFolders.Location = new System.Drawing.Point(125, 78);
-            this.chkCreateDownloadSubFolders.Name = "chkCreateDownloadSubFolders";
-            this.chkCreateDownloadSubFolders.Size = new System.Drawing.Size(263, 23);
-            this.chkCreateDownloadSubFolders.TabIndex = 35;
-            this.chkCreateDownloadSubFolders.Text = "Create Subfolder per version";
-            this.chkCreateDownloadSubFolders.Click += new System.EventHandler(this.chkCreateDownloadSubFolders_Click);
-            // 
-            // badLabel3
-            // 
-            this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.badLabel3.Dimmed = false;
-            this.badLabel3.Image = null;
-            this.badLabel3.Location = new System.Drawing.Point(17, 77);
-            this.badLabel3.Name = "badLabel3";
-            this.badLabel3.Size = new System.Drawing.Size(113, 23);
-            this.badLabel3.TabIndex = 34;
-            this.badLabel3.Text = "Download File Path:";
-            this.badLabel3.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
-            // btnSelectDownloadFilePath
-            // 
-            this.btnSelectDownloadFilePath.BlackButton = false;
-            this.btnSelectDownloadFilePath.Checked = false;
-            this.btnSelectDownloadFilePath.Image = null;
-            this.btnSelectDownloadFilePath.Location = new System.Drawing.Point(406, 100);
-            this.btnSelectDownloadFilePath.Name = "btnSelectDownloadFilePath";
-            this.btnSelectDownloadFilePath.Size = new System.Drawing.Size(22, 23);
-            this.btnSelectDownloadFilePath.TabIndex = 33;
-            this.btnSelectDownloadFilePath.Text = "...";
-            this.btnSelectDownloadFilePath.ToolTipText = "";
-            this.btnSelectDownloadFilePath.Click += new System.EventHandler(this.btnSelectDownloadFilePath_Click);
-            // 
             // txtDossierFilePath
             // 
             this.txtDossierFilePath.HasFocus = false;
             this.txtDossierFilePath.HideBorder = false;
             this.txtDossierFilePath.Image = null;
-            this.txtDossierFilePath.Location = new System.Drawing.Point(17, 44);
+            this.txtDossierFilePath.Location = new System.Drawing.Point(17, 56);
             this.txtDossierFilePath.MultilineAllow = false;
             this.txtDossierFilePath.Name = "txtDossierFilePath";
             this.txtDossierFilePath.PasswordChar = '\0';
@@ -137,7 +80,7 @@
             this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel1.Dimmed = false;
             this.badLabel1.Image = null;
-            this.badLabel1.Location = new System.Drawing.Point(17, 21);
+            this.badLabel1.Location = new System.Drawing.Point(17, 33);
             this.badLabel1.Name = "badLabel1";
             this.badLabel1.Size = new System.Drawing.Size(126, 23);
             this.badLabel1.TabIndex = 31;
@@ -161,7 +104,7 @@
             this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel2.Dimmed = false;
             this.badLabel2.Image = null;
-            this.badLabel2.Location = new System.Drawing.Point(17, 215);
+            this.badLabel2.Location = new System.Drawing.Point(17, 201);
             this.badLabel2.Name = "badLabel2";
             this.badLabel2.Size = new System.Drawing.Size(78, 23);
             this.badLabel2.TabIndex = 29;
@@ -184,7 +127,7 @@
             // cboSelectPlayer
             // 
             this.cboSelectPlayer.Image = null;
-            this.cboSelectPlayer.Location = new System.Drawing.Point(101, 215);
+            this.cboSelectPlayer.Location = new System.Drawing.Point(101, 201);
             this.cboSelectPlayer.Name = "cboSelectPlayer";
             this.cboSelectPlayer.Size = new System.Drawing.Size(202, 23);
             this.cboSelectPlayer.TabIndex = 26;
@@ -196,7 +139,7 @@
             this.btnSelectDossierFilePath.BlackButton = false;
             this.btnSelectDossierFilePath.Checked = false;
             this.btnSelectDossierFilePath.Image = null;
-            this.btnSelectDossierFilePath.Location = new System.Drawing.Point(406, 44);
+            this.btnSelectDossierFilePath.Location = new System.Drawing.Point(406, 56);
             this.btnSelectDossierFilePath.Name = "btnSelectDossierFilePath";
             this.btnSelectDossierFilePath.Size = new System.Drawing.Size(22, 23);
             this.btnSelectDossierFilePath.TabIndex = 21;
@@ -209,7 +152,7 @@
             this.btnDbSetting.BlackButton = false;
             this.btnDbSetting.Checked = false;
             this.btnDbSetting.Image = null;
-            this.btnDbSetting.Location = new System.Drawing.Point(309, 182);
+            this.btnDbSetting.Location = new System.Drawing.Point(309, 168);
             this.btnDbSetting.Name = "btnDbSetting";
             this.btnDbSetting.Size = new System.Drawing.Size(119, 23);
             this.btnDbSetting.TabIndex = 24;
@@ -235,7 +178,7 @@
             this.lblDbSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblDbSettings.Dimmed = false;
             this.lblDbSettings.Image = null;
-            this.lblDbSettings.Location = new System.Drawing.Point(17, 175);
+            this.lblDbSettings.Location = new System.Drawing.Point(17, 161);
             this.lblDbSettings.Name = "lblDbSettings";
             this.lblDbSettings.Size = new System.Drawing.Size(286, 36);
             this.lblDbSettings.TabIndex = 23;
@@ -249,7 +192,7 @@
             this.badGroupBox1.Image = null;
             this.badGroupBox1.Location = new System.Drawing.Point(1, 1);
             this.badGroupBox1.Name = "badGroupBox1";
-            this.badGroupBox1.Size = new System.Drawing.Size(445, 137);
+            this.badGroupBox1.Size = new System.Drawing.Size(445, 111);
             this.badGroupBox1.TabIndex = 19;
             this.badGroupBox1.TabStop = false;
             this.badGroupBox1.Text = "File Paths";
@@ -258,9 +201,9 @@
             // 
             this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox2.Image = null;
-            this.badGroupBox2.Location = new System.Drawing.Point(1, 154);
+            this.badGroupBox2.Location = new System.Drawing.Point(1, 129);
             this.badGroupBox2.Name = "badGroupBox2";
-            this.badGroupBox2.Size = new System.Drawing.Size(445, 100);
+            this.badGroupBox2.Size = new System.Drawing.Size(445, 125);
             this.badGroupBox2.TabIndex = 22;
             this.badGroupBox2.TabStop = false;
             this.badGroupBox2.Text = "Database and Player";
@@ -271,10 +214,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.Controls.Add(this.btnMergePlayers);
-            this.Controls.Add(this.txtDownloadFilePath);
-            this.Controls.Add(this.chkCreateDownloadSubFolders);
-            this.Controls.Add(this.badLabel3);
-            this.Controls.Add(this.btnSelectDownloadFilePath);
             this.Controls.Add(this.txtDossierFilePath);
             this.Controls.Add(this.badLabel1);
             this.Controls.Add(this.chkShowDBError);
@@ -309,10 +248,6 @@
         private BadGroupBox badGroupBox2;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogDossier;
         private BadLabel badLabel1;
-        private BadTextBox txtDownloadFilePath;
-        private BadLabel badLabel3;
-        private BadButton btnSelectDownloadFilePath;
-        private BadCheckBox chkCreateDownloadSubFolders;
         private BadButton btnMergePlayers;
     }
 }
