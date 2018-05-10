@@ -166,7 +166,7 @@ def main():
 		if tankversion >= 65:
 			tank_v2 = dict()
 			
-			if tankversion in [100,101]:
+			if tankversion in [101]:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon', 'fallout', 'maxFallout', 'falloutAchievements', 'ranked', 'maxRanked', 'rankedSeasons', 'a30x30', 'max30x30', 'epicBattle', 'maxEpicBattle', 'epicBattleAchievements')
 			elif tankversion in [99]:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon', 'fallout', 'maxFallout', 'falloutAchievements', 'ranked', 'maxRanked', 'rankedSeasons', 'a30x30', 'max30x30')
@@ -551,7 +551,7 @@ def load_structures():
 	
 	structures = dict()
 	
-	load_versions = [77,81,85,87,88,89,92,94,95,96,97,98,99,100,101];
+	load_versions = [77,81,85,87,88,89,92,94,95,96,97,98,99,101];
 	for version in load_versions:
 		jsondata = get_json_data('structures_'+str(version)+'.json') # do not use sub folder for structures
 		structures[version] = dict()

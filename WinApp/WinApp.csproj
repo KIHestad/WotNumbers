@@ -915,7 +915,6 @@
     <None Include="DevDocs\OLD_BRR\__init__.pyc" />
     <None Include="Dossier2json\structures_10.json" />
     <None Include="Dossier2json\structures_101.json" />
-    <None Include="Dossier2json\structures_100.json" />
     <None Include="Dossier2json\structures_17.json" />
     <None Include="Dossier2json\structures_18.json" />
     <None Include="Dossier2json\structures_20.json" />
@@ -1672,6 +1671,7 @@
     <Content Include="DevDocs\Python277\_weakrefset.py" />
     <Content Include="DevDocs\Python277\__future__.py" />
     <Content Include="DevDocs\Python277\__phello__.foo.py" />
+    <Content Include="Dossier2json\battle_results_shared_31.py" />
     <Content Include="PythonLib\abc.py" />
     <Content Include="PythonLib\base64.py" />
     <Content Include="PythonLib\collections.py" />

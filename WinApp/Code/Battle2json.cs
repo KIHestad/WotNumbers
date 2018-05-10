@@ -1138,12 +1138,12 @@ namespace WinApp.Code
                             "-f"
                         };
 
-                        await Task.Run(() =>
-                        {
+                        //await Task.Run(() =>
+                        //{
                             PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
                             ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
                             dynamic scopeResult = scope.GetVariable("main")();
-                        });
+                        //});
 
                         //ScriptRuntimeSetup setup = new ScriptRuntimeSetup();
                         //setup.DebugMode = true;

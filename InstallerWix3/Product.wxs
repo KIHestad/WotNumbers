@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.20.18.0"?>
+<?define ProductVersion = "0.21.1.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -344,9 +344,6 @@
       <Component Id="cmpstructures99" Directory="INSTALLFOLDER_Dossier2json" Guid="{74B38BDC-AD1F-4DF1-BCCA-F1AC6E11F446}">
         <File Id="filstructures99" KeyPath="yes" Source="$(var.D2jSource)\structures_99.json" />
       </Component>
-      <Component Id="cmpstructures100" Directory="INSTALLFOLDER_Dossier2json" Guid="{28F67AC2-6027-4E7A-8B09-66859AC5F5EB}">
-        <File Id="filstructures100" KeyPath="yes" Source="$(var.D2jSource)\structures_100.json" />
-      </Component>
       <Component Id="cmpstructures101" Directory="INSTALLFOLDER_Dossier2json" Guid="{2EB078AC-87AC-42A6-A49F-B471E8FAC50E}">
         <File Id="filstructures101" KeyPath="yes" Source="$(var.D2jSource)\structures_101.json" />
       </Component>
@@ -379,6 +376,9 @@
       </Component>
       <Component Id="cmpBRS_30" Directory="INSTALLFOLDER_Dossier2json" Guid="{5017903c-109d-4f9e-b01b-1502746c0784}">
         <File Id="filBRS_30" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_30.py" />
+      </Component>
+      <Component Id="cmpBRS_31" Directory="INSTALLFOLDER_Dossier2json" Guid="{A64B868D-5905-487C-966F-C7771526CB32}">
+        <File Id="filBRS_31" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_31.py" />
       </Component>
 
       <!-- Maps and tanks, not in use -->

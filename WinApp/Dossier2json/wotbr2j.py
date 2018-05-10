@@ -3,15 +3,8 @@
 # by BadButton and cuddlyTomato at wotnumbers.com  #
 # originally by Phalynx www.vbaddict.net (retired) #
 ####################################################
-import struct
-import json
-import time
-import sys
-import os
-import zlib
-import cPickle
-import StringIO
-import traceback
+import struct, json, time, sys, os, zlib, traceback
+import cPickle, StringIO #ironpython modified
 from itertools import izip 
 
 VEH_INTERACTION_DETAILS_LEGACY = ('spotted', 'killed', 'hits', 'he_hits', 'pierced', 'damageDealt', 'damageAssisted', 'crits', 'fire') 
@@ -20,7 +13,8 @@ VEH_INTERACTION_DETAILS_INDICES_LEGACY = dict(((x[1], x[0]) for x in enumerate(V
 VEHICLE_DEVICE_TYPE_NAMES = ('engine', 'ammoBay', 'fuelTank', 'radio', 'track', 'gun', 'turretRotator', 'surveyingDevice')
 VEHICLE_TANKMAN_TYPE_NAMES = ('commander', 'driver', 'radioman', 'gunner', 'loader')
 
-VEH_INTERACTION_DETAILS = (('spotted', 'B', 1, 0),
+VEH_INTERACTION_DETAILS = (
+ ('spotted', 'B', 1, 0),
  ('deathReason', 'b', 10, -1),
  ('directHits', 'H', 65535, 0),
  ('secondaryDirectHits', 'H', 65535, 0),
@@ -49,32 +43,28 @@ VEH_INTERACTION_DETAILS_TYPES = dict(((x[0], x[1]) for x in VEH_INTERACTION_DETA
   
   
 parser = dict()
-parser['version'] = "1.0.0.0.0"
+parser['version'] = "1.0.1.0"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
-cachefile = None
+cachefile = None #ironpython modified
 
 def usage(): 
     print str(sys.argv[0]) + " battleresult.dat [options]"
     print 'Options:'
     print '-f Formats output result to JSON pretty print (includes line breaks and indents)'
     print '-l Logging to file enabled, output to file: wotbr2j_log.txt'
-    print '-s Server Mode, disable writing of timestamp, enable logging (vBAddict mode)'
+    print '-s Server Mode (for vBAddict only, overrides other params)'
   
 def main(): 
 
-    import struct
-    import json
-    import time
-    import sys
-    import os
-    import shutil
-    import datetime
-    global filename_source, filename_target, option_server, option_logging, option_format, parser, log_file, cachefile
+    import struct, json, time, sys, os, shutil, datetime
+    global filename_source, filename_target, option_server, option_format, parser, option_logging, log_file
+    global cachefile #ironpython modified
     
     option_format = 0
     option_server = 0
     option_logging = 0
+    #ironpython modified
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
     log_file = os.path.join(script_dir, "wotbr2j_log.txt")
               
@@ -83,7 +73,8 @@ def main():
         sys.exit(2) 
 
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-    for argument in sys.argv: 
+    for argument in sys.argv:
+        #ironpython modified
         if argument == "-f": 
             option_format = 1
         if argument == "-l": 
@@ -98,12 +89,15 @@ def main():
     printmessage('### WoTBR2J ' + parser['version'] + ' BATTLE FILE CONVERT TO JSON ###', 1) 
     printmessage('Time: ' + str(datetime.datetime.now()), 1)
     printmessage('Encoding: ' + str(sys.getdefaultencoding()) + ' - ' + str(sys.getfilesystemencoding()), 1)
-
+    #ironpython modified
+    #if argument == "-l":
+    #    printmessage('Logging to file: ' + log_file, 0) 
     printmessage('Processing file: ' + filename_source, 1) 
       
     filename_target = os.path.splitext(filename_source)[0] 
-    filename_target = filename_target + '.json'
-
+    #ironpython modified
+    filename_target = filename_target + '.json' 
+    
     if not os.path.exists(filename_source) or not os.path.isfile(filename_source):
         exitwitherror('Battle Result does not exists! file: ' + filename_source)
     if not os.access(filename_source, os.R_OK):
@@ -114,7 +108,8 @@ def main():
     try: 
         #from os.path import SafeUnpickler - IRONPYTHON MODIFIED: no use if
         #SafeUnpickler
-        legacyBattleResultVersion, battleResults = SafeUnpickler.load(cachefile) 
+        #legacyBattleResultVersion, battleResults = SafeUnpickler.load(cachefile) 
+        legacyBattleResultVersion, battleResults = cPickle.load(cachefile)
     except Exception, e: 
         exitwitherror('Battle Result cannot be read (pickle could not be read) ' + e.message) 
 
@@ -125,7 +120,7 @@ def main():
     # Set last struct version, loop from highest to lowest version until valid #
     ############################################################################
 
-    parser['battleResultVersion'] = 30
+    parser['battleResultVersion'] = 31
 
     # Process file
     while parser['battleResultVersion'] > 0:
@@ -187,7 +182,7 @@ def convertToFullForm(compactForm, battleResultVersion):
     if len(battle_results_data.VEH_FULL_RESULTS) == 0:
         exitwitherror("Unsupported Battle Result Version: " + str(battleResultVersion))
     else:
-        if battleResultVersion >= 28:
+        if battleResultVersion >= 31:
 
             arenaUniqueID, avatarResults, fullResultsList, pickled = compactForm
             fullResultsList = SafeUnpickler.loads(zlib.decompress(fullResultsList))
@@ -204,7 +199,58 @@ def convertToFullForm(compactForm, battleResultVersion):
                 if len(battle_results_data.AVATAR_FULL_RESULTS) + 1 != len(avatarResults):
                     # Wrong number of items in lists, ie wrong parser version
                     return 0, {'error': 'Wrong number of items in avatar result list, ie wrong parser version'}
-                personal['avatar'] = avatarResults = battle_results_data.AVATAR_FULL_RESULTS.unpack(avatarResults)
+                personal['avatar'] = avatarResults = battle_results_data.AVATAR_FULL_RESULTS.unpackWthoutChecksum(avatarResults)
+
+                for vehTypeCompDescr, ownResults in fullResultsList.iteritems():
+                    vehPersonal = personal[vehTypeCompDescr] = battle_results_data.VEH_FULL_RESULTS.unpackWthoutChecksum(ownResults)
+                    if type(vehPersonal) is dict:
+                        try:
+                            vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
+                        except Exception: 
+                            return 0, {}
+                        vehPersonal['isPrematureLeave'] = avatarResults['isPrematureLeave']
+                        vehPersonal['fairplayViolations'] = avatarResults['fairplayViolations']
+
+                commonAsList, playersAsList, vehiclesAsList, avatarsAsList = SafeUnpickler.loads(zlib.decompress(pickled))
+                
+                fullForm['common'] = battle_results_data.COMMON_RESULTS.unpackWthoutChecksum(commonAsList)
+
+                for accountDBID, playerAsList in playersAsList.iteritems():
+                    fullForm['players'][accountDBID] = battle_results_data.PLAYER_INFO.unpack(playerAsList)
+
+                for accountDBID, avatarAsList in avatarsAsList.iteritems():
+                    fullForm['avatars'][accountDBID] = battle_results_data.AVATAR_PUBLIC_RESULTS.unpackWthoutChecksum(avatarAsList)
+
+                for vehicleID, vehiclesInfo in vehiclesAsList.iteritems():
+                    fullForm['vehicles'][vehicleID] = []
+                    for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
+                        fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpackWthoutChecksum(vehicleInfo))
+            except IndexError, i:
+                printmessage(traceback.format_exc(i), 1)
+                return 0, {'error': '%s' % i.message}
+            except KeyError, i:
+                printmessage(traceback.format_exc(i), 1)
+                return 0, {'error': 'Missing key in data: %s' % i.message}
+            except Exception, e:
+                return 0, {'error': e}
+        
+        elif battleResultVersion >= 28:
+            arenaUniqueID, avatarResults, fullResultsList, pickled = compactForm
+            fullResultsList = SafeUnpickler.loads(zlib.decompress(fullResultsList))
+            avatarResults = SafeUnpickler.loads(zlib.decompress(avatarResults))
+            personal = {}
+            try:
+                fullForm = {'arenaUniqueID': arenaUniqueID,
+                    'personal': personal,
+                    'common': {},
+                    'players': {},
+                    'vehicles': {},
+                    'avatars': {}}
+                
+                if len(battle_results_data.AVATAR_FULL_RESULTS) + 1 != len(avatarResults):
+                    # Wrong number of items in lists, ie wrong parser version
+                    return 0, {'error': 'Wrong number of items in avatar result list, ie wrong parser version'}
+                personal['avatar'] = avatarResults = battle_results_data.AVATAR_FULL_RESULTS.unpackWthoutChecksum(avatarResults)
 
                 for vehTypeCompDescr, ownResults in fullResultsList.iteritems():
                     vehPersonal = personal[vehTypeCompDescr] = battle_results_data.VEH_FULL_RESULTS.unpackWthoutChecksum(ownResults)
@@ -237,10 +283,7 @@ def convertToFullForm(compactForm, battleResultVersion):
                 printmessage(traceback.format_exc(i), 1)
                 return 0, {'error': 'Missing key in data: %s' % i.message}
             except Exception, e:
-                # return 0, {}
-                exitwitherror(
-                    "Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: ",
-                    e)
+                return 0, {'error': e}
 
         elif battleResultVersion >= 27:
             
@@ -283,10 +326,8 @@ def convertToFullForm(compactForm, battleResultVersion):
             except KeyError, i:
                 return 0, {'error': 'Missing key in data: %s' % i.message}
             except Exception, e: 
-                return 0, {}
-                exitwitherror(
-                    "Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: ",
-                    e)
+                return 0, {'error': e}
+
         elif battleResultVersion >= 19:
             arenaUniqueID, avatarResults, fullResultsList, pickled = compactForm
             fullResultsList = SafeUnpickler.loads(zlib.decompress(fullResultsList))
@@ -329,10 +370,7 @@ def convertToFullForm(compactForm, battleResultVersion):
             except KeyError, i:
                 return 0, {'error': 'Missing key in data: %s' % i.message}
             except Exception, e:
-                return 0, {}
-                exitwitherror(
-                    "Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: ",
-                    e)
+                return 0, {'error': e}
 
         else:
             exitwitherror("Unsupported version")
