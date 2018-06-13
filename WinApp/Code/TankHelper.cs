@@ -34,11 +34,12 @@ namespace WinApp.Code
                 tankTypeId = 5;
             }
             // Add tank
-            string insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium); ";
+            string insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, short_name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @short_name, @tier, @premium); ";
             DB.AddWithValue(ref insertSql, "@id", tankId, DB.SqlDataType.Int);
             DB.AddWithValue(ref insertSql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
             DB.AddWithValue(ref insertSql, "@countryId", countryId, DB.SqlDataType.Int);
             DB.AddWithValue(ref insertSql, "@name", tankName, DB.SqlDataType.VarChar);
+            DB.AddWithValue(ref insertSql, "@short_name", tankName, DB.SqlDataType.VarChar);
             DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
             DB.AddWithValue(ref insertSql, "@premium", premium, DB.SqlDataType.Int);
             await DB.ExecuteNonQuery(insertSql);

@@ -59,7 +59,7 @@ namespace WinApp.Code
                 if (splitServerUrl.Length < 3)
                 {
                     dfi.Success = false;
-                    dfi.Message = $"Error getting server realm name from dossier file name: " + decodedFileName;
+                    dfi.Message = $"Error decoding server realm name from dossier file name: " + decodedFileName;
                     Log.AddToLogBuffer(dfi.Message, true);
                     return dfi;
                 }
@@ -77,7 +77,7 @@ namespace WinApp.Code
                     dfi.ServerRealmName = "ASIA";
                 else if (url1.StartsWith("login") && url4.StartsWith("net"))
                     dfi.ServerRealmName = "RU";
-                else if (url1 == "login-ct")
+                else if (url1.Contains("-ct"))
                     dfi.ServerRealmName = "CT";
                 else
                 {

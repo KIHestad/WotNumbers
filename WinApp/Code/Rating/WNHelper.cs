@@ -166,7 +166,7 @@ namespace WinApp.Code.Rating
                     if (count > battleCount) break;
                 }
                 if (error != "" && Config.Settings.showDBErrors)
-                    await Log.LogToFile("GetDataForPlayerTankBattleReverse() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+                    await Log.LogToFile("GetDataForPlayerTankBattleReverse() - Could not find playerTank or missing WN8 exp values for tank: " + error + " for battle mode '" + battleMode + "'");
 
             }
 
@@ -241,7 +241,7 @@ namespace WinApp.Code.Rating
                     if (maxBattles > 0 && countBattles > maxBattles) break;
                 }
                 if (error != "" && Config.Settings.showDBErrors)
-                    await Log.LogToFile("GetDataForBattleRange() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+                    await Log.LogToFile("GetDataForBattleRange() - Could not find playerTank or missing WN8 exp values for tank: " + error + " for battle mode '" + battleMode + "'");
 
                 // Return playertanks with stats
                 DataRow[] dr = ptb.Select("battles > 0");

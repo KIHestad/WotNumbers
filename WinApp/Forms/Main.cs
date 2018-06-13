@@ -3811,210 +3811,220 @@ namespace WinApp.Forms
 
 		private async void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
-			if (mainGridFormatting)
-			{
-				string col = dataGridMain.Columns[e.ColumnIndex].Name;
-				DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-				if (col.Equals("EFF"))
-				{
-					if (dataGridMain["EFF", e.RowIndex].Value != DBNull.Value)
-					{
-						int eff = Convert.ToInt32(dataGridMain["EFF", e.RowIndex].Value);
-                        cell.Style.ForeColor = ColorRangeScheme.EffColor(eff);
-						cell.Style.SelectionForeColor = cell.Style.ForeColor;
-					}
-				}
-                else if (col.Equals("WN9") || col.Equals("WN9 Max Hist"))
+            try
+            {
+                if (mainGridFormatting)
                 {
-                    if (dataGridMain["WN9", e.RowIndex].Value != DBNull.Value)
+                    string col = dataGridMain.Columns[e.ColumnIndex].Name;
+                    DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+                    if (col.Equals("EFF"))
                     {
-                        int wn9 = Convert.ToInt32(dataGridMain["WN9", e.RowIndex].Value);
-                        cell.Style.ForeColor = ColorRangeScheme.WN9color(wn9);
-                        cell.Style.SelectionForeColor = cell.Style.ForeColor;
-                    }
-                }
-                else if (col.Equals("WN8"))
-                {
-                    if (dataGridMain["WN8", e.RowIndex].Value != DBNull.Value)
-                    {
-                        int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
-                        cell.Style.ForeColor = ColorRangeScheme.WN8color(wn8);
-                        cell.Style.SelectionForeColor = cell.Style.ForeColor;
-                    }
-                }
-				else if (col.Equals("WN7"))
-				{
-					if (dataGridMain["WN7", e.RowIndex].Value != DBNull.Value)
-					{
-						int wn7 = Convert.ToInt32(dataGridMain["WN7", e.RowIndex].Value);
-                        cell.Style.ForeColor = ColorRangeScheme.WN7color(wn7);
-						cell.Style.SelectionForeColor = cell.Style.ForeColor;
-					}
-				}
-                else if (col.Equals("Dmg Rank"))
-                {
-                    if (dataGridMain["Dmg Rank", e.RowIndex].Value != DBNull.Value)
-                    {
-                        double dmgRank = Convert.ToDouble(dataGridMain["Dmg Rank", e.RowIndex].Value);
-                        cell.Style.ForeColor = ColorRangeScheme.DmgRankColor(dmgRank);
-                        cell.Style.SelectionForeColor = cell.Style.ForeColor;
-                    }
-                }
-				else if (col.Contains("%"))
-				{
-					if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
-					{
-						int percentage = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
-						if (percentage > 0)
-						{
-							Color color = ColorTheme.Rating_very_bad;
-							color = ColorTheme.Rating_very_bad;
-							if (percentage >= 99) color = ColorTheme.Rating_super_uniqum;
-							else if (percentage >= 95) color = ColorTheme.Rating_uniqum;
-							else if (percentage >= 90) color = ColorTheme.Rating_very_great;
-							else if (percentage >= 80) color = ColorTheme.Rating_very_good;
-							else if (percentage >= 65) color = ColorTheme.Rating_good;
-							else if (percentage >= 50) color = ColorTheme.Rating_average;
-							else if (percentage >= 35) color = ColorTheme.Rating_below_average;
-							else if (percentage >= 20) color = ColorTheme.Rating_bad;
-							cell.Style.ForeColor = color;
-							cell.Style.SelectionForeColor = cell.Style.ForeColor;
-						}
-					}
-				}
-                else if (MainSettings.View == GridView.Views.Tank)
-                { 
-				    if (col.Equals("Remaining XP"))
-				    {
-					    if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
-					    {
-						    int val = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
-						    if (val > 0)
-						    {
-							    Color color = ColorTheme.Rating_very_bad;
-							    if (val <= 5000) color = ColorTheme.Rating_super_uniqum;
-							    else if (val <= 10000) color = ColorTheme.Rating_uniqum;
-							    else if (val <= 25000) color = ColorTheme.Rating_very_great;
-							    else if (val <= 50000) color = ColorTheme.Rating_very_good;
-							    else if (val <= 75000) color = ColorTheme.Rating_good;
-							    else if (val <= 100000) color = ColorTheme.Rating_average;
-							    else if (val <= 125000) color = ColorTheme.Rating_below_average;
-							    else if (val <= 150000) color = ColorTheme.Rating_bad;
-							    cell.Style.ForeColor = color;
-							    cell.Style.SelectionForeColor = cell.Style.ForeColor;
-						    }
-					    }
-                    }
-                    else if (col.Equals("Battles Today"))
-                    {
-                        int today = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
-                        if (dataGridMain["Battles Day", e.RowIndex].Value != DBNull.Value)
+                        if (dataGridMain["EFF", e.RowIndex].Value != DBNull.Value)
                         {
-                            int target = Convert.ToInt32(dataGridMain["Battles Day", e.RowIndex].Value);
-                            int diff = today - target;
-                            Color color = ColorTheme.Rating_very_good;
-                            if (diff < -3)
-                                color = ColorTheme.Rating_very_bad;
-                            else if (diff < 0)
-                                color = ColorTheme.Rating_bad;
-                            else if (diff < 2)
-                                color = ColorTheme.Rating_good;
-                            cell.Style.ForeColor = color;
+                            int eff = Convert.ToInt32(dataGridMain["EFF", e.RowIndex].Value);
+                            cell.Style.ForeColor = ColorRangeScheme.EffColor(eff);
                             cell.Style.SelectionForeColor = cell.Style.ForeColor;
-                            // Add background color if victory
-                            // Create battle time filter for today
-                            string battleTimeFilter = " AND battleTime>=@battleTime ";
-                            DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
-                            DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
-                            // Get values
-                            int playerTankId = Convert.ToInt32(dataGridMain["player_Tank_Id", e.RowIndex].Value);
-                            int victoryCount = await BattleHelper.GetBattleVictoryCount(playerTankId, battleTimeFilter);
-                            // add back color
-                            if (victoryCount > 0)
+                        }
+                    }
+                    else if (col.Equals("WN9") || col.Equals("WN9 Max Hist"))
+                    {
+                        if (dataGridMain["WN9", e.RowIndex].Value != DBNull.Value)
+                        {
+                            int wn9 = Convert.ToInt32(dataGridMain["WN9", e.RowIndex].Value);
+                            cell.Style.ForeColor = ColorRangeScheme.WN9color(wn9);
+                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                        }
+                    }
+                    else if (col.Equals("WN8"))
+                    {
+                        if (dataGridMain["WN8", e.RowIndex].Value != DBNull.Value)
+                        {
+                            int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
+                            cell.Style.ForeColor = ColorRangeScheme.WN8color(wn8);
+                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                        }
+                    }
+                    else if (col.Equals("WN7"))
+                    {
+                        if (dataGridMain["WN7", e.RowIndex].Value != DBNull.Value)
+                        {
+                            int wn7 = Convert.ToInt32(dataGridMain["WN7", e.RowIndex].Value);
+                            cell.Style.ForeColor = ColorRangeScheme.WN7color(wn7);
+                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                        }
+                    }
+                    else if (col.Equals("Dmg Rank"))
+                    {
+                        if (dataGridMain["Dmg Rank", e.RowIndex].Value != DBNull.Value)
+                        {
+                            double dmgRank = Convert.ToDouble(dataGridMain["Dmg Rank", e.RowIndex].Value);
+                            cell.Style.ForeColor = ColorRangeScheme.DmgRankColor(dmgRank);
+                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                        }
+                    }
+                    else if (col.Contains("%"))
+                    {
+                        if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
+                        {
+                            int percentage = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
+                            if (percentage > 0)
                             {
-                                cell.Style.BackColor = ColorTheme.GridRowCurrentPlayerAlive;
-                                cell.Style.SelectionBackColor = ColorTheme.GridRowCurrentPlayerAliveSelected;
+                                Color color = ColorTheme.Rating_very_bad;
+                                color = ColorTheme.Rating_very_bad;
+                                if (percentage >= 99) color = ColorTheme.Rating_super_uniqum;
+                                else if (percentage >= 95) color = ColorTheme.Rating_uniqum;
+                                else if (percentage >= 90) color = ColorTheme.Rating_very_great;
+                                else if (percentage >= 80) color = ColorTheme.Rating_very_good;
+                                else if (percentage >= 65) color = ColorTheme.Rating_good;
+                                else if (percentage >= 50) color = ColorTheme.Rating_average;
+                                else if (percentage >= 35) color = ColorTheme.Rating_below_average;
+                                else if (percentage >= 20) color = ColorTheme.Rating_bad;
+                                cell.Style.ForeColor = color;
+                                cell.Style.SelectionForeColor = cell.Style.ForeColor;
                             }
                         }
                     }
-                    if (col.Equals("Win Rate"))
+                    else if (MainSettings.View == GridView.Views.Tank)
                     {
-                        if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
+                        if (col.Equals("Remaining XP"))
                         {
-                            double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
-                            cell.Style.ForeColor = ColorRangeScheme.WinRateColor(wr);
-                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
+                            {
+                                int val = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
+                                if (val > 0)
+                                {
+                                    Color color = ColorTheme.Rating_very_bad;
+                                    if (val <= 5000) color = ColorTheme.Rating_super_uniqum;
+                                    else if (val <= 10000) color = ColorTheme.Rating_uniqum;
+                                    else if (val <= 25000) color = ColorTheme.Rating_very_great;
+                                    else if (val <= 50000) color = ColorTheme.Rating_very_good;
+                                    else if (val <= 75000) color = ColorTheme.Rating_good;
+                                    else if (val <= 100000) color = ColorTheme.Rating_average;
+                                    else if (val <= 125000) color = ColorTheme.Rating_below_average;
+                                    else if (val <= 150000) color = ColorTheme.Rating_bad;
+                                    cell.Style.ForeColor = color;
+                                    cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                                }
+                            }
+                        }
+                        else if (col.Equals("Battles Today"))
+                        {
+                            int today = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
+                            if (dataGridMain["Battles Day", e.RowIndex].Value != DBNull.Value)
+                            {
+                                int target = Convert.ToInt32(dataGridMain["Battles Day", e.RowIndex].Value);
+                                int diff = today - target;
+                                Color color = ColorTheme.Rating_very_good;
+                                if (diff < -3)
+                                    color = ColorTheme.Rating_very_bad;
+                                else if (diff < 0)
+                                    color = ColorTheme.Rating_bad;
+                                else if (diff < 2)
+                                    color = ColorTheme.Rating_good;
+                                cell.Style.ForeColor = color;
+                                cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                                // Add background color if victory
+                                // Create battle time filter for today
+                                string battleTimeFilter = " AND battleTime>=@battleTime ";
+                                DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
+                                DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                                // Get values
+                                int playerTankId = Convert.ToInt32(dataGridMain["player_Tank_Id", e.RowIndex].Value);
+                                int victoryCount = await BattleHelper.GetBattleVictoryCount(playerTankId, battleTimeFilter);
+                                // add back color
+                                if (victoryCount > 0)
+                                {
+                                    cell.Style.BackColor = ColorTheme.GridRowCurrentPlayerAlive;
+                                    cell.Style.SelectionBackColor = ColorTheme.GridRowCurrentPlayerAliveSelected;
+                                }
+                            }
+                        }
+                        if (col.Equals("Win Rate"))
+                        {
+                            if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
+                            {
+                                double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
+                                cell.Style.ForeColor = ColorRangeScheme.WinRateColor(wr);
+                                cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            }
+                        }
+                        if (col.Equals("RWR"))
+                        {
+                            if (dataGridMain["RWR", e.RowIndex].Value != DBNull.Value)
+                            {
+                                double RWR = Convert.ToDouble(dataGridMain["RWR", e.RowIndex].Value);
+                                cell.Style.ForeColor = ColorRangeScheme.RWRcolor(RWR);
+                                cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            }
                         }
                     }
-                    if (col.Equals("RWR"))
+                    else if (MainSettings.View == GridView.Views.Battle)
                     {
-                        if (dataGridMain["RWR", e.RowIndex].Value != DBNull.Value)
+                        bool footer = false;
+                        if (dataGridMain["footer", e.RowIndex] != null)
+                            footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) > 0);
+                        if (footer)
+                            dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
+                        if (col.Equals("Tank"))
                         {
-                            double RWR = Convert.ToDouble(dataGridMain["RWR", e.RowIndex].Value);
-                            cell.Style.ForeColor = ColorRangeScheme.RWRcolor(RWR);
+                            string battleTime = dataGridMain["battleTimeToolTip", e.RowIndex].Value.ToString();
+                            int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
+                            // Check if this row is normal or footer
+                            if (!footer) // normal line
+                            {
+                                cell.ToolTipText = "Battle result based on " + battlesCount.ToString() + " battle(s)" + Environment.NewLine + "Battle time: " + battleTime;
+                            }
+                        }
+                        // Battle Result color color
+                        else if (col.Equals("Result"))
+                        {
+                            string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
+                            cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
                             cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
+                            if (battlesCount > 1)
+                            {
+                                cell.ToolTipText = "Victory: " + dataGridMain["victoryToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
+                                    "Draw: " + dataGridMain["drawToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
+                                    "Defeat: " + dataGridMain["defeatToolTip", e.RowIndex].Value.ToString();
+                            }
+                        }
+                        // Survived color and formatting
+                        else if (col.Equals("Survived"))
+                        {
+                            string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
+                            cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
+                            if (battlesCount > 1)
+                            {
+                                cell.ToolTipText = "Survived: " + dataGridMain["survivedCountToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
+                                    "Killed: " + dataGridMain["killedcountToolTip", e.RowIndex].Value.ToString();
+                            }
                         }
                     }
-				}
-				else if (MainSettings.View == GridView.Views.Battle)
-				{
-					bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) > 0);
-					if (footer)
-						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
-					if (col.Equals("Tank"))
-					{
-						string battleTime = dataGridMain["battleTimeToolTip", e.RowIndex].Value.ToString();
-						int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
-						// Check if this row is normal or footer
-						if (!footer) // normal line
-						{
-							cell.ToolTipText = "Battle result based on " + battlesCount.ToString() + " battle(s)" + Environment.NewLine + "Battle time: " + battleTime;
-						}
-					}
-					// Battle Result color color
-					else if (col.Equals("Result"))
-					{
-						string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
-						cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-						cell.Style.SelectionForeColor = cell.Style.ForeColor;
-						int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
-						if (battlesCount > 1)
-						{
-							cell.ToolTipText = "Victory: " + dataGridMain["victoryToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
-								"Draw: " + dataGridMain["drawToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
-								"Defeat: " + dataGridMain["defeatToolTip", e.RowIndex].Value.ToString();
-						}
-					}
-					// Survived color and formatting
-					else if (col.Equals("Survived"))
-					{
-						string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
-						cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-						cell.Style.SelectionForeColor = cell.Style.ForeColor;
-						int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
-						if (battlesCount > 1)
-						{
-							cell.ToolTipText = "Survived: " + dataGridMain["survivedCountToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
-								"Killed: " + dataGridMain["killedcountToolTip", e.RowIndex].Value.ToString();
-						}
-					}
-				}
-                else if (MainSettings.View == GridView.Views.Map)
-                {
-                    bool footer = (dataGridMain["Map", e.RowIndex].Value.ToString() == "Totals");
-                    if (footer)
-                        dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
-                    if (col.Equals("Win Rate"))
+                    else if (MainSettings.View == GridView.Views.Map)
                     {
-                        if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
+                        bool footer = (dataGridMain["Map", e.RowIndex].Value.ToString() == "Totals");
+                        if (footer)
+                            dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
+                        if (col.Equals("Win Rate"))
                         {
-                            double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
-                            cell.Style.ForeColor = ColorRangeScheme.WinRateColor(wr);
-                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
+                            {
+                                double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
+                                cell.Style.ForeColor = ColorRangeScheme.WinRateColor(wr);
+                                cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            }
                         }
                     }
                 }
-			}
+            }
+            catch (Exception ex)
+            {
+                await Log.LogToFile(ex, "Error on datagrid paint event");
+            }
+            
 		}
 
 		#endregion

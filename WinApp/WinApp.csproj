@@ -1672,6 +1672,7 @@
     <Content Include="DevDocs\Python277\__future__.py" />
     <Content Include="DevDocs\Python277\__phello__.foo.py" />
     <Content Include="Dossier2json\battle_results_shared_31.py" />
+    <Content Include="Dossier2json\battle_results_shared_32.py" />
     <Content Include="PythonLib\abc.py" />
     <Content Include="PythonLib\base64.py" />
     <Content Include="PythonLib\collections.py" />

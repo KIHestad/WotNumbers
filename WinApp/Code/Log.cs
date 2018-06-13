@@ -13,9 +13,9 @@ namespace WinApp.Code
 		private static string filename = "Log.txt"; // Log filename
 		public static List<string> logBuffer = new List<string>();
 
-		#region logBuffer
-		
-		public async static Task WriteLogBuffer(bool forceLogging = false)
+        #region LogBuffer
+
+        public async static Task WriteLogBuffer(bool forceLogging = false)
 		{
 			bool loggingOk = true;
 			if (Config.Settings.showDBErrors || forceLogging)
@@ -42,78 +42,61 @@ namespace WinApp.Code
 			logBuffer.Add(ipyLog);
 		}
 
-		private static string ReadFromStream(MemoryStream ms) {
-			int length = (int)ms.Length;
-			Byte[] bytes = new Byte[length];
- 
-			ms.Seek(0, SeekOrigin.Begin);
-			ms.Read(bytes, 0, (int)ms.Length);
- 
-			return Encoding.GetEncoding("utf-8").GetString(bytes, 0, (int)ms.Length);
-		}
+		//private static string ReadFromStream(MemoryStream ms) {
+		//	int length = (int)ms.Length;
+		//	Byte[] bytes = new Byte[length];
+		//	ms.Seek(0, SeekOrigin.Begin);
+		//	ms.Read(bytes, 0, (int)ms.Length);
+		//	return Encoding.GetEncoding("utf-8").GetString(bytes, 0, (int)ms.Length);
+		//}
    
-
-		public static void AddToLogBuffer(List<string> logtext, bool addDateTime = true)
-		{
-			string d = "";
-			if (addDateTime) d = DateTime.Now + "\t";
-			foreach (string txt in logtext)
-			{
-				logBuffer.Add(d + txt);	
-			}
-		}
+		//public static void AddToLogBuffer(List<string> logtext, bool addDateTime = true)
+		//{
+		//	string d = "";
+		//	if (addDateTime) d = DateTime.Now + "\t";
+		//	foreach (string txt in logtext)
+		//	{
+		//		logBuffer.Add(d + txt);	
+		//	}
+		//}
 
 		#endregion
 
-		#region Direct logging
+		#region Log to file
 
 		public async static Task LogToFile(Exception ex, string customErrorMsg = "")
 		{
-			// Add list og Strings
-			if (await CreateFileIfNotExist())
-			{
-				// Write current logbuffer first, force log logbuffer to include recent logging
-				await WriteLogBuffer(true);
-				// Log exception
-				using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
-				{
-					if (ex != null)
-					{
-						string logtext = Environment.NewLine;
-						logtext += "{" + Environment.NewLine; 
-						logtext += DateTime.Now + " ### EXCEPTION ###" + Environment.NewLine;
-                        logtext += "   Source:          " + ex.Source + Environment.NewLine;
-						logtext += "   TargetSite:      " + ex.TargetSite + Environment.NewLine;
-						logtext += "   Data:            " + ex.Data + Environment.NewLine;
-						logtext += "   Message:         " + ex.Message + Environment.NewLine;
-						if (ex.InnerException != null && ex.InnerException.ToString() != "")
-							logtext += "   InnerException:  " + ex.InnerException + Environment.NewLine;
-						logtext += "   Stack Trace: " + Environment.NewLine + ex.StackTrace + Environment.NewLine;
-						if (customErrorMsg != "")
-							logtext += "   Details: " + Environment.NewLine + "   " + customErrorMsg + Environment.NewLine;
-						logtext += "}" + Environment.NewLine + Environment.NewLine; 
-						await sw.WriteLineAsync(logtext);
-					}
-				}
-			}
+            // check if ex exists
+            if (ex != null)
+            {
+                // Create log info
+                string logtext = Environment.NewLine;
+                logtext += "{" + Environment.NewLine;
+                logtext += DateTime.Now + " ### EXCEPTION ###" + Environment.NewLine;
+                logtext += "   Source:          " + ex.Source + Environment.NewLine;
+                logtext += "   TargetSite:      " + ex.TargetSite + Environment.NewLine;
+                logtext += "   Data:            " + ex.Data + Environment.NewLine;
+                logtext += "   Message:         " + ex.Message + Environment.NewLine;
+                if (ex.InnerException != null && ex.InnerException.ToString() != "")
+                    logtext += "   InnerException:  " + ex.InnerException + Environment.NewLine;
+                logtext += "   Stack Trace: " + Environment.NewLine + ex.StackTrace + Environment.NewLine;
+                if (customErrorMsg != "")
+                    logtext += "   Details: " + Environment.NewLine + "   " + customErrorMsg + Environment.NewLine;
+                logtext += "}" + Environment.NewLine + Environment.NewLine;
+                // Log now
+                logBuffer.Add(logtext);
+                await WriteLogBuffer();
+            }
 		}
 
 
 		public async static Task LogToFile(string logtext, bool addDateTime = true)
 		{
-			if (Config.Settings.showDBErrors)
+            if (Config.Settings.showDBErrors)
 			{
-				// Write current logbuffer first
+                if (addDateTime) logtext = DateTime.Now + "\t" + logtext;
+                logBuffer.Add(logtext);
 				await WriteLogBuffer();
-				// Add list og Strings
-				if (await CreateFileIfNotExist())
-				{
-					using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
-					{
-						if (addDateTime) logtext = DateTime.Now + "\t" + logtext;
-						await sw.WriteLineAsync(logtext);
-					}
-				}
 			}
 		}
 
@@ -123,19 +106,19 @@ namespace WinApp.Code
 			bool loggingOK = true;
 			try
 			{
-				if (Config.Settings.showDBErrors)
+				// Add list of Strings
+				if (await CreateFileIfNotExist())
 				{
-					// Add list of Strings
-					if (await CreateFileIfNotExist())
-					{
-						using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
-						{
-							foreach (var s in logtext)
-							{
-								await sw.WriteLineAsync(s);
-							}
-						}
-					}
+                    if (!IsFileLocked())
+                    {
+                        using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
+                        {
+                            foreach (var s in logtext)
+                            {
+                                await sw.WriteLineAsync(s);
+                            }
+                        }
+                    }
 				}
 			}
 			catch (Exception)
@@ -145,7 +128,6 @@ namespace WinApp.Code
 			}
 			return loggingOK;
 		}
-
 		#endregion
 
 		public async static Task CheckLogFileSize()
@@ -155,10 +137,13 @@ namespace WinApp.Code
 				FileInfo file = new FileInfo(Config.AppDataLogFolder + filename);
 				if (file.Length > 1024 * 1024 * 5) // max 5 MB
 				{
-					string movefilename = "Log_" + DateTime.Now.ToString("yyyy-MM-dd_HHmm") + ".txt";
-					file.CopyTo(Config.AppDataLogFolder + movefilename);
-					file.Delete();
-					await CreateFileIfNotExist();
+                    if (!IsFileLocked())
+                    {
+                        string movefilename = "Log_" + DateTime.Now.ToString("yyyy-MM-dd_HHmm") + ".txt";
+                        file.CopyTo(Config.AppDataLogFolder + movefilename);
+                        file.Delete();
+                        await CreateFileIfNotExist();
+                    }
 				}
 			}
 			else
@@ -193,6 +178,31 @@ namespace WinApp.Code
 			}
 			return ok;
 		}
-		
-	}
+
+        private static bool IsFileLocked()
+        {
+            FileInfo file = new FileInfo(Config.AppDataLogFolder + filename);
+            FileStream stream = null;
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+            //file is not locked
+            return false;
+        }
+
+    }
 }

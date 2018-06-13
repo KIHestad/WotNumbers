@@ -149,8 +149,8 @@ namespace WinApp.Forms
                 DB.AddWithValue(ref sql, "@name", _defaultTankDetails.name, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@short_name", _defaultTankDetails.short_name, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@tier", _defaultTankDetails.tier, DB.SqlDataType.Int);
-                DB.AddWithValue(ref sql, "@countryId", GetIdFromName("country", _defaultTankDetails.nation), DB.SqlDataType.Int);
-                DB.AddWithValue(ref sql, "@tankTypeId", GetIdFromName("tankType", _defaultTankDetails.tankType), DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@countryId", await GetIdFromName("country", _defaultTankDetails.nation), DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@tankTypeId", await GetIdFromName("tankType", _defaultTankDetails.tankType), DB.SqlDataType.Int);
                 DB.AddWithValue(ref sql, "@customTankInfo", _defaultTankDetails.customTankInfo, DB.SqlDataType.Boolean);
                 DB.AddWithValue(ref sql, "@id", _tankId, DB.SqlDataType.Int);
                 await DB.ExecuteNonQuery(sql);

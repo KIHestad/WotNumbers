@@ -98,7 +98,7 @@ namespace WinApp.Code.Rating
                 if (ptb.Rows.Count > 0)
                     RWR = RWRplayerTankBattle(ptb);
                 if (error != "" && Config.Settings.showDBErrors)
-                    await Log.LogToFile("RWRbattle() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+                    await Log.LogToFile("RWRbattle() - Could not find playerTank or missing WN8 exp values for tank: " + error + " for battle mode '" + battleMode + "'");
             }
             return RWR;
         }
@@ -149,7 +149,7 @@ namespace WinApp.Code.Rating
                     }
                 }
                 if (error != "" && Config.Settings.showDBErrors)
-                    await Log.LogToFile("RWRReverse() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+                    await Log.LogToFile("RWRReverse() - Could not find playerTank or missing WN8 exp values for tank: " + error + " for battle mode '" + battleMode + "'");
 
             }
             return RWR.RWRplayerTankBattle(ptb);
