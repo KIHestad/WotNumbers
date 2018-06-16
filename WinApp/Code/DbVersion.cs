@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 480; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 481; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3167,7 +3167,7 @@ namespace WinApp.Code
                 case 479:
                     RunDownloadAndUpdateTanks = true;
                     break;
-                case 480:
+                case 481:
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     RunDownloadAndUpdateTanks = true;
                     break;

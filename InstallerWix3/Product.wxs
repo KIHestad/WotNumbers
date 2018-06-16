@@ -383,6 +383,9 @@
       <Component Id="cmpBRS_32" Directory="INSTALLFOLDER_Dossier2json" Guid="{A9028ACE-1F00-4114-8B79-BF043306FEB5}">
         <File Id="filBRS_32" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_32.py" />
       </Component>
+      <Component Id="cmpBRS_33" Directory="INSTALLFOLDER_Dossier2json" Guid="{B0987780-2D6D-4133-AD29-C32E5AE91DD8}">
+        <File Id="filBRS_33" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_33.py" />
+      </Component>
 
       <!-- Maps and tanks, not in use -->
       <!--<Component Id="cmpDF0EF76EB93E25B92E3B35AE06A47377" Directory="INSTALLFOLDER_Dossier2json" Guid="{17D2D4F8-236A-4997-84A4-0165AE27CF97}">
