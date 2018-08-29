@@ -120,7 +120,7 @@ def main():
     # Set last struct version, loop from highest to lowest version until valid #
     ############################################################################
 
-    parser['battleResultVersion'] = 33
+    parser['battleResultVersion'] = 34
 
     # Process file
     while parser['battleResultVersion'] > 0:
