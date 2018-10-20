@@ -120,10 +120,10 @@ def main():
     # Set last struct version, loop from highest to lowest version until valid #
     ############################################################################
 
-    parser['battleResultVersion'] = 34
+    parser['battleResultVersion'] = 35
 
     # Process file
-    while parser['battleResultVersion'] > 0:
+    while parser['battleResultVersion'] > 21:
         printmessage("Processing version: " + str(parser['battleResultVersion']), 1)
         issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 
         if issuccess == 0:

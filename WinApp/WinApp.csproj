@@ -1675,6 +1675,7 @@
     <Content Include="Dossier2json\battle_results_shared_32.py" />
     <Content Include="Dossier2json\battle_results_shared_33.py" />
     <Content Include="Dossier2json\battle_results_shared_34.py" />
+    <Content Include="Dossier2json\battle_results_shared_35.py" />
     <Content Include="PythonLib\abc.py" />
     <Content Include="PythonLib\base64.py" />
     <Content Include="PythonLib\collections.py" />
