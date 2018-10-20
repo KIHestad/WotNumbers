@@ -41,7 +41,7 @@ namespace WinApp.Code
                         using (SqlCommand command = new SqlCommand(sql, con))
                         {
                             SqlDataAdapter adapter = new SqlDataAdapter(command);
-                            await Task.Run(() => adapter.Fill(dt));
+                            adapter.Fill(dt);
                         }
                     }
 				}
@@ -53,7 +53,7 @@ namespace WinApp.Code
                         using (SQLiteCommand command = new SQLiteCommand(sql, con))
                         {
                             SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
-                            await Task.Run(() => adapter.Fill(dt));
+                            adapter.Fill(dt);
                         }
                     }
 				}
@@ -87,7 +87,7 @@ namespace WinApp.Code
                         using (SqlCommand command = new SqlCommand(sql, con))
                         {
                             SqlDataAdapter adapter = new SqlDataAdapter(command);
-                            await Task.Run(() => adapter.Fill(dt));
+                            adapter.Fill(dt);
                             colNameIndex = 0;
                         }
                     }
@@ -101,7 +101,7 @@ namespace WinApp.Code
                         using (SQLiteCommand command = new SQLiteCommand(sql, con))
                         {
                             SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
-                            await Task.Run(() => adapter.Fill(dt));
+                            adapter.Fill(dt);
                             colNameIndex = 1;
                         }
                     }
@@ -297,9 +297,9 @@ namespace WinApp.Code
 			return dt;
 		}
 
-		public async static Task<bool> CreateDatabase(string databaseName, string fileLocation, ConfigData.dbType dbType)
+		public async static Task<string> CreateDatabase(string databaseName, string fileLocation, ConfigData.dbType dbType)
 		{
-			bool dbOk = false;
+			string result = null;
 			// Check database file location
 			bool fileLocationExsits = true;
 			fileLocation = fileLocation.Trim();
@@ -317,7 +317,7 @@ namespace WinApp.Code
 					if (!Directory.GetParent(prevPath.FullName).Exists)
 					{
 						fileLocationExsits = false;
-						MsgBox.Show("Error creating database, file path does not exist", "Error creating database");
+						result = "Error creating database, file path does not exist";
 					}
 					else
 					{
@@ -332,9 +332,9 @@ namespace WinApp.Code
 				{
 					// Check if database exists
 					bool dbExists = false;
-					string winAuth = "Win";
-					if (!Config.Settings.databaseWinAuth) winAuth = "Sql";
-					string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", Config.Settings.databaseServer, "master", winAuth, Config.Settings.databaseUid, Config.Settings.databasePwd);
+					string authType = "Win";
+					if (!Config.Settings.databaseWinAuth) authType = "Sql";
+					string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", Config.Settings.databaseServer, "master", authType, Config.Settings.databaseUid, Config.Settings.databasePwd);
 					using (SqlConnection con = new SqlConnection(connectionstring))
 					{
 						await con.OpenAsync();
@@ -347,7 +347,7 @@ namespace WinApp.Code
 					}
 					if (dbExists)
 					{
-						MsgBox.Show("Database with this name alreade exists, choose another database name.", "Cannot create database");
+                        result = "Database with this name alreade exists, choose another database name.";
 					}
 					else
 					{
@@ -371,14 +371,11 @@ namespace WinApp.Code
                                     // Save new db into settings
                                     Config.Settings.databaseName = databaseName;
                                     await Config.SaveConfig();
-                                    dbOk = true;
                                 }
                                 catch (Exception ex)
                                 {
                                     await Log.LogToFile(ex);
-                                    dbOk = false;
-                                    MsgBox.Show("Error creating database, check that valid databasename is selected." +
-                                        Environment.NewLine + Environment.NewLine + ex.ToString(), "Error creating database");
+                                    result = $"Error creating database, check that valid databasename is selected. Error message: {ex.Message}";
                                 }
                             }
                         }
@@ -389,7 +386,7 @@ namespace WinApp.Code
 					// Check if database exists
 					if (File.Exists(fileLocation + databaseName + ".db"))
 					{
-						MsgBox.Show("Error creating database, databasefile already exists, select another database name", "Error creating database");
+                        result = "Error creating database, databasefile already exists, select another database name";
 					}
 					else
 					{
@@ -399,11 +396,10 @@ namespace WinApp.Code
 						// Save new db file into settings
 						Config.Settings.databaseFileName = fileLocation + databaseName + ".db";
                         await Config.SaveConfig();
-                        dbOk = true;
 					}
 				}
 			}
-			return dbOk;
+			return result;
 		}
 		
 		public static void AddWithValue(ref string Sql, string Parameter, object Value, DB.SqlDataType DataType)
@@ -489,7 +485,7 @@ namespace WinApp.Code
 			return Sql;
 		}
 
-		public async static Task<bool> CheckConnection(bool showErrorIfNotExists = true)
+		public async static Task<bool> CheckConnection(bool showErrorIfNotExists, Form frm = null)
 		{
 			bool ok = false;
 			DataTable dt = new DataTable();
@@ -511,7 +507,7 @@ namespace WinApp.Code
                             using (SqlCommand command = new SqlCommand("SELECT * FROM player", con))
                             {
                                 SqlDataAdapter adapter = new SqlDataAdapter(command);
-                                await Task.Run(() => adapter.Fill(dt));
+                                adapter.Fill(dt);
                                 ok = true;
                             }
                         }
@@ -519,7 +515,7 @@ namespace WinApp.Code
 					catch (Exception ex)
 					{
 						await Log.LogToFile(ex);
-						if (showErrorIfNotExists) MsgBox.Show("Error connecting to database or test on accessing table data falied. Please check Database Settings.", "Config error");
+						if (showErrorIfNotExists) MsgBox.Show("Error connecting to database or test on accessing table data falied. Please check Database Settings.", "Config error", frm);
 					}
 				}
 			}
@@ -540,7 +536,7 @@ namespace WinApp.Code
                             using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM player", con))
                             {
                                 SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
-                                await Task.Run(() => adapter.Fill(dt));
+                                adapter.Fill(dt);
                                 ok = true;
                             }
                         }

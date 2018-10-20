@@ -52,8 +52,8 @@ namespace WinApp.Code
 			await Log.CheckLogFileSize();
 			await GetTankList();
             await GetJson2dbMappingFromDB();
-            await GetAchList();
-            await GetPlayerTankAchList();
+            //await GetAchList();
+            //await GetPlayerTankAchList();
             await GetPlayerTankFragList();
 			Battle2json.GetExistingBattleFiles();
 		}

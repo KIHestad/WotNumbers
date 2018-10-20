@@ -32,7 +32,13 @@ namespace WinApp.Code
 			return DateTime.Now + " " + logtext;
 		}
 
-		public async static Task<String> UpdateWN9(Form parentForm, int updateOnlyTankId = 0)
+        public class Result
+        {
+            public bool Success { get; set; }
+            public string Message { get; set; }
+        }
+
+		public async static Task<Result> UpdateWN9(Form parentForm, int updateOnlyTankId = 0)
         {
             string sql = "";
             double WN9Version = 0;
@@ -81,7 +87,7 @@ namespace WinApp.Code
 					ex.Message + Environment.NewLine +
 					ex.InnerException + Environment.NewLine + Environment.NewLine;
 				MsgBox.Show(msg, "Problem connecting to http://jaj22.org.uk", parentForm);
-				return "";
+				return new Result() { Success = false, Message = ex.Message };
 			}
 
 			// Execute update statements
@@ -96,15 +102,15 @@ namespace WinApp.Code
 			{
 				await Log.LogToFile(ex);
 				MsgBox.Show(ex.Message, "Error occured", parentForm);
-                return "";
+                return new Result() { Success = false, Message = ex.Message };
             }
 
             if (updateCount == 0)
-                return ("Did not find WN9 expected values for tank");
+                return new Result() { Success = false, Message = "Did not find WN9 expected values for tank" };
             else if (updateCount == 1)
-                return ("WN9 expected values updated for tank");
+                return new Result() { Success = true, Message = "WN9 expected values updated for tank" };
             else
-                return ("WN9 expected values updated for " + updateCount.ToString() + " tanks");
+                return new Result() { Success = true, Message = "WN9 expected values updated for " + updateCount.ToString() + " tanks" };
         }
 
 	}

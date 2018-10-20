@@ -163,7 +163,6 @@ namespace WinApp.Code
         // Settings to be saved to config.json
         private const string configfile = "config.json";        // File to load/save config changes
         public static ConfigData Settings = new ConfigData();				// Current configs
-        public static ConfigData LastWorkingSettings = new ConfigData();	// Used for reverting to last working settings if create db fails
         private static bool _appDataFolderOK = false;
        
         public static string AppDataBaseFolder
@@ -326,7 +325,7 @@ namespace WinApp.Code
             Config.Settings.lastGrindingProgressRecalc = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Day);
             Config.Settings.currentHomeView = "Default";
             Config.Settings.currentChartFavourite= "";
-            Config.Settings.res_mods_subfolder = "0.9.16";
+            Config.Settings.res_mods_subfolder = "";
         }
 
 		

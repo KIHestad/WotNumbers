@@ -316,28 +316,28 @@ namespace WinApp.Forms
 
         private async void btnResetWN8_Click(object sender, EventArgs e)
         {
-            string result = await ImportWN8Api2DB.UpdateWN8(this, _tankId); // result is empty if any error
-            if (result != "")
+            var result = await ImportWN8Api2DB.UpdateWN8(this, _tankId); // result is empty if any error
+            if (result.Success)
             {
                 await TankHelper.GetTankList();
                 DataRow dr = await TankHelper.GetTankInfo(_tankId);
                 ShowTankWN8(dr);
                 _WN8Changed = false;
-                MsgBox.Show(result, "Result getting WN8 expected values");
+                MsgBox.Show(result.Message, "Result getting WN8 expected values");
             }
             
         }
 
         private async void btnResetWN9_Click(object sender, EventArgs e)
         {
-            string result = await ImportWN9Api2DB.UpdateWN9(this, _tankId); // result is empty if any error
-            if (result != "")
+            var result = await ImportWN9Api2DB.UpdateWN9(this, _tankId); // result is empty if any error
+            if (result.Success)
             {
                 await TankHelper.GetTankList();
                 DataRow dr = await TankHelper.GetTankInfo(_tankId);
                 ShowTankWN9(dr);
                 _WN9Changed = false;
-                MsgBox.Show(result, "Result getting WN9 expected values");
+                MsgBox.Show(result.Message, "Result getting WN9 expected values");
             }
         }
     }

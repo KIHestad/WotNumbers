@@ -49,8 +49,11 @@ namespace WinApp.Forms.Settings
                     txtFolder.Text = "C:\\Games\\World_of_Tanks";
                 else if (Directory.Exists("D:\\Games\\World_of_Tanks"))
                     txtFolder.Text = "D:\\Games\\World_of_Tanks";
+                else if (Directory.Exists("E:\\Games\\World_of_Tanks"))
+                    txtFolder.Text = "E:\\Games\\World_of_Tanks";
                 Config.Settings.wotGameFolder = txtFolder.Text;
                 await Config.SaveConfig();
+                await WoThelper.CheckForNewResModsFolder();
             }
             txtBatchFile.Text = Config.Settings.wotGameRunBatchFile;
             chkAutoRun.Checked = Config.Settings.wotGameAutoStart;
@@ -176,7 +179,7 @@ namespace WinApp.Forms.Settings
             chkCore7.Enabled = chkOptimizeOn.Checked;
         }
 
-        private void btnFolder_Click(object sender, EventArgs e)
+        private async void btnFolder_Click(object sender, EventArgs e)
         {
             // Select dossier file
             folderBrowserDialog1.ShowNewFolderButton = false;
@@ -189,6 +192,7 @@ namespace WinApp.Forms.Settings
             if (folderBrowserDialog1.SelectedPath != "")
             {
                 txtFolder.Text = folderBrowserDialog1.SelectedPath;
+                txtResModsSubFolder.Text = await WoThelper.GetHighestResModsFolder(txtFolder.Text);
             }
         }
 
@@ -273,5 +277,10 @@ namespace WinApp.Forms.Settings
                 EditChangesApply(true);
         }
 
+        private async void txtFolder_TextChanged(object sender, EventArgs e)
+        {
+            txtResModsSubFolder.Text = await WoThelper.GetHighestResModsFolder(txtFolder.Text);
+            EditChangesApply(true);
+        }
     }
 }

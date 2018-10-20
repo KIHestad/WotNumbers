@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
+using WinApp.Code.FormView;
 
 namespace WinApp.Forms
 {
@@ -56,12 +57,11 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void DatabaseNew_Shown(object sender, EventArgs e)
+		private async void DatabaseNew_Shown(object sender, EventArgs e)
 		{
 			if (_autoSetup)
 			{
-				CreateNewDb();
-				AutoSetupHelper.AutoSetupCompleteOK = true;
+                AutoSetupHelper.AutoSetupCompleteOK = await CreateNewDb();
 				this.Close();
 			}
 		}
@@ -98,16 +98,17 @@ namespace WinApp.Forms
 			Refresh();
 		}
 
-		private void btnCreateDB_Click(object sender, EventArgs e)
+		private async void btnCreateDB_Click(object sender, EventArgs e)
 		{
-			CreateNewDb();
-			this.Close();
+			bool ok = await CreateNewDb();
+            if (ok) {
+                this.Close();
+            }
 		}
 		
-		private async void CreateNewDb()
+		private async Task<bool> CreateNewDb()
 		{
 			// Wait cursor
-			this.Cursor = Cursors.WaitCursor;
 			DatabaseNewTheme.Cursor = Cursors.WaitCursor;
 			btnCancel.Enabled = false;
 			btnCreateDB.Enabled = false;
@@ -115,120 +116,139 @@ namespace WinApp.Forms
 			txtDatabasename.Enabled = false;
 			txtFileLocation.Enabled = false;
 			// Create new db
-			bool ok = true;
-			badProgressBar.ValueMax = 11;
+			badProgressBar.ValueMax = 8;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
 			UpdateProgressBar("Creating new database");
 			// Create db now
-			ok = await DB.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType);
+			string createDbResult = await DB.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType);
+            if (createDbResult != null)
+            {
+                // Revert to prevous settings
+                MsgBox.Show($"Failed to create database. Error: {createDbResult}", "Failed to create database", this);
+                return false;
+            }
+            // successfully created db, continue to fill database with default data
+			UpdateProgressBar("Creating database tables");
+			// Update db by running sql scripts
+			string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\";
+			string sql;
+			// Create Tables
+			string filename = "";
+			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+				filename = "createTableMSSQL.txt";
+			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+				filename = "createTableSQLite.txt";
+			StreamReader streamReader = new StreamReader(path + filename, Encoding.UTF8);
+			sql = streamReader.ReadToEnd();
+			bool ok = await DB.ExecuteNonQuery(sql);
 			if (ok)
 			{
-				// Fill database with default data
-				UpdateProgressBar("Creating database tables");
-				// Update db by running sql scripts
-				string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\";
-				string sql;
-				// Create Tables
-				string filename = "";
-				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
-					filename = "createTableMSSQL.txt";
-				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
-					filename = "createTableSQLite.txt";
-				StreamReader streamReader = new StreamReader(path + filename, Encoding.UTF8);
+				// Insert default data
+				UpdateProgressBar("Inserting data into database");
+				streamReader = new StreamReader(path + "insert_dbver488.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = await DB.ExecuteNonQuery(sql);
-				if (ok)
-				{
-					// Insert default data
-					UpdateProgressBar("Inserting data into database");
-					streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
-					sql = streamReader.ReadToEnd();
-					ok = await DB.ExecuteNonQuery(sql);
-					if (ok)
-					{
-						// Upgrade to latest version
-						UpdateProgressBar("Upgrading database");
-						await DBVersion.CheckForDbUpgrade(this, true);
-						
-						// Get tanks, remember to init tankList first
-						UpdateProgressBar("Retrieves tanks from Wargaming API");
-                        await TankHelper.GetTankList();
+				ok = await DB.ExecuteNonQuery(sql, RunInBatch: true);
+                if (ok)
+                {
+                    // Upgrade to latest version
+                    UpdateProgressBar("Upgrading database");
+                    ok = await DBVersion.CheckForDbUpgrade(this, true);
+                }
+                if (ok)
+                {
+                    // Get tanks, remember to init tankList first
+                    UpdateProgressBar("Retrieves tanks from Wargaming API");
+                    // OLD METHOD, still in use because some tanks are missing from the new method
+                    await TankHelper.GetTankList();
+                    await ImportWotApi2DB.ImportTanksOldAPI(this);
+                    // NEW METHOD
+                    await TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
+                    ok = (await ImportWotApi2DB.ImportTanks(this)) == null;
+                    // Init after getting tanks and other basic data import
+                    await TankHelper.GetTankList();
+                }
+                if (ok)
+                {
+                    await TankHelper.GetJson2dbMappingFromDB();
+                }
 
-                        // OLD METHOD, still in use because some tanks are missing from the new method
-                        await ImportWotApi2DB.ImportTankList(this);
-                        await TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
-                        // NEW METHOD
-                        await ImportWotApi2DB.ImportTanks(this);
+				// Get turret
+				//UpdateProgressBar("Retrieves tank turrets from Wargaming API");
+				//ImportWotApi2DB.ImportTurrets(this);
 
+				// Get guns
+				//UpdateProgressBar("Retrieves tank guns from Wargaming API");
+				//ImportWotApi2DB.ImportGuns(this);
 
-                        // Init after getting tanks and other basic data import
-                        await TankHelper.GetTankList();
-                        await TankHelper.GetJson2dbMappingFromDB();
+				// Get radios
+				//UpdateProgressBar("Retrieves tank radios from Wargaming API");
+				//ImportWotApi2DB.ImportRadios(this);
 
-						// Get turret
-						//UpdateProgressBar("Retrieves tank turrets from Wargaming API");
-						//ImportWotApi2DB.ImportTurrets(this);
+				// Get achievements
+				//UpdateProgressBar("Retrieves achievements from Wargaming API");
+				//await ImportWotApi2DB.ImportAchievements(this);
+                //await TankHelper.GetAchList();
 
-						// Get guns
-						//UpdateProgressBar("Retrieves tank guns from Wargaming API");
-						//ImportWotApi2DB.ImportGuns(this);
+                 if (ok)
+                {
+                    // Get WN8 ratings
+                    UpdateProgressBar("Retrieves WN8 expected values from API");
+                    var result = await ImportWN8Api2DB.UpdateWN8(this);
+                    ok = result.Success;
+                }
+					
+                if (ok)
+                {
+                    // Get WN8 ratings
+                    UpdateProgressBar("Retrieves WN9 expected values from API");
+                    var result = await ImportWN9Api2DB.UpdateWN9(this);
+                    ok = result.Success;
+                }
+                    
+                if (ok)
+                {
+                    // Create default col list setups
+                    await ColListSystemDefault.NewSystemTankColList();
+                    await ColListSystemDefault.NewSystemBattleColList();
 
-						// Get radios
-						//UpdateProgressBar("Retrieves tank radios from Wargaming API");
-						//ImportWotApi2DB.ImportRadios(this);
+                    // Update settings 
+                    DBVersion.RunDownloadAndUpdateTanks = false;
+                    DBVersion.RunDossierFileCheckWithForceUpdate = true;
+                    Config.Settings.doneRunWotApi = DateTime.Now;
 
-						// Get achievements
-						UpdateProgressBar("Retrieves achievements from Wargaming API");
-						await ImportWotApi2DB.ImportAchievements(this);
-                        await TankHelper.GetAchList();
+                    // Reset player
+                    Config.Settings.playerName = "";
+                    Config.Settings.playerServer = "";
+                    Config.Settings.playerId = 0;
 
-						// Get WN8 ratings
-						UpdateProgressBar("Retrieves WN8 expected values from API");
-						await ImportWN8Api2DB.UpdateWN8(this);
+                    // New Init after upgrade db
+                    await TankHelper.GetAllLists();
 
-                        // Get WN8 ratings
-                        UpdateProgressBar("Retrieves WN9 expected values from API");
-                        await ImportWN9Api2DB.UpdateWN9(this);
+                    // Startup with default settings
+                    MainSettings.GridFilterTank = await GridFilter.GetDefault(GridView.Views.Tank);
+                    MainSettings.GridFilterBattle = await GridFilter.GetDefault(GridView.Views.Battle);
 
-                        // Update settings for API update runned
-                        DBVersion.RunDownloadAndUpdateTanks = false;
-						Config.Settings.doneRunWotApi = DateTime.Now;
-
-						// Reset player
-						Config.Settings.playerName = "";
-						Config.Settings.playerServer = "";
-						Config.Settings.playerId = 0;
-
-                        // New Init after upgrade db
-                        await TankHelper.GetAllLists();
-
-						// Startup with default settings
-						MainSettings.GridFilterTank = await GridFilter.GetDefault(GridView.Views.Tank);
-						MainSettings.GridFilterBattle = await GridFilter.GetDefault(GridView.Views.Battle);
-
-					}
-				}
+                }
 			}
 			// Done
-			Cursor.Current = Cursors.Default;
-			badProgressBar.Visible = false;
-			if (ok)
-			{
-				// Save new database to config
-				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
-					Config.Settings.databaseName = txtDatabasename.Text;
-				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
-					Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
-				MsgBox.Show("Database created successfully, new database saved to settings.", "Created database", this);
-			}
-			else
-			{
-				// Revert to prevous settings
-				MsgBox.Show("Failed to create database, revert to using previous settings.", "Failed to create database", this);
-				Config.Settings = Config.LastWorkingSettings;
-			}
-			await Config.SaveConfig();
+			DatabaseNewTheme.Cursor = Cursors.Default;
+            if (ok)
+            {
+                UpdateProgressBar("Database created successfully");
+                // Save new database to config
+                if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+                    Config.Settings.databaseName = txtDatabasename.Text;
+                else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+                    Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
+                MsgBox.Show("Database created successfully, new database saved to settings.", "Created database", this);
+                await Config.SaveConfig();
+            }
+            else
+            {
+                UpdateProgressBar("Error occured during database creation");
+            }
+            return ok;
 		}
 
 

@@ -35,6 +35,8 @@ namespace WinApp.Services
             {
                 // Get player
                 DataTable dtPlayer = await DB.FetchData($"SELECT playerApiId, playerApiToken FROM player WHERE Id={Config.Settings.playerId};");
+                if (dtPlayer == null || dtPlayer.Rows.Count == 0)
+                    return "No battles for upload.";
                 int playerId = Convert.ToInt32(dtPlayer.Rows[0]["playerApiId"]);
                 Guid playerToken = Guid.Parse(dtPlayer.Rows[0]["playerApiToken"].ToString());
                 // Get battles for transfer

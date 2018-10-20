@@ -177,13 +177,13 @@ namespace WinApp.Code
         #region importTanks
 
         // New method: "Vehicles" gets enhanced tank data, problem not as updated as old "List of vehicles"
-        public async static Task<String> ImportTanks(Form parentForm, bool overwriteCustomTankDetails = false)
+        public async static Task<string> ImportTanks(Form parentForm, bool overwriteCustomTankDetails = false)
 		{
             string json = await FetchFromAPI(WotApiType.Tank, 0, parentForm);
 			if (json == "")
 			{
-				return "No data imported.";
-			}
+				return "Could not find any data using Wargaming API. No data imported.";
+            }
 			else
 			{
 				int tankTypeId = 0;
@@ -324,25 +324,25 @@ namespace WinApp.Code
                     }
 
 					//Code.MsgBox.Show("Tank import complete");
-					return ("Import Complete");
+					return null;
 				}
 
 				catch (Exception ex)
 				{
 					await Log.LogToFile(ex);
-					Code.MsgBox.Show(ex.Message, "Error fetching tanks from WoT API", parentForm);
+					MsgBox.Show(ex.Message, "Error fetching tanks from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
 			}
         }
 
         // Old method "List of vehicles", only get if tank is missing
-        public async static Task<String> ImportTankList(Form parentForm, bool overwriteCustomTankDetails = false)
+        public async static Task<string> ImportTanksOldAPI(Form parentForm, bool overwriteCustomTankDetails = false)
         {
             string json = await FetchFromAPI(WotApiType.TankList, 0, parentForm);
             if (json == "")
             {
-                return "No data imported.";
+                return "Could not find any data using Wargaming API (old method). No data imported.";
             }
             else
             {
@@ -471,13 +471,13 @@ namespace WinApp.Code
                     }
 
                     //Code.MsgBox.Show("Tank import complete");
-                    return ("Import Complete");
+                    return null;
                 }
 
                 catch (Exception ex)
                 {
-                    await Log.LogToFile(ex);
-                    Code.MsgBox.Show(ex.Message, "Error fetching tanks from WoT API", parentForm);
+                    await Log.LogToFile(ex, "Old API for fetching tank list failed");
+                    //MsgBox.Show(ex.Message, "Error fetching tanks from WoT API old API", parentForm);
                     return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
                 }
             }

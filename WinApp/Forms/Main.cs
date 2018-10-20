@@ -218,7 +218,7 @@ namespace WinApp.Forms
                 // TODO: Set new blank current view, add feature for getting latest used favourite from config settings
                 BattleChartHelper.CurrentChartView = new List<BattleChartHelper.BattleChartItem>(); 
                 Code.Rating.WN9.SetTierAvgList();
-                if (await DB.CheckConnection())
+                if (await DB.CheckConnection(true, this))
                 {
                     // Moved to Page Load - to run this and make sure db upgrades are done before app starts
                     // TankHelper.GetAllLists();
@@ -4615,7 +4615,7 @@ namespace WinApp.Forms
             ConfigData.dbType databateType = Config.Settings.databaseType;
 
             // Show dialog
-            Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.Main);
+            Form frm = new Settings.AppSettings(AppSettingsHelper.Tabs.Main);
             frm.ShowDialog(this);
 
             // Update main form title
@@ -4627,11 +4627,11 @@ namespace WinApp.Forms
                 await RunWotApi(true);
 
             // Check if new database is created, database should be present but no player should exist
-            if (await DB.CheckConnection(true))
+            if (await DB.CheckConnection(true, this))
             {
                 bool runDossier = false;
                 // If no player selected, or changed db type run dosser check
-                runDossier = (Config.Settings.playerId == 0 || databateType != Config.Settings.databaseType);
+                runDossier = (Config.Settings.playerId == 0 || databateType != Config.Settings.databaseType || DBVersion.RunDossierFileCheckWithForceUpdate);
                 if (!runDossier)
                 {
                     // check if changed db according to dbtype

@@ -57,16 +57,25 @@ namespace WinApp.Code
 				if (Directory.Exists("C:\\Games\\World_of_Tanks"))
 				{
 					Config.Settings.wotGameFolder = "C:\\Games\\World_of_Tanks";
-					await Config.SaveConfig();
-					woTGameFolderOK = true;
+                    await Config.SaveConfig();
+                    await WoThelper.CheckForNewResModsFolder();
+                    woTGameFolderOK = true;
 				}
 				else if (Directory.Exists("D:\\Games\\World_of_Tanks"))
 				{
 					Config.Settings.wotGameFolder = "D:\\Games\\World_of_Tanks";
-					await Config.SaveConfig();
-					woTGameFolderOK = true;
+                    await Config.SaveConfig();
+                    await WoThelper.CheckForNewResModsFolder();
+                    woTGameFolderOK = true;
 				}
-			}
+                else if (Directory.Exists("E:\\Games\\World_of_Tanks"))
+                {
+                    Config.Settings.wotGameFolder = "E:\\Games\\World_of_Tanks";
+                    await Config.SaveConfig();
+                    await WoThelper.CheckForNewResModsFolder();
+                    woTGameFolderOK = true;
+                }
+            }
 			if (!woTGameFolderOK)
 				woTGameFolderOK = Directory.Exists(Config.Settings.wotGameFolder);
 			return woTGameFolderOK;

@@ -8,10 +8,10 @@ namespace WinApp.Code
 {
 	public static class MainSettings
 	{
-		public static GridView.Views View = GridView.Views.Overall;
-        public static GridFilter.Settings GridFilterTank { get; set; }
-        public static GridFilter.Settings GridFilterBattle { get; set; }
-        
+        public static GridView.Views View = GridView.Views.Overall;
+        public static GridFilter.Settings GridFilterTank = new GridFilter.Settings();
+        public static GridFilter.Settings GridFilterBattle = new GridFilter.Settings();
+
         public async static Task SetDefaultGridFilters()
         {
             GridFilterTank = await GridFilter.GetDefault(GridView.Views.Tank);

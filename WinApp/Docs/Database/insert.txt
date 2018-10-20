@@ -16,7 +16,7 @@ insert into battleSurvive (id, name, survived, color) values (1, 'Yes', 1, '#00F
 insert into battleSurvive (id, name, color)    values (2, 'Some', '#0094FF');
 insert into battleSurvive (id, name, killed, color)  values (3, 'No', 1 ,'#FF0000');
 
---json, common, countryid
+-- Country
 insert into country (id, name, shortName) values (0, 'USSR', 'USR');
 insert into country (id, name, shortName) values (1, 'Germany', 'GER');
 insert into country (id, name, shortName) values (2, 'USA', 'USA');

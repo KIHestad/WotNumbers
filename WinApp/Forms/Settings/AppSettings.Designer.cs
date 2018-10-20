@@ -140,6 +140,7 @@
             this.btnTab5.Tag = "5";
             this.btnTab5.Text = "Import";
             this.btnTab5.ToolTipText = "Import from WOT Statistics";
+            this.btnTab5.Visible = false;
             this.btnTab5.Click += new System.EventHandler(this.SelectTab_Click);
             // 
             // btnTab4

@@ -51,7 +51,7 @@ namespace WinApp.Forms
 
             // old method
             await TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
-            await ImportWotApi2DB.ImportTankList(this, overwriteCustom);
+            await ImportWotApi2DB.ImportTanksOldAPI(this, overwriteCustom);
 
             // New method
             await TankHelper.GetTankList();
@@ -74,9 +74,9 @@ namespace WinApp.Forms
 			// ImportWotApi2DB.ImportRadios(this);
 
 			// Get achievements
-			UpdateProgressBar("Retrieves achievements from Wargaming API");
-			await ImportWotApi2DB.ImportAchievements(this);
-            await TankHelper.GetAchList();
+			//UpdateProgressBar("Retrieves achievements from Wargaming API");
+			//await ImportWotApi2DB.ImportAchievements(this);
+            //await TankHelper.GetAchList();
 
 			// Get achievements
 			UpdateProgressBar("Retrieves maps from Wargaming API");

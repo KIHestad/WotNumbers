@@ -152,6 +152,9 @@
       <Component Id="cmpinsert" Guid="{93BB94DA-096B-42BC-883B-2B38D08697C7}">
         <File Id="filinsert" Source="..\WinApp\Docs\Database\insert.txt"  KeyPath="yes"></File>
       </Component>
+      <Component Id="cmpinsert488" Guid="{BC94636B-7260-4E5E-98E8-C9E07AACB798}">
+        <File Id="filinsert488" Source="..\WinApp\Docs\Database\insert_dbver488.txt"  KeyPath="yes"></File>
+      </Component>
       <Component Id="cmpAdminDB" Guid="{E3A9263F-EC63-4E01-B68B-24D2F010CE42}">
         <File Id="filAdminDB" Source="..\WinApp\Docs\Database\Admin.db"  KeyPath="yes"></File>
       </Component>

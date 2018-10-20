@@ -27,11 +27,15 @@ namespace WinApp.Code
         }
 
 
-        private async static Task<string> GetHighestResModsFolder()
+        public async static Task<string> GetHighestResModsFolder(string wotFolder = null)
         {
             try
             {
-                string resModsFullPath = Path.Combine(Config.Settings.wotGameFolder, "res_mods");
+                string resModsFullPath = "";
+                if (wotFolder == null)
+                    resModsFullPath = Path.Combine(Config.Settings.wotGameFolder, "res_mods");
+                else
+                    resModsFullPath = Path.Combine(wotFolder, "res_mods");
                 DirectoryInfo directory = new DirectoryInfo(resModsFullPath);
                 List<DirectoryInfo> subfolders = directory.GetDirectories().ToList();
                 string highestResModsFolder = "";
@@ -71,14 +75,16 @@ namespace WinApp.Code
             
         }
 
-        public async static Task CheckForNewResModsFolder()
+        public async static Task<string> CheckForNewResModsFolder()
         {
             string highestResModsFolder = await GetHighestResModsFolder();
             if (highestResModsFolder != "" && highestResModsFolder != Config.Settings.res_mods_subfolder)
             {
                 Config.Settings.res_mods_subfolder = highestResModsFolder;
                 await Config.SaveConfig();
+                return highestResModsFolder;
             }
+            return "";
         }
 
     }

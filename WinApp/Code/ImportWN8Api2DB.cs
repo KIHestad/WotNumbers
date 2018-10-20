@@ -25,8 +25,14 @@ namespace WinApp.Code
 			return DateTime.Now + " " + logtext;
 		}
 
+        public class Result
+        {
+            public bool Success { get; set; }
+            public string Message { get; set; }
+        }
+
         // updates all WN8 expected values, or only for one tank if added
-        public async static Task<String> UpdateWN8(Form parentForm, int updateOnlyTankId = 0)
+        public async static Task<Result> UpdateWN8(Form parentForm, int updateOnlyTankId = 0)
 		{
 			string sql = "";
 			int tankId = 0;
@@ -107,7 +113,7 @@ namespace WinApp.Code
 					ex.Message + Environment.NewLine +
 					ex.InnerException + Environment.NewLine + Environment.NewLine;
 				MsgBox.Show(msg, "Problem connecting to http://www.wnefficiency.net", parentForm);
-				return "";
+                return new Result() { Success = false, Message = msg };
 			}
 
 			// Execute update statements
@@ -122,15 +128,15 @@ namespace WinApp.Code
 			{
 				await Log.LogToFile(ex);
 				MsgBox.Show(ex.Message, "Error occured", parentForm);
-                return "";
+                return new Result() { Success = false, Message = ex.Message };
             }
 
             if (updateCount == 0)
-                return ("Did not find WN8 expected values for tank");
+                return new Result() { Success = false, Message = "Did not find WN8 expected values for tank" };
             else if (updateCount == 1)
-                return ("WN8 expected values updated for tank");
+                return new Result() { Success = true, Message = "WN8 expected values updated for tank" };
             else
-                return ("WN8 expected values updated for " + updateCount.ToString() + " tanks");
+                return new Result() { Success = true, Message = "WN8 expected values updated for " + updateCount.ToString() + " tanks" };
 
         }
 

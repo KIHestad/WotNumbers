@@ -131,11 +131,11 @@ namespace WinApp.Forms
 			await Config.SaveConfig();
 		}
 
-		private async void btnSave_Click_1(object sender, EventArgs e)
+		private async void btnSave_Click(object sender, EventArgs e)
 		{
 			await SaveConfig();
 			// Check if Connection to DB is OK, and get base data
-			if (await DB.CheckConnection()) // check db config, displays message if error
+			if (await DB.CheckConnection(true, this)) // check db config, displays message if error
 			{
 				// Check if current plyer exists in current database, if not remove it
 				DataTable dt = await DB.FetchData("SELECT * FROM player WHERE name='" + Config.Settings.playerNameAndServer + "'");
@@ -195,8 +195,6 @@ namespace WinApp.Forms
 			}
 			if (ok)
 			{
-				// Remember current settings, in case create db is not successfull, it is possible to revert
-				Config.LastWorkingSettings = Config.Settings; 
 				// Must save databasetype and db settings before entering form for creating new database
 				// All database handling uses current config settings to access correct database
 				await SaveConfig();
@@ -252,8 +250,5 @@ namespace WinApp.Forms
 		{
 			this.Close();
 		}
-
-		
-		
-	}
+    }
 }

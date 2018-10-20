@@ -27,18 +27,27 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 487; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 488; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
-		// The upgrade scripts
-		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
+
+        // The upgrade scripts
+        private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
 		{
-			// first define sqlscript for both mssql and sqlite for all versions
+			// Define sqlscript for both mssql and sqlite for all versions
 			string mssql = "";
 			string sqlite = "";
             string temp = "";
+            // Check version and perform changes
 			switch (version)
 			{
-				case 1: 
+                case 488:
+                    mssql = "DELETE FROM json2dbMapping WHERE jsonMain = 'tanks' "; // cleanup old and no longer-used dossier params
+                    sqlite = mssql;
+                    break;
+
+                // OLDER UPGRADES FOR BACKWARDS COMPABILITY
+
+                case 1: 
 					break; // First version, no script
 				case 2:                                                
 					mssql=	"CREATE TABLE favListTank ( "+
@@ -2912,7 +2921,7 @@ namespace WinApp.Code
                     }
                     break;
                 case 416:
-                    Config.Settings.res_mods_subfolder = "0.9.16";
+                    Config.Settings.res_mods_subfolder = "";
                     await Config.SaveConfig();
                     break;
                 case 417:
@@ -3183,6 +3192,8 @@ namespace WinApp.Code
                     sqlite = mssql;
                     RunDownloadAndUpdateTanks = true;
                     break;
+                
+
 
 
             }

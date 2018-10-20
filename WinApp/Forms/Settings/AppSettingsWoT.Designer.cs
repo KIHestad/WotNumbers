@@ -332,7 +332,7 @@
             this.txtFolder.TabIndex = 31;
             this.txtFolder.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtFolder.ToolTipText = "The folder where WoT game is installed";
-            this.txtFolder.TextChanged += new System.EventHandler(this.EditChangesApply);
+            this.txtFolder.TextChanged += new System.EventHandler(this.txtFolder_TextChanged);
             // 
             // badLabel1
             // 

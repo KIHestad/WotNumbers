@@ -68,7 +68,7 @@ namespace WinApp.Code
 				sw.Start();
 
                 // Update base data
-                await TankHelper.GetPlayerTankAchList();
+                //await TankHelper.GetPlayerTankAchList();
                 await TankHelper.GetPlayerTankFragList();
 
 				// read json string
@@ -262,22 +262,22 @@ namespace WinApp.Code
 									if (currentItem.tankId != "")
 									{
                                         // log.Add("  > Check for DB update - Tank: '" + tankName );
-                                        result.NewBattlesCount += await CheckTankDataResult(
-                                            currentItem.tankId,
-                                            NewPlayerTankRow,
-                                            NewPlayerTankBattle15Row,
-                                            NewPlayerTankBattle7Row,
-                                            NewPlayerTankBattle7RankedRow,
-                                            NewPlayerTankBattleHistoricalRow,
-                                            NewPlayerTankBattleSkirmishesRow,
-                                            NewPlayerTankBattleStrongholdRow,
-                                            NewPlayerTankBattleGlobalMapRow,
-                                            NewPlayerTankBattleGrandRow,
-                                            fragList,
-                                            achList,
-                                            ForceUpdate,
-                                            saveBattleResult
-                                        );
+                                        //result.NewBattlesCount += await CheckTankDataResult(
+                                        //    currentItem.tankId,
+                                        //    NewPlayerTankRow,
+                                        //    NewPlayerTankBattle15Row,
+                                        //    NewPlayerTankBattle7Row,
+                                        //    NewPlayerTankBattle7RankedRow,
+                                        //    NewPlayerTankBattleHistoricalRow,
+                                        //    NewPlayerTankBattleSkirmishesRow,
+                                        //    NewPlayerTankBattleStrongholdRow,
+                                        //    NewPlayerTankBattleGlobalMapRow,
+                                        //    NewPlayerTankBattleGrandRow,
+                                        //    fragList,
+                                        //    achList,
+                                        //    ForceUpdate,
+                                        //    saveBattleResult
+                                        //);
 											
 										// Reset all values
 										NewPlayerTankTable.Clear();
@@ -483,7 +483,7 @@ namespace WinApp.Code
 					await DB.ExecuteNonQuery(sql);
 				}
 					
-				// No longer in us
+				// No longer in use
 				// Check fraglist to update playertank frags
 				//List<FragItem> battleFragList = new List<FragItem>(); //  UpdatePlayerTankFrag(tankId, playerTankId, fragList);
 				// Check if achivment exists

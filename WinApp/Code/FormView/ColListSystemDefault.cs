@@ -304,7 +304,12 @@ namespace WinApp.Code.FormView
 		private async static Task SetFavListAsDefaultIfMissing(string favListId, int colTypeId)
 		{
 			string sql = "select count(id) from columnList where colDefault=1 and colType=" + colTypeId.ToString() + ";";
-			int count = Convert.ToInt32((await DB.FetchData(sql)).Rows[0][0]);
+            DataTable dt = await DB.FetchData(sql);
+            int count = 0;
+            if (dt != null || dt.Rows.Count > 0)
+            {
+                count = Convert.ToInt32(dt.Rows[0][0]);
+            }
 			if (count == 0)
 			{
 				sql = "update columnList set colDefault=1 where id=" + favListId + " and colType= " + colTypeId.ToString();
