@@ -262,22 +262,22 @@ namespace WinApp.Code
 									if (currentItem.tankId != "")
 									{
                                         // log.Add("  > Check for DB update - Tank: '" + tankName );
-                                        //result.NewBattlesCount += await CheckTankDataResult(
-                                        //    currentItem.tankId,
-                                        //    NewPlayerTankRow,
-                                        //    NewPlayerTankBattle15Row,
-                                        //    NewPlayerTankBattle7Row,
-                                        //    NewPlayerTankBattle7RankedRow,
-                                        //    NewPlayerTankBattleHistoricalRow,
-                                        //    NewPlayerTankBattleSkirmishesRow,
-                                        //    NewPlayerTankBattleStrongholdRow,
-                                        //    NewPlayerTankBattleGlobalMapRow,
-                                        //    NewPlayerTankBattleGrandRow,
-                                        //    fragList,
-                                        //    achList,
-                                        //    ForceUpdate,
-                                        //    saveBattleResult
-                                        //);
+                                        result.NewBattlesCount += await CheckTankDataResult(
+                                            currentItem.tankId,
+                                            NewPlayerTankRow,
+                                            NewPlayerTankBattle15Row,
+                                            NewPlayerTankBattle7Row,
+                                            NewPlayerTankBattle7RankedRow,
+                                            NewPlayerTankBattleHistoricalRow,
+                                            NewPlayerTankBattleSkirmishesRow,
+                                            NewPlayerTankBattleStrongholdRow,
+                                            NewPlayerTankBattleGlobalMapRow,
+                                            NewPlayerTankBattleGrandRow,
+                                            fragList,
+                                            achList,
+                                            ForceUpdate,
+                                            saveBattleResult
+                                        );
 											
 										// Reset all values
 										NewPlayerTankTable.Clear();
