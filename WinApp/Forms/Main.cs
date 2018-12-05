@@ -2286,10 +2286,14 @@ namespace WinApp.Forms
             mWotNumWebStats.BackColor = Color.FromArgb(255, 45, 45, 49);
         }
 
-        private void mVBaddict_Click(object sender, EventArgs e)
+        private async void mVBaddict_Click(object sender, EventArgs e)
         {
-            string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
-            Process.Start(serverURL);
+            MsgBox.Show("Sorry, but vBAddict is no loger working. Wot Numbers has discontinued support for vBAddict.");
+            Config.Settings.vBAddictShowToolBarMenu = false;
+            await Config.SaveConfig();
+            mVBaddict.Visible = false;
+            //string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
+            //Process.Start(serverURL);
         }
 
         #endregion

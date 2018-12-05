@@ -37,7 +37,6 @@
             this.btnTab6 = new BadButton();
             this.btnTab2 = new BadButton();
             this.btnTab5 = new BadButton();
-            this.btnTab4 = new BadButton();
             this.btnTab3 = new BadButton();
             this.btnTab1 = new BadButton();
             this.grpMain = new BadGroupBox();
@@ -51,7 +50,6 @@
             this.AppSettingsTheme.Controls.Add(this.btnTab6);
             this.AppSettingsTheme.Controls.Add(this.btnTab2);
             this.AppSettingsTheme.Controls.Add(this.btnTab5);
-            this.AppSettingsTheme.Controls.Add(this.btnTab4);
             this.AppSettingsTheme.Controls.Add(this.btnTab3);
             this.AppSettingsTheme.Controls.Add(this.btnTab1);
             this.AppSettingsTheme.Controls.Add(this.grpMain);
@@ -83,7 +81,7 @@
             this.btnTab7.Location = new System.Drawing.Point(84, 47);
             this.btnTab7.Name = "btnTab7";
             this.btnTab7.Size = new System.Drawing.Size(60, 23);
-            this.btnTab7.TabIndex = 17;
+            this.btnTab7.TabIndex = 10;
             this.btnTab7.Tag = "7";
             this.btnTab7.Text = "Options";
             this.btnTab7.ToolTipText = "Import from WOT Statistics";
@@ -108,7 +106,7 @@
             this.btnTab6.Location = new System.Drawing.Point(214, 47);
             this.btnTab6.Name = "btnTab6";
             this.btnTab6.Size = new System.Drawing.Size(60, 23);
-            this.btnTab6.TabIndex = 15;
+            this.btnTab6.TabIndex = 12;
             this.btnTab6.Tag = "6";
             this.btnTab6.Text = "Replays";
             this.btnTab6.ToolTipText = "Replay Settings";
@@ -122,7 +120,7 @@
             this.btnTab2.Location = new System.Drawing.Point(149, 47);
             this.btnTab2.Name = "btnTab2";
             this.btnTab2.Size = new System.Drawing.Size(60, 23);
-            this.btnTab2.TabIndex = 13;
+            this.btnTab2.TabIndex = 11;
             this.btnTab2.Tag = "2";
             this.btnTab2.Text = "Layout";
             this.btnTab2.ToolTipText = "Layout Settings";
@@ -133,29 +131,15 @@
             this.btnTab5.BlackButton = false;
             this.btnTab5.Checked = false;
             this.btnTab5.Image = null;
-            this.btnTab5.Location = new System.Drawing.Point(409, 47);
+            this.btnTab5.Location = new System.Drawing.Point(344, 47);
             this.btnTab5.Name = "btnTab5";
             this.btnTab5.Size = new System.Drawing.Size(60, 23);
-            this.btnTab5.TabIndex = 12;
+            this.btnTab5.TabIndex = 14;
             this.btnTab5.Tag = "5";
             this.btnTab5.Text = "Import";
             this.btnTab5.ToolTipText = "Import from WOT Statistics";
             this.btnTab5.Visible = false;
             this.btnTab5.Click += new System.EventHandler(this.SelectTab_Click);
-            // 
-            // btnTab4
-            // 
-            this.btnTab4.BlackButton = false;
-            this.btnTab4.Checked = false;
-            this.btnTab4.Image = null;
-            this.btnTab4.Location = new System.Drawing.Point(344, 47);
-            this.btnTab4.Name = "btnTab4";
-            this.btnTab4.Size = new System.Drawing.Size(60, 23);
-            this.btnTab4.TabIndex = 11;
-            this.btnTab4.Tag = "4";
-            this.btnTab4.Text = "vBAddict";
-            this.btnTab4.ToolTipText = "vBAddict uploads";
-            this.btnTab4.Click += new System.EventHandler(this.SelectTab_Click);
             // 
             // btnTab3
             // 
@@ -165,7 +149,7 @@
             this.btnTab3.Location = new System.Drawing.Point(279, 47);
             this.btnTab3.Name = "btnTab3";
             this.btnTab3.Size = new System.Drawing.Size(60, 23);
-            this.btnTab3.TabIndex = 10;
+            this.btnTab3.TabIndex = 13;
             this.btnTab3.Tag = "3";
             this.btnTab3.Text = "WoT";
             this.btnTab3.ToolTipText = "World of Tanks Game Settings";
@@ -221,7 +205,6 @@
         private BadForm AppSettingsTheme;
         private BadButton btnTab2;
         private BadButton btnTab5;
-        private BadButton btnTab4;
         private BadButton btnTab3;
         private BadButton btnTab1;
         private BadGroupBox grpMain;

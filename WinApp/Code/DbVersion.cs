@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 488; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 490; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 
         // The upgrade scripts
@@ -40,6 +40,15 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
+                case 490:
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+
+                case 489:
+                    mssql = "update player set vbaddictUploadActive=0, vbaddictUploadReplayActive=0";
+                    sqlite = mssql;
+                    break;
+
                 case 488:
                     mssql = "DELETE FROM json2dbMapping WHERE jsonMain = 'tanks' "; // cleanup old and no longer-used dossier params
                     sqlite = mssql;
@@ -3173,9 +3182,6 @@ namespace WinApp.Code
                     mssql = "INSERT INTO map (id, name, arena_id) VALUES (77, 'Province (big)', '03_campania_big'); ";
                     sqlite = mssql;
                     break;
-                case 479:
-                    RunDownloadAndUpdateTanks = true;
-                    break;
                 case 484:
                     mssql = "INSERT INTO map (id, name, arena_id) VALUES (84, 'Minsk', '90_minsk'); ";
                     sqlite = mssql;
@@ -3183,9 +3189,6 @@ namespace WinApp.Code
                 case 485:
                     mssql = "INSERT INTO map (id, name, arena_id) VALUES (83, 'Studzianki', '99_poland'); ";
                     sqlite = mssql;
-                    break;
-                case 486:
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
                 case 487:
                     mssql = "INSERT INTO map (id, name, arena_id) VALUES (85, 'Empires Border', '59_asia_great_wall'); ";

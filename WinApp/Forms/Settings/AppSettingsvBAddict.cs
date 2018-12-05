@@ -38,65 +38,69 @@ namespace WinApp.Forms.Settings
             EditChangesApply(false);
         }
 
-        private void TestStatus(bool testing = true)
-        {
-            btnTestConnection.Enabled = !testing;
-            btnUploadDossier.Enabled = !testing;
-            if (testing)
-                this.Cursor = Cursors.WaitCursor;
-            else
-                this.Cursor = Cursors.Default;
-            Refresh();
-        }
+        //private void TestStatus(bool testing = true)
+        //{
+        //    btnTestConnection.Enabled = !testing;
+        //    btnUploadDossier.Enabled = !testing;
+        //    if (testing)
+        //        this.Cursor = Cursors.WaitCursor;
+        //    else
+        //        this.Cursor = Cursors.Default;
+        //    Refresh();
+        //}
 
-        private async void btnTestConnection_Click(object sender, EventArgs e)
+        private void btnTestConnection_Click(object sender, EventArgs e)
         {
-            TestStatus();
-            MsgBox.Show(await vBAddictHelper.TestConnection(), "vBAddict connection test result");
-            TestStatus(false);
+            MsgBox.Show("vBAddict support EOL");
+            //TestStatus();
+            //MsgBox.Show(await vBAddictHelper.TestConnection(), "vBAddict connection test result");
+            //TestStatus(false);
         }
 
         private void btnUploadDossier_Click(object sender, EventArgs e)
         {
-            TestStatus();
-            string dossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
-            string token = txtToken.Text.Trim();
-            string msg = "";
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            bool result = vBAddictHelper.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg, false);
-            sw.Stop();
-            double timeUsed = Convert.ToDouble(sw.ElapsedMilliseconds) / 1000;
-            msg += Environment.NewLine + Environment.NewLine + "Used " + timeUsed.ToString() + " sec" + Environment.NewLine + Environment.NewLine;
-            string msgHeader = "Success uploading dossier file to vBAddict";
-            if (!result)
-                msgHeader = "Error uploading dossier file to vBAddict";
-            MsgBox.Show(msg, msgHeader);
-            TestStatus(false);
+            MsgBox.Show("vBAddict support EOL");
+
+            //TestStatus();
+            //string dossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
+            //string token = txtToken.Text.Trim();
+            //string msg = "";
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
+            //bool result = vBAddictHelper.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg, false);
+            //sw.Stop();
+            //double timeUsed = Convert.ToDouble(sw.ElapsedMilliseconds) / 1000;
+            //msg += Environment.NewLine + Environment.NewLine + "Used " + timeUsed.ToString() + " sec" + Environment.NewLine + Environment.NewLine;
+            //string msgHeader = "Success uploading dossier file to vBAddict";
+            //if (!result)
+            //    msgHeader = "Error uploading dossier file to vBAddict";
+            //MsgBox.Show(msg, msgHeader);
+            //TestStatus(false);
         }
 
 
-        private async void btnSaveSettings_Click(object sender, EventArgs e)
+        private void btnSaveSettings_Click(object sender, EventArgs e)
         {
-            await SaveChanges();
+            SaveChanges();
         }
 
-        public async Task SaveChanges()
+        public void SaveChanges()
         {
-            vBAddictHelper.Settings.Token = txtToken.Text;
-            vBAddictHelper.Settings.UploadActive = chkActivateAutoUpload.Checked;
-            vBAddictHelper.Settings.UploadReplayActive = chkActivateAutoReplayUpload.Checked;
-            await vBAddictHelper.SaveSettings();
-            Config.Settings.vBAddictShowToolBarMenu = chkShowvbAddictIcon.Checked;
-            var result = await Config.SaveConfig();
-            if (!result.Success)
-                MsgBox.Show("Error saving settings: " + result.Message, "Save result");
-            else
-            {
-                btnCancel.Enabled = false;
-                btnSaveSettings.Enabled = false;
-                EditChangesApply(false);
-            }                
+            MsgBox.Show("vBAddict support EOL");
+            //vBAddictHelper.Settings.Token = txtToken.Text;
+            //vBAddictHelper.Settings.UploadActive = chkActivateAutoUpload.Checked;
+            //vBAddictHelper.Settings.UploadReplayActive = chkActivateAutoReplayUpload.Checked;
+            //await vBAddictHelper.SaveSettings();
+            //Config.Settings.vBAddictShowToolBarMenu = chkShowvbAddictIcon.Checked;
+            //var result = await Config.SaveConfig();
+            //if (!result.Success)
+            //    MsgBox.Show("Error saving settings: " + result.Message, "Save result");
+            //else
+            //{
+            //    btnCancel.Enabled = false;
+            //    btnSaveSettings.Enabled = false;
+            //    EditChangesApply(false);
+            //}                
         }
 
 

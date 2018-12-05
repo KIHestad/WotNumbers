@@ -66,10 +66,10 @@ namespace WinApp.Code
             try
             {
                 // Upload prev unsuccsessful uploads to vBAddict 
-                if (vBAddictHelper.Settings.UploadActive)
-                {
-                    await VBAddictBattleResultToUpload();
-                }
+                //if (vBAddictHelper.Settings.UploadActive)
+                //{
+                //    await VBAddictBattleResultToUpload();
+                //}
                 // Get WoT top level battle_result folder for getting dat-files
                 if (Directory.Exists(Path.GetDirectoryName(Config.Settings.battleFilePath)))
                 {
@@ -136,29 +136,29 @@ namespace WinApp.Code
                                 // Convert file to json
                                 var result = await ConvertBattleUsingPython(file);
                                 // Upload battle to vBAddict if OK
-                                if (result.Success && vBAddictHelper.Settings.UploadActive)
-                                {
-                                    try
-                                    {
-                                        bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out string msg);
-                                        if (uploadOK)
-                                            Log.AddToLogBuffer(" > > > Uploaded battle to vBAddict successfully");
-                                        else
-                                        {
-                                            Log.AddToLogBuffer(" > > > Error uploading to vBAddict, copy file for later upload");
-                                            FileInfo fileBattleDatCopied = new FileInfo(file); // the battle file
-                                            if (File.Exists(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name))
-                                            {
-                                                File.Delete(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
-                                            }
-                                            fileBattleDatCopied.CopyTo(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
-                                            Log.AddToLogBuffer(msg);
-                                        }
-                                    } catch (Exception ex)
-                                    {
-                                        await Log.LogToFile(ex, " > > > Error uploading to vBAddict, copy file for later upload");
-                                    }
-                                }
+                                //if (result.Success && vBAddictHelper.Settings.UploadActive)
+                                //{
+                                //    try
+                                //    {
+                                //        bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out string msg);
+                                //        if (uploadOK)
+                                //            Log.AddToLogBuffer(" > > > Uploaded battle to vBAddict successfully");
+                                //        else
+                                //        {
+                                //            Log.AddToLogBuffer(" > > > Error uploading to vBAddict, copy file for later upload");
+                                //            FileInfo fileBattleDatCopied = new FileInfo(file); // the battle file
+                                //            if (File.Exists(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name))
+                                //            {
+                                //                File.Delete(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
+                                //            }
+                                //            fileBattleDatCopied.CopyTo(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
+                                //            Log.AddToLogBuffer(msg);
+                                //        }
+                                //    } catch (Exception ex)
+                                //    {
+                                //        await Log.LogToFile(ex, " > > > Error uploading to vBAddict, copy file for later upload");
+                                //    }
+                                //}
                                 if (result.DeleteFile)
                                 {
                                     // Success, json file is now created, clean up by delete dat file
@@ -219,42 +219,42 @@ namespace WinApp.Code
             return fileOK;
         }
 
-        private async static Task VBAddictBattleResultToUpload()
-        {
-            try
-            {
-                // Loop through all dat-files copied to AppDataBattleResultToUpload folder from previous unsuccesful uploads
-                string[] filesDatCopied = Directory.GetFiles(Config.AppDataBattleResultToUpload, "*.dat");
-                int totFilesDat = filesDatCopied.Count();
-                if (totFilesDat > 0)
-                {
-                    Log.AddToLogBuffer(" > > Start uploading previous unsuccessful vBAddict uploads, " + totFilesDat.ToString() + " battle DAT-files found");
-                    foreach (string file in filesDatCopied)
-                    {
-                        bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out string msg);
-                        if (uploadOK)
-                        {
-                            Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully file: " + file);
-                            // Success, dat file is now created, clean up by delete dat file
-                            FileInfo fileBattleDatCopied = new FileInfo(file); // the original file
-                            fileBattleDatCopied.Delete();
-                            Log.AddToLogBuffer(" > > > File removed from upload folder successfully");
-                        }
-                        else
-                        {
-                            Log.AddToLogBuffer(" > > > Error uploading to vBAddict, keep file for later upload");
-                            FileInfo fileBattleDatCopied = new FileInfo(file); // the battle file
-                            fileBattleDatCopied.CopyTo(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
-                            Log.AddToLogBuffer(msg);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                await Log.LogToFile(ex, "Function for uploaded previous unsuccessful vBAddict uploads failed.");
-            }
-        }
+        //private async static Task VBAddictBattleResultToUpload()
+        //{
+        //    try
+        //    {
+        //        // Loop through all dat-files copied to AppDataBattleResultToUpload folder from previous unsuccesful uploads
+        //        string[] filesDatCopied = Directory.GetFiles(Config.AppDataBattleResultToUpload, "*.dat");
+        //        int totFilesDat = filesDatCopied.Count();
+        //        if (totFilesDat > 0)
+        //        {
+        //            Log.AddToLogBuffer(" > > Start uploading previous unsuccessful vBAddict uploads, " + totFilesDat.ToString() + " battle DAT-files found");
+        //            foreach (string file in filesDatCopied)
+        //            {
+        //                bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out string msg);
+        //                if (uploadOK)
+        //                {
+        //                    Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully file: " + file);
+        //                    // Success, dat file is now created, clean up by delete dat file
+        //                    FileInfo fileBattleDatCopied = new FileInfo(file); // the original file
+        //                    fileBattleDatCopied.Delete();
+        //                    Log.AddToLogBuffer(" > > > File removed from upload folder successfully");
+        //                }
+        //                else
+        //                {
+        //                    Log.AddToLogBuffer(" > > > Error uploading to vBAddict, keep file for later upload");
+        //                    FileInfo fileBattleDatCopied = new FileInfo(file); // the battle file
+        //                    fileBattleDatCopied.CopyTo(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
+        //                    Log.AddToLogBuffer(msg);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await Log.LogToFile(ex, "Function for uploaded previous unsuccessful vBAddict uploads failed.");
+        //    }
+        //}
 
         private class Platoon
         {
@@ -956,21 +956,21 @@ namespace WinApp.Code
                                 battleListSuccess.Add(battleId);
 
                                 // Check for upload replay file to vBAddict
-                                if (vBAddictHelper.Settings.UploadReplayActive)
-                                {
-                                    FileInfo fi = await ReplayHelper.GetReplayFile(battleId);
-                                    if (fi != null)
-                                    {
-                                        string replayFilename = fi.FullName;
-                                        var uploadResult = await vBAddictHelper.UploadReplay(battleId, replayFilename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token);
-                                        if (uploadResult.Success)
-                                            Log.AddToLogBuffer(" > > Uploaded replay to vBAddict successfully: " + uploadResult.Message);
-                                        else
-                                        {
-                                            Log.AddToLogBuffer(" > > Error uploading replay to vBAddict: " + uploadResult.Message);
-                                        }
-                                    }
-                                }
+                                //if (vBAddictHelper.Settings.UploadReplayActive)
+                                //{
+                                //    FileInfo fi = await ReplayHelper.GetReplayFile(battleId);
+                                //    if (fi != null)
+                                //    {
+                                //        string replayFilename = fi.FullName;
+                                //        var uploadResult = await vBAddictHelper.UploadReplay(battleId, replayFilename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token);
+                                //        if (uploadResult.Success)
+                                //            Log.AddToLogBuffer(" > > Uploaded replay to vBAddict successfully: " + uploadResult.Message);
+                                //        else
+                                //        {
+                                //            Log.AddToLogBuffer(" > > Error uploading replay to vBAddict: " + uploadResult.Message);
+                                //        }
+                                //    }
+                                //}
                             }
                         }
                         else

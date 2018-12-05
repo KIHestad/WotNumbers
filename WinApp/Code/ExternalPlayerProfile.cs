@@ -150,10 +150,10 @@ namespace WinApp.Code
             toolStripItem_NoobmeterPlayerLookup.Click += new EventHandler(ToolStripItem_NoobmeterPP_Click);
 
             // vBAddict player profile item
-            ToolStripMenuItem toolStripItem_vBAddictPlayerLookup = new ToolStripMenuItem("vBAddict");
-            toolStripItem_vBAddictPlayerLookup.Click += new EventHandler(ToolStripItem_vBAddictPP_Click);
-            toolStripItem_vBAddictPlayerLookup.ToolTipText = "Profile depends on players uploads to vBAddict";
-            toolStripItem_vBAddictPlayerLookup.Image = image_vBAddict;
+            //ToolStripMenuItem toolStripItem_vBAddictPlayerLookup = new ToolStripMenuItem("vBAddict");
+            //toolStripItem_vBAddictPlayerLookup.Click += new EventHandler(ToolStripItem_vBAddictPP_Click);
+            //toolStripItem_vBAddictPlayerLookup.ToolTipText = "Profile depends on players uploads to vBAddict";
+            //toolStripItem_vBAddictPlayerLookup.Image = image_vBAddict;
 
             // Add cancel events
             dataGridPopup.Opening += new System.ComponentModel.CancelEventHandler(DataGridMainPopup_Opening);
@@ -165,7 +165,7 @@ namespace WinApp.Code
                 toolStripItem_Separator0,
                 toolStripItem_WargamingPlayerLookup,
                 toolStripItem_Separator2,
-                toolStripItem_vBAddictPlayerLookup,
+                //toolStripItem_vBAddictPlayerLookup,
                 toolStripItem_Separator1,
                 toolStripItem_WotLabsPlayerLookup,
 			});
@@ -225,24 +225,24 @@ namespace WinApp.Code
             await WotLabs(playerName);
         }
 
-        private async static void ToolStripItem_vBAddictPP_Click(object sender, EventArgs e)
-        {
-            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
-            string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
-            if (vBAddictPlayersManualLookup)
-            {
-                var searchResult = await vBAddictHelper.SearchForUser(playerAccountId);
-                if (searchResult.Users.Contains(playerAccountId))
-                    await vBAddict(playerName);
-                else
-                    MsgBox.Show("Player has no uploads to vBAddict, profile lookup is cancelled", "Player has no vBAddice profile");
-            }
-            else
-            {
-                await vBAddict(playerName);
-            }
+        //private async static void ToolStripItem_vBAddictPP_Click(object sender, EventArgs e)
+        //{
+        //    string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
+        //    string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
+        //    if (vBAddictPlayersManualLookup)
+        //    {
+        //        var searchResult = await vBAddictHelper.SearchForUser(playerAccountId);
+        //        if (searchResult.Users.Contains(playerAccountId))
+        //            await vBAddict(playerName);
+        //        else
+        //            MsgBox.Show("Player has no uploads to vBAddict, profile lookup is cancelled", "Player has no vBAddice profile");
+        //    }
+        //    else
+        //    {
+        //        await vBAddict(playerName);
+        //    }
                 
-        }
+        //}
 
         private async static void ToolStripItem_NoobmeterPP_Click(object sender, EventArgs e)
         {
@@ -263,29 +263,29 @@ namespace WinApp.Code
             await WoTstats(playerName);
         }
 
-        public async static Task GetvBAddictPlayers(int battleId)
-        {
-            List<string> allPlayers = new List<string>();
-            vBAddictPlayers = new List<string>();
-            string sql =
-                "select battlePlayer.accountId " +
-                "from battlePlayer " +
-                "where battleId=@battleId;";
-            DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-            DataTable dt = await DB.FetchData(sql);
-            // Terminate if none found
-            if (dt.Rows.Count == 0)
-                return;
-            // Get all players
-            foreach (DataRow dr in dt.Rows)
-            {
-                allPlayers.Add(dr["accountId"].ToString());
-            }
-            // Get vBAddict players
-            vBAddictHelper.SearchForuserResult getvBAddictPlayers = await vBAddictHelper.SearchForUser(allPlayers);
-            vBAddictPlayers = getvBAddictPlayers.Users;
-            vBAddictPlayersManualLookup = false;
-        }
+        //public async static Task GetvBAddictPlayers(int battleId)
+        //{
+        //    List<string> allPlayers = new List<string>();
+        //    vBAddictPlayers = new List<string>();
+        //    string sql =
+        //        "select battlePlayer.accountId " +
+        //        "from battlePlayer " +
+        //        "where battleId=@battleId;";
+        //    DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+        //    DataTable dt = await DB.FetchData(sql);
+        //    // Terminate if none found
+        //    if (dt.Rows.Count == 0)
+        //        return;
+        //    // Get all players
+        //    foreach (DataRow dr in dt.Rows)
+        //    {
+        //        allPlayers.Add(dr["accountId"].ToString());
+        //    }
+        //    // Get vBAddict players
+        //    vBAddictHelper.SearchForuserResult getvBAddictPlayers = await vBAddictHelper.SearchForUser(allPlayers);
+        //    vBAddictPlayers = getvBAddictPlayers.Users;
+        //    vBAddictPlayersManualLookup = false;
+        //}
 
     }
 }

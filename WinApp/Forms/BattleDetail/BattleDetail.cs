@@ -48,10 +48,10 @@ namespace WinApp.Forms
 			parentForm = selectedParentForm;
 		}
 
-        private async void BattleDetail_Shown(object sender, EventArgs e)
+        private void BattleDetail_Shown(object sender, EventArgs e)
         {
             // Get vbAddict players
-            await ExternalPlayerProfile.GetvBAddictPlayers(battleId);
+            // await ExternalPlayerProfile.GetvBAddictPlayers(battleId);
         }
 
 		private async void BattleDetail_Load(object sender, EventArgs e)

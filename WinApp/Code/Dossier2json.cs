@@ -254,18 +254,18 @@ namespace WinApp.Code
                         GridView.scheduleGridRefresh = false;
                     }
                     // Upload to vBAddict
-                    if (vBAddictHelper.Settings.UploadActive)
-                    {
-                        string prevDossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
-                        bool uploadOK = vBAddictHelper.UploadDossier(prevDossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out string msg);
-                        if (uploadOK)
-                            Log.AddToLogBuffer(" > Success uploading dossier file to vBAddict");
-                        else
-                        {
-                            Log.AddToLogBuffer(" > Error uploading dossier file to vBAddict");
-                            Log.AddToLogBuffer(msg);
-                        }
-                    }
+                    //if (vBAddictHelper.Settings.UploadActive)
+                    //{
+                    //    string prevDossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
+                    //    bool uploadOK = vBAddictHelper.UploadDossier(prevDossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out string msg);
+                    //    if (uploadOK)
+                    //        Log.AddToLogBuffer(" > Success uploading dossier file to vBAddict");
+                    //    else
+                    //    {
+                    //        Log.AddToLogBuffer(" > Error uploading dossier file to vBAddict");
+                    //        Log.AddToLogBuffer(msg);
+                    //    }
+                    //}
                 }
 				// Done
 				dt.Dispose();

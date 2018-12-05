@@ -25,7 +25,7 @@ namespace WinApp.Forms
 
         private async void Replay_Shown(object sender, EventArgs e)
         {
-            await GetvBAddictUploadInfo();
+            // await GetvBAddictUploadInfo();
             FileInfo fi = await ReplayHelper.GetReplayFile(_battleId);
             if (fi != null)
             {
@@ -39,7 +39,6 @@ namespace WinApp.Forms
                 lblMessage.Text = "Sorry, could not find any replay file for this battle.";
                 btnPlayReplay.Enabled = false;
                 btnShowFolder.Enabled = false;
-                btnUploadReplayTovBAddict.Enabled = false;
             }
         }
 
@@ -55,48 +54,26 @@ namespace WinApp.Forms
                 MsgBox.Show("It seems like World of Tanks is already running. Shut down WoT to be able to play replay", "WoT is running");
             Process.Start("explorer.exe", _filename);
         }
+                
+        //private async Task GetvBAddictUploadInfo()
+        //{
+        //    linkvBAddictUpload.Text = await vBAddictHelper.GetInfoUploadedvBAddict(_battleId);
+        //    toolTipvBAddictLink.SetToolTip(linkvBAddictUpload, "Go to battle report at vBAddict");
+        //}
 
-        private async void btnUploadReplayTovBAddict_Click(object sender, EventArgs e)
-        {
-            btnUploadReplayTovBAddict.Enabled = false;
-            btnUploadReplayTovBAddict.Text = "Uploading...";
-            Refresh();
-            var result = await vBAddictHelper.UploadReplay(_battleId, _filename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token);
-            string msg = "Upload to vBAddict was successful.";
-            if (!result.Success)
-            {
-                msg = "Upload to vBAddict failed with message: " + result.Message;
-                btnUploadReplayTovBAddict.Text = "Upload to vBAddict";
-                btnUploadReplayTovBAddict.Enabled = true;
-                MsgBox.Show(msg, "Upload to vBAddict result", this);
-            }
-            else
-            {
-                btnUploadReplayTovBAddict.Text = "Upload done";
-                await GetvBAddictUploadInfo();
-            }
-            Refresh();
-        }
-
-        private async Task GetvBAddictUploadInfo()
-        {
-            linkvBAddictUpload.Text = await vBAddictHelper.GetInfoUploadedvBAddict(_battleId);
-            toolTipvBAddictLink.SetToolTip(linkvBAddictUpload, "Go to battle report at vBAddict");
-        }
-
-        private void linkvBAddictUpload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (linkvBAddictUpload.Text != "")
-            {
-                // http://www.vbaddict.net/battlereport/user-server/map-nation-tankname-battleId
-                string serverURL = string.Format("http://www.vbaddict.net/battlereport/{0}-{1}/{2}",
-                    Config.Settings.playerName.ToLower(), // user
-                    ExternalPlayerProfile.GetServer, // server
-                    vBAddictHelper.GetReplayURLInfo(_battleId) // map - nation - tankname - battleid
-                    );
-                // string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
-                System.Diagnostics.Process.Start(serverURL);
-            }
-        }
+        //private void linkvBAddictUpload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        //{
+        //    if (linkvBAddictUpload.Text != "")
+        //    {
+        //        // http://www.vbaddict.net/battlereport/user-server/map-nation-tankname-battleId
+        //        string serverURL = string.Format("http://www.vbaddict.net/battlereport/{0}-{1}/{2}",
+        //            Config.Settings.playerName.ToLower(), // user
+        //            ExternalPlayerProfile.GetServer, // server
+        //            vBAddictHelper.GetReplayURLInfo(_battleId) // map - nation - tankname - battleid
+        //            );
+        //        // string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
+        //        System.Diagnostics.Process.Start(serverURL);
+        //    }
+        //}
     }
 }

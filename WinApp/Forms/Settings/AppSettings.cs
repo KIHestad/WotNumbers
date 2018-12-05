@@ -56,7 +56,7 @@ namespace WinApp.Forms.Settings
                 btnTab1.Checked = false;
                 btnTab2.Checked = false;
                 btnTab3.Checked = false;
-                btnTab4.Checked = false;
+                //btnTab4.Checked = false;
                 btnTab5.Checked = false;
                 btnTab6.Checked = false;
                 btnTab7.Checked = false;
@@ -82,10 +82,10 @@ namespace WinApp.Forms.Settings
                         btnTab3.Checked = true;
                         lastSelectedControl = new Forms.Settings.AppSettingsWoT();
                         break;
-                    case AppSettingsHelper.Tabs.vBAddict:
-                        btnTab4.Checked = true;
-                        lastSelectedControl = new Forms.Settings.AppSettingsvBAddict();
-                        break;
+                    //case AppSettingsHelper.Tabs.vBAddict:
+                    //    btnTab4.Checked = true;
+                    //    lastSelectedControl = new Forms.Settings.AppSettingsvBAddict();
+                    //    break;
                     case AppSettingsHelper.Tabs.Import:
                         btnTab5.Checked = true;
                         lastSelectedControl = new Forms.Settings.AppSettingsImport();
@@ -146,10 +146,10 @@ namespace WinApp.Forms.Settings
                     Forms.Settings.AppSettingsWoT controlAppSettingsWoT = (Forms.Settings.AppSettingsWoT)lastSelectedControl;
                     await controlAppSettingsWoT.SaveChanges();
                     break;
-                case AppSettingsHelper.Tabs.vBAddict:
-                    Forms.Settings.AppSettingsvBAddict controlAppSettingsvBAddict = (Forms.Settings.AppSettingsvBAddict)lastSelectedControl;
-                    await controlAppSettingsvBAddict.SaveChanges();
-                    break;
+                //case AppSettingsHelper.Tabs.vBAddict:
+                //    Forms.Settings.AppSettingsvBAddict controlAppSettingsvBAddict = (Forms.Settings.AppSettingsvBAddict)lastSelectedControl;
+                //    await controlAppSettingsvBAddict.SaveChanges();
+                //    break;
                 case AppSettingsHelper.Tabs.Import:
                     break;
                 case AppSettingsHelper.Tabs.Replay:

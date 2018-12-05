@@ -33,8 +33,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Replay));
             this.toolTipvBAddictLink = new System.Windows.Forms.ToolTip(this.components);
             this.badForm1 = new BadForm();
-            this.linkvBAddictUpload = new System.Windows.Forms.LinkLabel();
-            this.btnUploadReplayTovBAddict = new BadButton();
             this.btnPlayReplay = new BadButton();
             this.btnShowFolder = new BadButton();
             this.txtFile = new BadTextBox();
@@ -48,8 +46,6 @@
             // 
             // badForm1
             // 
-            this.badForm1.Controls.Add(this.linkvBAddictUpload);
-            this.badForm1.Controls.Add(this.btnUploadReplayTovBAddict);
             this.badForm1.Controls.Add(this.btnPlayReplay);
             this.badForm1.Controls.Add(this.btnShowFolder);
             this.badForm1.Controls.Add(this.txtFile);
@@ -77,33 +73,6 @@
             this.badForm1.TabIndex = 0;
             this.badForm1.Text = "Replay";
             this.badForm1.TitleHeight = 26;
-            // 
-            // linkvBAddictUpload
-            // 
-            this.linkvBAddictUpload.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkvBAddictUpload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.linkvBAddictUpload.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.linkvBAddictUpload.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkvBAddictUpload.Location = new System.Drawing.Point(18, 189);
-            this.linkvBAddictUpload.Name = "linkvBAddictUpload";
-            this.linkvBAddictUpload.Size = new System.Drawing.Size(199, 23);
-            this.linkvBAddictUpload.TabIndex = 13;
-            this.linkvBAddictUpload.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.linkvBAddictUpload.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkvBAddictUpload.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkvBAddictUpload_LinkClicked);
-            // 
-            // btnUploadReplayTovBAddict
-            // 
-            this.btnUploadReplayTovBAddict.BlackButton = false;
-            this.btnUploadReplayTovBAddict.Checked = false;
-            this.btnUploadReplayTovBAddict.Image = null;
-            this.btnUploadReplayTovBAddict.Location = new System.Drawing.Point(223, 189);
-            this.btnUploadReplayTovBAddict.Name = "btnUploadReplayTovBAddict";
-            this.btnUploadReplayTovBAddict.Size = new System.Drawing.Size(116, 23);
-            this.btnUploadReplayTovBAddict.TabIndex = 9;
-            this.btnUploadReplayTovBAddict.Text = "Upload to vBAddict";
-            this.btnUploadReplayTovBAddict.ToolTipText = "Upload replay to vBAddict";
-            this.btnUploadReplayTovBAddict.Click += new System.EventHandler(this.btnUploadReplayTovBAddict_Click);
             // 
             // btnPlayReplay
             // 
@@ -134,6 +103,7 @@
             // txtFile
             // 
             this.txtFile.HasFocus = false;
+            this.txtFile.HideBorder = false;
             this.txtFile.Image = null;
             this.txtFile.Location = new System.Drawing.Point(90, 130);
             this.txtFile.MultilineAllow = false;
@@ -148,6 +118,7 @@
             // txtPath
             // 
             this.txtPath.HasFocus = false;
+            this.txtPath.HideBorder = false;
             this.txtPath.Image = null;
             this.txtPath.Location = new System.Drawing.Point(90, 100);
             this.txtPath.MultilineAllow = false;
@@ -230,9 +201,7 @@
         private BadLabel lblFile;
         private BadLabel lblFolder;
         private BadLabel lblMessage;
-        private BadButton btnUploadReplayTovBAddict;
         private BadButton btnPlayReplay;
-        private System.Windows.Forms.LinkLabel linkvBAddictUpload;
         private System.Windows.Forms.ToolTip toolTipvBAddictLink;
     }
 }
