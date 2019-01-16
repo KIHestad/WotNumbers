@@ -337,7 +337,12 @@ namespace WinApp.Forms
             Form frm = new Forms.DatePopup(currentDate);
             frm.ShowDialog();
             if (DateTimeHelper.DatePopupSelected)
+            {
                 txtCompletionDate.Text = DateTimeHelper.DatePopupSelectedDate.ToString("d");
+                CalcProgress();
+                dataChanged = true;
+            }
+                
         }
 
         private void chkComplDate_Click(object sender, EventArgs e)
@@ -371,8 +376,8 @@ namespace WinApp.Forms
             txtCompletionDate.Enabled = chkComplDate.Checked;
             txtBattlesPerDay.Enabled = chkBtlPrDay.Checked;
         }
-
-        private void txtCompletionDate_TextChanged(object sender, EventArgs e)
+        
+        private void txtCompletionDate_Leave(object sender, EventArgs e)
         {
             if (!_init)
             {
@@ -383,8 +388,5 @@ namespace WinApp.Forms
                 }
             }
         }
-
-
-
-	}
+    }
 }

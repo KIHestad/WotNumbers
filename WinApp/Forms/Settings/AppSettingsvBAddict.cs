@@ -24,19 +24,19 @@ namespace WinApp.Forms.Settings
 
         private void vBAddict_Load(object sender, EventArgs e)
         {
-            DataBind();
+            // DataBind();
         }
 
-        private void DataBind()
-        {
-            group_vBAddict_Settings.Text = "Settings for current player: " + Config.Settings.playerNameAndServer;
-            chkActivateAutoUpload.Checked = vBAddictHelper.Settings.UploadActive;
-            chkActivateAutoReplayUpload.Checked = vBAddictHelper.Settings.UploadReplayActive;
-            txtToken.Text = vBAddictHelper.Settings.Token;
-            chkShowvbAddictIcon.Checked = Config.Settings.vBAddictShowToolBarMenu;
-            toolTipShowvBAddictIcon.SetToolTip(chkShowvbAddictIcon, "Used to go to your profile on vBAddict website");
-            EditChangesApply(false);
-        }
+        //private void DataBind()
+        //{
+        //    group_vBAddict_Settings.Text = "Settings for current player: " + Config.Settings.playerNameAndServer;
+        //    chkActivateAutoUpload.Checked = vBAddictHelper.Settings.UploadActive;
+        //    chkActivateAutoReplayUpload.Checked = vBAddictHelper.Settings.UploadReplayActive;
+        //    txtToken.Text = vBAddictHelper.Settings.Token;
+        //    chkShowvbAddictIcon.Checked = Config.Settings.vBAddictShowToolBarMenu;
+        //    toolTipShowvBAddictIcon.SetToolTip(chkShowvbAddictIcon, "Used to go to your profile on vBAddict website");
+        //    EditChangesApply(false);
+        //}
 
         //private void TestStatus(bool testing = true)
         //{
@@ -106,7 +106,7 @@ namespace WinApp.Forms.Settings
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            DataBind();
+            //DataBind();
             EditChangesApply(false);
         }
 

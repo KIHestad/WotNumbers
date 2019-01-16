@@ -55,8 +55,20 @@ namespace WinApp.Forms
             LoadConfigDataResult = await Config.GetConfig();
             currentPlayerId = Config.Settings.playerId;
             mainFormPosSize = Config.Settings.posSize;
-            // Get PosSize
-            if (mainFormPosSize != null)
+            // Check if outside of visible area
+            bool withinAnyScreen = false;
+            foreach (var item in Screen.AllScreens)
+            {
+                if (item.WorkingArea.Top <= mainFormPosSize.Top && 
+                    item.WorkingArea.Left <= mainFormPosSize.Left && 
+                    item.WorkingArea.Top + item.WorkingArea.Height >= mainFormPosSize.Top + mainFormPosSize.Height &&
+                    item.WorkingArea.Left + item.WorkingArea.Width >= mainFormPosSize.Left + mainFormPosSize.Width)
+                {
+                    withinAnyScreen = true;
+                }
+            }
+            // Set PosSize
+            if (mainFormPosSize != null && withinAnyScreen)
             {
                 this.Top = mainFormPosSize.Top;
                 this.Left = mainFormPosSize.Left;
@@ -183,7 +195,7 @@ namespace WinApp.Forms
                 Init = false;
 
                 // Show vbAddict Player Profil toolbar if upload activated
-                mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu);
+                // mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu);
 
                 // Create IronPython Engine
                 PythonEngine.CreateEngine();
@@ -230,7 +242,7 @@ namespace WinApp.Forms
                     // Check for res_mods folder
                     await WoThelper.CheckForNewResModsFolder();
                     // Get vBAddict settings
-                    await vBAddictHelper.GetSettings();
+                    // await vBAddictHelper.GetSettings();
                     // Get Images
                     ImageHelper.CreateTankImageTable();
                     await ImageHelper.LoadTankImages();
@@ -324,8 +336,8 @@ namespace WinApp.Forms
                     SetStatus2("Application started with errors");
                 }
 
-                // Set vbAddice icon image
-                ExternalPlayerProfile.image_vBAddict = imageListToolStrip.Images[15];
+                // Set external player icon image
+                // ExternalPlayerProfile.image_vBAddict = imageListToolStrip.Images[15];
                 ExternalPlayerProfile.image_Wargaming = imageListToolStrip.Images[16];
 
                 // Ready 
@@ -4671,7 +4683,7 @@ namespace WinApp.Forms
             SetFormTitle();
             await SetFavListMenu(); // Reload fav list items
             await SetColListMenu(); // Refresh column setup list now
-            mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu); // Show vbAddict Player Profil toolbar if upload activated
+            // mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu); // Show vbAddict Player Profil toolbar if upload activated
 
             // Upload battles to wotnumweb
             await new Services.AppBattleUpload().Run(false);

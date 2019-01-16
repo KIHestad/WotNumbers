@@ -35,10 +35,10 @@ namespace WinApp.Forms
 			System.Diagnostics.Process.Start(Constants.WotNumWebUrl());
 		}
 
-		private void linkVbAddict_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			System.Diagnostics.Process.Start("http://www.vbaddict.net/");
-		}
+		//private void linkVbAddict_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		//{
+		//	System.Diagnostics.Process.Start("http://www.vbaddict.net/");
+		//}
 
 		private async void btnIronPythonEnvironment_Click(object sender, EventArgs e)
 		{

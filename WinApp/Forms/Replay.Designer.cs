@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Replay));
-            this.toolTipvBAddictLink = new System.Windows.Forms.ToolTip(this.components);
             this.badForm1 = new BadForm();
             this.btnPlayReplay = new BadButton();
             this.btnShowFolder = new BadButton();
@@ -202,6 +201,5 @@
         private BadLabel lblFolder;
         private BadLabel lblMessage;
         private BadButton btnPlayReplay;
-        private System.Windows.Forms.ToolTip toolTipvBAddictLink;
     }
 }

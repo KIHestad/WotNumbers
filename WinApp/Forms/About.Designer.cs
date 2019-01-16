@@ -36,8 +36,6 @@
             this.badLabel7 = new BadLabel();
             this.btnIronPythonEnvironment = new BadButton();
             this.linkWotNumbers = new System.Windows.Forms.LinkLabel();
-            this.linkVbAddict = new System.Windows.Forms.LinkLabel();
-            this.badLabel8 = new BadLabel();
             this.badLabel5 = new BadLabel();
             this.badLabel4 = new BadLabel();
             this.lblWN8ver = new BadLabel();
@@ -57,8 +55,6 @@
             this.AboutTheme.Controls.Add(this.badLabel7);
             this.AboutTheme.Controls.Add(this.btnIronPythonEnvironment);
             this.AboutTheme.Controls.Add(this.linkWotNumbers);
-            this.AboutTheme.Controls.Add(this.linkVbAddict);
-            this.AboutTheme.Controls.Add(this.badLabel8);
             this.AboutTheme.Controls.Add(this.badLabel5);
             this.AboutTheme.Controls.Add(this.badLabel4);
             this.AboutTheme.Controls.Add(this.lblWN8ver);
@@ -80,7 +76,7 @@
             this.AboutTheme.MainArea = mainAreaClass1;
             this.AboutTheme.Name = "AboutTheme";
             this.AboutTheme.Resizable = false;
-            this.AboutTheme.Size = new System.Drawing.Size(407, 398);
+            this.AboutTheme.Size = new System.Drawing.Size(407, 300);
             this.AboutTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("AboutTheme.SystemExitImage")));
             this.AboutTheme.SystemMaximizeImage = null;
             this.AboutTheme.SystemMinimizeImage = null;
@@ -117,7 +113,7 @@
             this.btnIronPythonEnvironment.BlackButton = false;
             this.btnIronPythonEnvironment.Checked = false;
             this.btnIronPythonEnvironment.Image = null;
-            this.btnIronPythonEnvironment.Location = new System.Drawing.Point(239, 347);
+            this.btnIronPythonEnvironment.Location = new System.Drawing.Point(238, 247);
             this.btnIronPythonEnvironment.Name = "btnIronPythonEnvironment";
             this.btnIronPythonEnvironment.Size = new System.Drawing.Size(141, 23);
             this.btnIronPythonEnvironment.TabIndex = 21;
@@ -132,42 +128,14 @@
             this.linkWotNumbers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.linkWotNumbers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.linkWotNumbers.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkWotNumbers.Location = new System.Drawing.Point(48, 257);
+            this.linkWotNumbers.Location = new System.Drawing.Point(30, 254);
             this.linkWotNumbers.Name = "linkWotNumbers";
-            this.linkWotNumbers.Size = new System.Drawing.Size(87, 13);
+            this.linkWotNumbers.Size = new System.Drawing.Size(118, 13);
             this.linkWotNumbers.TabIndex = 13;
             this.linkWotNumbers.TabStop = true;
-            this.linkWotNumbers.Text = "wotnumbers.com";
+            this.linkWotNumbers.Text = "http://wotnumbers.com";
             this.linkWotNumbers.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.linkWotNumbers.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkWotNumbers_LinkClicked);
-            // 
-            // linkVbAddict
-            // 
-            this.linkVbAddict.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkVbAddict.AutoSize = true;
-            this.linkVbAddict.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.linkVbAddict.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.linkVbAddict.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkVbAddict.Location = new System.Drawing.Point(48, 316);
-            this.linkVbAddict.Name = "linkVbAddict";
-            this.linkVbAddict.Size = new System.Drawing.Size(93, 13);
-            this.linkVbAddict.TabIndex = 12;
-            this.linkVbAddict.TabStop = true;
-            this.linkVbAddict.Text = "www.vbaddict.net";
-            this.linkVbAddict.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkVbAddict.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkVbAddict_LinkClicked);
-            // 
-            // badLabel8
-            // 
-            this.badLabel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.badLabel8.Dimmed = false;
-            this.badLabel8.Image = null;
-            this.badLabel8.Location = new System.Drawing.Point(29, 290);
-            this.badLabel8.Name = "badLabel8";
-            this.badLabel8.Size = new System.Drawing.Size(351, 23);
-            this.badLabel8.TabIndex = 10;
-            this.badLabel8.Text = "Using dossier- and battle-parsers made by Phalynx at vBAddict ";
-            this.badLabel8.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // badLabel5
             // 
@@ -280,7 +248,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(407, 398);
+            this.ClientSize = new System.Drawing.Size(407, 300);
             this.Controls.Add(this.AboutTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "About";
@@ -303,12 +271,10 @@
 		private BadLabel badLabel1;
 		private BadLabel badLabel3;
 		private BadLabel badLabel2;
-		private BadLabel badLabel8;
 		private BadLabel badLabel5;
 		private BadLabel badLabel4;
 		private BadLabel lblWN8ver;
 		private BadLabel lblDBver;
-		private System.Windows.Forms.LinkLabel linkVbAddict;
 		private System.Windows.Forms.LinkLabel linkWotNumbers;
 		private BadButton btnIronPythonEnvironment;
         private BadLabel lblWN9ver;

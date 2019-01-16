@@ -960,130 +960,136 @@ namespace WinApp.Forms
 
 		private async Task<DataTable> GetDataGridSource(int team, string orderHeaderText = "XP", bool orderAscending = false)
 		{
-			string fortResourcesFields = "";
-			if (showFortResources) fortResourcesFields = ", fortResource as 'IR' ";
-			string enhancedFields = "";
-            string orderBy = GetSortField(orderHeaderText);
-			if (orderBy != "")
-			{
-				orderBy = " ORDER BY " + orderBy;
-				if (!orderAscending)
-					orderBy += " DESC ";
-			}
-            if (showAllColumns)
+            try
             {
-                enhancedFields =
-                    ", '' as separator1 " +
-                    ", killerName as 'Killed By' " +
+                string fortResourcesFields = "";
+			    if (showFortResources) fortResourcesFields = ", fortResource as 'IR' ";
+			    string enhancedFields = "";
+                string orderBy = GetSortField(orderHeaderText);
+			    if (orderBy != "")
+			    {
+				    orderBy = " ORDER BY " + orderBy;
+				    if (!orderAscending)
+					    orderBy += " DESC ";
+			    }
+                if (showAllColumns)
+                {
+                    enhancedFields =
+                        ", '' as separator1 " +
+                        ", killerName as 'Killed By' " +
 
-                    ", '' as separator2 " +
-                    ", damageAssistedTrack as 'Dmg Track' " +
-                    ", damageAssistedRadio as 'Dmg Spot' " +
-                    ", sniperDamageDealt as 'Dmg Sniper' " +
+                        ", '' as separator2 " +
+                        ", damageAssistedTrack as 'Dmg Track' " +
+                        ", damageAssistedRadio as 'Dmg Spot' " +
+                        ", sniperDamageDealt as 'Dmg Sniper' " +
 
-                    ", '' as separator8 " +
-                    ", damageReceived as 'Dmg Received' " +
-                    ", damageBlockedByArmor as 'Dmg Blocked' " +
+                        ", '' as separator8 " +
+                        ", damageReceived as 'Dmg Received' " +
+                        ", damageBlockedByArmor as 'Dmg Blocked' " +
 
-                    ", '' as separator3 " +
-                    ", spotted as 'Spot' " +
-                    ", capturePoints as 'Cap' " +
-                    ", droppedCapturePoints as 'Decap' " +
+                        ", '' as separator3 " +
+                        ", spotted as 'Spot' " +
+                        ", capturePoints as 'Cap' " +
+                        ", droppedCapturePoints as 'Decap' " +
 
-                    ", '' as separator4 " +
-                    ", shots as 'Shots' " +
-                    ", hits as 'Hits' " +
-                    ", pierced as 'Pierced Hits' " +
-                    ", explosionHits as 'Explosion Hits' " +
+                        ", '' as separator4 " +
+                        ", shots as 'Shots' " +
+                        ", hits as 'Hits' " +
+                        ", pierced as 'Pierced Hits' " +
+                        ", explosionHits as 'Explosion Hits' " +
 
-                    ", '' as separator5 " +
-                    ", directHitsReceived as 'Hits Received' " +
-                    ", piercingsReceived as 'Piercings Received' " +
-                    ", explosionHitsReceived as 'Expl Hits Received' " +
-                    ", noDamageShotsReceived as 'No Dmg Hits Received' " +
+                        ", '' as separator5 " +
+                        ", directHitsReceived as 'Hits Received' " +
+                        ", piercingsReceived as 'Piercings Received' " +
+                        ", explosionHitsReceived as 'Expl Hits Received' " +
+                        ", noDamageShotsReceived as 'No Dmg Hits Received' " +
 
-                    ", '' as separator6 " +
-                    ", mileage as 'Milage' " +
-                    ", lifeTime as 'Life Time' " +
+                        ", '' as separator6 " +
+                        ", mileage as 'Milage' " +
+                        ", lifeTime as 'Life Time' " +
 
-                    ", '' as separator7 " +
-                    ", credits as 'Base Credit' " +
+                        ", '' as separator7 " +
+                        ", credits as 'Base Credit' " +
 
-                    ", '' as separator9 " +
-                    ", isPrematureLeave as 'Premature Leave' " +
-                    ", isTeamKiller as 'Team Killer' " +
-                    ", tkills as 'Team Kills' ";
+                        ", '' as separator9 " +
+                        ", isPrematureLeave as 'Premature Leave' " +
+                        ", isTeamKiller as 'Team Killer' " +
+                        ", tkills as 'Team Kills' ";
+                }
+			    string sql =
+                    "select battlePlayer.accountId, battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', tank.hp as 'Tank HP', " + 
+                    "  damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
+				    fortResourcesFields +
+				    enhancedFields +
+				    ", deathReason as 'Dead', tank.id as 'TankId', " + team + " as 'Team' " +
+				    "from battlePlayer inner join " +
+				    "     tank on battlePlayer.tankId = tank.id " +
+				    "where battleId=@battleId and team=@team " +
+				    orderBy;
+			    DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+			    DB.AddWithValue(ref sql, "@team", team, DB.SqlDataType.Int);
+			    DataTable dt = await DB.FetchData(sql);
+			    // Add image as first col
+			    dt.Columns.Add("TankImage", typeof(Image)).SetOrdinal(3);
+			    // Add Total Row
+			    DataRow totalRow = dt.NewRow();
+			    // Set 0 ad deafult
+			    foreach (DataColumn dc in dt.Columns)
+				    if (dc.DataType == System.Type.GetType("System.Int32") || dc.DataType == System.Type.GetType("System.Int64"))
+					    totalRow[dc.ColumnName] = 0;
+			    totalRow["Player"] = "Total";
+			    Bitmap blankImg = new Bitmap(1, 1);
+			    totalRow["TankImage"] = (Image)blankImg;
+			    dt.Rows.Add(totalRow);
+			    int totRow = dt.Rows.Count -1;
+			    // Add images and calc total and more
+			    for (int i = 0; i < dt.Rows.Count - 1; i++)
+			    {
+                    DataRow dr = dt.Rows[i];
+                    // Tank img
+				    int tankId = Convert.ToInt32(dr["TankId"]);
+				    Image img = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.SmallImage);
+				    Bitmap newImage = new Bitmap(92,24);
+				    using (Graphics gr = Graphics.FromImage((Image)newImage))
+				    {
+					    //gr.SmoothingMode = SmoothingMode.HighQuality;
+					    gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+					    //gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+					    gr.DrawImage(img, 0, 0, 92, 24);
+				    }
+				    dr["TankImage"] = (Image)newImage;
+                    // Totals
+				    foreach (DataColumn dc in dt.Columns)
+				    {
+					    if (dc.DataType == System.Type.GetType("System.Int32") || dc.DataType == System.Type.GetType("System.Int64"))
+					    {
+						    if (dc.ColumnName != "Dead" && dr[dc.ColumnName] != DBNull.Value && Convert.ToInt32(dr[dc.ColumnName]) == 0) 
+							    dr[dc.ColumnName] = DBNull.Value;
+						    else
+						    {
+							    int total = Convert.ToInt32(dt.Rows[totRow][dc.ColumnName]);
+							    int addvalue = 0;
+							    if (dr[dc.ColumnName] != DBNull.Value) addvalue = Convert.ToInt32(dr[dc.ColumnName]);
+							    dt.Rows[totRow][dc.ColumnName] = total + addvalue;
+						    }
+					    }
+				    }
+			    }
+			    // Change total row type
+			    dt.Rows[totRow]["Dead"] = -99; // Indicates total row, dark background
+			    dt.AcceptChanges();
+			    return dt;
             }
-			string sql =
-                "select battlePlayer.accountId, '' as 'vBAddict', battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', tank.hp as 'Tank HP', " + 
-                "  damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
-				fortResourcesFields +
-				enhancedFields +
-				", deathReason as 'Dead', tank.id as 'TankId', " + team + " as 'Team' " +
-				"from battlePlayer inner join " +
-				"     tank on battlePlayer.tankId = tank.id " +
-				"where battleId=@battleId and team=@team " +
-				orderBy;
-			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@team", team, DB.SqlDataType.Int);
-			DataTable dt = await DB.FetchData(sql);
-			// Add image as first col
-			dt.Columns.Add("TankImage", typeof(Image)).SetOrdinal(3);
-			// Add Total Row
-			DataRow totalRow = dt.NewRow();
-			// Set 0 ad deafult
-			foreach (DataColumn dc in dt.Columns)
-				if (dc.DataType == System.Type.GetType("System.Int32") || dc.DataType == System.Type.GetType("System.Int64"))
-					totalRow[dc.ColumnName] = 0;
-			totalRow["Player"] = "Total";
-			Bitmap blankImg = new Bitmap(1, 1);
-			totalRow["TankImage"] = (Image)blankImg;
-			dt.Rows.Add(totalRow);
-			int totRow = dt.Rows.Count -1;
-			// Add images and calc total and more
-			for (int i = 0; i < dt.Rows.Count - 1; i++)
-			{
-                DataRow dr = dt.Rows[i];
-                // Tank img
-				int tankId = Convert.ToInt32(dr["TankId"]);
-				Image img = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.SmallImage);
-				Bitmap newImage = new Bitmap(92,24);
-				using (Graphics gr = Graphics.FromImage((Image)newImage))
-				{
-					//gr.SmoothingMode = SmoothingMode.HighQuality;
-					gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-					//gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-					gr.DrawImage(img, 0, 0, 92, 24);
-				}
-				dr["TankImage"] = (Image)newImage;
-                // vbAddict
-                if (ExternalPlayerProfile.vBAddictPlayers.Contains(dr["accountId"].ToString()))
-                    dr["vBAddict"] = "*";
-                // Totals
-				foreach (DataColumn dc in dt.Columns)
-				{
-					if (dc.DataType == System.Type.GetType("System.Int32") || dc.DataType == System.Type.GetType("System.Int64"))
-					{
-						if (dc.ColumnName != "Dead" && dr[dc.ColumnName] != DBNull.Value && Convert.ToInt32(dr[dc.ColumnName]) == 0) 
-							dr[dc.ColumnName] = DBNull.Value;
-						else
-						{
-							int total = Convert.ToInt32(dt.Rows[totRow][dc.ColumnName]);
-							int addvalue = 0;
-							if (dr[dc.ColumnName] != DBNull.Value) addvalue = Convert.ToInt32(dr[dc.ColumnName]);
-							dt.Rows[totRow][dc.ColumnName] = total + addvalue;
-						}
-					}
-				}
-			}
-			// Change total row type
-			dt.Rows[totRow]["Dead"] = -99; // Indicates total row, dark background
-			dt.AcceptChanges();
-			return dt;
-		}
+            catch (Exception ex)
+            {
+                MsgBox.Show("Error occured reading team data. " + ex.Message);
+                return null;
+            }
 
-        
-		private void FormatDataGrid(DataGridView dgv)
+        }
+
+
+        private void FormatDataGrid(DataGridView dgv)
 		{
 			// Deselect
 			dgv.ClearSelection();
@@ -1096,8 +1102,7 @@ namespace WinApp.Forms
 			dgv.Columns["Team"].Visible = false;
             dgv.Columns["Tank HP"].Visible = false;
             dgv.Columns["TankImage"].HeaderText = "";
-            dgv.Columns["vBAddict"].HeaderText = "";
-			// Left align text col
+            // Left align text col
 			dgv.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dgv.Columns["Clan"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dgv.Columns["Player"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -1124,8 +1129,7 @@ namespace WinApp.Forms
 			// col fixed width
 			dgv.Columns["TankImage"].Width = 60;
 			dgv.Columns["TankImage"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dgv.Columns["vBAddict"].Width = 12;
-			// Calc width for rest of fields
+            // Calc width for rest of fields
 			if (!showAllColumns)
 			{
 				// left part = player, clan, tank img, tank

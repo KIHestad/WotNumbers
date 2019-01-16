@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 490; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 501; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 
         // The upgrade scripts
@@ -40,6 +40,17 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
+                case 501:
+                    mssql = "UPDATE map SET id=54 WHERE ID=85; ";
+                    sqlite = mssql;
+                    break;
+
+                case 500:
+                    mssql =
+                        "INSERT INTO map (id, name, arena_id) VALUES (86, 'Hinterland', '222_er_clime'); ";
+                    sqlite = mssql;
+                    break;
+
                 case 490:
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
@@ -2916,19 +2927,19 @@ namespace WinApp.Code
                     sqlite = mssql;
                     break;
                 case 415:
-                    if (vBAddictHelper.Settings.Token != "")
-                    {
-                        mssql = 
-                            "UPDATE player " +
-                            "SET vbaddictToken=@vbaddictToken, vbaddictUploadActive=@vbaddictUploadActive, vbaddictUploadReplayActive=@vbaddictUploadReplayActive " +
-                            "WHERE id=@id;";
-                        DB.AddWithValue(ref mssql, "@vbaddictToken", vBAddictHelper.Settings.Token, DB.SqlDataType.VarChar);
-                        DB.AddWithValue(ref mssql, "@vbaddictUploadActive", vBAddictHelper.Settings.UploadActive, DB.SqlDataType.Boolean);
-                        DB.AddWithValue(ref mssql, "@vbaddictUploadReplayActive", vBAddictHelper.Settings.UploadReplayActive, DB.SqlDataType.Boolean);
-                        DB.AddWithValue(ref mssql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
-                        sqlite = mssql;
-                    }
-                    break;
+                    //if (vBAddictHelper.Settings.Token != "")
+                    //{
+                    //    mssql = 
+                    //        "UPDATE player " +
+                    //        "SET vbaddictToken=@vbaddictToken, vbaddictUploadActive=@vbaddictUploadActive, vbaddictUploadReplayActive=@vbaddictUploadReplayActive " +
+                    //        "WHERE id=@id;";
+                    //    DB.AddWithValue(ref mssql, "@vbaddictToken", vBAddictHelper.Settings.Token, DB.SqlDataType.VarChar);
+                    //    DB.AddWithValue(ref mssql, "@vbaddictUploadActive", vBAddictHelper.Settings.UploadActive, DB.SqlDataType.Boolean);
+                    //    DB.AddWithValue(ref mssql, "@vbaddictUploadReplayActive", vBAddictHelper.Settings.UploadReplayActive, DB.SqlDataType.Boolean);
+                    //    DB.AddWithValue(ref mssql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
+                    //    sqlite = mssql;
+                    //}
+                    //break;
                 case 416:
                     Config.Settings.res_mods_subfolder = "";
                     await Config.SaveConfig();

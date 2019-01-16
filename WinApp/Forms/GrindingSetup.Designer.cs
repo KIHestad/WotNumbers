@@ -145,6 +145,7 @@
             // txtCompletionDate
             // 
             this.txtCompletionDate.HasFocus = false;
+            this.txtCompletionDate.HideBorder = false;
             this.txtCompletionDate.Image = null;
             this.txtCompletionDate.Location = new System.Drawing.Point(474, 202);
             this.txtCompletionDate.MultilineAllow = false;
@@ -155,11 +156,12 @@
             this.txtCompletionDate.TabIndex = 29;
             this.txtCompletionDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtCompletionDate.ToolTipText = "";
-            this.txtCompletionDate.TextChanged += new System.EventHandler(this.txtCompletionDate_TextChanged);
+            this.txtCompletionDate.Leave += new System.EventHandler(this.txtCompletionDate_Leave);
             // 
             // txtBattlesPerDay
             // 
             this.txtBattlesPerDay.HasFocus = false;
+            this.txtBattlesPerDay.HideBorder = false;
             this.txtBattlesPerDay.Image = null;
             this.txtBattlesPerDay.Location = new System.Drawing.Point(474, 231);
             this.txtBattlesPerDay.MultilineAllow = false;
@@ -266,6 +268,7 @@
             // txtProgressXP
             // 
             this.txtProgressXP.HasFocus = false;
+            this.txtProgressXP.HideBorder = false;
             this.txtProgressXP.Image = null;
             this.txtProgressXP.Location = new System.Drawing.Point(141, 259);
             this.txtProgressXP.MultilineAllow = false;
@@ -285,6 +288,7 @@
             // 
             this.txtRemainingXP.Enabled = false;
             this.txtRemainingXP.HasFocus = false;
+            this.txtRemainingXP.HideBorder = false;
             this.txtRemainingXP.Image = null;
             this.txtRemainingXP.Location = new System.Drawing.Point(141, 287);
             this.txtRemainingXP.MultilineAllow = false;
@@ -302,6 +306,7 @@
             // 
             this.txtWinRate.Enabled = false;
             this.txtWinRate.HasFocus = false;
+            this.txtWinRate.HideBorder = false;
             this.txtWinRate.Image = null;
             this.txtWinRate.Location = new System.Drawing.Point(314, 123);
             this.txtWinRate.MultilineAllow = false;
@@ -331,6 +336,7 @@
             // 
             this.txtWins.Enabled = false;
             this.txtWins.HasFocus = false;
+            this.txtWins.HideBorder = false;
             this.txtWins.Image = null;
             this.txtWins.Location = new System.Drawing.Point(314, 94);
             this.txtWins.MultilineAllow = false;
@@ -347,6 +353,7 @@
             // 
             this.txtBattles.Enabled = false;
             this.txtBattles.HasFocus = false;
+            this.txtBattles.HideBorder = false;
             this.txtBattles.Image = null;
             this.txtBattles.Location = new System.Drawing.Point(314, 65);
             this.txtBattles.MultilineAllow = false;
@@ -415,6 +422,7 @@
             // 
             this.txtRestDays.Enabled = false;
             this.txtRestDays.HasFocus = false;
+            this.txtRestDays.HideBorder = false;
             this.txtRestDays.Image = null;
             this.txtRestDays.Location = new System.Drawing.Point(527, 288);
             this.txtRestDays.MultilineAllow = false;
@@ -445,6 +453,7 @@
             // 
             this.txtRestBattles.Enabled = false;
             this.txtRestBattles.HasFocus = false;
+            this.txtRestBattles.HideBorder = false;
             this.txtRestBattles.Image = null;
             this.txtRestBattles.Location = new System.Drawing.Point(527, 260);
             this.txtRestBattles.MultilineAllow = false;
@@ -513,6 +522,7 @@
             // txtTargetXP
             // 
             this.txtTargetXP.HasFocus = false;
+            this.txtTargetXP.HideBorder = false;
             this.txtTargetXP.Image = null;
             this.txtTargetXP.Location = new System.Drawing.Point(141, 231);
             this.txtTargetXP.MultilineAllow = false;
@@ -530,6 +540,7 @@
             // txtGrindComment
             // 
             this.txtGrindComment.HasFocus = false;
+            this.txtGrindComment.HideBorder = false;
             this.txtGrindComment.Image = null;
             this.txtGrindComment.Location = new System.Drawing.Point(141, 202);
             this.txtGrindComment.MultilineAllow = false;
@@ -572,6 +583,7 @@
             // 
             this.txtTotalXP.Enabled = false;
             this.txtTotalXP.HasFocus = false;
+            this.txtTotalXP.HideBorder = false;
             this.txtTotalXP.Image = null;
             this.txtTotalXP.Location = new System.Drawing.Point(141, 123);
             this.txtTotalXP.MultilineAllow = false;
@@ -588,6 +600,7 @@
             // 
             this.txtMaxXp.Enabled = false;
             this.txtMaxXp.HasFocus = false;
+            this.txtMaxXp.HideBorder = false;
             this.txtMaxXp.Image = null;
             this.txtMaxXp.Location = new System.Drawing.Point(141, 94);
             this.txtMaxXp.MultilineAllow = false;
@@ -604,6 +617,7 @@
             // 
             this.txtAvgXP.Enabled = false;
             this.txtAvgXP.HasFocus = false;
+            this.txtAvgXP.HideBorder = false;
             this.txtAvgXP.Image = null;
             this.txtAvgXP.Location = new System.Drawing.Point(141, 65);
             this.txtAvgXP.MultilineAllow = false;

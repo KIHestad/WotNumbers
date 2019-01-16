@@ -21,35 +21,35 @@ namespace WinApp.Code
 	{
 		// private static int timeout = 15000; // milliseconds
 
-        public static SettingsItem Settings = new SettingsItem(); 
+        //public static SettingsItem Settings = new SettingsItem(); 
 
-        public class SettingsItem
-        {
-            public string Token { get; set; }
-            public bool UploadActive { get; set; }
-            public bool UploadReplayActive { get; set; }
-        }
+        //public class SettingsItem
+        //{
+        //    public string Token { get; set; }
+        //    public bool UploadActive { get; set; }
+        //    public bool UploadReplayActive { get; set; }
+        //}
 
-        public async static Task GetSettings()
-        {
-            string sql = "SELECT * FROM player WHERE id=@id";
-            DB.AddWithValue(ref sql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
-            DataTable dt = await DB.FetchData(sql);
-            string token = "";
-            bool uploadActive = false;
-            bool uploadReplayActive = false;
-            if (dt.Rows.Count > 0)
-            {
-                DataRow dr = dt.Rows[0];
-                if (dr["vbaddictToken"] != DBNull.Value)
-                    token = dr["vbaddictToken"].ToString();
-                uploadActive = Convert.ToBoolean(dr["vbaddictUploadActive"]);
-                uploadReplayActive = Convert.ToBoolean(dr["vbaddictUploadReplayActive"]);
-            }
-            Settings.Token = token;
-            Settings.UploadActive = uploadActive;
-            Settings.UploadReplayActive = uploadReplayActive;
-        }
+        //public async static Task GetSettings()
+        //{
+        //    string sql = "SELECT * FROM player WHERE id=@id";
+        //    DB.AddWithValue(ref sql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
+        //    DataTable dt = await DB.FetchData(sql);
+        //    string token = "";
+        //    bool uploadActive = false;
+        //    bool uploadReplayActive = false;
+        //    if (dt.Rows.Count > 0)
+        //    {
+        //        DataRow dr = dt.Rows[0];
+        //        if (dr["vbaddictToken"] != DBNull.Value)
+        //            token = dr["vbaddictToken"].ToString();
+        //        uploadActive = Convert.ToBoolean(dr["vbaddictUploadActive"]);
+        //        uploadReplayActive = Convert.ToBoolean(dr["vbaddictUploadReplayActive"]);
+        //    }
+        //    Settings.Token = token;
+        //    Settings.UploadActive = uploadActive;
+        //    Settings.UploadReplayActive = uploadReplayActive;
+        //}
 
         //public async static Task SaveSettings()
         //{

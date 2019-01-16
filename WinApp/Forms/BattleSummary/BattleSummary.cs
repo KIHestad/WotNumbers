@@ -53,8 +53,8 @@ namespace WinApp.Forms
 		private async void BattleSummary_Load(object sender, EventArgs e)
 		{
 			// Reset list of valid vBAddict players, forces lookup
-            ExternalPlayerProfile.vBAddictPlayers = null;
-            ExternalPlayerProfile.vBAddictPlayersManualLookup = true;
+            //ExternalPlayerProfile.vBAddictPlayers = null;
+            //ExternalPlayerProfile.vBAddictPlayersManualLookup = true;
 
             // Create battle filter
             if (battleCountFilter)

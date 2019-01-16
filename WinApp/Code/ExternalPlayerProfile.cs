@@ -12,7 +12,7 @@ namespace WinApp.Code
 {
     public class ExternalPlayerProfile
     {
-        public static System.Drawing.Image image_vBAddict { get; set; }
+        //public static System.Drawing.Image image_vBAddict { get; set; }
         public static System.Drawing.Image image_Wargaming { get; set; }
         
         public static string GetServer
@@ -62,18 +62,18 @@ namespace WinApp.Code
             }
         }
 
-        public async static Task vBAddict(string playerName)
-        {
-            try
-            {
-                string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", playerName.ToLower(), GetServer);
-                System.Diagnostics.Process.Start(serverURL);
-            }
-            catch (Exception ex)
-            {
-                await Log.LogToFile(ex, "Error on showing player profile on vBAddict website.");
-            }
-        }
+        //public async static Task vBAddict(string playerName)
+        //{
+        //    try
+        //    {
+        //        string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", playerName.ToLower(), GetServer);
+        //        System.Diagnostics.Process.Start(serverURL);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await Log.LogToFile(ex, "Error on showing player profile on vBAddict website.");
+        //    }
+        //}
 
         public async static Task Noobmeter(string playerName, string playerAccountId)
         {
@@ -84,7 +84,7 @@ namespace WinApp.Code
             }
             catch (Exception ex)
             {
-                await Log.LogToFile(ex, "Error on showing player profile on vBAddict website.");
+                await Log.LogToFile(ex, "Error on showing player profile on Noobmeter website.");
             }
         }
 
@@ -187,18 +187,18 @@ namespace WinApp.Code
         private static void DataGridMainPopup_Opening(object sender, CancelEventArgs e)
         {
             // Check if vBAddict PP exists
-            if (!vBAddictPlayersManualLookup)
-            {
-                // Check used prefilled list of users
-                ContextMenuStrip cms = (ContextMenuStrip)sender;
-                bool vBAddictEnabled = true;
-                vBAddictEnabled = vBAddictPlayers.Contains(dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString());
-                foreach (ToolStripItem item in cms.Items)
-                {
-                    if (item.Text == "vBAddict")
-                        item.Enabled = vBAddictEnabled;
-                }
-            }
+            //if (!vBAddictPlayersManualLookup)
+            //{
+            //    // Check used prefilled list of users
+            //    ContextMenuStrip cms = (ContextMenuStrip)sender;
+            //    bool vBAddictEnabled = true;
+            //    vBAddictEnabled = vBAddictPlayers.Contains(dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString());
+            //    foreach (ToolStripItem item in cms.Items)
+            //    {
+            //        if (item.Text == "vBAddict")
+            //            item.Enabled = vBAddictEnabled;
+            //    }
+            //}
 
             // Close if no valid cell is clicked
             if (dataGridRightClickRow == -1)
@@ -209,8 +209,8 @@ namespace WinApp.Code
 
         public static DataGridView dataGridRightClick { get; set; }
         public static int dataGridRightClickRow { get; set; }
-        public static List<string> vBAddictPlayers { get; set; }
-        public static bool vBAddictPlayersManualLookup { get; set; }
+        //public static List<string> vBAddictPlayers { get; set; }
+        //public static bool vBAddictPlayersManualLookup { get; set; }
 
         private async static void ToolStripItem_WargamingPP_Click(object sender, EventArgs e)
         {

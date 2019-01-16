@@ -57,11 +57,13 @@ namespace WinApp.Code
                     int testBtlPerDay = 1;
                     int testRealAvgXP = CalcRealAvgXP(progress.Battles.ToString(), progress.Wins.ToString(), progress.TotalXP.ToString(), progress.AvgXP.ToString(), testBtlPerDay.ToString());
                     int testRestBattles = CalcRestBattles(progress.RestXP, testRealAvgXP);
-                    while (CalcRestDays(progress.RestXP, testRealAvgXP, testBtlPerDay) > maxRestDays)
+                    int testGetTestResult = CalcRestDays(progress.RestXP, testRealAvgXP, testBtlPerDay);
+                    while (testGetTestResult > maxRestDays)
                     {
                         testBtlPerDay++;
                         testRealAvgXP = CalcRealAvgXP(progress.Battles.ToString(), progress.Wins.ToString(), progress.TotalXP.ToString(), progress.AvgXP.ToString(), testBtlPerDay.ToString());
                         testRestBattles = CalcRestBattles(progress.RestXP, testRealAvgXP);
+                        testGetTestResult = CalcRestDays(progress.RestXP, testRealAvgXP, testBtlPerDay);
                     }
                     progress.BtlPerDay = testBtlPerDay;
                 }
@@ -69,10 +71,13 @@ namespace WinApp.Code
             // Calc values dependent of battles per day
             progress.RealAvgXP = CalcRealAvgXP(progress.Battles.ToString(), progress.Wins.ToString(), progress.TotalXP.ToString(), progress.AvgXP.ToString(), progress.BtlPerDay.ToString());
             progress.RestBattles = CalcRestBattles(progress.RestXP, progress.RealAvgXP);
-            // Calc completion date and rest days according to progress type
             progress.RestDays = CalcRestDays(progress.RestXP, progress.RealAvgXP, progress.BtlPerDay);
-            DateTime newCompleationDate = DateTime.Now.AddDays(progress.RestDays);
-            progress.CompleationDate = new DateTime(newCompleationDate.Year, newCompleationDate.Month, newCompleationDate.Day);
+            // Calc completion date and rest days according to progress type if not selected completion data for calculating battles per day to reach goal
+            if (progress.ProgressGoal == 0)
+            {
+                DateTime newCompleationDate = DateTime.Now.AddDays(progress.RestDays);
+                progress.CompleationDate = new DateTime(newCompleationDate.Year, newCompleationDate.Month, newCompleationDate.Day);
+            }
             return progress;
         }
 

@@ -98,7 +98,7 @@ namespace WinApp.Forms.Settings
                 Config.Settings.playerId = playerId;
             }
             // vBAddict settings
-            await vBAddictHelper.GetSettings();
+            // await vBAddictHelper.GetSettings();
             // Save
             ConfigData.Result result = await Config.SaveConfig();
             if (result.Success)
