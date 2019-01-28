@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 501; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 502; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 
         // The upgrade scripts
@@ -40,6 +40,10 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
+                case 502:
+                    await ColListSystemDefault.NewSystemBattleColList();
+                    break;
+
                 case 501:
                     mssql = "UPDATE map SET id=54 WHERE ID=85; ";
                     sqlite = mssql;
@@ -2777,9 +2781,6 @@ namespace WinApp.Code
                     break;
                 case 383:
                     await ColListSystemDefault.NewSystemTankColList();
-                    break;
-                case 384:
-                    await ColListSystemDefault.NewSystemBattleColList();
                     break;
                 case 385:
                     mssql = "ALTER TABLE playerTankBattle ADD wn9maxhist FLOAT NOT NULL default 0; ";
