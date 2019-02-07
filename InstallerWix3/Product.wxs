@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.23.3"?>
+<?define ProductVersion = "0.24.2"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -397,6 +397,9 @@
       </Component>
       <Component Id="cmpBRS_36" Directory="INSTALLFOLDER_Dossier2json" Guid="{025BFC09-0295-468C-83BC-D691A077D56B}">
         <File Id="filBRS_36" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_36.py" />
+      </Component>
+      <Component Id="cmpBRS_37" Directory="INSTALLFOLDER_Dossier2json" Guid="{720D6F53-57D2-4A1F-BA35-C79B6DB6BCCE}">
+        <File Id="filBRS_37" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_37.py" />
       </Component>
 
       <!-- Maps and tanks, not in use -->

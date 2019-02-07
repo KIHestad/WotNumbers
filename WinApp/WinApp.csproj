@@ -1015,6 +1015,7 @@
     <Content Include="DevDocs\Img\InfoPanel\bg4_72px.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg5_72px.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg6_72px.png" />
+    <Content Include="DevDocs\Img\Map Images.txt" />
     <Content Include="DevDocs\Img\SystemImages\checkboxcheck.png" />
     <Content Include="DevDocs\Img\SystemImages\dropdownarrrow.png" />
     <Content Include="DevDocs\Img\SystemImages\indicator_down.png" />

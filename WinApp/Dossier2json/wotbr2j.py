@@ -43,7 +43,7 @@ VEH_INTERACTION_DETAILS_TYPES = dict(((x[0], x[1]) for x in VEH_INTERACTION_DETA
   
   
 parser = dict()
-parser['version'] = "1.3.0.0"
+parser['version'] = "1.4.0.0"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
 cachefile = None #ironpython modified
@@ -120,7 +120,7 @@ def main():
     # Set last struct version, loop from highest to lowest version until valid #
     ############################################################################
 
-    parser['battleResultVersion'] = 36
+    parser['battleResultVersion'] = 37
 
     # Process file
     while parser['battleResultVersion'] > 21:

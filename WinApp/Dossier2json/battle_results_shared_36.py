@@ -235,7 +235,7 @@ _AVATAR_BASE_PRIVATE_RESULTS = Meta((
  'winnerIfDraw', int, 0, None, 'skip'), (
  'isPrematureLeave', bool, False, None, 'skip'), (
  'watchedBattleToTheEnd', bool, False, None, 'skip'), (
- 'squadBonusInfo', None, None,None, 'skip'), (
+ 'squadBonusInfo', None, None, None, 'skip'), (
  'rankChange', int, 0, None, 'skip'), (
  'accRank', tuple, (0, 0), None, 'skip'), (
  'vehRank', tuple, (0, 0), None, 'skip'), (
@@ -444,8 +444,7 @@ class _VehicleInteractionDetailsItem(object):
         return self.__values[self.__offset + VEH_INTERACTION_DETAILS_INDICES[key]]
 
     def __setitem__(self, key, value):
-        self.__values[self.__offset + VEH_INTERACTION_DETAILS_INDICES[key]] = min(
-            self.__fmt2py(VEH_INTERACTION_DETAILS_TYPES[key])(value), VEH_INTERACTION_DETAILS_MAX_VALUES[key])
+        self.__values[self.__offset + VEH_INTERACTION_DETAILS_INDICES[key]] = min(self.__fmt2py(VEH_INTERACTION_DETAILS_TYPES[key])(value), VEH_INTERACTION_DETAILS_MAX_VALUES[key])
 
     def __str__(self):
         return str(dict(self))
@@ -502,8 +501,7 @@ class VehicleInteractionDetails(object):
             flatIDs.append(uniqueID[1])
 
         try:
-            packed = struct.pack(('<%dI' % (2 * count)), *flatIDs) + struct.pack(
-                ('<' + VEH_INTERACTION_DETAILS_LAYOUT * count), *self.__values)
+            packed = struct.pack(('<%dI' % (2 * count)), *flatIDs) + struct.pack(('<' + VEH_INTERACTION_DETAILS_LAYOUT * count), *self.__values)
         except Exception as e:
             #from debug_utils import LOG_ERROR
             #LOG_ERROR('PACKING EXCEPTION', e, str(self))

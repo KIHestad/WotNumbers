@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 502; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 505; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 
         // The upgrade scripts
@@ -40,6 +40,18 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
+                case 505:
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+
+                case 504:
+                    mssql = 
+                        "UPDATE map SET arena_id='95_lost_city' WHERE ID=68; " +
+                        "INSERT INTO map (id, name, arena_id) VALUES (87, 'Ghost Town', '95_lost_city_ctf'); ";
+                    sqlite = mssql;
+                    RunDownloadAndUpdateTanks = true;
+                    break;
+
                 case 502:
                     await ColListSystemDefault.NewSystemBattleColList();
                     break;
@@ -53,10 +65,6 @@ namespace WinApp.Code
                     mssql =
                         "INSERT INTO map (id, name, arena_id) VALUES (86, 'Hinterland', '222_er_clime'); ";
                     sqlite = mssql;
-                    break;
-
-                case 490:
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
 
                 case 489:
@@ -3205,7 +3213,6 @@ namespace WinApp.Code
                 case 487:
                     mssql = "INSERT INTO map (id, name, arena_id) VALUES (85, 'Empires Border', '59_asia_great_wall'); ";
                     sqlite = mssql;
-                    RunDownloadAndUpdateTanks = true;
                     break;
                 
 
