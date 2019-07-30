@@ -991,10 +991,10 @@ namespace WinApp.Code
                 {
                     // Get damageRank new and old values
                     double rankDmgOld = 0;
-                    if (playerTankBattleOldRow["damageRating"] != null)
+                    if (playerTankBattleOldRow["damageRating"] != DBNull.Value)
                         rankDmgOld = Convert.ToDouble(playerTankBattleOldRow["damageRating"]);
                     double rankDmg = 0;
-                    if (playerTankBattleNewRow["damageRating"] != null)
+                    if (playerTankBattleNewRow["damageRating"] != DBNull.Value)
                         rankDmg = Convert.ToDouble(playerTankBattleNewRow["damageRating"]);
                     else
                         rankDmg = rankDmgOld; // If not able to fetch damageRank for new battle, use previous one - special fix for tankversion99 with problem getting this value 

@@ -43,7 +43,7 @@ VEH_INTERACTION_DETAILS_TYPES = dict(((x[0], x[1]) for x in VEH_INTERACTION_DETA
   
   
 parser = dict()
-parser['version'] = "1.4.0.0"
+parser['version'] = "1.5.1.3"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
 cachefile = None #ironpython modified
@@ -120,7 +120,7 @@ def main():
     # Set last struct version, loop from highest to lowest version until valid #
     ############################################################################
 
-    parser['battleResultVersion'] = 37
+    parser['battleResultVersion'] = 40
 
     # Process file
     while parser['battleResultVersion'] > 21:
@@ -198,7 +198,9 @@ def convertToFullForm(compactForm, battleResultVersion):
                 
                 if len(battle_results_data.AVATAR_FULL_RESULTS) + 1 != len(avatarResults):
                     # Wrong number of items in lists, ie wrong parser version
-                    return 0, {'error': 'Wrong number of items in avatar result list, ie wrong parser version'}
+                    tempMsg = '(expecting:' + str(len(battle_results_data.AVATAR_FULL_RESULTS) + 1) 
+                    tempMsg += ' - found:' + str(len(avatarResults)) + ')'
+                    return 0, {'error': 'Wrong number of items in avatar result list ' + tempMsg}
                 personal['avatar'] = avatarResults = battle_results_data.AVATAR_FULL_RESULTS.unpackWthoutChecksum(avatarResults)
 
                 for vehTypeCompDescr, ownResults in fullResultsList.iteritems():

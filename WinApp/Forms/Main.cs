@@ -1399,7 +1399,11 @@ namespace WinApp.Forms
                 catch (Exception ex)
                 {
                     await Log.LogToFile(ex, "Error on: " + logText);
-                    MsgBox.Show("Error activation dossier or battle listners, please check your application settings", "Error in dossier file path", this);
+                    MsgBox.Show(
+                        "Error activation dossier or battle listners, please check your application settings." + Environment.NewLine + Environment.NewLine +
+                        ex.Message, 
+                        "Error in dossier file path", 
+                        this);
                     run = false;
                 }
             }
@@ -4963,7 +4967,7 @@ namespace WinApp.Forms
 						switch (Config.Settings.wotGameStartType)
 						{
 							case ConfigData.WoTGameStartType.Launcher:
-								filename = "WOTLauncher.exe";
+								filename = "wgc_api.exe";
 								break;
 							case ConfigData.WoTGameStartType.Game:
 								filename = "WorldOfTanks.exe";

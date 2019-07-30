@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.24.2"?>
+<?define ProductVersion = "0.25.2"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -350,6 +350,9 @@
       <Component Id="cmpstructures101" Directory="INSTALLFOLDER_Dossier2json" Guid="{2EB078AC-87AC-42A6-A49F-B471E8FAC50E}">
         <File Id="filstructures101" KeyPath="yes" Source="$(var.D2jSource)\structures_101.json" />
       </Component>
+      <Component Id="cmpstructures102" Directory="INSTALLFOLDER_Dossier2json" Guid="{AD373D05-4D99-4169-B340-6F9FF7CDC889}">
+        <File Id="filstructures102" KeyPath="yes" Source="$(var.D2jSource)\structures_102.json" />
+      </Component>
 
       <!-- Battle result shared -->
 
@@ -401,7 +404,16 @@
       <Component Id="cmpBRS_37" Directory="INSTALLFOLDER_Dossier2json" Guid="{720D6F53-57D2-4A1F-BA35-C79B6DB6BCCE}">
         <File Id="filBRS_37" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_37.py" />
       </Component>
-
+      <Component Id="cmpBRS_38" Directory="INSTALLFOLDER_Dossier2json" Guid="{E680DC12-C923-4D7C-B357-3AD29A98E30D}">
+        <File Id="filBRS_38" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_38.py" />
+      </Component>
+      <Component Id="cmpBRS_39" Directory="INSTALLFOLDER_Dossier2json" Guid="{6912BAD8-7ED7-4CF9-80C7-32EDDD34A567}">
+        <File Id="filBRS_39" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_39.py" />
+      </Component>
+      <Component Id="cmpBRS_40" Directory="INSTALLFOLDER_Dossier2json" Guid="{A0086502-C531-4E8A-8122-5E5A7B8556C4}">
+        <File Id="filBRS_40" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_40.py" />
+      </Component>
+      
       <!-- Maps and tanks, not in use -->
       <!--<Component Id="cmpDF0EF76EB93E25B92E3B35AE06A47377" Directory="INSTALLFOLDER_Dossier2json" Guid="{17D2D4F8-236A-4997-84A4-0165AE27CF97}">
         <File Id="fil658CC5357D27167A6EB1467EAE4317BF" KeyPath="yes" Source="$(var.D2jSource)\tanks.json" />

@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 505; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 506; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 
         // The upgrade scripts
@@ -40,7 +40,8 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
-                case 505:
+                case 506:
+                    RunDownloadAndUpdateTanks = true;
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
 
@@ -49,7 +50,6 @@ namespace WinApp.Code
                         "UPDATE map SET arena_id='95_lost_city' WHERE ID=68; " +
                         "INSERT INTO map (id, name, arena_id) VALUES (87, 'Ghost Town', '95_lost_city_ctf'); ";
                     sqlite = mssql;
-                    RunDownloadAndUpdateTanks = true;
                     break;
 
                 case 502:

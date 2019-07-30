@@ -912,6 +912,7 @@
     <None Include="DevDocs\OLD_BRR\__init__.pyc" />
     <None Include="Dossier2json\structures_10.json" />
     <None Include="Dossier2json\structures_101.json" />
+    <None Include="Dossier2json\structures_102.json" />
     <None Include="Dossier2json\structures_17.json" />
     <None Include="Dossier2json\structures_18.json" />
     <None Include="Dossier2json\structures_20.json" />
@@ -1678,6 +1679,10 @@
     <Content Include="Dossier2json\battle_results_shared_34.py" />
     <Content Include="Dossier2json\battle_results_shared_35.py" />
     <Content Include="Dossier2json\battle_results_shared_36.py" />
+    <Content Include="Dossier2json\battle_results_shared_37.py" />
+    <Content Include="Dossier2json\battle_results_shared_38.py" />
+    <Content Include="Dossier2json\battle_results_shared_39.py" />
+    <Content Include="Dossier2json\battle_results_shared_40.py" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />
