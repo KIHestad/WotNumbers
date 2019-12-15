@@ -1683,6 +1683,10 @@
     <Content Include="Dossier2json\battle_results_shared_38.py" />
     <Content Include="Dossier2json\battle_results_shared_39.py" />
     <Content Include="Dossier2json\battle_results_shared_40.py" />
+    <Content Include="Dossier2json\battle_results_shared_41.py" />
+    <Content Include="Dossier2json\battle_results_shared_42.py" />
+    <Content Include="Dossier2json\battle_results_shared_43.py" />
+    <Content Include="Dossier2json\battle_results_shared_44.py" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />

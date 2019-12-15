@@ -75,6 +75,8 @@ namespace WinApp.Code.FormView
             wn7 = 3,
             wn8 = 4,
             wn9 = 6,
+            tierTotal = 7,
+            tierInterval = 8,
         }
 
         public class ChartTypeCols
@@ -269,6 +271,23 @@ namespace WinApp.Code.FormView
                 new ChartTypeCols() { playerTankValCol = "losses", battleValCol = "defeat" }
             };
             chartTypeList.Add(new ChartType() { name = "Defeat Count", col = chartTypeColList });
+
+            // Tier Total Average
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "battles", battleValCol = "battlescount" },
+                new ChartTypeCols() { playerTankValCol = "t.tier * ptb.battles", battleFirstValCol = "t.tier * b.battlesCount", battleValCol = "tier" }
+            };
+            chartTypeList.Add(new ChartType() { name = "Tier Total Avg", col = chartTypeColList, calcType = CalculationType.tierTotal });
+
+            // Tier Interval Average
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "battles", battleValCol = "battlescount" },
+                new ChartTypeCols() { playerTankValCol = "t.tier * ptb.battles", battleFirstValCol = "t.tier * b.battlesCount", battleValCol = "tier" },
+            };
+            chartTypeList.Add(new ChartType() { name = "Tier Played Avg", col = chartTypeColList, calcType = CalculationType.tierInterval });
+
 
             // Done
             return chartTypeList;

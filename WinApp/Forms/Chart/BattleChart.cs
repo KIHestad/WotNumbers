@@ -223,55 +223,58 @@ namespace WinApp.Forms
             if (use2ndYaxis)
                 newSerie.YAxisType = AxisType.Secondary;
             // Line  and marker type
-            newSerie.ChartType = chartType.seriesStyle;
-            if (chartType.seriesStyle == SeriesChartType.Point) // Point = only dot shown
+            if (chartType != null)
             {
-                // Default marker type for point type
-                newSerie.MarkerStyle = MarkerStyle.Circle;
-            }
-            else // Other chart type = line type
-            {
-                // Override to spline type if checked
-                if (mSpline.Checked) 
-                    newSerie.ChartType = SeriesChartType.Spline;
-                // Set marker type
-                if (mBullet.Checked)
+                newSerie.ChartType = chartType.seriesStyle;
+                if (chartType.seriesStyle == SeriesChartType.Point) // Point = only dot shown
+                {
+                    // Default marker type for point type
                     newSerie.MarkerStyle = MarkerStyle.Circle;
-                else
-                    newSerie.MarkerStyle = MarkerStyle.None;
-            }
-            if (BattleChartHelper.Settings.Xaxis == "Date")
-			{
-				ChartingMain.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Auto;
-                ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
-				newSerie.XValueType = ChartValueType.DateTime;
-				chartOrder = "DESC";
-			}
-			else if (BattleChartHelper.Settings.Xaxis == "Battle")
-			{
-				ChartingMain.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Number;
-				ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
-				newSerie.XValueType = ChartValueType.Int32;
-			}
-            
-            // Add series to chart
-            ChartingMain.Series.Add(newSerie);
-            
-            // Special calculations for calculated columns
-			switch (chartTypeName)
-			{
-				case "WN8":
-                    await DrawChartSeriesWN8(tankId, chartSerie, chartMode);
-                    return;
-                case "WN9":
-                    if (tankId != 0)
-                        await DrawChartSeriesWN9PerTank(tankId, chartSerie, chartOrder, chartMode);
+                }
+                else // Other chart type = line type
+                {
+                    // Override to spline type if checked
+                    if (mSpline.Checked)
+                        newSerie.ChartType = SeriesChartType.Spline;
+                    // Set marker type
+                    if (mBullet.Checked)
+                        newSerie.MarkerStyle = MarkerStyle.Circle;
                     else
-                        DrawChartSeriesWN9ForAccount(chartSerie, chartOrder, chartMode);
-                    return;
+                        newSerie.MarkerStyle = MarkerStyle.None;
+                }
+                if (BattleChartHelper.Settings.Xaxis == "Date")
+                {
+                    ChartingMain.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Auto;
+                    ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                    newSerie.XValueType = ChartValueType.DateTime;
+                    chartOrder = "DESC";
+                }
+                else if (BattleChartHelper.Settings.Xaxis == "Battle")
+                {
+                    ChartingMain.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Number;
+                    ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                    newSerie.XValueType = ChartValueType.Int32;
+                }
+
+                // Add series to chart
+                ChartingMain.Series.Add(newSerie);
+
+                // Special actions / calculations for chart types
+                switch (chartTypeName)
+                {
+                    case "WN8":
+                        await DrawChartSeriesWN8(tankId, chartSerie, chartMode);
+                        return;
+                    case "WN9":
+                        if (tankId != 0)
+                            await DrawChartSeriesWN9PerTank(tankId, chartSerie, chartOrder, chartMode);
+                        else
+                            DrawChartSeriesWN9ForAccount(chartSerie, chartOrder, chartMode);
+                        return;
+                }
+                // Draw series in chart now
+                await DrawChartSeries(tankId, chartSerie, chartOrder, chartType, chartMode, use2ndYaxis);
             }
-            // Draw series in chart now
-            await DrawChartSeries(tankId, chartSerie, chartOrder, chartType, chartMode);
 		}
 
 		private static double CalcChartSeriesPointValue(List<double> values, BattleChartHelper.CalculationType calcType, double defaultTier)
@@ -297,7 +300,7 @@ namespace WinApp.Forms
                     rp.DEF = values[4];
                     rp.CAP = values[5];
                     rp.TIER = defaultTier; // values[6]; ???
-                    result = Code.Rating.EFF.EffUseFormula(rp);
+                    result = EFF.EffUseFormula(rp);
 					break;
 				case BattleChartHelper.CalculationType.wn7:
 					rp.BATTLES = values[0];
@@ -308,11 +311,20 @@ namespace WinApp.Forms
                     rp.CAP = values[5];
                     rp.WINS = values[6];
                     rp.TIER = defaultTier; // values[6]; ???
-                    result = Code.Rating.WN7.WN7useFormula(rp);
+                    result = WN7.WN7useFormula(rp);
 					break;
 				case BattleChartHelper.CalculationType.wn8:
 					break;
                 case BattleChartHelper.CalculationType.wn9:
+                    break;
+                case BattleChartHelper.CalculationType.tierTotal:
+                    result = values[1] / values[0]; // sum tier / sum battles = total avg tier
+                    break;
+                case BattleChartHelper.CalculationType.tierInterval:
+                    result = values[1] / values[0]; // sum tier / sum battles = total avg tier
+                    // Reset accumulated values to get interval on next
+                    values[1] = 0;
+                    values[0] = 0;
                     break;
                 default:
 					break;
@@ -320,7 +332,7 @@ namespace WinApp.Forms
 			return result;
 		}
 
-		private async Task DrawChartSeries(int tankId, string chartSerie, string chartOrder, BattleChartHelper.ChartType chartType, string chartMode)
+		private async Task DrawChartSeries(int tankId, string chartSerie, string chartOrder, BattleChartHelper.ChartType chartType, string chartMode, bool use2ndYaxis)
 		{
 			// Create sql select fields and to store values
 			string currentValCols = "";
@@ -414,9 +426,9 @@ namespace WinApp.Forms
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtChart = await DB.FetchData(sql);
 			double chartVal = 0;
-			// Calculate values for some special charts
+			// Special actions / Calculations for special charts
 			double defaultTier = 0;
-			switch (chartType.calcType)
+            switch (chartType.calcType)
 			{
 				case BattleChartHelper.CalculationType.eff:
 					if (tankId == 0)
@@ -432,13 +444,9 @@ namespace WinApp.Forms
 					else
 						defaultTier = await TankHelper.GetTankTier(tankId);
 					break;
-				case BattleChartHelper.CalculationType.wn8:
-					break;
-                case BattleChartHelper.CalculationType.wn9:
-                    break;
             }
-			// If show per date
-			if (BattleChartHelper.Settings.Xaxis == "Date")
+            // If show per date
+            if (BattleChartHelper.Settings.Xaxis == "Date")
 			{
 				DateTime chartDate = DateTime.Now;
 				double hourInterval = 24;
@@ -562,7 +570,7 @@ namespace WinApp.Forms
 					DateTime thisDate = Convert.ToDateTime(drBattle["battle_time"]);
 					if (thisDate <= chartDate)
 					{
-                        chartVal = Math.Round(Code.Rating.WN8.CalcPlayerTankBattle(ptb), decimals);
+                        chartVal = Math.Round(WN8.CalcPlayerTankBattle(ptb), decimals);
 						ChartingMain.Series[chartSerie].Points.AddXY(thisDate, chartVal); // Use battle date
 						chartDate = thisDate.AddHours(-hourInterval);
 					}
