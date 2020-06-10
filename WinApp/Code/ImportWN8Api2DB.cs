@@ -112,7 +112,7 @@ namespace WinApp.Code
 					"Could not connect to " + urlBase + ", please check your Internet access." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
 					ex.InnerException + Environment.NewLine + Environment.NewLine;
-				MsgBox.Show(msg, "Problem connecting to http://www.wnefficiency.net", parentForm);
+				MsgBox.Show(msg, "Connection to external web site failed", parentForm);
                 return new Result() { Success = false, Message = msg };
 			}
 

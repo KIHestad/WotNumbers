@@ -160,6 +160,12 @@
     <Compile Include="Code\ExternalPlayerProfile.cs" />
     <Compile Include="Code\FormControl\BadGridView.cs" />
     <Compile Include="Code\Battle2json.cs" />
+    <Compile Include="Forms\BattleDetail\BattleDetailMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BattleDetail\BattleDetailMap.Designer.cs">
+      <DependentUpon>BattleDetailMap.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\AppBattleUpload.cs" />
     <Compile Include="Services\AppStartup.cs" />
     <Compile Include="Code\DateTimeHelper.cs" />
@@ -675,6 +681,9 @@
     <EmbeddedResource Include="Forms\BattleDetail\BattleDetail.resx">
       <DependentUpon>BattleDetail.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BattleDetail\BattleDetailMap.resx">
+      <DependentUpon>BattleDetailMap.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\BattleDetail\BattleReview.resx">
       <DependentUpon>BattleReview.cs</DependentUpon>
     </EmbeddedResource>
@@ -910,20 +919,8 @@
     <None Include="Docs\New_Default_Setup.json" />
     <None Include="Docs\Old_Default_Setup.json" />
     <None Include="DevDocs\OLD_BRR\__init__.pyc" />
-    <None Include="Dossier2json\structures_10.json" />
     <None Include="Dossier2json\structures_101.json" />
     <None Include="Dossier2json\structures_102.json" />
-    <None Include="Dossier2json\structures_17.json" />
-    <None Include="Dossier2json\structures_18.json" />
-    <None Include="Dossier2json\structures_20.json" />
-    <None Include="Dossier2json\structures_22.json" />
-    <None Include="Dossier2json\structures_24.json" />
-    <None Include="Dossier2json\structures_26.json" />
-    <None Include="Dossier2json\structures_27.json" />
-    <None Include="Dossier2json\structures_28.json" />
-    <None Include="Dossier2json\structures_29.json" />
-    <None Include="Dossier2json\structures_65.json" />
-    <None Include="Dossier2json\structures_69.json" />
     <None Include="Dossier2json\structures_77.json" />
     <None Include="Dossier2json\structures_81.json" />
     <None Include="Dossier2json\structures_85.json" />
@@ -935,8 +932,8 @@
     <None Include="Dossier2json\structures_95.json" />
     <None Include="Dossier2json\structures_96.json" />
     <None Include="Dossier2json\structures_97.json" />
-    <None Include="Dossier2json\structures_99.json" />
     <None Include="Dossier2json\structures_98.json" />
+    <None Include="Dossier2json\structures_99.json" />
     <None Include="Lib\ensurepip\_bundled\pip-8.1.1-py2.py3-none-any.whl" />
     <None Include="Lib\ensurepip\_bundled\setuptools-20.10.1-py2.py3-none-any.whl" />
     <None Include="packages.config" />
@@ -1673,20 +1670,7 @@
     <Content Include="DevDocs\Python277\__future__.py" />
     <Content Include="DevDocs\Python277\__phello__.foo.py" />
     <Content Include="Docs\Database\insert_dbver488.txt" />
-    <Content Include="Dossier2json\battle_results_shared_31.py" />
-    <Content Include="Dossier2json\battle_results_shared_32.py" />
-    <Content Include="Dossier2json\battle_results_shared_33.py" />
-    <Content Include="Dossier2json\battle_results_shared_34.py" />
-    <Content Include="Dossier2json\battle_results_shared_35.py" />
-    <Content Include="Dossier2json\battle_results_shared_36.py" />
-    <Content Include="Dossier2json\battle_results_shared_37.py" />
-    <Content Include="Dossier2json\battle_results_shared_38.py" />
-    <Content Include="Dossier2json\battle_results_shared_39.py" />
-    <Content Include="Dossier2json\battle_results_shared_40.py" />
-    <Content Include="Dossier2json\battle_results_shared_41.py" />
-    <Content Include="Dossier2json\battle_results_shared_42.py" />
-    <Content Include="Dossier2json\battle_results_shared_43.py" />
-    <Content Include="Dossier2json\battle_results_shared_44.py" />
+    <Content Include="Dossier2json\battle_results_shared.py" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />
@@ -2253,18 +2237,7 @@
     <Content Include="Docs\Database\createTableMSSQL.txt" />
     <Content Include="Docs\Database\insert.txt" />
     <None Include="Docs\Database\upgrade.json" />
-    <Content Include="Dossier2json\battle_results_shared_22.py" />
-    <Content Include="Dossier2json\battle_results_shared_23.py" />
-    <Content Include="Dossier2json\battle_results_shared_24.py" />
-    <Content Include="Dossier2json\battle_results_shared_25.py" />
-    <Content Include="Dossier2json\battle_results_shared_26.py" />
-    <Content Include="Dossier2json\battle_results_shared_27.py" />
-    <Content Include="Dossier2json\battle_results_shared_28.py" />
-    <Content Include="Dossier2json\battle_results_shared_30.py" />
-    <Content Include="Dossier2json\battle_results_shared_29.py" />
-    <Content Include="Dossier2json\dictpackers_20.py" />
-    <Content Include="Dossier2json\dictpackers_28.py" />
-    <Content Include="Dossier2json\dictpackers_29.py" />
+    <Content Include="Dossier2json\dictpackers.py" />
     <Content Include="Dossier2json\wotbr2j.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="form_ico_6.ico" />

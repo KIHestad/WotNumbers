@@ -19,6 +19,7 @@ namespace WinApp.Code
 		public static bool RunDownloadAndUpdateTanks = false;
 		public static bool RunRecalcBattleWN8 = false;
         public static bool RunRecalcBattleWN9 = false;
+        public static bool RunRecalcBattlePos = false;
         public static bool RunRecalcBattleCreditPerTank = false;
 		public static bool RunRecalcBattleKDratioCRdmg = false;
         public static bool RunRecalcBattleMaxTier = false;
@@ -27,7 +28,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 512; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 526; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 
         // The upgrade scripts
@@ -40,10 +41,92 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
-
-                case 512:
+                case 526:
                     RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+                case 525:
+                    temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
+                    mssql =
+                        temp + "VALUES (231, 1, 246, 'playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun', 'Dmg Combined', 'Total combined damage = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 50, 'Int', NULL, NULL, 'SUM(playerTankBattle.assistStun)', 'SUM(battle.assistStun)', 0, NULL, 0);" +
+                        temp + "VALUES (232, 1, 259, 'CAST((playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Combined', 'Average combined damage per battle = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 50, 'Float', NULL, NULL, 'CAST(SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', 'SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)', 1, 'SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)', 0);";
+                    sqlite = mssql;
+                    break;
+                case 524:
+                    temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
+                    mssql =
+                        temp + "VALUES (230, 2, 222, 'battle.Dmg+battle.assistSpot+battle.assistTrack+battle.assistStun', 'Dmg Combined', 'All damage combined = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 47, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
+                    sqlite = mssql;
+                    break;
+                case 523:
+                    RunDossierFileCheckWithForceUpdate = true;
+                    break;
+                case 521:
+                    temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
+                    mssql =
+                        temp + "VALUES (227, 2, 222, 'battle.assistStun', 'Dmg Stun', 'Assisted damage casued by others to enemy tanks due to you stunning the enemy tank', 'Damage', 47, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);" +
+                        temp + "VALUES (228, 1, 246, 'playerTankBattle.assistStun', 'Dmg Stun', 'Damage to enemy tanks done by others after you stunned them', 'Damage', 50, 'Int', NULL, NULL, 'SUM(playerTankBattle.assistStun)', 'SUM(battle.assistStun)', 0, NULL, 0);" +
+                        temp + "VALUES (229, 1, 259, 'CAST(playerTankBattle.assistStun*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Stun', 'Average damge per battle to enemy tanks done by others after you stunned them', 'Damage', 50, 'Float', NULL, NULL, 'CAST(SUM(playerTankBattle.assistStun) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', 'SUM(battle.assistStun)', 1, 'SUM(playerTankBattle.assistStun)', 0);";
+                    sqlite = mssql;
+                    break;
+                case 520:
+                    temp =
+                        "SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+                            "              SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(assistStun) AS assistStun, SUM(cap) AS cap,  " +
+                            "              SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
+                            "              SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived) AS heHitsReceived,  " +
+                            "              SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+                            "              MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(wn9) AS wn9, MAX(wn9maxhist) AS wn9maxhist, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(rwr) as rwr, " +
+                            "			   MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun, SUM(dmgBlocked) as dmgBlocked, SUM(potentialDmgReceived) as potentialDmgReceived, " +
+                            "              SUM(credBtlCount) AS credBtlCount, SUM(credBtlLifetime) as credBtlLifetime, SUM(credAvgIncome) as credAvgIncome,  SUM(credAvgCost) as credAvgCost, " +
+                            "              SUM(credAvgResult) as credAvgResult,  SUM(credMaxIncome) as credMaxIncome,  SUM(credMaxCost) as credMaxCost, SUM(credMaxResult) as credMaxResult,  " +
+                            "              SUM(credAvgCost) ascredAvgCost " +
+                            "FROM            playerTankBattle " +
+                            "GROUP BY playerTankId; ";
+                    mssql =
+                        "ALTER VIEW playerTankBattleTotalsView AS " + temp;
+                    sqlite =
+                        "DROP VIEW playerTankBattleTotalsView; " +
+                        "CREATE VIEW playerTankBattleTotalsView AS " + temp;
+                    break;
+                case 519:
+
+                    temp = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) ";
+                    mssql =
+                        temp + "VALUES ('tanks_v2', 'a15x15_2', 'damageAssistedStun', 'Int', 'assistStun', 'assistStun', 'tanks_v2.a15x15_2.damageAssistedStun', '15'    );" +
+                        temp + "VALUES ('tanks_v2', 'a30x30',   'damageAssistedStun', 'Int', 'assistStun', 'assistStun', 'tanks_v2.a30x30.damageAssistedStun',   'Grand' );";
+                    sqlite = mssql;
+                    break;
+                case 518:
+                    mssql =
+                        "ALTER TABLE playerTankBattle ADD assistStun int NOT NULL default 0; " +
+                        "ALTER TABLE battle ADD assistStun int NOT NULL default 0; ";
+                    sqlite = mssql.Replace("int", "integer");
+                    break;
+                case 517:
+                    RunRecalcBattlePos = true;
+                    mssql = 
+                        "UPDATE columnSelection SET colGroup = 'Battle' WHERE colGroup='Mode'; " +
+                        "UPDATE columnSelection SET colGroup = 'Damage' WHERE ID IN (19,21,22,20,213,214,215,218) ";
+                    sqlite = mssql;
+                    break;
+                case 516:
+                    mssql = "UPDATE columnSelection SET colGroup = 'Result' WHERE ID IN (545, 546, 530, 531); ";
+                    sqlite = mssql;
+                    break;
+                case 515:
+                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+                    mssql =
+                        temp + "VALUES (545, 2, 138, 'battle.posByXp', 'Pos XP', 'Your position on the battle result leaderboard by XP', 'Battle', 47, 'Int'); " +
+                        temp + "VALUES (546, 2, 139, 'battle.posByDmg', 'Pos Dmg', 'Your position on the battle result leaderboard by damage', 'Battle', 47, 'Int'); ";
+                    sqlite = mssql;
+                    break;
+
+                case 514:
+                    mssql =
+                        "ALTER TABLE battle ADD posByDmg int NULL; " +
+                        "ALTER TABLE battle ADD posByXp int NULL; ";
+                    sqlite = mssql.Replace("int", "integer");
                     break;
 
                 case 511:
@@ -3081,9 +3164,6 @@ namespace WinApp.Code
                     mssql = temp + "VALUES (226, 1, 7, 'tank.hp', 'HP', 'Tank HP', 'Tank', 50, 'Int'); ";
                     sqlite = mssql;
                     break;
-                case 442:
-                    RunDossierFileCheckWithForceUpdate = true;
-                    break;
                 case 443:
                     mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (9, 'Poland', 'PL', 'poland', 85); ";
                     sqlite = mssql;
@@ -3353,6 +3433,7 @@ namespace WinApp.Code
 		private async static Task CalcPlayerTeam()
 		{
 			string sql = "";
+            // battlePlayer.playerTeam = bit, 0=false (this is not player team thus enemy team) 1=true (this is players team)
 			//sql = "UPDATE battlePlayer SET playerTeam = 0";
 			//DB.ExecuteNonQuery(sql);
 			DataTable dtPlayer = await DB.FetchData("SELECT * FROM player");

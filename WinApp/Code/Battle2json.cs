@@ -300,21 +300,14 @@ namespace WinApp.Code
                     sr.Close();
                     // Root token
                     JToken token_root = JObject.Parse(json);
-                    // Get version
-                    int btlResultVer = 0;
+                    // Parser = wotbr2j-script added info
                     JToken token_parser = token_root["parser"];
+                    // Common = main battle result info
                     JToken token_common = token_root["common"];
-                    string result = (string)token_parser.SelectToken("result"); // Find if ok - battleresultversion >= 15, WoT 9.8 and higher
-                    if (result == "ok")
-                        btlResultVer = (int)token_parser.SelectToken("battleResultVersion");
-                    else
-                    {
-                        result = (string)token_common.SelectToken("result"); // Find if ok - battleresultversion <= 14, Wot 9.7 and lower
-                        if (result == "ok")
-                            btlResultVer = (int)token_root.SelectToken("battleresultversion");
-                    }
+                    string result = (string)token_parser.SelectToken("result"); // Find if ok
+                    string btlResultVer = (string)token_parser.SelectToken("version"); // find version
                     // Check if ok
-                    if (btlResultVer != 0)
+                    if (result == "ok")
                     {
                         Int64 arenaUniqueID = (Int64)token_root.SelectToken("arenaUniqueID"); // Find unique id
                         double arenaCreateTime = (double)token_common.SelectToken("arenaCreateTime"); // Arena create time
@@ -388,8 +381,7 @@ namespace WinApp.Code
                                     new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") }
                                 };
                                 int playerTeam = (int)token_personel.SelectToken("team");
-                                int enemyTeam = 1;
-                                if (playerTeam == 1) enemyTeam = 2;
+                                int enemyTeam = playerTeam == 1 ? 2 : 1;
                                 // Find game type
                                 int bonusType = (int)token_common.SelectToken("bonusType");
                                 battleValues.Add(new BattleValue() { colname = "bonusType", value = bonusType });
@@ -627,6 +619,8 @@ namespace WinApp.Code
                                 int killedByAccountId = 0;
                                 string killedByPlayerName = "";
                                 List<ClanInfo> clanCount = new List<ClanInfo>();
+                                
+                                // Iterate over all battles players and get data
                                 foreach (JToken player in token_players)
                                 {
                                     BattlePlayer newPlayer = new BattlePlayer();
@@ -636,16 +630,8 @@ namespace WinApp.Code
                                     newPlayer.clanDBID = (int)playerInfo.SelectToken("clanDBID");
                                     newPlayer.clanAbbrev = (string)playerInfo.SelectToken("clanAbbrev");
                                     newPlayer.name = (string)playerInfo.SelectToken("name");
-                                    if (btlResultVer >= 15)
-                                    {
-                                        newPlayer.platoonID = (int)playerInfo.SelectToken("prebattleID");
-                                        newPlayer.vehicleid = 0; // NEW METHOD NOT SUPPORTED FOR NEW FILE STRUCT YET ->
-                                    }
-                                    else
-                                    {
-                                        newPlayer.platoonID = (int)playerInfo.SelectToken("platoonID");
-                                        newPlayer.vehicleid = (int)playerInfo.SelectToken("vehicleid");
-                                    }
+                                    newPlayer.platoonID = (int)playerInfo.SelectToken("prebattleID");
+                                    newPlayer.vehicleid = 0; // NEW METHOD NOT SUPPORTED FOR NEW FILE STRUCT YET ->
                                     newPlayer.team = (int)playerInfo.SelectToken("team");
                                     if (newPlayer.team == playerTeam)
                                         newPlayer.playerTeam = 1;
@@ -684,19 +670,17 @@ namespace WinApp.Code
                                         platoon.Add(p);
                                     }
                                 }
+                                
                                 // Get results from vehiles section and add to db
                                 JToken token_vehicles = token_root["vehicles"];
                                 // First iteration to get vehiclesid to late be able to find player killed by
-                                if (btlResultVer >= 15)
+                                foreach (JToken vechicle in token_vehicles)
                                 {
-                                    foreach (JToken vechicle in token_vehicles)
-                                    {
-                                        JProperty vProperty = (JProperty)vechicle;
-                                        int vid = Convert.ToInt32(vProperty.Name);
-                                        JValue accountDBID = (JValue)vechicle.First.First.SelectToken("accountDBID");
-                                        BattlePlayer player = battlePlayers.Find(p => p.accountDBID == Convert.ToInt32(accountDBID));
-                                        player.vehicleid = vid;
-                                    }
+                                    JProperty vProperty = (JProperty)vechicle;
+                                    int vid = Convert.ToInt32(vProperty.Name);
+                                    JValue accountDBID = (JValue)vechicle.First.First.SelectToken("accountDBID");
+                                    BattlePlayer player = battlePlayers.Find(p => p.accountDBID == Convert.ToInt32(accountDBID));
+                                    player.vehicleid = vid;
                                 }
                                 // Get battle player data
                                 foreach (JToken vechicle in token_vehicles)
@@ -706,19 +690,10 @@ namespace WinApp.Code
                                     JToken vechicleInfo;
                                     // Find player for mapping
                                     BattlePlayer player = new BattlePlayer();
-                                    if (btlResultVer >= 15)
-                                    {
-                                        vechicleInfo = vechicle.First.First;
-                                        JValue accountDBID = (JValue)vechicleInfo.SelectToken("accountDBID");
-                                        if (accountDBID != null)
-                                            player = battlePlayers.Find(p => p.accountDBID == Convert.ToInt32(accountDBID));
-                                    }
-                                    else
-                                    {
-                                        vechicleInfo = vechicle.First;
-                                        int vehicleid = Convert.ToInt32(vechicleProperty.Name);
-                                        player = battlePlayers.Find(p => p.vehicleid == vehicleid);
-                                    }
+                                    vechicleInfo = vechicle.First.First;
+                                    JValue accountDBID = (JValue)vechicleInfo.SelectToken("accountDBID");
+                                    if (accountDBID != null)
+                                        player = battlePlayers.Find(p => p.accountDBID == Convert.ToInt32(accountDBID));
 
                                     if (player != null)
                                     {
@@ -755,12 +730,10 @@ namespace WinApp.Code
                                         fields += ", directHitsReceived, droppedCapturePoints, hits, kills, shots, shotsReceived, spotted, tkills, fortResource";
                                         values += ", " + vechicleInfo.SelectToken("directHitsReceived");
                                         values += ", " + vechicleInfo.SelectToken("droppedCapturePoints");
-                                        if (btlResultVer >= 15) { jsonField = "directHits"; } else { jsonField = "hits"; } // CHANGED STRUCT FROM WOT 9.8
-                                        values += ", " + vechicleInfo.SelectToken(jsonField);
+                                        values += ", " + vechicleInfo.SelectToken("directHits");
                                         values += ", " + vechicleInfo.SelectToken("kills");
                                         values += ", " + vechicleInfo.SelectToken("shots");
-                                        if (btlResultVer >= 15) { jsonField = "directHitsReceived"; } else { jsonField = "shotsReceived"; } // CHANGED STRUCT FROM WOT 9.8
-                                        values += ", " + vechicleInfo.SelectToken(jsonField);
+                                        values += ", " + vechicleInfo.SelectToken("directHitsReceived");
                                         values += ", " + vechicleInfo.SelectToken("spotted");
                                         values += ", " + vechicleInfo.SelectToken("tkills");
                                         // TODO: no longer in use?
@@ -776,12 +749,10 @@ namespace WinApp.Code
                                         // Added more
                                         fields += ", potentialDamageReceived, noDamageShotsReceived, sniperDamageDealt, piercingsReceived, pierced, isTeamKiller";
                                         values += ", " + vechicleInfo.SelectToken("potentialDamageReceived");
-                                        if (btlResultVer >= 15) { jsonField = "noDamageDirectHitsReceived"; } else { jsonField = "noDamageShotsReceived"; } // CHANGED STRUCT FROM WOT 9.8
-                                        values += ", " + vechicleInfo.SelectToken(jsonField);
+                                        values += ", " + vechicleInfo.SelectToken("noDamageDirectHitsReceived");
                                         values += ", " + vechicleInfo.SelectToken("sniperDamageDealt");
                                         values += ", " + vechicleInfo.SelectToken("piercingsReceived");
-                                        if (btlResultVer >= 15) { jsonField = "piercings"; } else { jsonField = "pierced"; } // CHANGED STRUCT FROM WOT 9.8
-                                        values += ", " + vechicleInfo.SelectToken(jsonField);
+                                        values += ", " + vechicleInfo.SelectToken("piercings");
 
                                         // Is Team Killer
                                         bool isTeamKiller = Convert.ToBoolean(vechicleInfo.SelectToken("isTeamKiller"));
@@ -875,7 +846,9 @@ namespace WinApp.Code
                                     "  survivedenemy=@survivedenemy, " +
                                     "  fragsteam=@fragsteam, " +
                                     "  fragsenemy=@fragsenemy, " +
-                                    "  maxBattleTier=@maxBattleTier " +
+                                    "  maxBattleTier=@maxBattleTier, " +
+                                    "  posByXp=@posByXp, " +
+                                    "  posByDmg=@posByDmg " + 
                                     "where id=@battleId;";
                                 // Clan info
                                 int maxClanCount = 0;
@@ -937,11 +910,15 @@ namespace WinApp.Code
                                 // Frags team/enemy
                                 DB.AddWithValue(ref sql, "@fragsteam", fragsCount[playerTeam], DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sql, "@fragsenemy", fragsCount[enemyTeam], DB.SqlDataType.Int);
+                                // Position on battle result team leaderboard
+                                var positions = await BattleHelper.GetPlayerPositionInTeamLeaderboard(battleId);
+                                DB.AddWithValue(ref sql, "@posByXp", positions.PosByXp, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sql, "@posByDmg", positions.PosByDmg, DB.SqlDataType.Int);
                                 // Add Battle ID and run sql if any values
                                 DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
                                 await DB.ExecuteNonQuery(sql);
                                 BattlesUpdated++;
-                                // If grinding, adjust grogress
+                                // If grinding, adjust progress
                                 if (grindXP > 0)
                                     await GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));
                                 // Update Tank Credits
@@ -1126,9 +1103,6 @@ namespace WinApp.Code
                     PythonEngine.ipyOutput = ""; // clear ipy output
                     try
                     {
-                        //var ipy = Python.CreateRuntime();
-                        //dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
-                        //ipyrun.main();
 
                         Log.AddToLogBuffer(" > > Starting to converted battle DAT-file to JSON file: " + filename);
                         var argv = new List
@@ -1138,22 +1112,10 @@ namespace WinApp.Code
                             "-f"
                         };
 
-                        //await Task.Run(() =>
-                        //{
-                            PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
-                            ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
-                            dynamic scopeResult = scope.GetVariable("main")();
-                        //});
-
-                        //ScriptRuntimeSetup setup = new ScriptRuntimeSetup();
-                        //setup.DebugMode = true;
-                        //setup.LanguageSetups.Add(Python.CreateLanguageSetup(null));
-                        //ScriptRuntime runtime = new ScriptRuntime(setup);
-                        //ScriptEngine engine = runtime.GetEngineByTypeName(typeof(PythonContext).AssemblyQualifiedName);
-                        //ScriptSource script = engine.CreateScriptSourceFromFile(battle2jsonScript);
-                        //CompiledCode code = script.Compile();
-                        //ScriptScope scope = engine.CreateScope();
-                        //script.Execute(scope);
+                        //NORMAL
+                        PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
+                        ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
+                        dynamic scopeResult = scope.GetVariable("main")();
 
                         Log.AddToLogBuffer(" > > > Converted battle DAT-file to JSON file: " + filename);
                         result.Success = true;

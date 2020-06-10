@@ -776,6 +776,7 @@ namespace WinApp.Forms
             mRecalcBattleWN8.Enabled = true;
             mRecalcBattleWN7.Enabled = true;
             mRecalcBattleEFF.Enabled = true;
+            mRecalcBattlePos.Enabled = true;
             mRecalcBattleAllRatings.Enabled = true;
             mRecalcBattleCreditsPerTank.Enabled = true;
             mAppSettings.Enabled = true;
@@ -789,8 +790,8 @@ namespace WinApp.Forms
 			{
                 if (DBVersion.RunDownloadAndUpdateTanks)
                     await RunWotApi(true);
-				if (DBVersion.RunRecalcBattleWN8 || DBVersion.RunRecalcBattleWN9)
-					await RunRecalcBattleWN8or9(true, DBVersion.RunRecalcBattleWN8, DBVersion.RunRecalcBattleWN9);
+				if (DBVersion.RunRecalcBattleWN8 || DBVersion.RunRecalcBattleWN9 || DBVersion.RunRecalcBattlePos)
+					await RunRecalcBattleRating(true, DBVersion.RunRecalcBattleWN8, DBVersion.RunRecalcBattleWN9, DBVersion.RunRecalcBattlePos);
                 if (DBVersion.RunRecalcBattleCreditPerTank)
                     await RunRecalcBattleCreditsPerTank(true);
                 if (DBVersion.RunRecalcBattleKDratioCRdmg)
@@ -2814,7 +2815,7 @@ namespace WinApp.Forms
                         if (dr["player_Tank_Id"] != DBNull.Value)
                         {
                             int playerTankId = Convert.ToInt32(dr["player_Tank_Id"]);
-                            dr["Battles Today"] = await BattleHelper.GetBattleCount(playerTankId, battleTimeFilter);
+                            dr["Battles Today"] = await BattleHelper.GetTankBattleCount(playerTankId, battleTimeFilter);
                         }
                     }
                     dtTankData.AcceptChanges();
@@ -3950,7 +3951,7 @@ namespace WinApp.Forms
                                 DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
                                 // Get values
                                 int playerTankId = Convert.ToInt32(dataGridMain["player_Tank_Id", e.RowIndex].Value);
-                                int victoryCount = await BattleHelper.GetBattleVictoryCount(playerTankId, battleTimeFilter);
+                                int victoryCount = await BattleHelper.GetTankBattleVictoryCount(playerTankId, battleTimeFilter);
                                 // add back color
                                 if (victoryCount > 0)
                                 {
@@ -4131,7 +4132,7 @@ namespace WinApp.Forms
         private async void dataGridMainPopup_RecalculateBattleRating_Click(object sender, EventArgs e)
 		{
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
-			Form frm = new Forms.RecalcBattleRating(true, true, true, true, true, battleId);
+			Form frm = new Forms.RecalcBattleRating(true, true, true, true, true, true, battleId);
 			frm.ShowDialog(this);
             await ShowView("Refreshed grid");
         }
@@ -4714,13 +4715,14 @@ namespace WinApp.Forms
             double WNcurrentVer9 = await DBVersion.GetWNVersion(9);
             Form frm = new Forms.UpdateFromApi(autoRun);
 			frm.ShowDialog(this);
+            // Disabled auto update WN8 because new version is set per day and WN9 is no longer relevant or gets updated
             //bool WNnewVer8 = (DBVersion.GetWNVersion(8) > WNcurrentVer8);
-            bool WNnewVer9 = (await DBVersion.GetWNVersion(9) > WNcurrentVer9);
-            if (WNnewVer9) //
-            {
-                await RunRecalcBattleWN8or9(true, false, WNnewVer9); // Disabled auto update WN8 because new version is set per day
-                DBVersion.RunDossierFileCheckWithForceUpdate = true;
-            }
+            //bool WNnewVer9 = (await DBVersion.GetWNVersion(9) > WNcurrentVer9);
+            //if (WNnewVer9) //
+            //{
+            //    await RunRecalcBattleRating(true, WNnewVer8, WNnewVer9); 
+            //    DBVersion.RunDossierFileCheckWithForceUpdate = true;
+            //}
             await ShowView("Refreshed view");
 		}
 
@@ -4738,9 +4740,10 @@ namespace WinApp.Forms
             bool WN9 = (menu.Tag.ToString() == "WN9" || menu.Tag.ToString() == "ALL");
             bool WN8 = (menu.Tag.ToString() == "WN8" || menu.Tag.ToString() == "ALL");
             bool WN7 = (menu.Tag.ToString() == "WN7" || menu.Tag.ToString() == "ALL");
-            bool EFF = (menu.Tag.ToString() == "EFF" || menu.Tag.ToString() == "ALL"); 
+            bool EFF = (menu.Tag.ToString() == "EFF" || menu.Tag.ToString() == "ALL");
+            bool POS = (menu.Tag.ToString() == "POS" || menu.Tag.ToString() == "ALL");
             // Show dialog
-			Form frm = new Forms.RecalcBattleRating(false, WN9, WN8, WN7, EFF);
+            Form frm = new Forms.RecalcBattleRating(false, WN9, WN8, WN7, EFF, POS);
 			frm.ShowDialog(this);
 			// Return to prev file watcher state
 			if (runState != Config.Settings.dossierFileWathcherRun)
@@ -4772,9 +4775,9 @@ namespace WinApp.Forms
             await ShowView("Refreshed grid");
         }
 
-		private async Task RunRecalcBattleWN8or9(bool autoRun, bool wn8, bool wn9)
+		private async Task RunRecalcBattleRating(bool autoRun, bool wn8, bool wn9, bool pos)
 		{
-			Form frm = new Forms.RecalcBattleRating(autoRun, wn9, wn8, false, false);
+			Form frm = new Forms.RecalcBattleRating(autoRun, wn9, wn8, false, false, pos);
 			frm.ShowDialog(this);
             await ShowView("Refreshed grid");
         }
@@ -5857,6 +5860,7 @@ namespace WinApp.Forms
             // opens the folder in explorer
             Process.Start("explorer.exe", Config.AppDataHomeViewFolder);
         }
+
 
 
 

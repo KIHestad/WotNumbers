@@ -9,7 +9,19 @@ namespace WinApp.Code
 {
 	public class BattleHelper
 	{
-		public async static Task<int> GetBattleCount(int playerTankId, string battleTimeFilter)
+        public async static Task<int> GetTotalBattleRows()
+        {
+            int count = 0;
+            string sql = "SELECT count(id) FROM battle";
+            DataTable dt = await DB.FetchData(sql);
+            if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
+                count = Convert.ToInt32(dt.Rows[0][0]);
+            dt.Dispose();
+            dt.Clear();
+            return count;
+        }
+
+        public async static Task<int> GetTankBattleCount(int playerTankId, string battleTimeFilter)
         {
             int count = 0;
             string sql = "SELECT sum(battlesCount) FROM battle WHERE playerTankId=@playerTankId " + battleTimeFilter;
@@ -22,7 +34,7 @@ namespace WinApp.Code
             return count;
         }
 
-        public async static Task<int> GetBattleVictoryCount(int playerTankId, string battleTimeFilter)
+        public async static Task<int> GetTankBattleVictoryCount(int playerTankId, string battleTimeFilter)
         {
             int count = 0;
             string sql = "SELECT sum(victory) FROM battle WHERE playerTankId=@playerTankId " + battleTimeFilter;
@@ -34,5 +46,66 @@ namespace WinApp.Code
             dt.Clear();
             return count;
         }
-	}
+
+        public class PosOnTeamLeaderboard
+        {
+            public int? PosByXp { get; set; }
+            public int? PosByDmg { get; set; }
+        }
+
+        public async static Task<PosOnTeamLeaderboard> GetPlayerPositionInTeamLeaderboard(int battleId)
+        {
+            PosOnTeamLeaderboard posOnTeamLeaderboard = new PosOnTeamLeaderboard();
+            string playerName = Config.Settings.playerName;
+            // Get players team
+            int playersTeam = 0;
+            string sql = @"
+                SELECT team
+                FROM battlePlayer 
+                WHERE battlePlayer.name = @playerName AND battleId=@battleId 
+                ORDER BY battlePlayer.xp DESC, battlePlayer.damageDealt DESC";
+            DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
+            DataTable dt = await DB.FetchData(sql);
+            if (dt == null || dt.Rows.Count == 0)
+                return posOnTeamLeaderboard;
+            playersTeam = Convert.ToInt32(dt.Rows[0]["team"]);
+            // Get position pr xp
+            sql = @"
+                SELECT battlePlayer.name as teamPlayerName, battlePlayer.xp as teamPlayerXp, battlePlayer.damageDealt as teamPlayerDmg
+                FROM battlePlayer 
+                WHERE battlePlayer.team = @playersTeam AND battleId=@battleId 
+                ORDER BY battlePlayer.xp DESC, battlePlayer.damageDealt DESC";
+            DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@playersTeam", playersTeam, DB.SqlDataType.Int);
+            dt = await DB.FetchData(sql);
+            if (dt.Rows.Count > 1)
+            {
+                int pos = 1;
+                while (dt.Rows.Count > pos && dt.Rows[pos -1]["teamPlayerName"].ToString() != playerName)
+                    pos++;
+                posOnTeamLeaderboard.PosByXp = pos;
+            }
+            // Get position pr dmg
+            sql = @"
+                SELECT battlePlayer.name as teamPlayerName, battlePlayer.xp as teamPlayerXp, battlePlayer.damageDealt as teamPlayerDmg
+                FROM battlePlayer 
+                WHERE battlePlayer.team = @playersTeam AND battleId=@battleId 
+                ORDER BY battlePlayer.damageDealt DESC, battlePlayer.xp DESC";
+            DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@playersTeam", playersTeam, DB.SqlDataType.Int);
+            dt = await DB.FetchData(sql);
+            if (dt.Rows.Count > 1)
+            {
+                int pos = 1;
+                while (dt.Rows.Count > pos && dt.Rows[pos -1]["teamPlayerName"].ToString() != playerName)
+                    pos++;
+                posOnTeamLeaderboard.PosByDmg = pos;
+            }
+            // done
+            dt.Dispose();
+            dt.Clear();
+            return posOnTeamLeaderboard;
+        }
+    }
 }

@@ -21,11 +21,13 @@ namespace WinApp.Forms
 		private int clanId = 0;
 		private string battleMode = "";
 		private Form parentForm;
-		public BattleReview(int showBattleId, Form selectedParentForm)
+        private Form battleDetailForm;
+		public BattleReview(int showBattleId, Form selectedParentForm, Form battleDetailForm)
 		{
 			InitializeComponent();
 			battleId = showBattleId;
-			parentForm = selectedParentForm;
+            parentForm = selectedParentForm;
+            this.battleDetailForm = battleDetailForm;
 		}
 		// Paintig objects
 		Bitmap bitmap; // bitmap object to hold the painting
@@ -33,70 +35,80 @@ namespace WinApp.Forms
 		// Custom cursors
 		Cursor[] cursorEraser = new Cursor[3];
 		Cursor[] cursorPainting = new Cursor[3];
+        // Battle info
+        DataRow battleData;
 
-		#region Main
+        #region Main
+
+        public async void PaintMap()
+        {
+            // Init paint area
+            bitmap = new Bitmap(300, 300, PixelFormat.Format32bppArgb);
+            graphics = Graphics.FromImage(bitmap);
+            // Check if painting exists
+            string sql = "select painting from battleMapPaint where battleId=@battleId";
+            DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+            DataTable dtBtlMapPaint = await DB.FetchData(sql);
+            if (dtBtlMapPaint.Rows.Count > 0)
+            {
+                paintingExists = true;
+                byte[] imgByte = (byte[])dtBtlMapPaint.Rows[0]["painting"];
+                bitmap = new Bitmap(ImageHelper.ByteArrayToImage(imgByte));
+                picPaint.Image = bitmap;
+            }
+            // Custom cursors
+            cursorPainting[0] = CursorHelper.CreateCursor(imageListCursors.Images[0], 2, 2);
+            cursorPainting[1] = CursorHelper.CreateCursor(imageListCursors.Images[1], 3, 3);
+            cursorPainting[2] = CursorHelper.CreateCursor(imageListCursors.Images[2], 4, 4);
+            cursorEraser[0] = CursorHelper.CreateCursor(imageListCursors.Images[3], 4, 4);
+            cursorEraser[1] = CursorHelper.CreateCursor(imageListCursors.Images[4], 9, 9);
+            cursorEraser[2] = CursorHelper.CreateCursor(imageListCursors.Images[5], 19, 19);
+
+            // Fetch battle data data
+            sql =
+                "select map.*, battle.comment as battleComment, playerTank.tankId as tankId, map.id as mapId, " +
+                "  battle.enemyClanDBID as enemyClanDBID, battle.battleMode as battleMode " +
+                "from battle left join " +
+                "  map on map.id = battle.mapId left join " +
+                "  playerTank on battle.playerTankId = playerTank.Id " +
+                "where battle.id=@battleId";
+            DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+            battleData = (await DB.FetchData(sql)).Rows[0];
+            // Get map pictures and text
+            if (battleData["arena_id"] != DBNull.Value)
+            {
+                string arena_id = battleData["arena_id"].ToString();
+                panelMap.BackgroundImage = ImageHelper.GetMap(arena_id);
+                picIllustration.Image = ImageHelper.GetMap(arena_id, true);
+                lblMapDescription.Text = battleData["description"].ToString();
+            }
+        }
 
 		private async void BattleMapAndComment_Load(object sender, EventArgs e)
 		{
 			// Paint toolstrip
 			toolStripPaint.Renderer = new StripRenderer();
-			// Init paint area
-			bitmap = new Bitmap(300, 300, PixelFormat.Format32bppArgb);
-			graphics = Graphics.FromImage(bitmap);
-			// Check if painting exists
-			string sql = "select painting from battleMapPaint where battleId=@battleId";
-			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-			DataTable dtBtlMapPaint = await DB.FetchData(sql);
-			if (dtBtlMapPaint.Rows.Count > 0)
-			{
-				paintingExists = true;
-				byte[] imgByte = (byte[])dtBtlMapPaint.Rows[0]["painting"];
-				bitmap = new Bitmap(ImageHelper.ByteArrayToImage(imgByte));
-				picPaint.Image = bitmap;
-			}
-			// Custom cursors
-			cursorPainting[0] = CursorHelper.CreateCursor(imageListCursors.Images[0], 2, 2); 
-			cursorPainting[1] = CursorHelper.CreateCursor(imageListCursors.Images[1], 3, 3); 
-			cursorPainting[2] = CursorHelper.CreateCursor(imageListCursors.Images[2], 4, 4); 
-			cursorEraser[0] = CursorHelper.CreateCursor(imageListCursors.Images[3], 4, 4);
-			cursorEraser[1] = CursorHelper.CreateCursor(imageListCursors.Images[4], 9, 9);
-			cursorEraser[2] = CursorHelper.CreateCursor(imageListCursors.Images[5], 19, 19);
 
-			// Fetch battle data data
-			sql = 
-				"select map.*, battle.comment as battleComment, playerTank.tankId as tankId, map.id as mapId, " + 
-				"  battle.enemyClanDBID as enemyClanDBID, battle.battleMode as battleMode " +
-				"from battle left join " +
-				"  map on map.id = battle.mapId left join " +
-				"  playerTank on battle.playerTankId = playerTank.Id " +
-				"where battle.id=@battleId";
-			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-			DataRow dr = (await DB.FetchData(sql)).Rows[0];
-			// Get map pictures and text
-			if (dr["arena_id"] != DBNull.Value)
-			{
-				string arena_id = dr["arena_id"].ToString();
-				panelMap.BackgroundImage = ImageHelper.GetMap(arena_id);
-				picIllustration.Image = ImageHelper.GetMap(arena_id, true);
-				lblMapDescription.Text = dr["description"].ToString();
-			}
+            // Get battle data and paint map
+            PaintMap();
+
 			// get battle comment
-			if (dr["battleComment"] != DBNull.Value)
+			if (battleData["battleComment"] != DBNull.Value)
 			{
-				lastBattleComment = dr["battleComment"].ToString();
+				lastBattleComment = battleData["battleComment"].ToString();
 				txtComment.Text = lastBattleComment;
 			}
 			// get tank & battle mode
-			tankId = Convert.ToInt32(dr["tankId"]);
-			battleMode = dr["battleMode"].ToString();
+			tankId = Convert.ToInt32(battleData["tankId"]);
+			battleMode = battleData["battleMode"].ToString();
 			// get map for filter
-			if (dr["mapId"] != DBNull.Value)
-				mapId = Convert.ToInt32(dr["mapId"]);
+			if (battleData["mapId"] != DBNull.Value)
+				mapId = Convert.ToInt32(battleData["mapId"]);
 			else
 				chkMap.Visible = false;
 			// get clan for filter
-			if (dr["enemyClanDBID"] != DBNull.Value)
-				clanId = Convert.ToInt32(dr["enemyClanDBID"]);
+			if (battleData["enemyClanDBID"] != DBNull.Value)
+				clanId = Convert.ToInt32(battleData["enemyClanDBID"]);
 			else
 				chkClan.Visible = false;
 			// Other other battle reviews
@@ -354,7 +366,12 @@ namespace WinApp.Forms
 			}
 		}
 
-		#endregion
+        #endregion
 
-	}
+        private void mShowInSeparateWindow_Click(object sender, EventArgs e)
+        {
+            Form frm = new BattleDetailMap(battleId, this);
+            FormHelper.OpenFormCenterOfParent(battleDetailForm, frm);
+        }
+    }
 }

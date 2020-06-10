@@ -905,7 +905,7 @@ namespace WinApp.Forms
 		{
 			if (!fetchedMapAndComment)
 			{
-                controlBattleReview = new Forms.BattleReview(battleId, parentForm)
+                controlBattleReview = new BattleReview(battleId, parentForm, this)
                 {
                     Name = "controlBattleReview"
                 };
