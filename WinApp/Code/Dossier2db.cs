@@ -57,6 +57,7 @@ namespace WinApp.Code
             string dataType = "";
             string dbField = "";
             string dbValue = "";
+            string lastTankId = "";
             try
 			{
 				// Read file into string
@@ -213,14 +214,21 @@ namespace WinApp.Code
 							//  Found unmapped achievent in dedicated subsections
 							else if (currentItem.subSection == "achievements7x7" || currentItem.subSection == "achievements" || currentItem.subSection == "fortAchievements") 
 							{
-								int count = Convert.ToInt32(currentItem.value);
-								if (count > 0)
-								{
-									AchItem ach = new AchItem();
-									ach.achName = currentItem.property.ToString();
-									ach.count = count;
-									achList.Add(ach);
-								}
+                                if (Int32.TryParse(currentItem.value.ToString(), out int count))
+                                {
+                                    if (count > 0)
+                                    {
+                                        AchItem ach = new AchItem();
+                                        ach.achName = currentItem.property.ToString();
+                                        ach.count = count;
+                                        achList.Add(ach);
+                                    }
+                                }
+                                else
+                                {
+                                    Log.AddToLogBuffer($"Warning: For tank {lastTankId} a invalid value {currentItem.value.ToString()} was found in dossier file sub section {currentItem.subSection}, not possible to set this value to property { currentItem.property.ToString()} ");
+                                }
+								
 							}
 
 							// ****
@@ -293,12 +301,13 @@ namespace WinApp.Code
                                         // clear frags and Achievements
                                         fragList = "";
 										achList.Clear();
-									}
+                                    }
 									// Get new tank name
 									if (currentItem.mainSection == "tanks_v2" || currentItem.mainSection == "tanks") // The only section containing tanks to be read
 									{
 										currentItem.tankId = reader.Value.ToString(); // add to current item
-									}
+                                        lastTankId = currentItem.tankId;
+                                    }
 								}
 							}
 							else if (reader.Value != null) // main level ( 0 or 1)
@@ -356,7 +365,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
-                string latestData = string.Format("Latest data read from dossier: dataType={0} dbField={1} dbValue={2}", dataType, dbField, dbValue);
+                string latestData = string.Format("Latest data read from dossier: tankId={0} dataType={1} dbField={2} dbValue={3}", lastTankId, dataType, dbField, dbValue);
                 await Log.LogToFile(ex, latestData);
                 result.Message = "An error occured performing battle fetch, please check the log file";
                 result.Success = false;

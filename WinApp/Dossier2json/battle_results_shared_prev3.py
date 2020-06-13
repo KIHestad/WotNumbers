@@ -1,16 +1,20 @@
-# uncompyle6 version 3.7.0
+# uncompyle6 version 3.2.5
 # Python bytecode 2.7 (62211)
-# Decompiled from: Python 2.7.18 (v2.7.18:8d21aa21f2, Apr 20 2020, 13:19:08) [MSC v.1500 32 bit (Intel)]
+# Decompiled from: Python 2.7.14 (v2.7.14:84471935ed, Sep 16 2017, 20:19:30) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: scripts/common/battle_results_shared.py
 import struct
 from itertools import izip
-#from items.badges_common import BadgesCommon
-#from items.vehicles import VEHICLE_DEVICE_TYPE_NAMES, VEHICLE_TANKMAN_TYPE_NAMES
-#from constants import FLAG_ACTION, PREMIUM_TYPE, PREM_BONUS_TYPES
-#from DictPackers import Meta, DictPacker, SimpleDictPacker, DeltaPacker, ValueReplayPacker, BunchProxyPacker, roundToInt
+#from badges_common import BadgesCommon
 from dictpackers import *
 
-#from items badges_common
+#from vehicles import VEHICLE_DEVICE_TYPE_NAMES, VEHICLE_TANKMAN_TYPE_NAMES
+VEHICLE_DEVICE_TYPE_NAMES = (
+ 'engine', 'ammoBay', 'fuelTank', 'radio', 'track', 'gun', 'turretRotator', 'surveyingDevice', 'STUN_PLACEHOLDER',
+ 'wheel')
+VEHICLE_TANKMAN_TYPE_NAMES = (
+ 'commander', 'driver', 'radioman', 'gunner', 'loader')
+
+#from items.badges_common import BadgesCommon
 class BadgesCommon(object):
     _BADGE_IDS_LEN_FORMAT = '<B'
     _BADGE_IDS = '<{}I'
@@ -20,14 +24,7 @@ class BadgesCommon(object):
     def selectedBadgesEmpty():
         return ([], [])
 
-#from itmes.vehicles
-VEHICLE_DEVICE_TYPE_NAMES = (
- 'engine', 'ammoBay', 'fuelTank', 'radio', 'track', 'gun', 'turretRotator', 'surveyingDevice', 'STUN_PLACEHOLDER',
- 'wheel')
-VEHICLE_TANKMAN_TYPE_NAMES = (
- 'commander', 'driver', 'radioman', 'gunner', 'loader')
-
-#from contants
+#from constants import FLAG_ACTION, PREMIUM_TYPE, PREM_BONUS_TYPES
 class FLAG_ACTION:
     PICKED_UP_FROM_BASE = 0
     PICKED_UP_FROM_GROUND = 1
@@ -87,16 +84,16 @@ VEH_INTERACTION_DETAILS = (
  ('noDamageDirectHitsReceived', 'H', 65535, 0),
  ('targetKills', 'B', 255, 0))
 VEH_INTERACTION_DETAILS_NAMES = [ x[0] for x in VEH_INTERACTION_DETAILS ]
-VEH_INTERACTION_DETAILS_MAX_VALUES = dict((x[0], x[2]) for x in VEH_INTERACTION_DETAILS)
+VEH_INTERACTION_DETAILS_MAX_VALUES = dict(((x[0], x[2]) for x in VEH_INTERACTION_DETAILS))
 VEH_INTERACTION_DETAILS_INIT_VALUES = [ x[3] for x in VEH_INTERACTION_DETAILS ]
 VEH_INTERACTION_DETAILS_LAYOUT = ('').join([ x[1] for x in VEH_INTERACTION_DETAILS ])
-VEH_INTERACTION_DETAILS_INDICES = dict((x[1][0], x[0]) for x in enumerate(VEH_INTERACTION_DETAILS))
-VEH_INTERACTION_DETAILS_TYPES = dict((x[0], x[1]) for x in VEH_INTERACTION_DETAILS)
+VEH_INTERACTION_DETAILS_INDICES = dict(((x[1][0], x[0]) for x in enumerate(VEH_INTERACTION_DETAILS)))
+VEH_INTERACTION_DETAILS_TYPES = dict(((x[0], x[1]) for x in VEH_INTERACTION_DETAILS))
 
 def _buildMapsForExt(*fields):
     return (
      Meta(*fields),
-     tuple((v[0], v[2]) for v in fields), {v[0]:i for i, v in enumerate(fields)})
+     tuple(((v[0], v[2]) for v in fields)), {v[0]:i for i, v in enumerate(fields)})
 
 
 VEH_CELL_RESULTS_EXTS = {'extPublic': {'recoveryMechanic': _buildMapsForExt((
@@ -236,7 +233,22 @@ _VEH_BASE_RESULTS_PUBLIC = Meta((
  'kills', int, 0, None, 'sum'), (
  'spotted', int, 0, None, 'sum'), (
  'damaged', int, 0, None, 'sum'), (
- 'stunned', int, 0, None, 'sum'))
+ 'stunned', int, 0, None, 'sum'), (
+ 'environmentID', int, 0, None, 'sum'), (
+ 'eventLorePoints', int, 0, None, 'sum'), (
+ 'generalID', int, -1, None, 'max'), (
+ 'generalLevel', int, -1, None, 'max'), (
+ 'frontLevel', int, -1, None, 'max'), (
+ 'generalPoints', int, 0, None, 'sum'), (
+ 'generalPointsNoBonus', int, 0, None, 'sum'), (
+ 'generalPointsPrev', int, 0, None, 'sum'), (
+ 'frontPoints', int, 0, None, 'sum'), (
+ 'frontPointsNoBonus', int, 0, None, 'sum'), (
+ 'frontPointsPrev', int, 0, None, 'sum'), (
+ 'gereralLevelReached', bool, False, None, 'any'), (
+ 'frontLevelReached', bool, False, None, 'any'), (
+ 'eventGoals', list, [], None, 'extend'), (
+ 'energyToken', str, '', None, 'any'))
 _VEH_BASE_RESULTS_PRIVATE = Meta((
  'xpPenalty', int, 0, None, 'sum'), (
  'creditsPenalty', int, 0, None, 'sum'), (
@@ -282,9 +294,10 @@ _AVATAR_BASE_PRIVATE_RESULTS = Meta((
  'fortClanDBIDs', list, [], None, 'skip'), (
  'winnerIfDraw', int, 0, None, 'skip'), (
  'isPrematureLeave', bool, False, None, 'skip'), (
- 'watchedBattleToTheEnd', bool, False, None, 'skip'), (
- 'squadBonusInfo', None, None,None, 'skip'), (
- 'progressiveReward',None, None,None, 'skip'), (
+ 'watchedBattleToTheEnd', bool, False, None, 'skip'), ('squadBonusInfo', None, None,
+                                                       None, 'skip'), ('progressiveReward',
+                                                                       None, None,
+                                                                       None, 'skip'), (
  'rankChange', int, 0, None, 'skip'), (
  'updatedRankChange', int, 0, None, 'skip'), (
  'accRank', tuple, (0, 0), None, 'skip'), (
@@ -297,16 +310,15 @@ _AVATAR_BASE_PRIVATE_RESULTS = Meta((
  'rankedSeason', tuple, (0, 0), None, 'skip'), (
  'rankedSeasonNum', int, 0, None, 'skip'), (
  'bonusBattleUsed', bool, False, None, 'skip'), (
- 'efficiencyBonusBattles', int, 0, None, 'skip'), (
- 'stepsBonusBattles', int, 0, None, 'skip'), (
+ 'qualificationBonusBattles', int, 0, None, 'skip'), (
+ 'additionalBonusBattles', int, 0, None, 'skip'), (
  'eligibleForCrystalRewards', bool, False, None, 'skip'), (
  'activeRents', dict, {}, None, 'skip'), (
  'recruitsIDs', list, [], None, 'skip'), (
  'recruiterID', int, 0, None, 'skip'), (
  'fareTeamXPPosition', int, 0, None, 'skip'))
-_AVATAR_BASE_PUBLIC_RESULTS_EXTS = {
-   'playerRank': _buildMapsForExt((
-                  'rank', int, 0, None, 'skip')), 
+_AVATAR_BASE_PUBLIC_RESULTS_EXTS = {'playerRank': _buildMapsForExt((
+                'rank', int, 0, None, 'skip')), 
    'epicMetaGame': _buildMapsForExt((
                   'creditsAfterShellCosts', int, 0, None, 'skip'), (
                   'unchargedShellCosts', int, 0, None, 'skip'), (
@@ -454,7 +466,6 @@ VEH_FULL_RESULTS_UPDATE = Meta((
  'battleNum', int, 0, None, 'skip')) + _PRIVATE_EVENT_RESULTS
 _VEH_FULL_RESULTS_PRIVATE = Meta((
  'questsProgress', dict, {}, None, 'joinDicts'), (
- 'c11nProgress', dict, {}, None, 'skip'), (
  'originalCreditsToDrawSquad', int, 0, None, 'sum'), (
  'originalCreditsPenaltySquad', int, 0, None, 'skip'), (
  'originalCreditsContributionInSquad', int, 0, None, 'skip'), (
@@ -470,13 +481,12 @@ PLAYER_INFO = Meta((
  'prebattleID', int, 0, None, 'skip'), (
  'team', int, 1, None, 'skip'), (
  'igrType', int, 0, None, 'skip'))
-_COMMON_RESULTS_EXTS = {
-    'destructibleEntity': _buildMapsForExt((
-        'numStarted', int, 0, None, 'skip'), (
-        'numDestroyed', int, 0, None, 'skip'), (
-        'numDefended', int, 0, None, 'skip')), 
-    'sector': _buildMapsForExt((
-        'numCaptured', int, 0, None, 'skip'))}
+_COMMON_RESULTS_EXTS = {'destructibleEntity': _buildMapsForExt((
+                        'numStarted', int, 0, None, 'skip'), (
+                        'numDestroyed', int, 0, None, 'skip'), (
+                        'numDefended', int, 0, None, 'skip')), 
+   'sector': _buildMapsForExt((
+            'numCaptured', int, 0, None, 'skip'))}
 COMMON_RESULTS = Meta((
  'arenaTypeID', int, 0, None, 'skip'), (
  'arenaCreateTime', int, 0, None, 'skip'), (
@@ -488,15 +498,16 @@ COMMON_RESULTS = Meta((
  'guiType', int, 0, None, 'skip'), (
  'vehLockMode', int, 0, None, 'skip'), ('division', None, None, None, 'skip'), (
  'bots', dict, {}, None, 'skip'), (
- 'extCommon', dict, {}, BunchProxyPacker(_COMMON_RESULTS_EXTS), 'joinExts'), (
- 'accountCompDescr', dict, {}, None, 'skip'))
-# Check above line for 'accountCompDescr', previously failed and have been commented out
+ 'extCommon', dict, {}, BunchProxyPacker(_COMMON_RESULTS_EXTS), 'joinExts')
+ #, (
+ #'accountCompDescr', dict, {}, None, 'skip')
+)
 VEH_INTERACTIVE_STATS = ('xp', 'damageDealt', 'capturePts', 'flagActions', 'winPoints',
                          'deathCount', 'resourceAbsorbed', 'stopRespawn', 'equipmentDamage',
                          'equipmentKills')
-VEH_INTERACTIVE_STATS_INDICES = dict((x[1], x[0]) for x in enumerate(VEH_INTERACTIVE_STATS))
+VEH_INTERACTIVE_STATS_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_INTERACTIVE_STATS)))
 AVATAR_PRIVATE_STATS = ('ragePoints', )
-AVATAR_PRIVATE_STATS_INDICES = dict((x[1], x[0]) for x in enumerate(AVATAR_PRIVATE_STATS))
+AVATAR_PRIVATE_STATS_INDICES = dict(((x[1], x[0]) for x in enumerate(AVATAR_PRIVATE_STATS)))
 _PREM_TYPE_TO_FACTOR100_NAMES = {PREM_BONUS_TYPES.CREDITS: {PREMIUM_TYPE.BASIC: 'premiumCreditsFactor100', 
                               PREMIUM_TYPE.PLUS: 'premiumPlusCreditsFactor100', 
                               PREMIUM_TYPE.VIP: 'premiumVipCreditsFactor100'}, 
@@ -543,7 +554,7 @@ class _VehicleInteractionDetailsItem(object):
         self.__offset = offset
 
     def __getitem__(self, key):
-        return self.__values[(self.__offset + VEH_INTERACTION_DETAILS_INDICES[key])]
+        return self.__values[self.__offset + VEH_INTERACTION_DETAILS_INDICES[key]]
 
     def __setitem__(self, key, value):
         self.__values[self.__offset + VEH_INTERACTION_DETAILS_INDICES[key]] = min(self.__fmt2py(VEH_INTERACTION_DETAILS_TYPES[key])(value), VEH_INTERACTION_DETAILS_MAX_VALUES[key])
@@ -561,7 +572,7 @@ class VehicleInteractionDetails(object):
         self.__uniqueVehIDs = uniqueVehIDs
         self.__values = values
         size = len(VEH_INTERACTION_DETAILS)
-        self.__offsets = dict((x[1], x[0] * size) for x in enumerate(uniqueVehIDs))
+        self.__offsets = dict(((x[1], x[0] * size) for x in enumerate(uniqueVehIDs)))
 
     @staticmethod
     def fromPacked(packed):
@@ -571,7 +582,7 @@ class VehicleInteractionDetails(object):
         flatIDs = struct.unpack(packedVehIDsLayout, packed[:packedVehIDsLen])
         uniqueVehIDs = []
         for i in xrange(0, len(flatIDs), 2):
-            uniqueVehIDs.append((flatIDs[i], flatIDs[(i + 1)]))
+            uniqueVehIDs.append((flatIDs[i], flatIDs[i + 1]))
 
         values = struct.unpack('<' + VEH_INTERACTION_DETAILS_LAYOUT * count, packed[packedVehIDsLen:])
         return VehicleInteractionDetails(uniqueVehIDs, values)

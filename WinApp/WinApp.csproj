@@ -921,6 +921,7 @@
     <None Include="DevDocs\OLD_BRR\__init__.pyc" />
     <None Include="Dossier2json\structures_101.json" />
     <None Include="Dossier2json\structures_102.json" />
+    <None Include="Dossier2json\structures_103.json" />
     <None Include="Dossier2json\structures_77.json" />
     <None Include="Dossier2json\structures_81.json" />
     <None Include="Dossier2json\structures_85.json" />

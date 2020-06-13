@@ -1,9 +1,8 @@
-# uncompyle6 version 3.7.0
+# uncompyle6 version 2.14.0
 # Python bytecode 2.7 (62211)
-# Decompiled from: Python 2.7.18 (v2.7.18:8d21aa21f2, Apr 20 2020, 13:19:08) [MSC v.1500 32 bit (Intel)]
+# Decompiled from: Python 2.7.14 (v2.7.14:84471935ed, Sep 16 2017, 20:19:30) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: scripts/common/DictPackers.py
 import copy
-#from debug_utils import *
 from binascii import crc32
 
 def roundToInt(val):
@@ -18,31 +17,29 @@ class DeltaPacker(object):
     def pack(self, seq):
         if len(seq) == 0:
             return seq
-        else:
-            ret = [
-             None] * len(seq)
-            s = sorted(seq)
-            if self.packPredicate:
-                p = self.packPredicate
-                s = [ p(v) for v in s ]
-            ret[0] = s[0]
-            for index, v in enumerate(s[1:]):
-                diff = v - s[index]
-                ret[index + 1] = diff
+        ret = [
+         None] * len(seq)
+        s = sorted(seq)
+        if self.packPredicate:
+            p = self.packPredicate
+            s = [ p(v) for v in s ]
+        ret[0] = s[0]
+        for index, v in enumerate(s[1:]):
+            diff = v - s[index]
+            ret[index + 1] = diff
 
-            return ret
+        return ret
 
     def unpack(self, seq):
         if len(seq) == 0:
             return seq
-        else:
-            ret = [
-             None] * len(seq)
-            ret[0] = seq[0]
-            for index in xrange(1, len(seq)):
-                ret[index] = ret[(index - 1)] + seq[index]
+        ret = [
+         None] * len(seq)
+        ret[0] = seq[0]
+        for index in xrange(1, len(seq)):
+            ret[index] = ret[index - 1] + seq[index]
 
-            return ret
+        return ret
 
 
 class ValueReplayPacker:
@@ -88,14 +85,17 @@ class DictPacker(object):
                 v = dataDict.get(name, default)
                 if v is None:
                     pass
-                elif v == default:
-                    v = None
-                elif packer is not None:
-                    v = packer.pack(v)
-                elif transportType is not None and not isinstance(v, transportType):
-                    v = transportType(v)
+                else:
                     if v == default:
                         v = None
+                    else:
+                        if packer is not None:
+                            v = packer.pack(v)
+                        else:
+                            if transportType is not None and not isinstance(v, transportType):
+                                v = transportType(v)
+                                if v == default:
+                                    v = None
                 l[index + 1] = v
             except Exception as e:
                 LOG_ERROR('error while packing:', index, metaEntry, str(e))
@@ -105,36 +105,32 @@ class DictPacker(object):
 
     def unpack(self, dataList):
         ret = {}
-        try:
-            if len(dataList) == 0 or dataList[0] != self._checksum:
-                return
-            for index, meta in enumerate(self._metaData):
-                val = dataList[(index + 1)]
-                name, _, default, packer, aggFunc = meta
-                if val is None:
-                    val = copy.deepcopy(default)
-                elif packer is not None:
+        if len(dataList) == 0 or dataList[0] != self._checksum:
+            return
+        for index, meta in enumerate(self._metaData):
+            val = dataList[index + 1]
+            name, _, default, packer, aggFunc = meta
+            if val is None:
+                val = copy.deepcopy(default)
+            else:
+                if packer is not None:
                     val = packer.unpack(val)
-                ret[name] = val
-        except Exception as e:
-            LOG_ERROR('error while unpack:', index, meta, str(e))
-            raise
+            ret[name] = val
+
         return ret
 
     def unpackWthoutChecksum(self, dataList):
         ret = {}
-        try:
-            for index, meta in enumerate(self._metaData):
-                val = dataList[(index + 1)]
-                name, _, default, packer, aggFunc = meta
-                if val is None:
-                    val = copy.deepcopy(default)
-                elif packer is not None:
+        for index, meta in enumerate(self._metaData):
+            val = dataList[index + 1]
+            name, _, default, packer, aggFunc = meta
+            if val is None:
+                val = copy.deepcopy(default)
+            else:
+                if packer is not None:
                     val = packer.unpack(val)
-                ret[name] = val
-        except Exception as e:
-            LOG_ERROR('error while unpackWthoutChecksum:', index, meta, str(e))
-            raise
+            ret[name] = val
+
         return ret
 
     @staticmethod
@@ -186,7 +182,7 @@ class Meta(DictPacker):
 
     def __init__(self, *metaData):
         DictPacker.__init__(self, *metaData)
-        self.__nameToIdx = dict((value[0], index) for index, value in enumerate(self._metaData))
+        self.__nameToIdx = dict(((value[0], index) for index, value in enumerate(self._metaData)))
         self.__names = set(self.__nameToIdx.keys())
 
     def names(self):

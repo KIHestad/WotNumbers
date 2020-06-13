@@ -44,7 +44,7 @@ VEH_INTERACTION_DETAILS_TYPES = dict(((x[0], x[1]) for x in VEH_INTERACTION_DETA
   
   
 parser = dict()
-parser['version'] = "1.9.0.1"
+parser['version'] = "1.9.1.0"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
 
@@ -146,12 +146,14 @@ def convertToFullForm(compactForm):
     avatarResults = Unpickler.loads(zlib.decompress(avatarResults))
     personal = {}
     try:
-        fullForm = {'arenaUniqueID': arenaUniqueID,
+        fullForm = {
+            'arenaUniqueID': arenaUniqueID,
             'personal': personal,
             'common': {},
             'players': {},
             'vehicles': {},
-            'avatars': {}}
+            'avatars': {}
+        }
                 
         if len(battle_results_data.AVATAR_FULL_RESULTS) + 1 != len(avatarResults):
             # Wrong number of items in lists, ie wrong parser version
@@ -173,7 +175,10 @@ def convertToFullForm(compactForm):
         commonAsList, playersAsList, vehiclesAsList, avatarsAsList = Unpickler.loads(zlib.decompress(pickled))
                 
         fullForm['common'] = battle_results_data.COMMON_RESULTS.unpackWthoutChecksum(commonAsList)
-                
+        #Fix from WoT 1.9.1.0
+        if 'accountCompDescr' in fullForm['common']:
+            del fullForm['common']['accountCompDescr']
+
         for accountDBID, playerAsList in playersAsList.iteritems():
             fullForm['players'][accountDBID] = battle_results_data.PLAYER_INFO.unpack(playerAsList)
 
@@ -192,49 +197,52 @@ def convertToFullForm(compactForm):
         printmessage(traceback.format_exc(i), 1)
         return 0, {'error': 'Missing key in data: %s' % i.message}
     except Exception, e:
+        printmessage(traceback.format_exc(e), 1)
         return 0, {'error': e}
     
 
 def prepareForJSON(bresult):
+    ## Fix values in personal class for non-valid json parameters
     if 'personal' in bresult:
+        for subLevel, subLevelValues in bresult['personal'].copy().iteritems():
 
-        #if 'club' in bresult['personal']:    
-        #    if 'clubDossierPopUps' in bresult['personal']['club']:
-        #        oldClubDossier = bresult['personal']['club']['clubDossierPopUps'].copy()
-        #        bresult['personal']['club']['clubDossierPopUps'] = dict()
-        #        for achievement, amount in oldClubDossier.iteritems():
-        #            bresult['personal']['club']['clubDossierPopUps'][str(list(achievement)[0]) + '-' + str(list(achievement)[1])] = amount
-        
-        for vehTypeCompDescr, ownResults in bresult['personal'].copy().iteritems():
-            if vehTypeCompDescr == 'avatar':
-                if 'avatarDamageEventList' in bresult['personal'][vehTypeCompDescr]:
-                    del bresult['personal'][vehTypeCompDescr]['avatarDamageEventList']
-                if 'squadBonusInfo' in bresult['personal'][vehTypeCompDescr]:
-                    del bresult['personal'][vehTypeCompDescr]['squadBonusInfo']
-            if ownResults is not None:
-                if 'club' in ownResults:
-                    if ownResults['club'] is not None:
-                        if 'club' in ownResults:
-                            if 'clubDossierPopUps' in ownResults['club']:
-                                oldClubDossier = ownResults['club']['clubDossierPopUps'].copy()
-                                ownResults['club']['clubDossierPopUps'] = dict()
+            #Remove unwanted entries
+            if subLevel == 'avatar': 
+                if 'avatarDamageEventList' in bresult['personal'][subLevel]:
+                    del bresult['personal'][subLevel]['avatarDamageEventList']
+                if 'squadBonusInfo' in bresult['personal'][subLevel]:
+                    del bresult['personal'][subLevel]['squadBonusInfo']
+            else:
+                if 'c11nProgress' in bresult['personal'][subLevel]:
+                    del bresult['personal'][subLevel]['c11nProgress']
+
+            #Inspect and clean up values
+            if subLevelValues is not None:
+                #MC: This is a hack to remove suspicious entries ending with "The resulting string is not a valid number", typically removing binary 
+                for detail in subLevelValues:
+                    if (type(subLevelValues[detail]) is str):
+                        subLevelValues[detail] = 0
+                #Fix detail section having array as key
+                if 'details' in subLevelValues:
+                    newValues = arrayDictToString(subLevelValues['details'])
+                    bresult['personal'][subLevel]['details'] = newValues
+                #Fix for club section, old code from Phalynx, unsure if relevant any more or what it does ^_^
+                if 'club' in subLevelValues:
+                    if subLevelValues['club'] is not None:
+                        if 'club' in subLevelValues:
+                            if 'clubDossierPopUps' in subLevelValues['club']:
+                                oldClubDossier = subLevelValues['club']['clubDossierPopUps'].copy()
+                                subLevelValues['club']['clubDossierPopUps'] = dict()
                                 for achievement, amount in oldClubDossier.iteritems():
-                                    bresult['personal'][vehTypeCompDescr]['club']['clubDossierPopUps'][str(list(achievement)[0]) + '-' + str(list(achievement)[1])] = amount
+                                    bresult['personal'][subLevel]['club']['clubDossierPopUps'][str(list(achievement)[0]) + '-' + str(list(achievement)[1])] = amount
         
         if len(bresult['personal'].copy())>1 and len(bresult['personal'].copy())<10 :
             pass
-        for vehTypeCompDescr, ownResults in bresult['personal'].copy().iteritems():
-            if ownResults is not None:
-                for detail in ownResults:
-                    if (type(ownResults[detail]) is str): # MC: This is a hack to remove suspicious entries. The resulting string is not a valid number.
-                        ownResults[detail] = 0
-                    
-                if 'details' in ownResults:
-                    newdetails = detailsDictToString(ownResults['details'])
-                    bresult['personal'][vehTypeCompDescr]['details'] = newdetails
+        
+        
     return bresult
             
-def detailsDictToString(mydict):
+def arrayDictToString(mydict):
     mydictcopy = dict()
     
     if not type(mydict) is dict:
@@ -268,13 +276,26 @@ def dumpjson(bresult):
     bresult = prepareForJSON(bresult)
     try:
         finalfile = open(filename_target, 'w') 
-        #test = json.dumps(bresult, ensure_ascii=False)
+        
+        # Debug section
+        #test = json.dumps(bresult['arenaUniqueID'], ensure_ascii=False)
+        #test = json.dumps(bresult['avatars'], ensure_ascii=False)
+        #test = json.dumps(bresult['common'], ensure_ascii=False)
+        #test = json.dumps(bresult['parser'], ensure_ascii=False)
+        #test = json.dumps(bresult['players'], ensure_ascii=False)
+        #test = json.dumps(bresult['vehicles'], ensure_ascii=False)
+        #vehTypeCompDescr, ownResults = bresult['personal']
+        #vehTypeCompDescrData = bresult['personal'][vehTypeCompDescr]
+        #ownResultsData = bresult['personal'][ownResults]
+        #test = json.dumps(vehTypeCompDescrData, ensure_ascii=False)
+        #test = json.dumps(ownResultsData, ensure_ascii=False)
+        
         if option_format == 1: 
-            
-            finalfile.write(json.dumps(bresult, ensure_ascii=False, sort_keys=True, indent=4)) 
+            finalfile.write(json.dumps(bresult, ensure_ascii=False, skipkeys=True, sort_keys=True, indent=4)) 
         else: 
-            finalfile.write(json.dumps(bresult, ensure_ascii=False)) 
-        finalfile.close() # IRONPYTHON MODIFIED: close dossier output file
+            finalfile.write(json.dumps(bresult, ensure_ascii=False, skipkeys=True))
+        # IRONPYTHON MODIFIED: close dossier output file
+        finalfile.close()
     except Exception, e:
         if finalfile is not None: 
             finalfile.close() # IRONPYTHON MODIFIED: close dossier output file
