@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.27.4"?>
+<?define ProductVersion = "0.28.2"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -278,12 +278,36 @@
         <File Id="filwotbr2j" KeyPath="yes" Source="$(var.D2jSource)\wotbr2j.py" />
       </Component>
       
-      <!-- Battle classes: battle_results_shared + dictpackers -->
-      <Component Id="cmpBRS" Directory="INSTALLFOLDER_Dossier2json" Guid="{8B240B12-05C7-4FA9-98EE-BCCFBB8C155F}">
-        <File Id="filBRS" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared.py" />
+      <!-- Battle classes -->
+      <Component Id="cmp_battle_results_common" Directory="INSTALLFOLDER_Dossier2json" Guid="{499C9315-F235-490D-A659-5983B3CED27E}">
+        <File Id="fil_battle_results_common" KeyPath="yes" Source="$(var.D2jSource)\battle_results_common.py" />
       </Component>
-      <Component Id="cmpdictpackers" Directory="INSTALLFOLDER_Dossier2json" Guid="{171302F2-9757-4686-85EC-22CB4725DEFB}">
-        <File Id="fildictpackers" KeyPath="yes" Source="$(var.D2jSource)\dictpackers.py" />
+      <Component Id="cmp_battle_results_constants" Directory="INSTALLFOLDER_Dossier2json" Guid="{E7E75DED-FE8D-4BF4-9CA4-67721CF9077B}">
+        <File Id="fil_battle_results_constants" KeyPath="yes" Source="$(var.D2jSource)\battle_results_constants.py" />
+      </Component>
+      <Component Id="cmp_battle_results_event" Directory="INSTALLFOLDER_Dossier2json" Guid="{9172E6DC-D0AB-4E24-9E9A-8FFE7D20FDA8}">
+        <File Id="fil_battle_results_event" KeyPath="yes" Source="$(var.D2jSource)\battle_results_event.py" />
+      </Component>
+      <Component Id="cmp_battle_results_frontline" Directory="INSTALLFOLDER_Dossier2json" Guid="{8D706356-5FFF-4D51-AAC3-15A787227A23}">
+        <File Id="fil_battle_results_frontline" KeyPath="yes" Source="$(var.D2jSource)\battle_results_frontline.py" />
+      </Component>
+      <Component Id="cmp_battle_results_random" Directory="INSTALLFOLDER_Dossier2json" Guid="{3B82BA11-561C-448E-BBDF-25785485BAEE}">
+        <File Id="fil_battle_results_random" KeyPath="yes" Source="$(var.D2jSource)\battle_results_random.py" />
+      </Component>
+      <Component Id="cmp_battle_results_ranked" Directory="INSTALLFOLDER_Dossier2json" Guid="{7D043DA7-3EFD-4769-8BA6-0CEB10672652}">
+        <File Id="fil_battle_results_ranked" KeyPath="yes" Source="$(var.D2jSource)\battle_results_ranked.py" />
+      </Component>
+      <Component Id="cmp_constants" Directory="INSTALLFOLDER_Dossier2json" Guid="{09B69B97-AC06-4D04-A2A3-3E78968D51AB}">
+        <File Id="fil_constants" KeyPath="yes" Source="$(var.D2jSource)\constants.py" />
+      </Component>
+      <Component Id="cmp_DictPackers" Directory="INSTALLFOLDER_Dossier2json" Guid="{666D608A-3F02-4694-A7CF-7810503157A1}">
+        <File Id="fil_DictPackers" KeyPath="yes" Source="$(var.D2jSource)\DictPackers.py" />
+      </Component>
+      <Component Id="cmp_enumerations" Directory="INSTALLFOLDER_Dossier2json" Guid="{9D05D33F-CFF2-443E-95F0-D0B5637EF508}">
+        <File Id="fil_enumerations" KeyPath="yes" Source="$(var.D2jSource)\enumerations.py" />
+      </Component>
+      <Component Id="cmp_soft_exception" Directory="INSTALLFOLDER_Dossier2json" Guid="{52D1D08A-A2CE-4ADC-91D2-E81868CD37C1}">
+        <File Id="fil_soft_exception" KeyPath="yes" Source="$(var.D2jSource)\soft_exception.py" />
       </Component>
       
       <!-- Dossier Structs -->
@@ -335,6 +359,9 @@
       <Component Id="cmpstructures103" Directory="INSTALLFOLDER_Dossier2json" Guid="{8CF03748-CDA1-49FB-90DC-F68F06E0A3B0}">
         <File Id="filstructures103" KeyPath="yes" Source="$(var.D2jSource)\structures_103.json" />
       </Component>
+      <Component Id="cmpstructures104" Directory="INSTALLFOLDER_Dossier2json" Guid="{1616C6E8-8610-4E21-A6B4-B0F1A1D1146D}">
+        <File Id="filstructures104" KeyPath="yes" Source="$(var.D2jSource)\structures_104.json" />
+      </Component>
 
     </ComponentGroup>
   </Fragment>
@@ -347,6 +374,7 @@
   <Fragment>
     <DirectoryRef Id="INSTALLFOLDER_Lib">
       <Directory Id="dirPythonImportlib" Name="importlib" />
+      <Directory Id="dirPythonEnum" Name="enum" />
       <Directory Id="dirPythonJson" Name="json" />
     </DirectoryRef>
   </Fragment>
@@ -356,6 +384,10 @@
 
       <Component Id="cmp6A4F5D0D9049F8BE7FC1711861F4D8B4" Directory="dirPythonImportlib" Guid="{987C4F6A-9668-4B1C-8C16-D5E16E3B17A3}">
         <File Id="fil7010E2F892346ED2311A72799BDCC9F1" KeyPath="yes" Source="$(var.LibSource)\importlib\__init__.py" />
+      </Component>
+
+      <Component Id="cmp_python_enum" Directory="dirPythonEnum" Guid="{7168EA90-E76A-4F87-8926-2F685BCB124B}">
+        <File Id="fil_python_enum" KeyPath="yes" Source="$(var.LibSource)\enum\__init__.py" />
       </Component>
 
       <Component Id="cmpB20DAB89CAB0EBF08847C869670B3C62" Directory="dirPythonJson" Guid="{8B483B92-F60C-4B48-B637-2858BD3BF85D}">
@@ -442,6 +474,9 @@
       </Component>
       <Component Id="cmp910378290F3D621F37BB6E0E69072AE4" Directory="INSTALLFOLDER_Lib" Guid="{288BE286-18DA-4E23-848B-2353F26437B9}">
         <File Id="filAE49CCFFD6E5862290145C1B48AF9D17" KeyPath="yes" Source="$(var.LibSource)\weakref.py" />
+      </Component>
+      <Component Id="cmp_python_functools" Directory="INSTALLFOLDER_Lib" Guid="{8DC4BD14-2EB0-4D8D-AEFD-4DA49AC1AF14}">
+        <File Id="fil_python_functools" KeyPath="yes" Source="$(var.LibSource)\functools.py" />
       </Component>
     </ComponentGroup>
   </Fragment>

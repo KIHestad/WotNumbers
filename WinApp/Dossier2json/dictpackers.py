@@ -3,8 +3,12 @@
 # Decompiled from: Python 2.7.18 (v2.7.18:8d21aa21f2, Apr 20 2020, 13:19:08) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: scripts/common/DictPackers.py
 import copy
-#from debug_utils import *
+
+# CHANGED: Not use debug log
+#from debug_utils import LOG_ERROR
+
 from binascii import crc32
+from functools import partial
 
 def roundToInt(val):
     return int(round(val))
@@ -56,22 +60,6 @@ class ValueReplayPacker:
         return value
 
 
-class BunchProxyPacker(object):
-
-    def __init__(self, bunchMetaData):
-        self.__metaData = bunchMetaData
-
-    @property
-    def extMeta(self):
-        return self.__metaData
-
-    def pack(self, bunchOfDicts):
-        return {key:self.__metaData[key][0].pack(value) for key, value in bunchOfDicts.iteritems()}
-
-    def unpack(self, bunchOfLists):
-        return {key:self.__metaData[key][0].unpack(value) for key, value in bunchOfLists.iteritems()}
-
-
 class DictPacker(object):
 
     def __init__(self, *metaData):
@@ -98,44 +86,32 @@ class DictPacker(object):
                         v = None
                 l[index + 1] = v
             except Exception as e:
-                LOG_ERROR('error while packing:', index, metaEntry, str(e))
+                #LOG_ERROR('error while packing:', index, metaEntry, str(e))
                 raise
 
         return l
 
     def unpack(self, dataList):
         ret = {}
-        try:
-            if len(dataList) == 0 or dataList[0] != self._checksum:
-                return
-            for index, meta in enumerate(self._metaData):
-                val = dataList[(index + 1)]
-                name, _, default, packer, aggFunc = meta
-                if val is None:
-                    val = copy.deepcopy(default)
-                elif packer is not None:
-                    val = packer.unpack(val)
-                ret[name] = val
-        except Exception as e:
-            LOG_ERROR('error while unpack:', index, meta, str(e))
-            raise
+        if len(dataList) == 0 or dataList[0] != self._checksum:
+            return
+        for index, meta in enumerate(self._metaData):
+            val = dataList[(index + 1)]
+            name, _, _, packer, _ = meta
+            if val is None:
+                val = self.getDefaultValue(index)
+            elif packer is not None:
+                val = packer.unpack(val)
+            ret[name] = val
+
         return ret
 
-    def unpackWthoutChecksum(self, dataList):
-        ret = {}
-        try:
-            for index, meta in enumerate(self._metaData):
-                val = dataList[(index + 1)]
-                name, _, default, packer, aggFunc = meta
-                if val is None:
-                    val = copy.deepcopy(default)
-                elif packer is not None:
-                    val = packer.unpack(val)
-                ret[name] = val
-        except Exception as e:
-            LOG_ERROR('error while unpackWthoutChecksum:', index, meta, str(e))
-            raise
-        return ret
+    def getChecksum(self):
+        return self._checksum
+
+    def getDefaultValue(self, index):
+        _, _, default, _, _ = self._metaData[index]
+        return copy.deepcopy(default)
 
     @staticmethod
     def checksum(metaData):
@@ -174,26 +150,41 @@ class SimpleDictPacker(object):
         return ret
 
 
-class MetaEntry(object):
-    __slots__ = ('name', 'transportType', 'default', 'packer', 'aggFunc')
-
-    def __init__(self, *data):
-        self.name, self.transportType, default, self.packer, self.aggFunc = data
-        self.default = copy.deepcopy(default)
-
-
 class Meta(DictPacker):
 
     def __init__(self, *metaData):
         DictPacker.__init__(self, *metaData)
-        self.__nameToIdx = dict((value[0], index) for index, value in enumerate(self._metaData))
-        self.__names = set(self.__nameToIdx.keys())
+        self.__nameToData = {name:(index, transportType, default, packer, aggFunc) for index, (name, transportType, default, packer, aggFunc) in enumerate(self._metaData)}
+        self.__names = set(self.__nameToData.keys())
+        self.__initDefaults()
 
     def names(self):
         return self.__names
 
-    def indexOf(self, key):
-        return self.__nameToIdx[key]
+    def defaults(self):
+        result = self.__defaultsImmutable.copy()
+        for key, value in self.__defaultsMutable.iteritems():
+            result[key] = value()
+
+        return result
+
+    def indexOf(self, name):
+        return self.__nameToData[name][0]
+
+    def nameOf(self, index):
+        return self._metaData[index][0]
+
+    def getDataByName(self, name):
+        return self.__nameToData[name]
+
+    def getDefaultValue(self, index):
+        name, _, _, _, _ = self._metaData[index]
+        return self.getDefaultValueByName(name)
+
+    def getDefaultValueByName(self, name):
+        if name in self.__defaultsImmutable:
+            return self.__defaultsImmutable[name]
+        return self.__defaultsMutable[name]()
 
     def __add__(self, other):
         newMeta = self._metaData + other._metaData
@@ -205,5 +196,31 @@ class Meta(DictPacker):
     def __len__(self):
         return len(self._metaData)
 
-    def __getitem__(self, index):
-        return MetaEntry(*self._metaData[index])
+    def __initDefaults(self):
+        self.__defaultsImmutable = {}
+        self.__defaultsMutable = {}
+        for name, transportType, default, _, _ in self._metaData:
+            mutableType = getMutability(transportType, default)
+            if mutableType == 'immutable':
+                self.__defaultsImmutable[name] = default
+            else:
+                lambdas = {'mutableList': partial(lambda x: x[:], default), 
+                   'mutableDeep': partial(copy.deepcopy, default), 
+                   'mutableCopy': partial(lambda x: x.copy(), default)}
+                self.__defaultsMutable[name] = lambdas[mutableType]
+
+
+def getMutability(transportType, default):
+    if transportType in (int, float, str, bool, None):
+        return 'immutable'
+    else:
+        if transportType in (list, tuple, set):
+            if all(getMutability(type(value), value) == 'immutable' for value in default):
+                if transportType == list:
+                    return 'mutableList'
+                if transportType == tuple:
+                    return 'immutable'
+                return 'mutableCopy'
+        if default or transportType != dict:
+            return 'mutableDeep'
+        return 'mutableCopy'

@@ -922,6 +922,7 @@
     <None Include="Dossier2json\structures_101.json" />
     <None Include="Dossier2json\structures_102.json" />
     <None Include="Dossier2json\structures_103.json" />
+    <None Include="Dossier2json\structures_104.json" />
     <None Include="Dossier2json\structures_77.json" />
     <None Include="Dossier2json\structures_81.json" />
     <None Include="Dossier2json\structures_85.json" />
@@ -1671,7 +1672,16 @@
     <Content Include="DevDocs\Python277\__future__.py" />
     <Content Include="DevDocs\Python277\__phello__.foo.py" />
     <Content Include="Docs\Database\insert_dbver488.txt" />
-    <Content Include="Dossier2json\battle_results_shared.py" />
+    <Content Include="Dossier2json\battle_results_common.py" />
+    <Content Include="Dossier2json\battle_results_constants.py" />
+    <Content Include="Dossier2json\battle_results_event.py" />
+    <Content Include="Dossier2json\battle_results_frontline.py" />
+    <Content Include="Dossier2json\battle_results_random.py" />
+    <Content Include="Dossier2json\battle_results_ranked.py" />
+    <Content Include="Dossier2json\constants.py" />
+    <Content Include="Dossier2json\DictPackers.py" />
+    <Content Include="Dossier2json\enumerations.py" />
+    <Content Include="Dossier2json\soft_exception.py" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />
@@ -2192,7 +2202,9 @@
     <Content Include="PythonLib\base64.py" />
     <Content Include="PythonLib\collections.py" />
     <Content Include="PythonLib\copy.py" />
+    <Content Include="PythonLib\enum\__init__.py" />
     <Content Include="PythonLib\fnmatch.py" />
+    <Content Include="PythonLib\functools.py" />
     <Content Include="PythonLib\genericpath.py" />
     <Content Include="PythonLib\heapq.py" />
     <Content Include="PythonLib\importlib\__init__.py" />
@@ -2238,7 +2250,6 @@
     <Content Include="Docs\Database\createTableMSSQL.txt" />
     <Content Include="Docs\Database\insert.txt" />
     <None Include="Docs\Database\upgrade.json" />
-    <Content Include="Dossier2json\dictpackers.py" />
     <Content Include="Dossier2json\wotbr2j.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="form_ico_6.ico" />

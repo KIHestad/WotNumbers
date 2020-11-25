@@ -28,7 +28,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 526; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 531; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 
         // The upgrade scripts
@@ -41,9 +41,25 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
-                case 526:
-                    RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
+                case 531:
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
+                    break;
+                case 530:
+                    mssql =
+                        "UPDATE map SET id = 800 WHERE id = 89;" +
+                        "UPDATE map SET id = 89 WHERE id = 72;";
+                    sqlite = mssql;
+                    break;
+                case 529:
+                    mssql =
+                        "UPDATE map SET arena_id = '60_asia_miao_OLD', name = 'Pearl River (old version)' WHERE Id = 52;" +
+                        "INSERT INTO map (id, name, arena_id) VALUES (60, 'Perl River (version 2)', '60_asia_miao'); ";
+                    sqlite = mssql;
+                    break;
+                case 527:
+                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (89, 'New Map', '251_br_battle_city3'); ";
+                    sqlite = mssql;
                     break;
                 case 525:
                     temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
