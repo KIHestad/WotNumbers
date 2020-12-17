@@ -77,8 +77,8 @@ namespace WinApp.Code
                 logtext += "   TargetSite:      " + ex.TargetSite + Environment.NewLine;
                 logtext += "   Data:            " + ex.Data + Environment.NewLine;
                 logtext += "   Message:         " + ex.Message + Environment.NewLine;
-                if (ex.InnerException != null && ex.InnerException.ToString() != "")
-                    logtext += "   InnerException:  " + ex.InnerException + Environment.NewLine;
+                if (ex.InnerException != null)
+                    logtext += "   InnerException:  " + ex.InnerException.Message + Environment.NewLine;
                 logtext += "   Stack Trace: " + Environment.NewLine + ex.StackTrace + Environment.NewLine;
                 if (customErrorMsg != "")
                     logtext += "   Details: " + Environment.NewLine + "   " + customErrorMsg + Environment.NewLine;

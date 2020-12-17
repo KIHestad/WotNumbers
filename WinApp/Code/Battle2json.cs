@@ -203,6 +203,7 @@ namespace WinApp.Code
         {
             int BattlesUpdated = 0; // return value
             bool deleteLastFileOnError = false;
+            string customErrMsg = "Module: Starting";
             try
             {
                 Log.AddToLogBuffer(" > Start looking for battle result");
@@ -265,6 +266,7 @@ namespace WinApp.Code
                         // If battle found from DB add enhanced values from battle file now
                         if (dt.Rows.Count > 0)
                         {
+                            customErrMsg = "Module: Player data";
                             // Check if already read, if not continue adding enhanced values
                             if (dt.Rows[0]["arenaUniqueID"] == DBNull.Value)
                             {
@@ -423,7 +425,7 @@ namespace WinApp.Code
                                 await DB.ExecuteNonQuery(sql);
 
                                 // Add Battle Players *******************************
-
+                                customErrMsg = "Module: Battle Players";
                                 List<BattlePlayer> battlePlayers = new List<BattlePlayer>();
                                 JToken token_players = token_root["players"];
                                 // Get values to save to battle
@@ -715,10 +717,12 @@ namespace WinApp.Code
                                 DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
                                 await DB.ExecuteNonQuery(sql);
                                 BattlesUpdated++;
+                                customErrMsg = "Module: Update Grinding Progress";
                                 // If grinding, adjust progress
                                 if (grindXP > 0)
                                     await GrindingProgress(playerTankId, (int)token_private["vehicle"].SelectToken("xp"));
                                 // Update Tank Credits
+                                customErrMsg = "Module: Update Tank Credits";
                                 await TankCreditCalculation.RecalculateForTank(playerTankId);
                                 // Done
                                 deleteFileAfterRead = true;
@@ -767,6 +771,7 @@ namespace WinApp.Code
                 // Upload to wot num web server
                 if (battleListSuccess.Count > 0)
                 {
+                    customErrMsg = "Module: Battle Upload";
                     string uploadResult = await new Services.AppBattleUpload().RunForBattles(battleListSuccess);
                     await Log.LogToFile($" > > Battle upload status: {uploadResult}");
                 }
@@ -786,7 +791,7 @@ namespace WinApp.Code
             catch (Exception ex)
             {
                 Log.AddToLogBuffer(" > > Battle file analyze terminated for file: " + lastFile);
-                await Log.LogToFile(ex, "Battle result file analyze process terminated due to faulty file structure or content");
+                await Log.LogToFile(ex, $"Battle result file analyze process terminated due to faulty file structure or content. {customErrMsg}");
                 deleteLastFileOnError = true;
             }
             try

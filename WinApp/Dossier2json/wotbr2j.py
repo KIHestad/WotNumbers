@@ -9,10 +9,10 @@ from itertools import izip
 from collections import OrderedDict
 from DictPackers import Meta
 from battle_results_constants import BATTLE_RESULT_ENTRY_TYPE as ENTRY_TYPE
-import battle_results_common, battle_results_event, battle_results_frontline, battle_results_random, battle_results_ranked
+import battle_results_common, battle_results_frontline, battle_results_random, battle_results_ranked
 
 parser = dict()
-parser['version'] = "1.10.1.3"
+parser['version'] = "1.11.0.0"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
 
@@ -170,6 +170,26 @@ def main():
                     jsonPlayers[accountDBID]['vehicle']['vehicleId'] = vehicleId
                 else:
                     printmessage('Warning: Found vehicle data but could not map to player. TankId: {}'.format(vehTypeCompDescr), True)
+        
+        # Prepare result 
+        printmessage("All data read, preparing result", True)
+        parser['result'] = 'ok'
+        br2jResult = OrderedDict()
+        br2jResult['parser'] = parser
+        br2jResult['arenaUniqueID'] = arenaUniqueID
+        br2jResult['tankId'] = tankId
+        br2jResult['common'] = jsonCommon
+        br2jResult['private'] = {}
+        br2jResult['private']['account'] = jsonAccount
+        br2jResult['private']['vehicle'] = jsonVehicle
+        br2jResult['players'] = jsonPlayers
+
+        # write json file now
+        dumpjson(br2jResult) 
+
+        printmessage('### Done ###', True) 
+        printmessage('', False) 
+        cachefile.close()
 
     except IndexError, e:
         printmessage('Index error during data unpacking: ' + e.message, True)
@@ -183,27 +203,7 @@ def main():
         printmessage('Exception error during data unpacking: ' + e.message, True)
         printmessage(traceback.format_exc(e), False)
         exitwitherror('Battle result cannot be read')
-    
-    printmessage("Battle processed", False)
-    
-    parser['result'] = 'ok'
-    
-    br2jResult = OrderedDict()
-    br2jResult['parser'] = parser
-    br2jResult['arenaUniqueID'] = arenaUniqueID
-    br2jResult['tankId'] = tankId
-    br2jResult['common'] = jsonCommon
-    br2jResult['private'] = {}
-    br2jResult['private']['account'] = jsonAccount
-    br2jResult['private']['vehicle'] = jsonVehicle
-    br2jResult['players'] = jsonPlayers
 
-    # write json file now
-    dumpjson(br2jResult) 
-
-    printmessage('### Done ###', True) 
-    printmessage('', False) 
-    cachefile.close()
     #exit(0) 
 
 
@@ -251,7 +251,7 @@ def validate(objectName, struct, data):
         errMsg = 'Wrong number of data items for object: {} (found: {}, expecting {})'.format(objectName, dataLen, structLen)
         exitwitherror(errMsg, None, True)
     else:
-        printmessage('Successfully validated object: {} (found {} data items)'.format(objectName, dataLen), True)
+        printmessage('> Successfully validated object: {} (found {} data items)'.format(objectName, dataLen), True)
         return
 
 # Split battle result into into separate structs for mapping to data
@@ -312,6 +312,7 @@ def exitwitherror(message, e=None, abort=False):
 def dumpjson(bresult): 
     global option_logging, option_format, filename_target
     try:
+        printmessage('Creating output file:' + filename_target, True)
         finalfile = open(filename_target, 'w') 
         if option_format: 
             finalfile.write(json.dumps(bresult, ensure_ascii=False, skipkeys=True, indent=4, cls=SetEncoder)) 
@@ -321,7 +322,7 @@ def dumpjson(bresult):
     except Exception, e:
         if finalfile is not None: 
             finalfile.close() 
-        exitwitherror("Exception: ", e, abort=True)
+        exitwitherror("Exception creating file: ", e, abort=True)
 
 
 class SetEncoder(json.JSONEncoder):

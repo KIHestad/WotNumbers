@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.28.2"?>
+<?define ProductVersion = "0.28.5"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -296,9 +296,6 @@
       </Component>
       <Component Id="cmp_battle_results_ranked" Directory="INSTALLFOLDER_Dossier2json" Guid="{7D043DA7-3EFD-4769-8BA6-0CEB10672652}">
         <File Id="fil_battle_results_ranked" KeyPath="yes" Source="$(var.D2jSource)\battle_results_ranked.py" />
-      </Component>
-      <Component Id="cmp_constants" Directory="INSTALLFOLDER_Dossier2json" Guid="{09B69B97-AC06-4D04-A2A3-3E78968D51AB}">
-        <File Id="fil_constants" KeyPath="yes" Source="$(var.D2jSource)\constants.py" />
       </Component>
       <Component Id="cmp_DictPackers" Directory="INSTALLFOLDER_Dossier2json" Guid="{666D608A-3F02-4694-A7CF-7810503157A1}">
         <File Id="fil_DictPackers" KeyPath="yes" Source="$(var.D2jSource)\DictPackers.py" />

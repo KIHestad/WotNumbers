@@ -1678,7 +1678,6 @@
     <Content Include="Dossier2json\battle_results_frontline.py" />
     <Content Include="Dossier2json\battle_results_random.py" />
     <Content Include="Dossier2json\battle_results_ranked.py" />
-    <Content Include="Dossier2json\constants.py" />
     <Content Include="Dossier2json\DictPackers.py" />
     <Content Include="Dossier2json\enumerations.py" />
     <Content Include="Dossier2json\soft_exception.py" />
