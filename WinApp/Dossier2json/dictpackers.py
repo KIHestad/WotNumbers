@@ -3,10 +3,7 @@
 # Decompiled from: Python 2.7.18 (v2.7.18:8d21aa21f2, Apr 20 2020, 13:19:08) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: scripts/common/DictPackers.py
 import copy
-
-# CHANGED: Not use debug log
 #from debug_utils import LOG_ERROR
-
 from binascii import crc32
 from functools import partial
 

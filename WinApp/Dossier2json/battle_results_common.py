@@ -12,16 +12,12 @@ class FLAG_ACTION:
     RANGE = (PICKED_UP_FROM_BASE, PICKED_UP_FROM_GROUND, CAPTURED, LOST)
 
 from DictPackers import DictPacker, SimpleDictPacker, DeltaPacker, ValueReplayPacker, roundToInt
-
-# CHANGED: Remove ref to lib, copy relevant classes info file
 #from items.vehicles import VEHICLE_DEVICE_TYPE_NAMES, VEHICLE_TANKMAN_TYPE_NAMES
 VEHICLE_DEVICE_TYPE_NAMES = (
  'engine', 'ammoBay', 'fuelTank', 'radio', 'track', 'gun', 'turretRotator', 'surveyingDevice', 'STUN_PLACEHOLDER',
  'wheel')
 VEHICLE_TANKMAN_TYPE_NAMES = (
  'commander', 'driver', 'radioman', 'gunner', 'loader')
-
-# CHANGED: Remove ref to lib, copy relevant classes info file
 #from items.badges_common import BadgesCommon
 class BadgesCommon(object):
     @staticmethod
@@ -292,7 +288,7 @@ BATTLE_RESULTS = [
  (
   'eventEventCoinList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
-  'eventCreditsFactor1000List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
+  'eventCreditsFactor100List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventXPFactor100List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (

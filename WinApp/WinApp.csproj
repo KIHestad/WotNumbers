@@ -1680,7 +1680,6 @@
     <Content Include="Dossier2json\battle_results_ranked.py" />
     <Content Include="Dossier2json\DictPackers.py" />
     <Content Include="Dossier2json\enumerations.py" />
-    <Content Include="Dossier2json\soft_exception.py" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />
