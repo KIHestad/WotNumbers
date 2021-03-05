@@ -11,6 +11,7 @@ class FLAG_ACTION:
     LOST = 3
     RANGE = (PICKED_UP_FROM_BASE, PICKED_UP_FROM_GROUND, CAPTURED, LOST)
 
+
 from DictPackers import DictPacker, SimpleDictPacker, DeltaPacker, ValueReplayPacker, roundToInt
 #from items.vehicles import VEHICLE_DEVICE_TYPE_NAMES, VEHICLE_TANKMAN_TYPE_NAMES
 VEHICLE_DEVICE_TYPE_NAMES = (
@@ -204,9 +205,9 @@ BATTLE_RESULTS = [
  (
   'eventCoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
-  'piggyBank', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
+  'bpcoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
-  'brPosInBattle', int, 255, None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
+  'piggyBank', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventCredits', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
@@ -221,6 +222,8 @@ BATTLE_RESULTS = [
   'eventCrystal', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventEventCoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
+ (
+  'eventBpcoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
   'originalCredits', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
@@ -252,7 +255,11 @@ BATTLE_RESULTS = [
  (
   'originalEventCoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
+  'originalBpcoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
+ (
   'eventCoinReplay', str, '', ValueReplayPacker(), 'skip', ENTRY_TYPE.VEHICLE_SELF),
+ (
+  'bpcoinReplay', str, '', ValueReplayPacker(), 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'factualXP', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
@@ -274,6 +281,8 @@ BATTLE_RESULTS = [
  (
   'subtotalEventCoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
+  'subtotalBpcoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
+ (
   'eventCreditsList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventXPList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
@@ -287,6 +296,8 @@ BATTLE_RESULTS = [
   'eventCrystalList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventEventCoinList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
+ (
+  'eventBpcoinList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventCreditsFactor100List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
@@ -476,16 +487,6 @@ BATTLE_RESULTS = [
  (
   'eligibleForCrystalRewards', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
-  'brPointsChanges', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
- (
-  'brTitleChange', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
- (
-  'accBRTitle', tuple, (1, 0), None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
- (
-  'prevBRTitle', tuple, (1, 0), None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
- (
-  'maxAchievedBRTitle', tuple, (0, 0), None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
- (
   'activeRents', dict, {}, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
   'recruitsIDs', list, [], None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
@@ -513,6 +514,8 @@ BATTLE_RESULTS = [
   'eventCrystal', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
  (
   'eventEventCoin', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
+ (
+  'eventBpcoin', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
  (
   'credits', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
  (
@@ -668,10 +671,6 @@ BATTLE_RESULTS = [
   'occupyingForceDestruction', bool, False, None, 'max', ENTRY_TYPE.SERVER),
  (
   'occupyingForceBasePoints', int, 0, None, 'sum', ENTRY_TYPE.SERVER),
- (
-  'battleXPTotal', int, 0, None, 'sum', ENTRY_TYPE.SERVER),
- (
-  'modulesDescriptors', list, [], None, 'extend', ENTRY_TYPE.SERVER),
  (
   'directEnemyHits', int, 0, None, 'sum', ENTRY_TYPE.SERVER),
  (
