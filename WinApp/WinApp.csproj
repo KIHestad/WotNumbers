@@ -923,6 +923,7 @@
     <None Include="Dossier2json\structures_102.json" />
     <None Include="Dossier2json\structures_103.json" />
     <None Include="Dossier2json\structures_104.json" />
+    <None Include="Dossier2json\structures_105.json" />
     <None Include="Dossier2json\structures_77.json" />
     <None Include="Dossier2json\structures_81.json" />
     <None Include="Dossier2json\structures_85.json" />

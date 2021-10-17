@@ -28,7 +28,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 533; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 536; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 
         // The upgrade scripts
@@ -41,11 +41,13 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
-                case 533:
+                case 536:
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
-                case 532:
+                case 535:
                     RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
+                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (90, 'Safe Haven', '127_japort'); ";
+                    sqlite = mssql;
                     break;
                 case 530:
                     mssql =

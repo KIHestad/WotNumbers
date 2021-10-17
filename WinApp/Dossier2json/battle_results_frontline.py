@@ -10,9 +10,9 @@ BATTLE_RESULTS = [
  (
   'unchargedShellCosts', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
  (
-  'prevMetaLevel', tuple, (0, 1, 0), None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+  'prevMetaLevel', tuple, (1, 0), None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
  (
-  'metaLevel', tuple, (0, 1, 0), None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+  'metaLevel', tuple, (1, 0), None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
  (
   'flXP', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
  (
@@ -24,4 +24,10 @@ BATTLE_RESULTS = [
  (
   'boosterFlXPFactor100', int, 0, None, 'any', ENTRY_TYPE.ACCOUNT_ALL),
  (
-  'flXPReplay', str, '', ValueReplayPacker(), 'skip', ENTRY_TYPE.ACCOUNT_ALL)]
+  'flXPReplay', str, '', ValueReplayPacker(), 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'basePointsDiff', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'sumPoints', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'hasBattlePass', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL)]

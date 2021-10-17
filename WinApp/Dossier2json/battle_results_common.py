@@ -11,7 +11,6 @@ class FLAG_ACTION:
     LOST = 3
     RANGE = (PICKED_UP_FROM_BASE, PICKED_UP_FROM_GROUND, CAPTURED, LOST)
 
-
 from DictPackers import DictPacker, SimpleDictPacker, DeltaPacker, ValueReplayPacker, roundToInt
 #from items.vehicles import VEHICLE_DEVICE_TYPE_NAMES, VEHICLE_TANKMAN_TYPE_NAMES
 VEHICLE_DEVICE_TYPE_NAMES = (
@@ -119,6 +118,8 @@ BATTLE_RESULTS = [
  (
   'achievements', list, [], None, 'extend', ENTRY_TYPE.VEHICLE_ALL),
  (
+  'inBattleAchievements', list, [], None, 'extend', ENTRY_TYPE.VEHICLE_ALL),
+ (
   'potentialDamageReceived', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
  (
   'rolloutsCount', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
@@ -164,6 +165,8 @@ BATTLE_RESULTS = [
   'spotted', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
  (
   'damaged', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
+ (
+  'damagedHp', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
  (
   'stunned', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
  (
@@ -425,6 +428,8 @@ BATTLE_RESULTS = [
  (
   'dossierPopUps', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
+  'dossierLogRecords', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
+ (
   'vehTypeLockTime', int, 0, None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'serviceProviderID', int, 0, None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
@@ -480,6 +485,8 @@ BATTLE_RESULTS = [
   'isPrematureLeave', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
   'watchedBattleToTheEnd', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
+ (
+  'vseBattleResults', list, [], None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
   'squadBonusInfo', None, None, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
@@ -704,4 +711,14 @@ BATTLE_RESULTS = [
  (
   'eventGoldByEventID', dict, {}, None, 'skip', ENTRY_TYPE.SERVER),
  (
-  'playerRank', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL)]
+  'playerRank', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'quickShellChangerUsageCount', int, 0, None, 'skip', ENTRY_TYPE.SERVER),
+ (
+  'goldBankGain', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
+ (
+  'setupsIndexes', dict, {}, None, 'any', ENTRY_TYPE.VEHICLE_SELF),
+ (
+  'startAmmo', list, [], None, 'skip', ENTRY_TYPE.SERVER),
+ (
+  'initialVehicleAmmo', list, [], None, 'skip', ENTRY_TYPE.SERVER)]
