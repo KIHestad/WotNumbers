@@ -2,7 +2,7 @@
 
 Homepage:    http://wotnumbers.com
 
-Created by: BadButton and cmdrTrinity (alias: leeruude)
+Created by: KI Hestad (aka: BadButton)
 
 *******************************************************
 
