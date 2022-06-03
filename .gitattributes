@@ -4,6 +4,13 @@
 * text=auto
 
 ###############################################################################
+# Spesify languages to ignore 
+###############################################################################
+* linguist-vendored
+*.js linguist-vendored=false
+*.py linguist-vendored=false
+
+###############################################################################
 # Set default behavior for command prompt diff.
 #
 # This is need for earlier builds of msysgit that does not have it on by
