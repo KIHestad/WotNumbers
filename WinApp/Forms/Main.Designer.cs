@@ -126,7 +126,6 @@
             this.mTankFilter_Fav09 = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_Fav10 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-            this.mTankFilter_GetInGarage = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_EditFavList = new System.Windows.Forms.ToolStripMenuItem();
             this.mMode = new System.Windows.Forms.ToolStripDropDownButton();
             this.mModeAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -241,9 +240,6 @@
             this.mSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsRunBattleCheck = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
-            this.mAdminTools = new System.Windows.Forms.ToolStripMenuItem();
-            this.mAdminToolsUploadBattlesNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.mAdminToolsUploadBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.mRecalcTankStatistics = new System.Windows.Forms.ToolStripMenuItem();
@@ -264,16 +260,11 @@
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.mExit = new System.Windows.Forms.ToolStripMenuItem();
             this.mHelp = new System.Windows.Forms.ToolStripDropDownButton();
-            this.mWotNumWebUserGuide = new System.Windows.Forms.ToolStripMenuItem();
             this.mWotNumWebForum = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.mHelpCheckVersion = new System.Windows.Forms.ToolStripMenuItem();
-            this.mHelpMessage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.mLinksSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.mWotNumWebStats = new System.Windows.Forms.ToolStripButton();
-            this.mVBaddict = new System.Windows.Forms.ToolStripButton();
             this.lblStatusRowCount = new System.Windows.Forms.Label();
             this.panelMainArea = new System.Windows.Forms.Panel();
             this.scrollCorner = new BadScrollBarCorner();
@@ -346,10 +337,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // timerWotNumMenuItem
-            // 
-            this.timerWotNumMenuItem.Tick += new System.EventHandler(this.timerWotNumMenuItem_Tick);
-            // 
             // fswDossier
             // 
             this.fswDossier.EnableRaisingEvents = true;
@@ -420,13 +407,10 @@
             this.mViewChart,
             this.mSettingSeparator,
             this.mSettings,
-            this.mHelp,
-            this.mLinksSeparator,
-            this.mWotNumWebStats,
-            this.mVBaddict});
+            this.mHelp});
             this.toolMain.Location = new System.Drawing.Point(9, 29);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(1061, 25);
+            this.toolMain.Size = new System.Drawing.Size(1080, 25);
             this.toolMain.Stretch = true;
             this.toolMain.TabIndex = 18;
             this.toolMain.Text = "toolStripEx1";
@@ -471,7 +455,7 @@
             this.mViewTankInfo.Image = ((System.Drawing.Image)(resources.GetObject("mViewTankInfo.Image")));
             this.mViewTankInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mViewTankInfo.Name = "mViewTankInfo";
-            this.mViewTankInfo.Size = new System.Drawing.Size(57, 22);
+            this.mViewTankInfo.Size = new System.Drawing.Size(56, 22);
             this.mViewTankInfo.Text = "&Tanks";
             this.mViewTankInfo.ToolTipText = "Tank View";
             this.mViewTankInfo.Click += new System.EventHandler(this.mViewTankInfo_Click);
@@ -554,7 +538,7 @@
             this.mColumnSelect_01.Checked = true;
             this.mColumnSelect_01.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mColumnSelect_01.Name = "mColumnSelect_01";
-            this.mColumnSelect_01.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_01.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_01.Text = "Col List #1";
             this.mColumnSelect_01.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
             this.mColumnSelect_01.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -562,7 +546,7 @@
             // mColumnSelect_02
             // 
             this.mColumnSelect_02.Name = "mColumnSelect_02";
-            this.mColumnSelect_02.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_02.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_02.Text = "Col List #2";
             this.mColumnSelect_02.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
             this.mColumnSelect_02.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -570,7 +554,7 @@
             // mColumnSelect_03
             // 
             this.mColumnSelect_03.Name = "mColumnSelect_03";
-            this.mColumnSelect_03.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_03.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_03.Text = "Col List #3";
             this.mColumnSelect_03.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
             this.mColumnSelect_03.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -578,7 +562,7 @@
             // mColumnSelect_04
             // 
             this.mColumnSelect_04.Name = "mColumnSelect_04";
-            this.mColumnSelect_04.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_04.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_04.Text = "Col List #4";
             this.mColumnSelect_04.Visible = false;
             this.mColumnSelect_04.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -587,7 +571,7 @@
             // mColumnSelect_05
             // 
             this.mColumnSelect_05.Name = "mColumnSelect_05";
-            this.mColumnSelect_05.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_05.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_05.Text = "Col List #5";
             this.mColumnSelect_05.Visible = false;
             this.mColumnSelect_05.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -596,7 +580,7 @@
             // mColumnSelect_06
             // 
             this.mColumnSelect_06.Name = "mColumnSelect_06";
-            this.mColumnSelect_06.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_06.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_06.Text = "Col List #6";
             this.mColumnSelect_06.Visible = false;
             this.mColumnSelect_06.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -605,7 +589,7 @@
             // mColumnSelect_07
             // 
             this.mColumnSelect_07.Name = "mColumnSelect_07";
-            this.mColumnSelect_07.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_07.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_07.Text = "Col List #7";
             this.mColumnSelect_07.Visible = false;
             this.mColumnSelect_07.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -614,7 +598,7 @@
             // mColumnSelect_08
             // 
             this.mColumnSelect_08.Name = "mColumnSelect_08";
-            this.mColumnSelect_08.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_08.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_08.Text = "Col List #8";
             this.mColumnSelect_08.Visible = false;
             this.mColumnSelect_08.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -623,7 +607,7 @@
             // mColumnSelect_09
             // 
             this.mColumnSelect_09.Name = "mColumnSelect_09";
-            this.mColumnSelect_09.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_09.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_09.Text = "Col List #9";
             this.mColumnSelect_09.Visible = false;
             this.mColumnSelect_09.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -632,7 +616,7 @@
             // mColumnSelect_10
             // 
             this.mColumnSelect_10.Name = "mColumnSelect_10";
-            this.mColumnSelect_10.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_10.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_10.Text = "Col List #10";
             this.mColumnSelect_10.Visible = false;
             this.mColumnSelect_10.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -641,7 +625,7 @@
             // mColumnSelect_11
             // 
             this.mColumnSelect_11.Name = "mColumnSelect_11";
-            this.mColumnSelect_11.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_11.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_11.Text = "Col List #11";
             this.mColumnSelect_11.Visible = false;
             this.mColumnSelect_11.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -650,7 +634,7 @@
             // mColumnSelect_12
             // 
             this.mColumnSelect_12.Name = "mColumnSelect_12";
-            this.mColumnSelect_12.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_12.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_12.Text = "Col List #12";
             this.mColumnSelect_12.Visible = false;
             this.mColumnSelect_12.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -659,7 +643,7 @@
             // mColumnSelect_13
             // 
             this.mColumnSelect_13.Name = "mColumnSelect_13";
-            this.mColumnSelect_13.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_13.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_13.Text = "Col List #13";
             this.mColumnSelect_13.Visible = false;
             this.mColumnSelect_13.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -668,7 +652,7 @@
             // mColumnSelect_14
             // 
             this.mColumnSelect_14.Name = "mColumnSelect_14";
-            this.mColumnSelect_14.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_14.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_14.Text = "Col List #14";
             this.mColumnSelect_14.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
             this.mColumnSelect_14.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -676,7 +660,7 @@
             // mColumnSelect_15
             // 
             this.mColumnSelect_15.Name = "mColumnSelect_15";
-            this.mColumnSelect_15.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_15.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_15.Text = "Col List #15";
             this.mColumnSelect_15.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
             this.mColumnSelect_15.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -684,12 +668,12 @@
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(191, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(190, 6);
             // 
             // mColumnSelect_Edit
             // 
             this.mColumnSelect_Edit.Name = "mColumnSelect_Edit";
-            this.mColumnSelect_Edit.Size = new System.Drawing.Size(194, 22);
+            this.mColumnSelect_Edit.Size = new System.Drawing.Size(193, 22);
             this.mColumnSelect_Edit.Text = "Edit Tank/Battle View...";
             this.mColumnSelect_Edit.Click += new System.EventHandler(this.toolItemColumnSelect_Edit_Click);
             // 
@@ -784,14 +768,13 @@
             this.mTankFilter_Fav09,
             this.mTankFilter_Fav10,
             this.toolStripSeparator12,
-            this.mTankFilter_GetInGarage,
             this.mTankFilter_EditFavList});
             this.mTankFilter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter.Image")));
             this.mTankFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mTankFilter.Name = "mTankFilter";
             this.mTankFilter.ShowDropDownArrow = false;
-            this.mTankFilter.Size = new System.Drawing.Size(77, 22);
+            this.mTankFilter.Size = new System.Drawing.Size(76, 22);
             this.mTankFilter.Text = "My Tanks";
             this.mTankFilter.ToolTipText = "Select Favourite Tank List";
             this.mTankFilter.Visible = false;
@@ -814,7 +797,7 @@
             this.mTankFilter_Country.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Country.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Country.Image")));
             this.mTankFilter_Country.Name = "mTankFilter_Country";
-            this.mTankFilter_Country.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Country.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Country.Text = "Nation";
             // 
             // mTankFilter_CountryGermany
@@ -950,7 +933,7 @@
             this.mTankFilter_Type.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Type.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Type.Image")));
             this.mTankFilter_Type.Name = "mTankFilter_Type";
-            this.mTankFilter_Type.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Type.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Type.Text = "Tank Type";
             // 
             // mTankFilter_TypeLT
@@ -958,7 +941,7 @@
             this.mTankFilter_TypeLT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_TypeLT.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_TypeLT.Image")));
             this.mTankFilter_TypeLT.Name = "mTankFilter_TypeLT";
-            this.mTankFilter_TypeLT.Size = new System.Drawing.Size(157, 22);
+            this.mTankFilter_TypeLT.Size = new System.Drawing.Size(156, 22);
             this.mTankFilter_TypeLT.Text = "Light Tanks";
             this.mTankFilter_TypeLT.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
             this.mTankFilter_TypeLT.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
@@ -969,7 +952,7 @@
             this.mTankFilter_TypeMT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_TypeMT.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_TypeMT.Image")));
             this.mTankFilter_TypeMT.Name = "mTankFilter_TypeMT";
-            this.mTankFilter_TypeMT.Size = new System.Drawing.Size(157, 22);
+            this.mTankFilter_TypeMT.Size = new System.Drawing.Size(156, 22);
             this.mTankFilter_TypeMT.Text = "Medium Tanks";
             this.mTankFilter_TypeMT.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
             this.mTankFilter_TypeMT.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
@@ -980,7 +963,7 @@
             this.mTankFilter_TypeHT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_TypeHT.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_TypeHT.Image")));
             this.mTankFilter_TypeHT.Name = "mTankFilter_TypeHT";
-            this.mTankFilter_TypeHT.Size = new System.Drawing.Size(157, 22);
+            this.mTankFilter_TypeHT.Size = new System.Drawing.Size(156, 22);
             this.mTankFilter_TypeHT.Text = "Heavy Tanks";
             this.mTankFilter_TypeHT.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
             this.mTankFilter_TypeHT.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
@@ -991,7 +974,7 @@
             this.mTankFilter_TypeTD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_TypeTD.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_TypeTD.Image")));
             this.mTankFilter_TypeTD.Name = "mTankFilter_TypeTD";
-            this.mTankFilter_TypeTD.Size = new System.Drawing.Size(157, 22);
+            this.mTankFilter_TypeTD.Size = new System.Drawing.Size(156, 22);
             this.mTankFilter_TypeTD.Text = "Tank Destroyers";
             this.mTankFilter_TypeTD.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
             this.mTankFilter_TypeTD.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
@@ -1002,7 +985,7 @@
             this.mTankFilter_TypeSPG.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_TypeSPG.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_TypeSPG.Image")));
             this.mTankFilter_TypeSPG.Name = "mTankFilter_TypeSPG";
-            this.mTankFilter_TypeSPG.Size = new System.Drawing.Size(157, 22);
+            this.mTankFilter_TypeSPG.Size = new System.Drawing.Size(156, 22);
             this.mTankFilter_TypeSPG.Text = "SPGs";
             this.mTankFilter_TypeSPG.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
             this.mTankFilter_TypeSPG.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
@@ -1024,7 +1007,7 @@
             this.mTankFilter_Tier.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Tier.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier.Image")));
             this.mTankFilter_Tier.Name = "mTankFilter_Tier";
-            this.mTankFilter_Tier.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Tier.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Tier.Text = "Tier";
             // 
             // mTankFilter_Tier1
@@ -1132,7 +1115,7 @@
             this.mTankFilter_Search.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Search.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Search.Image")));
             this.mTankFilter_Search.Name = "mTankFilter_Search";
-            this.mTankFilter_Search.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Search.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Search.Text = "Search for Tank...";
             this.mTankFilter_Search.Click += new System.EventHandler(this.mTankFilter_Search_Click);
             // 
@@ -1141,14 +1124,14 @@
             this.mTankFilter_Clear.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Clear.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Clear.Image")));
             this.mTankFilter_Clear.Name = "mTankFilter_Clear";
-            this.mTankFilter_Clear.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Clear.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Clear.Text = "Clear Tank Filter";
             this.mTankFilter_Clear.Click += new System.EventHandler(this.mTankFilter_Clear_Click);
             // 
             // mTankFilter_FavSeparator
             // 
             this.mTankFilter_FavSeparator.Name = "mTankFilter_FavSeparator";
-            this.mTankFilter_FavSeparator.Size = new System.Drawing.Size(230, 6);
+            this.mTankFilter_FavSeparator.Size = new System.Drawing.Size(200, 6);
             // 
             // mTankFilter_All
             // 
@@ -1157,7 +1140,7 @@
             this.mTankFilter_All.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mTankFilter_All.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_All.Name = "mTankFilter_All";
-            this.mTankFilter_All.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_All.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_All.Text = "My Tanks";
             this.mTankFilter_All.Click += new System.EventHandler(this.toolItemTankFilter_All_Click);
             this.mTankFilter_All.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1166,7 +1149,7 @@
             // 
             this.mTankFilter_All_NotOwned.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_All_NotOwned.Name = "mTankFilter_All_NotOwned";
-            this.mTankFilter_All_NotOwned.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_All_NotOwned.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_All_NotOwned.Text = "All Tanks";
             this.mTankFilter_All_NotOwned.Click += new System.EventHandler(this.mTankFilter_All_NotOwned_Click);
             this.mTankFilter_All_NotOwned.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1175,7 +1158,7 @@
             // 
             this.mTankFilter_Fav01.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav01.Name = "mTankFilter_Fav01";
-            this.mTankFilter_Fav01.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Fav01.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Fav01.Text = "Favourite item #1";
             this.mTankFilter_Fav01.Visible = false;
             this.mTankFilter_Fav01.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -1185,7 +1168,7 @@
             // 
             this.mTankFilter_Fav02.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav02.Name = "mTankFilter_Fav02";
-            this.mTankFilter_Fav02.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Fav02.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Fav02.Text = "Favourite item #2";
             this.mTankFilter_Fav02.Visible = false;
             this.mTankFilter_Fav02.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -1195,7 +1178,7 @@
             // 
             this.mTankFilter_Fav03.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav03.Name = "mTankFilter_Fav03";
-            this.mTankFilter_Fav03.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Fav03.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Fav03.Text = "Favourite item #3";
             this.mTankFilter_Fav03.Visible = false;
             this.mTankFilter_Fav03.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -1205,7 +1188,7 @@
             // 
             this.mTankFilter_Fav04.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav04.Name = "mTankFilter_Fav04";
-            this.mTankFilter_Fav04.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Fav04.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Fav04.Text = "Favourite item #4";
             this.mTankFilter_Fav04.Visible = false;
             this.mTankFilter_Fav04.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -1215,7 +1198,7 @@
             // 
             this.mTankFilter_Fav05.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav05.Name = "mTankFilter_Fav05";
-            this.mTankFilter_Fav05.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Fav05.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Fav05.Text = "Favourite item #5";
             this.mTankFilter_Fav05.Visible = false;
             this.mTankFilter_Fav05.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -1225,7 +1208,7 @@
             // 
             this.mTankFilter_Fav06.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav06.Name = "mTankFilter_Fav06";
-            this.mTankFilter_Fav06.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Fav06.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Fav06.Text = "Favourite item #6";
             this.mTankFilter_Fav06.Visible = false;
             this.mTankFilter_Fav06.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -1235,7 +1218,7 @@
             // 
             this.mTankFilter_Fav07.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav07.Name = "mTankFilter_Fav07";
-            this.mTankFilter_Fav07.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Fav07.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Fav07.Text = "Favourite item #7";
             this.mTankFilter_Fav07.Visible = false;
             this.mTankFilter_Fav07.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -1245,7 +1228,7 @@
             // 
             this.mTankFilter_Fav08.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav08.Name = "mTankFilter_Fav08";
-            this.mTankFilter_Fav08.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Fav08.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Fav08.Text = "Favourite item #8";
             this.mTankFilter_Fav08.Visible = false;
             this.mTankFilter_Fav08.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -1255,7 +1238,7 @@
             // 
             this.mTankFilter_Fav09.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav09.Name = "mTankFilter_Fav09";
-            this.mTankFilter_Fav09.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Fav09.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Fav09.Text = "Favourite item #9";
             this.mTankFilter_Fav09.Visible = false;
             this.mTankFilter_Fav09.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -1265,7 +1248,7 @@
             // 
             this.mTankFilter_Fav10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav10.Name = "mTankFilter_Fav10";
-            this.mTankFilter_Fav10.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Fav10.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_Fav10.Text = "Favourite item #10";
             this.mTankFilter_Fav10.Visible = false;
             this.mTankFilter_Fav10.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -1274,21 +1257,13 @@
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(230, 6);
-            // 
-            // mTankFilter_GetInGarage
-            // 
-            this.mTankFilter_GetInGarage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mTankFilter_GetInGarage.Name = "mTankFilter_GetInGarage";
-            this.mTankFilter_GetInGarage.Size = new System.Drawing.Size(233, 22);
-            this.mTankFilter_GetInGarage.Text = "Update \"In Garage\" Tank List...";
-            this.mTankFilter_GetInGarage.Click += new System.EventHandler(this.mTankFilter_GetInGarage_Click);
+            this.toolStripSeparator12.Size = new System.Drawing.Size(200, 6);
             // 
             // mTankFilter_EditFavList
             // 
             this.mTankFilter_EditFavList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_EditFavList.Name = "mTankFilter_EditFavList";
-            this.mTankFilter_EditFavList.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_EditFavList.Size = new System.Drawing.Size(203, 22);
             this.mTankFilter_EditFavList.Text = "Edit Favourite Tank List...";
             this.mTankFilter_EditFavList.Click += new System.EventHandler(this.toolItemTankFilter_EditFavList_Click);
             // 
@@ -1558,7 +1533,7 @@
             this.mBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mBattles.Name = "mBattles";
             this.mBattles.ShowDropDownArrow = false;
-            this.mBattles.Size = new System.Drawing.Size(105, 22);
+            this.mBattles.Size = new System.Drawing.Size(104, 22);
             this.mBattles.Text = "Today\'s Battles";
             this.mBattles.ToolTipText = "Select Battle Time";
             this.mBattles.Visible = false;
@@ -1830,7 +1805,7 @@
             this.mBattleGroup_No.Checked = true;
             this.mBattleGroup_No.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mBattleGroup_No.Name = "mBattleGroup_No";
-            this.mBattleGroup_No.Size = new System.Drawing.Size(205, 22);
+            this.mBattleGroup_No.Size = new System.Drawing.Size(204, 22);
             this.mBattleGroup_No.Text = "No Grouping";
             this.mBattleGroup_No.Click += new System.EventHandler(this.toolItemGroupingSelected_Click);
             this.mBattleGroup_No.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1838,12 +1813,12 @@
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(202, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(201, 6);
             // 
             // mBattleGroup_TankAverage
             // 
             this.mBattleGroup_TankAverage.Name = "mBattleGroup_TankAverage";
-            this.mBattleGroup_TankAverage.Size = new System.Drawing.Size(205, 22);
+            this.mBattleGroup_TankAverage.Size = new System.Drawing.Size(204, 22);
             this.mBattleGroup_TankAverage.Text = "Group by Tank - Average";
             this.mBattleGroup_TankAverage.Click += new System.EventHandler(this.toolItemGroupingSelected_Click);
             this.mBattleGroup_TankAverage.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1851,7 +1826,7 @@
             // mBattleGroup_TankSum
             // 
             this.mBattleGroup_TankSum.Name = "mBattleGroup_TankSum";
-            this.mBattleGroup_TankSum.Size = new System.Drawing.Size(205, 22);
+            this.mBattleGroup_TankSum.Size = new System.Drawing.Size(204, 22);
             this.mBattleGroup_TankSum.Text = "Group by Tank - Sum";
             this.mBattleGroup_TankSum.Click += new System.EventHandler(this.toolItemGroupingSelected_Click);
             this.mBattleGroup_TankSum.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -2155,7 +2130,7 @@
             // mGadgetChartTier
             // 
             this.mGadgetChartTier.Name = "mGadgetChartTier";
-            this.mGadgetChartTier.Size = new System.Drawing.Size(216, 22);
+            this.mGadgetChartTier.Size = new System.Drawing.Size(214, 22);
             this.mGadgetChartTier.Tag = "ucChartTier";
             this.mGadgetChartTier.Text = "Battle Count per Tier";
             this.mGadgetChartTier.Click += new System.EventHandler(this.mGadgetAdd);
@@ -2163,7 +2138,7 @@
             // mGadgetChartTankType
             // 
             this.mGadgetChartTankType.Name = "mGadgetChartTankType";
-            this.mGadgetChartTankType.Size = new System.Drawing.Size(216, 22);
+            this.mGadgetChartTankType.Size = new System.Drawing.Size(214, 22);
             this.mGadgetChartTankType.Tag = "ucChartTankType";
             this.mGadgetChartTankType.Text = "Battle Count per Tank Type";
             this.mGadgetChartTankType.Click += new System.EventHandler(this.mGadgetAdd);
@@ -2171,7 +2146,7 @@
             // mGadgetChartNation
             // 
             this.mGadgetChartNation.Name = "mGadgetChartNation";
-            this.mGadgetChartNation.Size = new System.Drawing.Size(216, 22);
+            this.mGadgetChartNation.Size = new System.Drawing.Size(214, 22);
             this.mGadgetChartNation.Tag = "ucChartNation";
             this.mGadgetChartNation.Text = "Battle Count per Nation";
             this.mGadgetChartNation.Click += new System.EventHandler(this.mGadgetAdd);
@@ -2192,7 +2167,7 @@
             // mGadgetTotalStatsDefault
             // 
             this.mGadgetTotalStatsDefault.Name = "mGadgetTotalStatsDefault";
-            this.mGadgetTotalStatsDefault.Size = new System.Drawing.Size(261, 22);
+            this.mGadgetTotalStatsDefault.Size = new System.Drawing.Size(260, 22);
             this.mGadgetTotalStatsDefault.Tag = "ucTotalStatsDefault";
             this.mGadgetTotalStatsDefault.Text = "Total Stats - Using Default Columns";
             this.mGadgetTotalStatsDefault.Click += new System.EventHandler(this.mGadgetAdd);
@@ -2200,7 +2175,7 @@
             // mGadgetTotalStats
             // 
             this.mGadgetTotalStats.Name = "mGadgetTotalStats";
-            this.mGadgetTotalStats.Size = new System.Drawing.Size(261, 22);
+            this.mGadgetTotalStats.Size = new System.Drawing.Size(260, 22);
             this.mGadgetTotalStats.Tag = "ucTotalStats";
             this.mGadgetTotalStats.Text = "Total Stats - Empty";
             this.mGadgetTotalStats.Click += new System.EventHandler(this.mGadgetAdd);
@@ -2208,12 +2183,12 @@
             // toolStripSeparator26
             // 
             this.toolStripSeparator26.Name = "toolStripSeparator26";
-            this.toolStripSeparator26.Size = new System.Drawing.Size(258, 6);
+            this.toolStripSeparator26.Size = new System.Drawing.Size(257, 6);
             // 
             // mGadgetAddBattleModeStats
             // 
             this.mGadgetAddBattleModeStats.Name = "mGadgetAddBattleModeStats";
-            this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(261, 22);
+            this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(260, 22);
             this.mGadgetAddBattleModeStats.Tag = "ucBattleTypes";
             this.mGadgetAddBattleModeStats.Text = "Battle Mode Stats";
             this.mGadgetAddBattleModeStats.Click += new System.EventHandler(this.mGadgetAdd);
@@ -2221,7 +2196,7 @@
             // mGadgetAddTankTypeStats
             // 
             this.mGadgetAddTankTypeStats.Name = "mGadgetAddTankTypeStats";
-            this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(261, 22);
+            this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(260, 22);
             this.mGadgetAddTankTypeStats.Tag = "ucTotalTanks";
             this.mGadgetAddTankTypeStats.Text = "Tank Type Stats";
             this.mGadgetAddTankTypeStats.Click += new System.EventHandler(this.mGadgetAdd);
@@ -2310,7 +2285,6 @@
             this.mSettingsRun,
             this.mSettingsRunBattleCheck,
             this.toolStripSeparator24,
-            this.mAdminTools,
             this.mUpdateDataFromAPI,
             this.toolStripSeparator18,
             this.mRecalcTankStatistics,
@@ -2335,7 +2309,7 @@
             this.mSettingsRun.Enabled = false;
             this.mSettingsRun.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mSettingsRun.Name = "mSettingsRun";
-            this.mSettingsRun.Size = new System.Drawing.Size(271, 22);
+            this.mSettingsRun.Size = new System.Drawing.Size(263, 22);
             this.mSettingsRun.Text = "Automatically Fetch New Battles";
             this.mSettingsRun.Click += new System.EventHandler(this.toolItemSettingsRun_Click);
             this.mSettingsRun.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -2345,62 +2319,35 @@
             this.mSettingsRunBattleCheck.Enabled = false;
             this.mSettingsRunBattleCheck.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mSettingsRunBattleCheck.Name = "mSettingsRunBattleCheck";
-            this.mSettingsRunBattleCheck.Size = new System.Drawing.Size(271, 22);
+            this.mSettingsRunBattleCheck.Size = new System.Drawing.Size(263, 22);
             this.mSettingsRunBattleCheck.Text = "Check for New Battle";
             this.mSettingsRunBattleCheck.Click += new System.EventHandler(this.mSettingsRunBattleCheck_Click);
             // 
             // toolStripSeparator24
             // 
             this.toolStripSeparator24.Name = "toolStripSeparator24";
-            this.toolStripSeparator24.Size = new System.Drawing.Size(268, 6);
-            // 
-            // mAdminTools
-            // 
-            this.mAdminTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mAdminToolsUploadBattlesNew,
-            this.mAdminToolsUploadBattlesAll});
-            this.mAdminTools.Enabled = false;
-            this.mAdminTools.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mAdminTools.Name = "mAdminTools";
-            this.mAdminTools.Size = new System.Drawing.Size(271, 22);
-            this.mAdminTools.Text = "Sync Battles to Wot Numbers website";
-            // 
-            // mAdminToolsUploadBattlesNew
-            // 
-            this.mAdminToolsUploadBattlesNew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mAdminToolsUploadBattlesNew.Name = "mAdminToolsUploadBattlesNew";
-            this.mAdminToolsUploadBattlesNew.Size = new System.Drawing.Size(177, 22);
-            this.mAdminToolsUploadBattlesNew.Text = "Upload New Battles";
-            this.mAdminToolsUploadBattlesNew.Click += new System.EventHandler(this.mAdminToolsUploadBattlesNew_Click);
-            // 
-            // mAdminToolsUploadBattlesAll
-            // 
-            this.mAdminToolsUploadBattlesAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mAdminToolsUploadBattlesAll.Name = "mAdminToolsUploadBattlesAll";
-            this.mAdminToolsUploadBattlesAll.Size = new System.Drawing.Size(177, 22);
-            this.mAdminToolsUploadBattlesAll.Text = "Upload All Battles";
-            this.mAdminToolsUploadBattlesAll.Click += new System.EventHandler(this.mAdminToolsUploadBattlesAll_Click);
+            this.toolStripSeparator24.Size = new System.Drawing.Size(260, 6);
             // 
             // mUpdateDataFromAPI
             // 
             this.mUpdateDataFromAPI.Enabled = false;
             this.mUpdateDataFromAPI.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mUpdateDataFromAPI.Name = "mUpdateDataFromAPI";
-            this.mUpdateDataFromAPI.Size = new System.Drawing.Size(271, 22);
+            this.mUpdateDataFromAPI.Size = new System.Drawing.Size(263, 22);
             this.mUpdateDataFromAPI.Text = "Download and Update Tanks...";
             this.mUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
             // 
             // toolStripSeparator18
             // 
             this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator18.Size = new System.Drawing.Size(260, 6);
             // 
             // mRecalcTankStatistics
             // 
             this.mRecalcTankStatistics.Enabled = false;
             this.mRecalcTankStatistics.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mRecalcTankStatistics.Name = "mRecalcTankStatistics";
-            this.mRecalcTankStatistics.Size = new System.Drawing.Size(271, 22);
+            this.mRecalcTankStatistics.Size = new System.Drawing.Size(263, 22);
             this.mRecalcTankStatistics.Text = "Recalculate Tank Statistics";
             this.mRecalcTankStatistics.Click += new System.EventHandler(this.mRecalcTankStatistics_Click);
             // 
@@ -2417,7 +2364,7 @@
             this.mRecalcBattleRatings.Enabled = false;
             this.mRecalcBattleRatings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mRecalcBattleRatings.Name = "mRecalcBattleRatings";
-            this.mRecalcBattleRatings.Size = new System.Drawing.Size(271, 22);
+            this.mRecalcBattleRatings.Size = new System.Drawing.Size(263, 22);
             this.mRecalcBattleRatings.Text = "Recalculate Battle Ratings";
             // 
             // mRecalcBattleWN9
@@ -2490,20 +2437,20 @@
             this.mRecalcBattleCreditsPerTank.Enabled = false;
             this.mRecalcBattleCreditsPerTank.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mRecalcBattleCreditsPerTank.Name = "mRecalcBattleCreditsPerTank";
-            this.mRecalcBattleCreditsPerTank.Size = new System.Drawing.Size(271, 22);
+            this.mRecalcBattleCreditsPerTank.Size = new System.Drawing.Size(263, 22);
             this.mRecalcBattleCreditsPerTank.Text = "Recalculate Battle Credits per Tank...";
             this.mRecalcBattleCreditsPerTank.Click += new System.EventHandler(this.mRecalcBattleCreditsPerTank_Click);
             // 
             // toolStripSeparator25
             // 
             this.toolStripSeparator25.Name = "toolStripSeparator25";
-            this.toolStripSeparator25.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator25.Size = new System.Drawing.Size(260, 6);
             // 
             // mSettingsShowLogFiles
             // 
             this.mSettingsShowLogFiles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mSettingsShowLogFiles.Name = "mSettingsShowLogFiles";
-            this.mSettingsShowLogFiles.Size = new System.Drawing.Size(271, 22);
+            this.mSettingsShowLogFiles.Size = new System.Drawing.Size(263, 22);
             this.mSettingsShowLogFiles.Text = "Show Log Files...";
             this.mSettingsShowLogFiles.Click += new System.EventHandler(this.mSettingsShowLogFiles_Click);
             // 
@@ -2511,34 +2458,34 @@
             // 
             this.mShowDbTables.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mShowDbTables.Name = "mShowDbTables";
-            this.mShowDbTables.Size = new System.Drawing.Size(271, 22);
+            this.mShowDbTables.Size = new System.Drawing.Size(263, 22);
             this.mShowDbTables.Text = "Show Database Tables...";
             this.mShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(260, 6);
             // 
             // mAppSettings
             // 
             this.mAppSettings.Enabled = false;
             this.mAppSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mAppSettings.Name = "mAppSettings";
-            this.mAppSettings.Size = new System.Drawing.Size(271, 22);
+            this.mAppSettings.Size = new System.Drawing.Size(263, 22);
             this.mAppSettings.Text = "Application Settings...";
             this.mAppSettings.Click += new System.EventHandler(this.mAppSettings_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(260, 6);
             // 
             // mExit
             // 
             this.mExit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mExit.Name = "mExit";
-            this.mExit.Size = new System.Drawing.Size(271, 22);
+            this.mExit.Size = new System.Drawing.Size(263, 22);
             this.mExit.Text = "Exit";
             this.mExit.Click += new System.EventHandler(this.mExit_Click);
             // 
@@ -2548,11 +2495,9 @@
             this.mHelp.BackColor = System.Drawing.Color.Transparent;
             this.mHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.mHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mWotNumWebUserGuide,
             this.mWotNumWebForum,
             this.toolStripSeparator23,
             this.mHelpCheckVersion,
-            this.mHelpMessage,
             this.toolStripSeparator2,
             this.mHelpAbout});
             this.mHelp.Image = ((System.Drawing.Image)(resources.GetObject("mHelp.Image")));
@@ -2563,85 +2508,39 @@
             this.mHelp.Text = "toolStripDropDownButton1";
             this.mHelp.ToolTipText = "Help";
             // 
-            // mWotNumWebUserGuide
-            // 
-            this.mWotNumWebUserGuide.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mWotNumWebUserGuide.Name = "mWotNumWebUserGuide";
-            this.mWotNumWebUserGuide.Size = new System.Drawing.Size(286, 22);
-            this.mWotNumWebUserGuide.Text = "Wot Numbers User Guides...";
-            this.mWotNumWebUserGuide.Click += new System.EventHandler(this.mWotNumWebUserGuide_Click);
-            // 
             // mWotNumWebForum
             // 
             this.mWotNumWebForum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mWotNumWebForum.Name = "mWotNumWebForum";
-            this.mWotNumWebForum.Size = new System.Drawing.Size(286, 22);
-            this.mWotNumWebForum.Text = "Wot Numbers Forum...";
+            this.mWotNumWebForum.Size = new System.Drawing.Size(193, 22);
+            this.mWotNumWebForum.Text = "Wot Numbers Website";
             this.mWotNumWebForum.Click += new System.EventHandler(this.mWotNumWebForum_Click);
             // 
             // toolStripSeparator23
             // 
             this.toolStripSeparator23.Name = "toolStripSeparator23";
-            this.toolStripSeparator23.Size = new System.Drawing.Size(283, 6);
+            this.toolStripSeparator23.Size = new System.Drawing.Size(190, 6);
             // 
             // mHelpCheckVersion
             // 
             this.mHelpCheckVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHelpCheckVersion.Name = "mHelpCheckVersion";
-            this.mHelpCheckVersion.Size = new System.Drawing.Size(286, 22);
+            this.mHelpCheckVersion.Size = new System.Drawing.Size(193, 22);
             this.mHelpCheckVersion.Text = "Check for new version";
             this.mHelpCheckVersion.Click += new System.EventHandler(this.mHelpCheckVersion_Click);
-            // 
-            // mHelpMessage
-            // 
-            this.mHelpMessage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mHelpMessage.Name = "mHelpMessage";
-            this.mHelpMessage.Size = new System.Drawing.Size(286, 22);
-            this.mHelpMessage.Text = "View message from Wot Numbers Team";
-            this.mHelpMessage.Click += new System.EventHandler(this.mHelpMessage_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(283, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(190, 6);
             // 
             // mHelpAbout
             // 
             this.mHelpAbout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHelpAbout.Name = "mHelpAbout";
-            this.mHelpAbout.Size = new System.Drawing.Size(286, 22);
+            this.mHelpAbout.Size = new System.Drawing.Size(193, 22);
             this.mHelpAbout.Text = "About Wot Numbers...";
             this.mHelpAbout.Click += new System.EventHandler(this.mHelpAbout_Click);
-            // 
-            // mLinksSeparator
-            // 
-            this.mLinksSeparator.Name = "mLinksSeparator";
-            this.mLinksSeparator.Size = new System.Drawing.Size(6, 25);
-            // 
-            // mWotNumWebStats
-            // 
-            this.mWotNumWebStats.BackColor = System.Drawing.Color.Transparent;
-            this.mWotNumWebStats.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mWotNumWebStats.Image = ((System.Drawing.Image)(resources.GetObject("mWotNumWebStats.Image")));
-            this.mWotNumWebStats.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mWotNumWebStats.Name = "mWotNumWebStats";
-            this.mWotNumWebStats.Size = new System.Drawing.Size(96, 20);
-            this.mWotNumWebStats.Text = "Stats on Web";
-            this.mWotNumWebStats.ToolTipText = "Go to the Stats page on Wot Numbers website";
-            this.mWotNumWebStats.Click += new System.EventHandler(this.mWotNumWebStats_Click);
-            // 
-            // mVBaddict
-            // 
-            this.mVBaddict.BackColor = System.Drawing.Color.Transparent;
-            this.mVBaddict.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
-            this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
-            this.mVBaddict.Text = "toolStripButton1";
-            this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
-            this.mVBaddict.Visible = false;
-            this.mVBaddict.Click += new System.EventHandler(this.mVBaddict_Click);
             // 
             // lblStatusRowCount
             // 
@@ -2950,10 +2849,8 @@
 		private System.Windows.Forms.ToolStripMenuItem mShowDbTables;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
 		private System.Windows.Forms.ToolStripButton mViewChart;
-		private System.Windows.Forms.ToolStripMenuItem mTankFilter_GetInGarage;
 		private System.Windows.Forms.ToolStripDropDownButton mHelp;
 		private System.Windows.Forms.ToolStripMenuItem mHelpCheckVersion;
-		private System.Windows.Forms.ToolStripMenuItem mHelpMessage;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem mHelpAbout;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_Clear;
@@ -3006,7 +2903,6 @@
         private System.Windows.Forms.ToolStripMenuItem mMapDescr;
         private System.Windows.Forms.ToolStripMenuItem mMapDescrLarge;
         private System.Windows.Forms.ToolStripMenuItem mMapShowOld;
-        private System.Windows.Forms.ToolStripButton mVBaddict;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator28;
         private System.Windows.Forms.ToolStripMenuItem mHomeViewFileLoad;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
@@ -3021,10 +2917,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private System.Windows.Forms.ToolStripMenuItem mHomeViewDefault;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_Search;
-        private System.Windows.Forms.ToolStripSeparator mLinksSeparator;
         private System.Windows.Forms.ToolStripMenuItem mWotNumWebForum;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
-        private System.Windows.Forms.ToolStripMenuItem mWotNumWebUserGuide;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleWN9;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator31;
         private System.Windows.Forms.ToolStripMenuItem mHomeViewRecent1;
@@ -3080,10 +2974,6 @@
         private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelectedEdit;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountryPoland;
         private System.Windows.Forms.ToolStripMenuItem grandBattleToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mAdminTools;
-        private System.Windows.Forms.ToolStripMenuItem mAdminToolsUploadBattlesNew;
-        private System.Windows.Forms.ToolStripMenuItem mAdminToolsUploadBattlesAll;
-        private System.Windows.Forms.ToolStripButton mWotNumWebStats;
         private System.Windows.Forms.Timer timerWotNumMenuItem;
         private System.IO.FileSystemWatcher fswDossier;
         private System.IO.FileSystemWatcher fswBattle;

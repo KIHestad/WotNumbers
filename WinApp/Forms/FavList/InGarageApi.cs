@@ -22,9 +22,10 @@ namespace WinApp.Forms
 
 		private void InGarageApi_Load(object sender, EventArgs e)
 		{
-			Uri url= new Uri($"{Constants.WotNumWebUrl()}/Api/WotAuthenticate.aspx?uid=1&server=" + Config.Settings.playerServer);
-			webBrowser1.ScriptErrorsSuppressed = true;
-			webBrowser1.Url = url;
+			// Discontinued
+            //Uri url= new Uri($"{Constants.WotNumWebUrl()}/Api/WotAuthenticate.aspx?uid=1&server=" + Config.Settings.playerServer);
+			//webBrowser1.ScriptErrorsSuppressed = true;
+			//webBrowser1.Url = url;
 		}
 
 		private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -32,7 +33,7 @@ namespace WinApp.Forms
             // Look for:
             // {Constants.WotNumWebUrl()}/Api/WotAuthenticate.aspx?authenticationresult=1&status=ok&access_token=ba1ca887d157e6842507b715ba3f0eaee69f1789&nickname=BadButton&account_id=500700596&expires_at=1407971037
             string result = e.Url.AbsoluteUri.ToString();
-			string resultOk = $"{Constants.WotNumWebUrl()}/Api/WotAuthenticate.aspx?authenticationresult=1&";
+            string resultOk = ""; // TODO: Remove code? Feature is discontinued $"{Constants.WotNumWebUrl()}/Api/WotAuthenticate.aspx?authenticationresult=1&";
 			if (result.Length > resultOk.Length && result.Substring(0, resultOk.Length) == resultOk)
 			{
 				// Get Values

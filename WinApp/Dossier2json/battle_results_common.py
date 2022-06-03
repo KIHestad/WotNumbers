@@ -10,8 +10,7 @@ class FLAG_ACTION:
     CAPTURED = 2
     LOST = 3
     RANGE = (PICKED_UP_FROM_BASE, PICKED_UP_FROM_GROUND, CAPTURED, LOST)
-
-from DictPackers import DictPacker, SimpleDictPacker, DeltaPacker, ValueReplayPacker, roundToInt
+from DictPackers import DictPacker, MergeDictPacker, SimpleDictPacker, DeltaPacker, ValueReplayPacker, roundToInt
 #from items.vehicles import VEHICLE_DEVICE_TYPE_NAMES, VEHICLE_TANKMAN_TYPE_NAMES
 VEHICLE_DEVICE_TYPE_NAMES = (
  'engine', 'ammoBay', 'fuelTank', 'radio', 'track', 'gun', 'turretRotator', 'surveyingDevice', 'STUN_PLACEHOLDER',
@@ -23,7 +22,6 @@ class BadgesCommon(object):
     @staticmethod
     def selectedBadgesEmpty():
         return ([], [])
-
 BATTLE_RESULTS = [
  (
   'health', int, 0, None, 'skip', ENTRY_TYPE.VEHICLE_ALL),
@@ -65,6 +63,8 @@ BATTLE_RESULTS = [
   'damageDealt', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
  (
   'sniperDamageDealt', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
+ (
+  'artilleryFortEquipDamageDealt', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
  (
   'equipmentDamageDealt', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
  (
@@ -147,6 +147,8 @@ BATTLE_RESULTS = [
   'destructiblesDamageDealt', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
  (
   'destructiblesHits', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
+ (
+  'destructibleDeaths', list, [], None, 'extend', ENTRY_TYPE.VEHICLE_ALL),
  (
   'numDefended', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_ALL),
  (
@@ -500,6 +502,8 @@ BATTLE_RESULTS = [
  (
   'recruiterID', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
+  'referralBonusVehicles', list, [], None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
+ (
   'fareTeamXPPosition', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
   'questsProgress', dict, {}, None, 'joinDicts', ENTRY_TYPE.ACCOUNT_SELF),
@@ -721,4 +725,8 @@ BATTLE_RESULTS = [
  (
   'startAmmo', list, [], None, 'skip', ENTRY_TYPE.SERVER),
  (
-  'initialVehicleAmmo', list, [], None, 'skip', ENTRY_TYPE.SERVER)]
+  'initialVehicleAmmo', list, [], None, 'skip', ENTRY_TYPE.SERVER),
+ (
+  'replayURL', str, '', None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
+ (
+  'currencies', dict, {}, MergeDictPacker(), 'joinByEachPacker', ENTRY_TYPE.VEHICLE_SELF)]

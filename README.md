@@ -1,6 +1,6 @@
 # WoT Numbers #
 
-Homepage:    http://wotnumbers.com
+Homepage:    https://wotnumbers.com
 
 Created by: KI Hestad (aka: BadButton)
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.30.1"?>
+<?define ProductVersion = "1.0.1"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -358,6 +358,9 @@
       </Component>
       <Component Id="cmpstructures105" Directory="INSTALLFOLDER_Dossier2json" Guid="{F1574D68-3C87-4583-8EA4-203949D52BDD}">
         <File Id="filstructures105" KeyPath="yes" Source="$(var.D2jSource)\structures_105.json" />
+      </Component>
+      <Component Id="cmpstructures106" Directory="INSTALLFOLDER_Dossier2json" Guid="{42F65FC9-4304-4FF6-BC73-66ABA8638840}">
+        <File Id="filstructures106" KeyPath="yes" Source="$(var.D2jSource)\structures_106.json" />
       </Component>
 
     </ComponentGroup>

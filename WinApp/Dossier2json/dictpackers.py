@@ -147,6 +147,41 @@ class SimpleDictPacker(object):
         return ret
 
 
+class MergeDictPacker(object):
+
+    def __init__(self, *metaData):
+        self._dictList = [
+         DictPacker(*metaData)]
+
+    def pack(self, dataDict):
+        ret = []
+        for packer in self._dictList:
+            res = packer.pack(dataDict)
+            ret.append(len(res))
+            ret.extend(res)
+
+        return ret
+
+    def unpack(self, dataList):
+        ret = {}
+        offset = 0
+        for packer in self._dictList:
+            nxtOffset, offset = dataList[offset], offset + 1
+            ret.update(packer.unpack(dataList[offset:offset + nxtOffset]))
+            offset = offset + nxtOffset
+
+        return ret
+
+    def merge(self, pack):
+        checkSums = set([ v.getChecksum() for v in self._dictList ])
+        for dictPacker in pack._dictList:
+            if dictPacker.getChecksum() not in checkSums:
+                self._dictList.append(dictPacker)
+
+    def meta(self):
+        return sum([ Meta(*packer._metaData) for packer in self._dictList ], Meta())
+
+
 class Meta(DictPacker):
 
     def __init__(self, *metaData):
@@ -192,6 +227,9 @@ class Meta(DictPacker):
 
     def __len__(self):
         return len(self._metaData)
+
+    def meta(self, name):
+        return self.getDataByName(name)[3].meta()
 
     def __initDefaults(self):
         self.__defaultsImmutable = {}

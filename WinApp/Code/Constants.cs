@@ -25,9 +25,9 @@ namespace WinApp.Code
         public static string WotNumWebUrl()
         {
             if (IsDebugging())
-                return "http://wotnumbers.com"; // Alternative user local web server
+                return "https://wotnumbers.com"; // Alternative user local web server
             else
-                return "http://wotnumbers.com";
+                return "https://wotnumbers.com";
         }
 
     }

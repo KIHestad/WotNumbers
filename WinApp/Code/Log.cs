@@ -20,7 +20,7 @@ namespace WinApp.Code
 			bool loggingOk = true;
 			if (Config.Settings.showDBErrors || forceLogging)
 			{
-				loggingOk = await LogToFileLogBuffer(logBuffer, false);
+				loggingOk = await LogToFileLogBuffer(false);
 			}
 			if (loggingOk)
             {
@@ -101,7 +101,7 @@ namespace WinApp.Code
 		}
 
 		// Used to write logbuffer
-		private async static Task<bool> LogToFileLogBuffer(List<string> logtext, bool addDateTime = false)
+		private async static Task<bool> LogToFileLogBuffer(bool addDateTime = false)
 		{
 			bool loggingOK = true;
 			try
@@ -113,7 +113,7 @@ namespace WinApp.Code
                     {
                         using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
                         {
-                            foreach (var s in logtext)
+                            foreach (var s in logBuffer)
                             {
                                 await sw.WriteLineAsync(s);
                             }

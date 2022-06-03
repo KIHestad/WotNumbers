@@ -167,6 +167,7 @@
       <DependentUpon>BattleDetailMap.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\AppBattleUpload.cs" />
+    <Compile Include="Services\AppNewVersion.cs" />
     <Compile Include="Services\AppStartup.cs" />
     <Compile Include="Code\DateTimeHelper.cs" />
     <Compile Include="Code\ExtensionMethods.cs" />
@@ -671,6 +672,7 @@
     </Compile>
     <Compile Include="Code\TankHelper.cs" />
     <Compile Include="Services\Models\AppBattlesUploadModels.cs" />
+    <Compile Include="Services\Models\AppNewVersionModels.cs" />
     <Compile Include="Services\Models\AppStartypModels.cs" />
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
@@ -924,6 +926,7 @@
     <None Include="Dossier2json\structures_103.json" />
     <None Include="Dossier2json\structures_104.json" />
     <None Include="Dossier2json\structures_105.json" />
+    <None Include="Dossier2json\structures_106.json" />
     <None Include="Dossier2json\structures_77.json" />
     <None Include="Dossier2json\structures_81.json" />
     <None Include="Dossier2json\structures_85.json" />

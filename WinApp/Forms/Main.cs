@@ -134,9 +134,16 @@ namespace WinApp.Forms
             lblStatus2.Text = "Application starting...";
             lblStatusRowCount.Text = "";
             // Log startup
+            string startupMessage = "********* Application startup - Wot Numbers " + AppVersion.AssemblyVersion + " " + AppVersion.BuildVersion + " *********";
+            string startupLine = ("").PadLeft(startupMessage.Length, '*');
+            string startupSpace = ("").PadLeft(20, ' ');
             Log.AddToLogBuffer("", false);
-            Log.AddToLogBuffer("'********* Application startup - Wot Numbers " + AppVersion.AssemblyVersion + " " + AppVersion.BuildVersion + " *********'", true);
             Log.AddToLogBuffer("", false);
+            Log.AddToLogBuffer($"{startupSpace}'{startupLine}'", false);
+            Log.AddToLogBuffer($"{startupSpace}'{startupMessage}'", false);
+            Log.AddToLogBuffer($"{startupSpace}'{startupLine}'", false);
+            // Write log
+            await Log.WriteLogBuffer(true);
             
 
             // Mouse scrolling for datagrid
@@ -612,158 +619,100 @@ namespace WinApp.Forms
 		private async Task RunAppStartupAPI(bool manualVersionCheck)
 		{
             // Run appstart procedure, webservice to wot numbers website, log app usage + get playerId/token for posting data to website + check for new version
-            Services.AppStartup appStartup = new Services.AppStartup();
-            Services.Models.AppStartupModels.Result appStartupResult = await appStartup.Run(!manualVersionCheck);
+            // Services.AppStartup appStartup = new Services.AppStartup();
+            // Services.Models.AppStartupModels.Result appStartupResult = await appStartup.Run(!manualVersionCheck);
 
-            // Not success getting appstart data from website api
-            if (!appStartupResult.Success)
+            // New method: check for new version at hestad.no web server
+            var websiteVersionCheck = Services.AppNewVersion.Check();
+
+            // Not success getting website download settings
+            if (!websiteVersionCheck.Success)
             {
-                // Manual check for new version, or debug mode, show message box popup
+                Log.AddToLogBuffer("Unsuccessful check for new version on website. " + websiteVersionCheck.Message);
+                await Log.WriteLogBuffer(true);
+                // Manual check for new version, or debug mode, show message in message box
                 if (manualVersionCheck)
                 {
                     MsgBox.Show(
-                        "Could not access webservice, remote server is not available or you have no Internet access." + Environment.NewLine + Environment.NewLine +
-                        appStartupResult.Message + Environment.NewLine + Environment.NewLine + Environment.NewLine,
-                        "Version check failed",
+                        "Unsuccessful check for new version." + Environment.NewLine + Environment.NewLine +
+                        websiteVersionCheck.Message + Environment.NewLine + Environment.NewLine + Environment.NewLine,
+                        "Website version check",
                         this);
                 }
                 // Normal startup, continue with startup actions, show notification in status bar
                 if (!manualVersionCheck)
                 {
-                    await RunAppStartupActions("Could not access webservice to check for new version.");
+                    await RunAppStartupActions("Error occured checking website for new version.");
                 }
             }
             // Success getting appstart data
             else
             {
-                // Check if user has access to pilot version
-                bool userIsTestPilot = (appStartupResult.PilotVersion != null);
-                // Get versions
-                double currentVersion = AppVersion.AssemblyVersion.ToVersionNumber();
-                double latestReleaseVersion = appStartupResult.ReleaseVersion.AppVersion.ToVersionNumber();
-                double latestPilotVersion = 0;
-                if (userIsTestPilot)
-                    latestPilotVersion = appStartupResult.PilotVersion.AppVersion.ToVersionNumber();
-                // Chcek if new version found
-                bool newReleaseVersion = (latestReleaseVersion > currentVersion);
-                bool newPilotVersion = false;
-                if (userIsTestPilot)
-                    newPilotVersion = (latestPilotVersion > currentVersion);
-
-                // Check if site is in maintanence mode
-                if (appStartupResult.ReleaseVersion.MaintenanceMode && (!userIsTestPilot || (userIsTestPilot && appStartupResult.PilotVersion.MaintenanceMode)))
+                // Check if download is available
+                if (!websiteVersionCheck.DownloadSettings.Active)
                 {
-                    // Web is currently in maintance mode, just skip version check - perform normal startup
-                    // Manual check for new version, or debug mode, show message box popup
+                    // Not available
+                    Log.AddToLogBuffer("Website providing new version for download is in maintanace mode.");
+                    Log.AddToLogBuffer("Message returned from website: " + websiteVersionCheck.DownloadSettings.InactiveMessage);
+                    await Log.WriteLogBuffer(true);
                     if (manualVersionCheck)
                     {
-                        // Message if debug mode
+                        Log.AddToLogBuffer("Wot Numbers website download is currently not available. " + websiteVersionCheck.DownloadSettings.InactiveMessage);
+                        await Log.WriteLogBuffer(true);
                         if (Config.Settings.showDBErrors || manualVersionCheck)
                             MsgBox.Show(
-                                "Wot Numbers download service is currently in maintenance mode, try again later." + Environment.NewLine + Environment.NewLine,
-                                "Version check terminated", this);
+                                "Wot Numbers download is currently not available." + Environment.NewLine + Environment.NewLine +
+                                websiteVersionCheck.DownloadSettings.InactiveMessage + Environment.NewLine + Environment.NewLine,
+                                "Website version check", this);
                     }
                     if (!manualVersionCheck)
                     {
-                        await RunAppStartupActions("Wot Numbers website in maintenance mode, version check skipped");
+                        await RunAppStartupActions(websiteVersionCheck.DownloadSettings.InactiveMessage);
                     }
                 }
-                // Site not in maintance mode
+                // Download exists
                 else
                 {
-                    // Check if new release version, force upgrade
-                    if (newReleaseVersion)
+                    // Get versions
+                    double currentVersion = AppVersion.AssemblyVersion.ToVersionNumber();
+                    double latestVersion = websiteVersionCheck.DownloadSettings.Version.ToVersionNumber();
+                    // Check if new version found
+                    bool newVersionAvailable = (latestVersion > currentVersion);
+                    if (newVersionAvailable)
                     {
+                        // New version found
+                        Log.AddToLogBuffer($"New version found online: {websiteVersionCheck.DownloadSettings.Version}" );
+                        await Log.WriteLogBuffer(true);
                         string msg =
-                            "New version is available: " + appStartupResult.ReleaseVersion.AppVersion + Environment.NewLine + Environment.NewLine +
+                            "New version is available: " + websiteVersionCheck.DownloadSettings.Version + Environment.NewLine + Environment.NewLine +
                             "Click OK to go to the download site." + Environment.NewLine + Environment.NewLine;
-                        MsgBox.Show(msg, "Upgrade to new version reqired", MsgBox.Type.OK, this);
-                        Process.Start(appStartupResult.DownloadUrl);
+                        MsgBox.Show(msg, "Website version check", MsgBox.Type.OK, this);
+                        Process.Start(Constants.WotNumWebUrl());
                         this.Close();
                         Application.Exit();
                     }
-                    // Check if new pilot version, optional upgrade
-                    else if (newPilotVersion && !appStartupResult.PilotVersion.MaintenanceMode)
+                    else
                     {
-                        string msg =
-                            "New pilot version available: " + appStartupResult.PilotVersion.AppVersion + Environment.NewLine + Environment.NewLine +
-                            "Do you want to download this version?" + Environment.NewLine + Environment.NewLine;
-                        MsgBox.Button answer = MsgBox.Show(msg, "New pilot version found", MsgBox.Type.YesNo, this);
-                        if (answer == MsgBox.Button.Yes)
+                        // Not found new version
+                        Log.AddToLogBuffer("Successfully checked for new version online, current version is latest. Your are ready to go. ");
+                        await Log.WriteLogBuffer(true);
+                        if (manualVersionCheck)
                         {
-                            Process.Start(appStartupResult.DownloadUrl);
-                            this.Close();
-                            Application.Exit();
+                            string msg =
+                                "You are running the latest version: " + AppVersion.AssemblyVersion + Environment.NewLine + Environment.NewLine +
+                                "Do you want to go to Wot Numbers website download page anyway?" + Environment.NewLine + Environment.NewLine;
+                            MsgBox.Button answer = MsgBox.Show(msg, "Website version check", MsgBox.Type.YesNo, this);
+                            if (answer == MsgBox.Button.Yes)
+                            {
+                                Process.Start(Constants.WotNumWebUrl());
+                            }
+                        }
+                        else
+                        {
+                            // Check for triggered actions
+                            await RunAppStartupActions("You are running the latest version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
                         }
                     }
-                    // Check if manual version check give message anyway
-                    else if (manualVersionCheck)
-                    { 
-                        // Not found new versipn
-                        string msg =
-                            "You are running the latest version: " + AppVersion.AssemblyVersion + Environment.NewLine + Environment.NewLine +
-                            "Do you want to go to Wot Numbers website download page anyway?" + Environment.NewLine + Environment.NewLine;
-                        MsgBox.Button answer = MsgBox.Show(msg, "No new version forund", MsgBox.Type.YesNo, this);
-                        if (answer == MsgBox.Button.Yes)
-                        {
-                            Process.Start(appStartupResult.DownloadUrl);
-                        }
-                    }
-                    // No new version found, continue with checking message and startup actions
-                    // Running release version
-                    if (currentVersion <= latestReleaseVersion) 
-                    {
-                        // Message, if exits and not set to be shown in the future, and user not seen it yet
-                        if (appStartupResult.ReleaseVersion.Message != null && appStartupResult.ReleaseVersion.MessageDate != null && appStartupResult.ReleaseVersion.MessageDate <= DateTime.Now &&
-                            (Config.Settings.readMessage == null || Config.Settings.readMessage < appStartupResult.ReleaseVersion.MessageDate))
-                        {
-                            // Display message from Wot Numbers API
-                            MsgBox.Show(appStartupResult.ReleaseVersion.Message + Environment.NewLine + Environment.NewLine, "Message published " + Convert.ToDateTime(appStartupResult.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
-                            // Save read message
-                            Config.Settings.readMessage = DateTime.Now;
-                            await Config.SaveConfig();
-                        }
-                        // Action: Run force wot api
-                        if (appStartupResult.ReleaseVersion.RunWotApi != null && appStartupResult.ReleaseVersion.RunWotApi <= DateTime.Now) // Avoid running future planned updates
-                        {
-                            if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < appStartupResult.ReleaseVersion.RunWotApi)
-                                DBVersion.RunDownloadAndUpdateTanks = true;
-                        }
-                        // Action: Force dossier file check or just normal 
-                        if (appStartupResult.ReleaseVersion.RunForceDossierFileCheck != null && appStartupResult.ReleaseVersion.RunForceDossierFileCheck <= DateTime.Now) // Avoid running future planned updates
-                        {
-                            if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < appStartupResult.ReleaseVersion.RunForceDossierFileCheck)
-                                DBVersion.RunDossierFileCheckWithForceUpdate = true;
-                        }
-                    }
-                    // Pilot version
-                    else if (appStartupResult.PilotVersion != null && currentVersion > latestReleaseVersion)
-                    {
-                        // Message, if exits and not set to be shown in the future, and user not seen it yet
-                        if (appStartupResult.PilotVersion.Message != null && appStartupResult.PilotVersion.MessageDate != null && appStartupResult.PilotVersion.MessageDate <= DateTime.Now &&
-                            (Config.Settings.readMessage == null || Config.Settings.readMessage < appStartupResult.PilotVersion.MessageDate))
-                        {
-                            // Display message from Wot Numbers API
-                            MsgBox.Show(appStartupResult.PilotVersion.Message + Environment.NewLine + Environment.NewLine, "Message to test pilot published " + Convert.ToDateTime(appStartupResult.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
-                            // Save read message
-                            Config.Settings.readMessage = DateTime.Now;
-                            await Config.SaveConfig();
-                        }
-                        // Action: Run force wot api
-                        if (appStartupResult.PilotVersion.RunWotApi != null && appStartupResult.PilotVersion.RunWotApi <= DateTime.Now) // Avoid running future planned updates
-                        {
-                            if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < appStartupResult.PilotVersion.RunWotApi)
-                                DBVersion.RunDownloadAndUpdateTanks = true;
-                        }
-                        // Action: Force dossier file check or just normal 
-                        if (appStartupResult.PilotVersion.RunForceDossierFileCheck != null && appStartupResult.PilotVersion.RunForceDossierFileCheck <= DateTime.Now) // Avoid running future planned updates
-                        {
-                            if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < appStartupResult.PilotVersion.RunForceDossierFileCheck)
-                                DBVersion.RunDossierFileCheckWithForceUpdate = true;
-                        }
-                    }
-                    // Check for triggered actions
-                    await RunAppStartupActions("You are running the latest version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
                 }
             }
             // Enable Settings menues
@@ -780,7 +729,6 @@ namespace WinApp.Forms
             mRecalcBattleAllRatings.Enabled = true;
             mRecalcBattleCreditsPerTank.Enabled = true;
             mAppSettings.Enabled = true;
-            mAdminTools.Enabled = true;
         }
 		
 		private async Task RunAppStartupActions(string message)
@@ -809,47 +757,16 @@ namespace WinApp.Forms
                     await RunDossierFileCheck(msg, DBVersion.RunDossierFileCheckWithForceUpdate);
 				}
 
+                // Discontinued
                 // Upload battles to website
-                string result = await new Services.AppBattleUpload().Run(DBVersion.RunUploadAllToWotNumWeb);
-                if (DBVersion.RunUploadAllToWotNumWeb)
-                    await Log.LogToFile($" > > Battle upload to Wot Numbers website for all battles done. Status: {result}");
-                else
-                    await Log.LogToFile($" > > Battle upload to Wot Numbers website for new battles done. status: {result}");
-                // Start wot num web toolbar button pulsating
-                timerWotNumMenuItem.Interval = 20000;
-                timerWotNumMenuItem.Enabled = wotNumWebMenuItemPulsatingEnabled;
-                
+                //string result = await new Services.AppBattleUpload().Run(DBVersion.RunUploadAllToWotNumWeb);
+                //if (DBVersion.RunUploadAllToWotNumWeb)
+                //    await Log.LogToFile($" > > Battle upload to Wot Numbers website for all battles done. Status: {result}");
+                //else
+                //    await Log.LogToFile($" > > Battle upload to Wot Numbers website for new battles done. status: {result}");
+                                
             }
 		}
-
-        // Pulsating wot num web toolbar button: mWotNumWebStats
-        bool wotNumWebMenuItemPulsatingEnabled = true;
-        byte wotNumWebMenuItemPulsatingCount = 0;
-        int wotNumWebMenuItemRedColor = 45;
-        int wotNumWebMenuItemRedColorInterval = 10;
-        private void timerWotNumMenuItem_Tick(object sender, EventArgs e)
-        {
-            wotNumWebMenuItemRedColor += wotNumWebMenuItemRedColorInterval;
-            timerWotNumMenuItem.Interval = 100;
-            if (wotNumWebMenuItemRedColor > 180)
-            {
-                wotNumWebMenuItemRedColorInterval = -10;
-            }
-            else if (wotNumWebMenuItemRedColor < 45)
-            {
-                timerWotNumMenuItem.Interval = 2000;
-                wotNumWebMenuItemRedColorInterval = 10;
-                wotNumWebMenuItemRedColor = 45;
-                wotNumWebMenuItemPulsatingCount++;
-            }
-            if (wotNumWebMenuItemPulsatingEnabled && wotNumWebMenuItemPulsatingCount < 30)
-                mWotNumWebStats.BackColor = Color.FromArgb(255, wotNumWebMenuItemRedColor, 45 + ((wotNumWebMenuItemRedColor - 45) / 2), 49); 
-            else
-            {
-                timerWotNumMenuItem.Enabled = false;
-                mWotNumWebStats.BackColor = Color.FromArgb(255, 45, 45, 49);
-            }
-        }
 
         #endregion
 
@@ -2270,51 +2187,31 @@ namespace WinApp.Forms
 
         #region Menu Item: Admin Tools
 
-        private async void mAdminToolsUploadBattlesNew_Click(object sender, EventArgs e)
+        private void mAdminToolsUploadBattlesNew_Click(object sender, EventArgs e)
         {
-            Services.AppBattleUpload appBattleUpload = new Services.AppBattleUpload();
-            string result = await appBattleUpload.Run(false);
-            MsgBox.Show(result, "Upload new battles to Wot Numbers website", this);
+            //Services.AppBattleUpload appBattleUpload = new Services.AppBattleUpload();
+            //string result = await appBattleUpload.Run(false);
+            //MsgBox.Show(result, "Upload new battles to Wot Numbers website", this);
+            MsgBox.Show("Message", "This feature is discontinued", this);
         }
 
-        private async void mAdminToolsUploadBattlesAll_Click(object sender, EventArgs e)
+        private void mAdminToolsUploadBattlesAll_Click(object sender, EventArgs e)
         {
-            MsgBox.Button answer = MsgBox.Show(
-                "This operation will transfer all battles even if they have been transferred previously, it might take a while. Are you sure you want to run the job?" + Environment.NewLine + Environment.NewLine,
-                "Warning", MsgBox.Type.YesNo, this);
-            if (answer == MsgBox.Button.Yes)
-            {
-                Services.AppBattleUpload appBattleUpload = new Services.AppBattleUpload();
-                string result = await appBattleUpload.Run(true);
-                MsgBox.Show(result, "Upload all battles to Wot Numbers website", this);
-            }
-        }
-
-        #endregion
-
-        #region Menu Item: Go to web
-
-        private void mWotNumWebStats_Click(object sender, EventArgs e)
-        {
-            timerWotNumMenuItem.Enabled = false;
-            wotNumWebMenuItemPulsatingEnabled = false;
-            string serverURL = string.Format("{0}/Stats/Index/{1}/{2}", Constants.WotNumWebUrl(), Config.Settings.playerName, Config.Settings.playerServer);
-            Process.Start(serverURL);
-            mWotNumWebStats.BackColor = Color.FromArgb(255, 45, 45, 49);
-        }
-
-        private async void mVBaddict_Click(object sender, EventArgs e)
-        {
-            MsgBox.Show("Sorry, but vBAddict is no loger working. Wot Numbers has discontinued support for vBAddict.");
-            Config.Settings.vBAddictShowToolBarMenu = false;
-            await Config.SaveConfig();
-            mVBaddict.Visible = false;
-            //string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
-            //Process.Start(serverURL);
+            //MsgBox.Button answer = MsgBox.Show(
+            //    "This operation will transfer all battles even if they have been transferred previously, it might take a while. Are you sure you want to run the job?" + Environment.NewLine + Environment.NewLine,
+            //    "Warning", MsgBox.Type.YesNo, this);
+            //if (answer == MsgBox.Button.Yes)
+            //{
+            //    Services.AppBattleUpload appBattleUpload = new Services.AppBattleUpload();
+            //    string result = await appBattleUpload.Run(true);
+            //    MsgBox.Show(result, "Upload all battles to Wot Numbers website", this);
+            //}
+            MsgBox.Show("Message", "This feature is discontinued", this);
         }
 
         #endregion
 
+        
         #region Filters 
 
         private int tankFilterNation = 0;
@@ -4691,7 +4588,7 @@ namespace WinApp.Forms
             // mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu); // Show vbAddict Player Profil toolbar if upload activated
 
             // Upload battles to wotnumweb
-            await new Services.AppBattleUpload().Run(false);
+            // await new Services.AppBattleUpload().Run(false);
 
             // Refresh data
             SetStatus2("Refreshed grid");
@@ -4861,49 +4758,6 @@ namespace WinApp.Forms
 		private async void mHelpCheckVersion_Click(object sender, EventArgs e)
 		{
             await RunAppStartupAPI(true);
-		}
-
-		private async void mHelpMessage_Click(object sender, EventArgs e)
-		{
-            // Message
-            Services.AppStartup appStartup = new Services.AppStartup();
-            Services.Models.AppStartupModels.Result appStartupResult = await appStartup.Run(false);
-            if (!appStartupResult.Success)
-                MsgBox.Show(appStartupResult.Message, "Error getting message", this);
-            else
-            {
-                
-                // Check if user has access to pilot version
-                bool userIsTestPilot = (appStartupResult.PilotVersion != null);
-                // Get versions
-                double currentVersion = AppVersion.AssemblyVersion.ToVersionNumber();
-                double latestReleaseVersion = appStartupResult.ReleaseVersion.AppVersion.ToVersionNumber();
-                double latestPilotVersion = 0;
-                if (userIsTestPilot)
-                    latestPilotVersion = appStartupResult.PilotVersion.AppVersion.ToVersionNumber();
-                // Running Release version, and message exits and not set to be shown in the future
-                if (currentVersion <= latestReleaseVersion && appStartupResult.ReleaseVersion.Message != null && appStartupResult.ReleaseVersion.MessageDate != null && appStartupResult.ReleaseVersion.MessageDate <= DateTime.Now)
-                {
-                    // Display message from Wot Numbers API
-                    MsgBox.Show(appStartupResult.ReleaseVersion.Message + Environment.NewLine + Environment.NewLine, "Message published " + Convert.ToDateTime(appStartupResult.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
-                    // Save read message
-                    Config.Settings.readMessage = DateTime.Now;
-                    await Config.SaveConfig();
-                }
-                // Pilot version, and message exits and not set to be shown in the future
-                else if (currentVersion > latestReleaseVersion && appStartupResult.PilotVersion.Message != null && appStartupResult.PilotVersion.MessageDate != null && appStartupResult.PilotVersion.MessageDate <= DateTime.Now)
-                {
-                    // Display message from Wot Numbers API
-                    MsgBox.Show(appStartupResult.PilotVersion.Message + Environment.NewLine + Environment.NewLine, "Message to test pilot published " + Convert.ToDateTime(appStartupResult.PilotVersion.MessageDate).ToString("dd.MM.yyyy"), this);
-                    // Save read message
-                    Config.Settings.readMessage = DateTime.Now;
-                    await Config.SaveConfig();
-                }
-                else
-                {
-                    MsgBox.Show("No message available.","Message", this);
-                }
-            } 
 		}
 
 		private async void mTankFilter_GetInGarage_Click(object sender, EventArgs e)
@@ -5120,14 +4974,10 @@ namespace WinApp.Forms
 
         private void mWotNumWebForum_Click(object sender, EventArgs e)
         {
-            Process.Start($"{Constants.WotNumWebUrl()}/Forum/List/8/All_Topcs");
+            Process.Start($"{Constants.WotNumWebUrl()}");
         }
 
-        private void mWotNumWebUserGuide_Click(object sender, EventArgs e)
-        {
-            Process.Start($"{Constants.WotNumWebUrl()}/Forum/List/2/User_Guides");
-        }
-
+        
 
 		#endregion
 

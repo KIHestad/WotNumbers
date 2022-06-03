@@ -768,13 +768,14 @@ namespace WinApp.Code
                     }
                 }
 
+                // Discontinued
                 // Upload to wot num web server
-                if (battleListSuccess.Count > 0)
-                {
-                    customErrMsg = "Module: Battle Upload";
-                    string uploadResult = await new Services.AppBattleUpload().RunForBattles(battleListSuccess);
-                    await Log.LogToFile($" > > Battle upload status: {uploadResult}");
-                }
+                //if (battleListSuccess.Count > 0)
+                //{
+                //    customErrMsg = "Module: Battle Upload";
+                //    string uploadResult = await new Services.AppBattleUpload().RunForBattles(battleListSuccess);
+                //    await Log.LogToFile($" > > Battle upload status: {uploadResult}");
+                //}
 
                 // Result logging
                 if (filesJson.Length == 0) // Any files?
