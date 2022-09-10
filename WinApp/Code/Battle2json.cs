@@ -282,6 +282,16 @@ namespace WinApp.Code
                                     // common initial values
                                     new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") }
                                 };
+                                
+                                int playerAccountId = (int)token_private["account"].SelectToken("accountDBID");
+                       
+                                if (playerAccountId != Config.Settings.playerAccountId)
+                                {
+                                    // Dossier2json changed player and the new player has not playerAccountId setup.
+                                    Config.Settings.playerAccountId = playerAccountId;
+                                    await Config.SaveConfig();
+                                }
+
                                 int playerTeam = (int)token_private["account"].SelectToken("team");
                                 int enemyTeam = playerTeam == 1 ? 2 : 1;
                                 // Find game type
@@ -712,6 +722,7 @@ namespace WinApp.Code
                                 DB.AddWithValue(ref sql, "@fragsenemy", fragsCount[enemyTeam], DB.SqlDataType.Int);
                                 // Position on battle result team leaderboard
                                 var positions = await BattleHelper.GetPlayerPositionInTeamLeaderboard(battleId);
+
                                 DB.AddWithValue(ref sql, "@posByXp", positions.PosByXp, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sql, "@posByDmg", positions.PosByDmg, DB.SqlDataType.Int);
                                 // Add Battle ID and run sql if any values
