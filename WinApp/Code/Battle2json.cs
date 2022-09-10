@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using IronPython.Hosting;
 using IronPython.Runtime;
+using IronPython.Runtime.Exceptions;
 using Microsoft.Scripting.Hosting;
 using Newtonsoft.Json.Linq;
 
@@ -904,6 +905,12 @@ namespace WinApp.Code
                         dynamic scopeResult = scope.GetVariable("main")();
 
                         Log.AddToLogBuffer(" > > > Converted battle DAT-file to JSON file: " + filename);
+                        result.Success = true;
+                        result.DeleteFile = true;
+                    }
+                    catch (SystemExitException)
+                    {
+                        Log.AddToLogBuffer(" > > > Some one called SystemExit instead of sys.exit(): Converted battle DAT-file to JSON file: " + filename);
                         result.Success = true;
                         result.DeleteFile = true;
                     }
