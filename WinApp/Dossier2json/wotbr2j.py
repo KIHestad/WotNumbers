@@ -9,10 +9,10 @@ from itertools import izip
 from collections import OrderedDict
 from DictPackers import Meta
 from battle_results_constants import BATTLE_RESULT_ENTRY_TYPE as ENTRY_TYPE
-import battle_results_common, battle_results_frontline, battle_results_random, battle_results_ranked
+import battle_results_common,  battle_results_frontline, battle_results_ranked, battle_results_random
 
 parser = dict()
-parser['version'] = "1.17.0.0"
+parser['version'] = "1.18.0.0"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
 
@@ -204,7 +204,7 @@ def main():
         printmessage(traceback.format_exc(e), False)
         exitwitherror('Battle result cannot be read')
 
-    exit(0) 
+    sys.exit(0) 
 
 
 # CLASS **************************************************************************************************************************

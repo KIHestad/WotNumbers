@@ -1,8 +1,9 @@
-# uncompyle6 version 3.7.0
+# uncompyle6 version 3.7.4
 # Python bytecode 2.7 (62211)
-# Decompiled from: Python 2.7.18 (v2.7.18:8d21aa21f2, Apr 20 2020, 13:19:08) [MSC v.1500 32 bit (Intel)]
+# Decompiled from: Python 2.7.8 (default, Jun 30 2014, 16:08:48) [MSC v.1500 64 bit (AMD64)]
 # Embedded file name: scripts/common/DictPackers.py
 import copy
+#Modified for WotNumbers
 #from debug_utils import LOG_ERROR
 from binascii import crc32
 from functools import partial
@@ -28,8 +29,7 @@ class DeltaPacker(object):
                 s = [ p(v) for v in s ]
             ret[0] = s[0]
             for index, v in enumerate(s[1:]):
-                diff = v - s[index]
-                ret[index + 1] = diff
+                ret[index + 1] = v - s[index]
 
             return ret
 
@@ -49,7 +49,7 @@ class DeltaPacker(object):
 class ValueReplayPacker:
 
     def pack(self, value):
-        if isinstance(value, str):
+        if isinstance(value, (str, unicode)):
             return value
         return value.pack()
 
@@ -83,6 +83,7 @@ class DictPacker(object):
                         v = None
                 l[index + 1] = v
             except Exception as e:
+				#Modified for WotNumbers
                 #LOG_ERROR('error while packing:', index, metaEntry, str(e))
                 raise
 
@@ -92,11 +93,12 @@ class DictPacker(object):
         ret = {}
         if len(dataList) == 0 or dataList[0] != self._checksum:
             return
+        getDefaultValue = self.getDefaultValue
         for index, meta in enumerate(self._metaData):
             val = dataList[(index + 1)]
             name, _, _, packer, _ = meta
             if val is None:
-                val = self.getDefaultValue(index)
+                val = getDefaultValue(index)
             elif packer is not None:
                 val = packer.unpack(val)
             ret[name] = val
@@ -140,9 +142,10 @@ class SimpleDictPacker(object):
 
     def unpack(self, dataList):
         ret = {}
+        keys = self.__keys
         for index, value in enumerate(dataList):
             if value is not None:
-                ret[self.__keys[index]] = value
+                ret[keys[index]] = value
 
         return ret
 
@@ -232,17 +235,20 @@ class Meta(DictPacker):
         return self.getDataByName(name)[3].meta()
 
     def __initDefaults(self):
-        self.__defaultsImmutable = {}
-        self.__defaultsMutable = {}
+        self.__defaultsImmutable = defaultsImmutable = {}
+        self.__defaultsMutable = defaultsMutable = {}
         for name, transportType, default, _, _ in self._metaData:
             mutableType = getMutability(transportType, default)
             if mutableType == 'immutable':
-                self.__defaultsImmutable[name] = default
+                defaultsImmutable[name] = default
+            elif mutableType == 'mutableList':
+                defaultsMutable[name] = partial(lambda x: x[:], default)
+            elif mutableType == 'mutableDeep':
+                defaultsMutable[name] = partial(copy.deepcopy, default)
+            elif mutableType == 'mutableCopy':
+                defaultsMutable[name] = partial(lambda x: x.copy(), default)
             else:
-                lambdas = {'mutableList': partial(lambda x: x[:], default), 
-                   'mutableDeep': partial(copy.deepcopy, default), 
-                   'mutableCopy': partial(lambda x: x.copy(), default)}
-                self.__defaultsMutable[name] = lambdas[mutableType]
+                raise KeyError(mutableType)
 
 
 def getMutability(transportType, default):
