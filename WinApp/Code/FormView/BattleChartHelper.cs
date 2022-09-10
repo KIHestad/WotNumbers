@@ -134,7 +134,7 @@ namespace WinApp.Code.FormView
             {
                 new ChartTypeCols() { playerTankValCol = "wn9" }
             };
-            chartTypeList.Add(new ChartType() { name = "WN9 per battle", col = chartTypeColList, totals = false, seriesStyle = SeriesChartType.Point });
+            chartTypeList.Add(new ChartType() { name = "WN9 per battle", col = chartTypeColList, totals = false});
 
 
             // WN8
@@ -156,7 +156,7 @@ namespace WinApp.Code.FormView
             {
                 new ChartTypeCols() { playerTankValCol = "wn8" }
             };
-            chartTypeList.Add(new ChartType() { name = "WN8 per battle", col = chartTypeColList, totals = false, seriesStyle = SeriesChartType.Point });
+            chartTypeList.Add(new ChartType() { name = "WN8 per battle", col = chartTypeColList, totals = false});
 
             // WN 7
             chartTypeColList = new List<ChartTypeCols>
@@ -177,7 +177,7 @@ namespace WinApp.Code.FormView
             {
                 new ChartTypeCols() { playerTankValCol = "wn7" }
             };
-            chartTypeList.Add(new ChartType() { name = "WN7 per battle", col = chartTypeColList, totals = false, seriesStyle = SeriesChartType.Point });
+            chartTypeList.Add(new ChartType() { name = "WN7 per battle", col = chartTypeColList, totals = false});
 
             // Efficiency
             chartTypeColList = new List<ChartTypeCols>
@@ -288,6 +288,21 @@ namespace WinApp.Code.FormView
             };
             chartTypeList.Add(new ChartType() { name = "Tier Played Avg", col = chartTypeColList, calcType = CalculationType.tierInterval });
 
+            // Damage raw
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "dmg" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "Dmg", col = chartTypeColList, totals = false, calcType = CalculationType.standard });
+            
+            // Assisted spot
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "assistSpot" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "Assisted Spot", col = chartTypeColList, totals = false, calcType = CalculationType.standard });
 
             // Done
             return chartTypeList;
