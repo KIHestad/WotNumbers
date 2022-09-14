@@ -290,6 +290,14 @@ namespace WinApp.Code
                                     // Dossier2json changed player and the new player has not playerAccountId setup.
                                     Config.Settings.playerAccountId = playerAccountId;
                                     await Config.SaveConfig();
+
+                                    // update database
+                                    sql = "UPDATE player SET accountId = @accountId WHERE name = @name;";
+                                    
+                                    DB.AddWithValue(ref sql, "@accountId", playerAccountId, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@name", Config.Settings.playerNameAndServer, DB.SqlDataType.VarChar);
+                                   
+                                    await DB.ExecuteNonQuery(sql);
                                 }
 
                                 int playerTeam = (int)token_private["account"].SelectToken("team");
