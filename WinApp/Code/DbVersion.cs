@@ -28,7 +28,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 538; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 539; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 
         // The upgrade scripts
@@ -41,6 +41,14 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
+				case 539:
+					mssql =
+						// Add column for wargamigAccountId
+						"ALTER TABLE player ADD accountId int NOT NULL DEFAULT(0);" +
+						// adding new map "outpost"
+						"INSERT INTO map (id, name, arena_id) VALUES (102, 'Outpost', '128_last_frontier_v'); ";
+					sqlite = mssql;
+					break;
                 case 538:
                     RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
                     break;
