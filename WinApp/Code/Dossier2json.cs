@@ -135,17 +135,19 @@ namespace WinApp.Code
 				string playerName = dfi.PlayerName;
 				string playerServer = dfi.ServerRealmName;
 				string playerNameAndServer = playerName + " (" + playerServer + ")";
-                // int playerAccountId = 0;
+                int playerAccountId = 0;
 
                 // Get player ID
                 int playerId = 0;
                 bool playerExists = false;
-				string sql = "select id from player where name=@name";
-				DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-				DataTable dt = await DB.FetchData(sql);
+				string sql = "select id, accountId from player where name=@name";
+                DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+
+                DataTable dt = await DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
                 {
                     playerId = Convert.ToInt32(dt.Rows[0][0]);
+                    playerAccountId = Convert.ToInt32(dt.Rows[0][1]);
                     playerExists = true;
                 }
 				// If no player found, create now
@@ -175,12 +177,14 @@ namespace WinApp.Code
                     return result;
 				}
 				// If dossier player is not current player change
-				if (Config.Settings.playerId != playerId || Config.Settings.playerNameAndServer != playerNameAndServer)
+				if (Config.Settings.playerId != playerId 
+                    || Config.Settings.playerNameAndServer != playerNameAndServer
+                    || Config.Settings.playerAccountId != playerAccountId)
 				{
 					Config.Settings.playerId = playerId;
 					Config.Settings.playerName = playerName;
 					Config.Settings.playerServer = playerServer;
-                    Config.Settings.playerAccountId = 0;
+                    Config.Settings.playerAccountId = playerAccountId;
                     await Config.SaveConfig();
                 }
 				// Copy dossier file and perform file conversion to json format
