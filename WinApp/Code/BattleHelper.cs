@@ -56,23 +56,25 @@ namespace WinApp.Code
         public async static Task<PosOnTeamLeaderboard> GetPlayerPositionInTeamLeaderboard(int battleId)
         {
             PosOnTeamLeaderboard posOnTeamLeaderboard = new PosOnTeamLeaderboard();
-            string playerName = Config.Settings.playerName;
+            int playerAccountId = Config.Settings.playerAccountId;
             // Get players team
             int playersTeam = 0;
             string sql = @"
                 SELECT team
                 FROM battlePlayer 
-                WHERE battlePlayer.name = @playerName AND battleId=@battleId 
+                WHERE battlePlayer.accountId=@accountId AND battleId=@battleId 
                 ORDER BY battlePlayer.xp DESC, battlePlayer.damageDealt DESC";
-            DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-            DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
+            
+            DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int); 
+            DB.AddWithValue(ref sql, "@accountId", playerAccountId, DB.SqlDataType.Int);
+
             DataTable dt = await DB.FetchData(sql);
             if (dt == null || dt.Rows.Count == 0)
                 return posOnTeamLeaderboard;
             playersTeam = Convert.ToInt32(dt.Rows[0]["team"]);
             // Get position pr xp
             sql = @"
-                SELECT battlePlayer.name as teamPlayerName, battlePlayer.xp as teamPlayerXp, battlePlayer.damageDealt as teamPlayerDmg
+                SELECT battlePlayer.accountId as teamPlayerAccountId, battlePlayer.xp as teamPlayerXp, battlePlayer.damageDealt as teamPlayerDmg
                 FROM battlePlayer 
                 WHERE battlePlayer.team = @playersTeam AND battleId=@battleId 
                 ORDER BY battlePlayer.xp DESC, battlePlayer.damageDealt DESC";
@@ -82,13 +84,13 @@ namespace WinApp.Code
             if (dt.Rows.Count > 1)
             {
                 int pos = 1;
-                while (dt.Rows.Count > pos && dt.Rows[pos -1]["teamPlayerName"].ToString() != playerName)
+                while (dt.Rows.Count > pos && Convert.ToInt32(dt.Rows[pos -1]["teamPlayerAccountId"]) != Config.Settings.playerAccountId)
                     pos++;
                 posOnTeamLeaderboard.PosByXp = pos;
             }
             // Get position pr dmg
             sql = @"
-                SELECT battlePlayer.name as teamPlayerName, battlePlayer.xp as teamPlayerXp, battlePlayer.damageDealt as teamPlayerDmg
+                SELECT battlePlayer.accountId as teamPlayerAccountId, battlePlayer.xp as teamPlayerXp, battlePlayer.damageDealt as teamPlayerDmg
                 FROM battlePlayer 
                 WHERE battlePlayer.team = @playersTeam AND battleId=@battleId 
                 ORDER BY battlePlayer.damageDealt DESC, battlePlayer.xp DESC";
@@ -98,7 +100,7 @@ namespace WinApp.Code
             if (dt.Rows.Count > 1)
             {
                 int pos = 1;
-                while (dt.Rows.Count > pos && dt.Rows[pos -1]["teamPlayerName"].ToString() != playerName)
+                while (dt.Rows.Count > pos && Convert.ToInt32(dt.Rows[pos - 1]["teamPlayerAccountId"]) != Config.Settings.playerAccountId)
                     pos++;
                 posOnTeamLeaderboard.PosByDmg = pos;
             }

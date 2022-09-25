@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using IronPython.Hosting;
 using IronPython.Runtime;
+using IronPython.Runtime.Exceptions;
 using Microsoft.Scripting.Hosting;
 using Newtonsoft.Json.Linq;
 
@@ -281,6 +282,24 @@ namespace WinApp.Code
                                     // common initial values
                                     new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") }
                                 };
+                                
+                                int playerAccountId = (int)token_private["account"].SelectToken("accountDBID");
+                       
+                                if (playerAccountId != Config.Settings.playerAccountId)
+                                {
+                                    // Dossier2json changed player and the new player has not playerAccountId setup.
+                                    Config.Settings.playerAccountId = playerAccountId;
+                                    await Config.SaveConfig();
+
+                                    // update database
+                                    sql = "UPDATE player SET accountId = @accountId WHERE name = @name;";
+                                    
+                                    DB.AddWithValue(ref sql, "@accountId", playerAccountId, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@name", Config.Settings.playerNameAndServer, DB.SqlDataType.VarChar);
+                                   
+                                    await DB.ExecuteNonQuery(sql);
+                                }
+
                                 int playerTeam = (int)token_private["account"].SelectToken("team");
                                 int enemyTeam = playerTeam == 1 ? 2 : 1;
                                 // Find game type
@@ -645,6 +664,7 @@ namespace WinApp.Code
                                     "  survivedenemy=@survivedenemy, " +
                                     "  fragsteam=@fragsteam, " +
                                     "  fragsenemy=@fragsenemy, " +
+                                    "  minBattleTier=@minBattleTier, " + 
                                     "  maxBattleTier=@maxBattleTier, " +
                                     "  posByXp=@posByXp, " +
                                     "  posByDmg=@posByDmg " + 
@@ -694,6 +714,12 @@ namespace WinApp.Code
                                     DB.AddWithValue(ref sql, "@killedByPlayerName", killedByPlayerName, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@killedByAccountId", killedByAccountId, DB.SqlDataType.Int);
                                 }
+                                // Min Battle Tier
+                                int? minBattleTier = await GetMinBattleTier(battleId);
+                                if (minBattleTier == null)
+                                    DB.AddWithValue(ref sql, "@minBattleTier", DBNull.Value, DB.SqlDataType.Int);
+                                else
+                                    DB.AddWithValue(ref sql, "@minBattleTier", minBattleTier, DB.SqlDataType.Int);
                                 // Max Battle Tier
                                 int? maxBattleTier = await GetMaxBattleTier(battleId);
                                 if (maxBattleTier == null)
@@ -711,6 +737,7 @@ namespace WinApp.Code
                                 DB.AddWithValue(ref sql, "@fragsenemy", fragsCount[enemyTeam], DB.SqlDataType.Int);
                                 // Position on battle result team leaderboard
                                 var positions = await BattleHelper.GetPlayerPositionInTeamLeaderboard(battleId);
+
                                 DB.AddWithValue(ref sql, "@posByXp", positions.PosByXp, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sql, "@posByDmg", positions.PosByDmg, DB.SqlDataType.Int);
                                 // Add Battle ID and run sql if any values
@@ -907,6 +934,12 @@ namespace WinApp.Code
                         result.Success = true;
                         result.DeleteFile = true;
                     }
+                    catch (SystemExitException)
+                    {
+                        Log.AddToLogBuffer(" > > > Some one called SystemExit instead of sys.exit(): Converted battle DAT-file to JSON file: " + filename);
+                        result.Success = true;
+                        result.DeleteFile = true;
+                    }
                     catch (Exception ex)
                     {
                         Log.AddToLogBuffer(" > > IronPython exception thrown converted battle DAT-file to JSON file: " + filename);
@@ -929,7 +962,29 @@ namespace WinApp.Code
             return result;
         }
 
-        private async static Task<int?> GetMaxBattleTier(int battleId)
+        private async static Task<int?> GetMinBattleTier(int battleId)
+        {
+            try
+            {
+                int? minBattleTier = null;
+                string sql =
+                    "select min(tank.tier) " +
+                    "from battlePlayer left join tank on battleplayer.tankid=tank.id " +
+                    "where battleid=" + battleId;
+                DataTable dt = await DB.FetchData(sql);
+                if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
+                    minBattleTier = Convert.ToInt32(dt.Rows[0][0]);
+                return minBattleTier;
+            }
+            catch (Exception ex)
+            {
+                await Log.LogToFile(ex, "Error getting min tier for tanks in battle: " + battleId);
+                return null;
+            }
+
+        }
+
+    private async static Task<int?> GetMaxBattleTier(int battleId)
         {
             try
             {

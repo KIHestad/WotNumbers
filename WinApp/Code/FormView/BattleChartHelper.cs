@@ -77,6 +77,9 @@ namespace WinApp.Code.FormView
             wn9 = 6,
             tierTotal = 7,
             tierInterval = 8,
+            EMAiN100 = 9,
+            EMAiN10 = 10,
+            EMAiCombinedDmg = 11,
         }
 
         public class ChartTypeCols
@@ -134,7 +137,7 @@ namespace WinApp.Code.FormView
             {
                 new ChartTypeCols() { playerTankValCol = "wn9" }
             };
-            chartTypeList.Add(new ChartType() { name = "WN9 per battle", col = chartTypeColList, totals = false, seriesStyle = SeriesChartType.Point });
+            chartTypeList.Add(new ChartType() { name = "WN9 per battle", col = chartTypeColList, totals = false});
 
 
             // WN8
@@ -156,7 +159,7 @@ namespace WinApp.Code.FormView
             {
                 new ChartTypeCols() { playerTankValCol = "wn8" }
             };
-            chartTypeList.Add(new ChartType() { name = "WN8 per battle", col = chartTypeColList, totals = false, seriesStyle = SeriesChartType.Point });
+            chartTypeList.Add(new ChartType() { name = "WN8 per battle", col = chartTypeColList, totals = false});
 
             // WN 7
             chartTypeColList = new List<ChartTypeCols>
@@ -177,7 +180,7 @@ namespace WinApp.Code.FormView
             {
                 new ChartTypeCols() { playerTankValCol = "wn7" }
             };
-            chartTypeList.Add(new ChartType() { name = "WN7 per battle", col = chartTypeColList, totals = false, seriesStyle = SeriesChartType.Point });
+            chartTypeList.Add(new ChartType() { name = "WN7 per battle", col = chartTypeColList, totals = false});
 
             // Efficiency
             chartTypeColList = new List<ChartTypeCols>
@@ -288,6 +291,105 @@ namespace WinApp.Code.FormView
             };
             chartTypeList.Add(new ChartType() { name = "Tier Played Avg", col = chartTypeColList, calcType = CalculationType.tierInterval });
 
+            // Raw damage in battle
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "dmg", battleValCol = "dmg" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "Dmg", col = chartTypeColList, totals = false, calcType = CalculationType.standard });
+
+            // EMAi(100) damage in battle
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "dmg", battleValCol = "dmg" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "EMAi(100) Dmg", col = chartTypeColList, totals = true, calcType = CalculationType.EMAiN100 });
+
+            // Assisted spot in battle
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "assistSpot", battleValCol = "assistSpot" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "Assisted Spot", col = chartTypeColList, totals = false, calcType = CalculationType.standard });
+
+            // EMAi(100) assisted spot in battle
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "assistSpot", battleValCol = "assistSpot" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "EMAi(100) Assisted Spot", col = chartTypeColList, totals = true, calcType = CalculationType.EMAiN100});
+
+            // Assisted track in battle
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "assistTrack", battleValCol = "assistTrack" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "Assisted Track", col = chartTypeColList, totals = false, calcType = CalculationType.standard });
+
+            // EMAi(100) assisted track in battle
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "assistTrack", battleValCol = "assistTrack" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "EMAi(100) Assisted Track", col = chartTypeColList, totals = true, calcType = CalculationType.EMAiN100 });
+
+            // Combined damage in battle
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "dmg", battleValCol = "dmg" },
+                new ChartTypeCols() { playerTankValCol = "assistSpot", battleValCol = "assistSpot" },                
+                new ChartTypeCols() { playerTankValCol = "assistTrack", battleValCol = "assistTrack" },            
+            };
+
+            chartTypeList.Add(new ChartType() { name = "Combined Damage", col = chartTypeColList, totals = false, calcType = CalculationType.standard });
+
+            // EMAi(100) Combined damage track in battle
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { playerTankValCol = "dmg", battleValCol = "dmg" },
+                new ChartTypeCols() { playerTankValCol = "assistSpot", battleValCol = "assistSpot" },
+                new ChartTypeCols() { playerTankValCol = "assistTrack", battleValCol = "assistTrack" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "EMAi(100) Combined Damage", col = chartTypeColList, totals = true, calcType = CalculationType.EMAiCombinedDmg });
+
+            // Min tier in battle 
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { battleValCol = "minBattleTier" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "Minimum tier in battle", col = chartTypeColList, totals = false, calcType = CalculationType.standard });
+
+            // EMAi(10) Min tier in battle 
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { battleValCol = "minBattleTier" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "EMAi(10) Minimum tier in battle", col = chartTypeColList, totals = true, calcType = CalculationType.EMAiN10 });
+
+            // Max tier in tier
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { battleValCol = "maxBattleTier" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "Maximum tier in battle", col = chartTypeColList, totals = false, calcType = CalculationType.standard });
+
+            // EMAi(10) Max tier in tier
+            chartTypeColList = new List<ChartTypeCols>
+            {
+                new ChartTypeCols() { battleValCol = "maxBattleTier" },
+            };
+
+            chartTypeList.Add(new ChartType() { name = "EMAi(10) Maximum tier in battle", col = chartTypeColList, totals = true, calcType = CalculationType.EMAiN10 });
 
             // Done
             return chartTypeList;

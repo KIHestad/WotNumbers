@@ -744,7 +744,9 @@ namespace WinApp.Forms
                     await RunRecalcBattleCreditsPerTank(true);
                 if (DBVersion.RunRecalcBattleKDratioCRdmg)
                     await RunRecalcBattleKDratioCRdmg(true);
-                if (DBVersion.RunRecalcBattleMaxTier)
+				if (DBVersion.RunRecalcBattleMinTier)
+					await RunRecalcBattleMinTier();
+				if (DBVersion.RunRecalcBattleMaxTier)
                     await RunRecalcBattleMaxTier();
 
 				// Check for dossier update
@@ -3055,7 +3057,7 @@ namespace WinApp.Forms
 					rowTotals["killedCountToolTip"] = 0;
 					IEnumerable<string> nonTotalsCols = new List<string> 
 					{ 
-						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "WN9", "Hit Rate",  "Max Tier", "Dmg Rank", 
+						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "WN9", "Hit Rate", "Min Tier", "Max Tier", "Dmg Rank", 
 						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %", "Platoon", "Killed By Player ID", "Enemy Clan ID", "Dmg C/R"
 					};
 					IEnumerable<string> countCols = new List<string> 
@@ -4693,7 +4695,14 @@ namespace WinApp.Forms
             await ShowView("Refreshed grid");
         }
 
-        private async Task RunRecalcBattleMaxTier()
+		private async Task RunRecalcBattleMinTier()
+		{
+			Form frm = new Forms.RecalcBattleMinTier(true);
+			frm.ShowDialog(this);
+			await ShowView("Refreshed grid");
+		}
+
+		private async Task RunRecalcBattleMaxTier()
         {
             Form frm = new Forms.RecalcBattleMaxTier(true);
             frm.ShowDialog(this);

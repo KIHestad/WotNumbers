@@ -59,8 +59,9 @@ namespace WinApp.Code
 		public string  databaseUid { get; set; }				// MSSQL Username (if SQL authentication)
 		public string  databasePwd { get; set; }				// MSSQL Password (if SQL authentication)
 		public string  databaseName { get; set; }				// MSSQL Databasename
-		public int     playerId { get; set; }					// Player ID selected
-        public string  playerName { get; set; }				    // Player Name selected
+		public int     playerId { get; set; }                   // Player ID selected
+		public int	   playerAccountId{ get; set; }             // Player Account Id
+		public string  playerName { get; set; }				    // Player Name selected
 		public string  playerServer { get; set; }				// Player Server selected
 		public string  playerNameAndServer						// Construct playername with servername as name used in player-table as unique playername
 		{
@@ -281,6 +282,7 @@ namespace WinApp.Code
 			Config.Settings.databaseName = "";
 			// Common param
 			Config.Settings.playerId = 0;
+			Config.Settings.playerAccountId = 0;
 			Config.Settings.playerName = "";
 			Config.Settings.playerServer = "";
 			Config.Settings.dossierFilePath = "";
