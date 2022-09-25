@@ -774,7 +774,7 @@ namespace WinApp.Code
                     else
                     {
                         Log.AddToLogBuffer(" > > Battle file returned result: '" + result + "', could not process JSON file: " + file);
-                        var message = token_common.SelectToken("message"); // get message
+                        var message = token_parser?.SelectToken("message"); // get message
                         if (message != null)
                             Log.AddToLogBuffer(" > > > Message: " + message.ToString());
                         Log.AddToLogBuffer(" > > Faulty battle file schedule for delete");
