@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -31,7 +31,6 @@ namespace WinApp.Code
         // The current databaseversion
         public static int ExpectedNumber = 541; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
-
         // The upgrade scripts
         private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
 		{
@@ -55,11 +54,11 @@ namespace WinApp.Code
 					sqlite = mssql;
 					RunRecalcBattleMinTier = true; 
 					break;
-				case 539:
+
+       case 539:
 					mssql =
 						// Add column for wargamigAccountId
 						"ALTER TABLE player ADD accountId int NOT NULL DEFAULT(0);" +
-
 						// adding new map "outpost"
 						"INSERT INTO map (id, name, arena_id) VALUES (102, 'Outpost', '128_last_frontier_v'); ";
 					sqlite = mssql;
