@@ -664,6 +664,7 @@ namespace WinApp.Code
                                     "  survivedenemy=@survivedenemy, " +
                                     "  fragsteam=@fragsteam, " +
                                     "  fragsenemy=@fragsenemy, " +
+                                    "  minBattleTier=@minBattleTier, " + 
                                     "  maxBattleTier=@maxBattleTier, " +
                                     "  posByXp=@posByXp, " +
                                     "  posByDmg=@posByDmg " + 
@@ -713,6 +714,12 @@ namespace WinApp.Code
                                     DB.AddWithValue(ref sql, "@killedByPlayerName", killedByPlayerName, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@killedByAccountId", killedByAccountId, DB.SqlDataType.Int);
                                 }
+                                // Min Battle Tier
+                                int? minBattleTier = await GetMinBattleTier(battleId);
+                                if (minBattleTier == null)
+                                    DB.AddWithValue(ref sql, "@minBattleTier", DBNull.Value, DB.SqlDataType.Int);
+                                else
+                                    DB.AddWithValue(ref sql, "@minBattleTier", minBattleTier, DB.SqlDataType.Int);
                                 // Max Battle Tier
                                 int? maxBattleTier = await GetMaxBattleTier(battleId);
                                 if (maxBattleTier == null)
@@ -955,7 +962,29 @@ namespace WinApp.Code
             return result;
         }
 
-        private async static Task<int?> GetMaxBattleTier(int battleId)
+        private async static Task<int?> GetMinBattleTier(int battleId)
+        {
+            try
+            {
+                int? minBattleTier = null;
+                string sql =
+                    "select min(tank.tier) " +
+                    "from battlePlayer left join tank on battleplayer.tankid=tank.id " +
+                    "where battleid=" + battleId;
+                DataTable dt = await DB.FetchData(sql);
+                if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
+                    minBattleTier = Convert.ToInt32(dt.Rows[0][0]);
+                return minBattleTier;
+            }
+            catch (Exception ex)
+            {
+                await Log.LogToFile(ex, "Error getting min tier for tanks in battle: " + battleId);
+                return null;
+            }
+
+        }
+
+    private async static Task<int?> GetMaxBattleTier(int battleId)
         {
             try
             {

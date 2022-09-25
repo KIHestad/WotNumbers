@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -22,14 +22,14 @@ namespace WinApp.Code
         public static bool RunRecalcBattlePos = false;
         public static bool RunRecalcBattleCreditPerTank = false;
 		public static bool RunRecalcBattleKDratioCRdmg = false;
-        public static bool RunRecalcBattleMaxTier = false;
-        public static bool RunInstallNewBrrVersion = false;
+		public static bool RunRecalcBattleMaxTier = false;
+		public static bool RunRecalcBattleMinTier = false;
+		public static bool RunInstallNewBrrVersion = false;
         public static bool RunUploadAllToWotNumWeb = false;
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 539; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
-
+        public static int ExpectedNumber = 541; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
         // The upgrade scripts
         private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -41,7 +41,21 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
-				case 539:
+				case 541:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (547, 2, 140, 'battle.minBattleTier', 'Min Tier', 'Lowest tier on any tank participated in battle', 'Battle', 47, 'Int', NULL); ";
+					sqlite = mssql;
+					break;
+				case 540:
+					mssql =
+						// Add column for minTier
+						"ALTER TABLE battle ADD minBattleTier int NULL;";
+					sqlite = mssql;
+					RunRecalcBattleMinTier = true; 
+					break;
+
+       case 539:
 					mssql =
 						// Add column for wargamigAccountId
 						"ALTER TABLE player ADD accountId int NOT NULL DEFAULT(0);" +

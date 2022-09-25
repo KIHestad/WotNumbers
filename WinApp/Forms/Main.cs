@@ -744,7 +744,9 @@ namespace WinApp.Forms
                     await RunRecalcBattleCreditsPerTank(true);
                 if (DBVersion.RunRecalcBattleKDratioCRdmg)
                     await RunRecalcBattleKDratioCRdmg(true);
-                if (DBVersion.RunRecalcBattleMaxTier)
+				if (DBVersion.RunRecalcBattleMinTier)
+					await RunRecalcBattleMinTier();
+				if (DBVersion.RunRecalcBattleMaxTier)
                     await RunRecalcBattleMaxTier();
 
 				// Check for dossier update
@@ -4693,7 +4695,14 @@ namespace WinApp.Forms
             await ShowView("Refreshed grid");
         }
 
-        private async Task RunRecalcBattleMaxTier()
+		private async Task RunRecalcBattleMinTier()
+		{
+			Form frm = new Forms.RecalcBattleMinTier(true);
+			frm.ShowDialog(this);
+			await ShowView("Refreshed grid");
+		}
+
+		private async Task RunRecalcBattleMaxTier()
         {
             Form frm = new Forms.RecalcBattleMaxTier(true);
             frm.ShowDialog(this);
