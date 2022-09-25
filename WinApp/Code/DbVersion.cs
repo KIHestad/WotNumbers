@@ -29,7 +29,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 541; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 542; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 
         // The upgrade scripts
@@ -42,10 +42,15 @@ namespace WinApp.Code
             // Check version and perform changes
 			switch (version)
 			{
+				case 542:
+					mssql =
+						"UPDATE columnSelection SET colName = 'CAST(battle.minBattleTier AS FLOAT)', colDataType = 'Float' WHERE id = 547;";
+					sqlite = mssql;
+					break;
 				case 541:
 					mssql =
 						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
-						"VALUES (547, 2, 140, 'battle.minBattleTier', 'Min Tier', 'Lowest tier on any tank participated in battle', 'Battle', 47, 'Int', NULL); ";
+						"VALUES (547, 2, 142, 'battle.minBattleTier', 'Min Tier', 'Lowest tier on any tank participated in battle', 'Battle', 47, 'Int', NULL); ";
 					sqlite = mssql;
 					break;
 				case 540:
