@@ -45,6 +45,7 @@ namespace WinApp.Code
 					mssql =
 						"UPDATE columnSelection SET colName = 'CAST(battle.minBattleTier AS FLOAT)', colDataType = 'Float' WHERE id = 547;";
 					sqlite = mssql;
+					CopyAdminDB = true;
 					break;
 				case 541:
 					mssql =
@@ -64,7 +65,7 @@ namespace WinApp.Code
 						// Add column for wargamigAccountId
 						"ALTER TABLE player ADD accountId int NOT NULL DEFAULT(0);" +
 						// adding new map "outpost"
-						"INSERT INTO map (id, name, arena_id) VALUES (102, 'Outpost', '128_last_frontier_v'); ";
+						"INSERT INTO map (id, name, arena_id) VALUES (206, 'Outpost', '128_last_frontier_v'); ";
 					sqlite = mssql;
 					break;
 				case 538:
