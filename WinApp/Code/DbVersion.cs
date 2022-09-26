@@ -18,27 +18,27 @@ namespace WinApp.Code
 		public static bool RunDossierFileCheckWithForceUpdate = false;
 		public static bool RunDownloadAndUpdateTanks = false;
 		public static bool RunRecalcBattleWN8 = false;
-        public static bool RunRecalcBattleWN9 = false;
-        public static bool RunRecalcBattlePos = false;
-        public static bool RunRecalcBattleCreditPerTank = false;
+		public static bool RunRecalcBattleWN9 = false;
+		public static bool RunRecalcBattlePos = false;
+		public static bool RunRecalcBattleCreditPerTank = false;
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 		public static bool RunRecalcBattleMaxTier = false;
 		public static bool RunRecalcBattleMinTier = false;
 		public static bool RunInstallNewBrrVersion = false;
-        public static bool RunUploadAllToWotNumWeb = false;
-        public static bool CopyAdminDB = false;
+		public static bool RunUploadAllToWotNumWeb = false;
+		public static bool CopyAdminDB = false;
 
-        // The current databaseversion
-        public static int ExpectedNumber = 542; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		// The current databaseversion
+		public static int ExpectedNumber = 542; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
-        // The upgrade scripts
-        private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
+		// The upgrade scripts
+		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
 		{
 			// Define sqlscript for both mssql and sqlite for all versions
 			string mssql = "";
 			string sqlite = "";
-            string temp = "";
-            // Check version and perform changes
+			string temp = "";
+			// Check version and perform changes
 			switch (version)
 			{
 				case 542:
@@ -57,10 +57,9 @@ namespace WinApp.Code
 						// Add column for minTier
 						"ALTER TABLE battle ADD minBattleTier int NULL;";
 					sqlite = mssql;
-					RunRecalcBattleMinTier = true; 
+					RunRecalcBattleMinTier = true;
 					break;
-
-       case 539:
+				case 539:
 					mssql =
 						// Add column for wargamigAccountId
 						"ALTER TABLE player ADD accountId int NOT NULL DEFAULT(0);" +
@@ -68,178 +67,178 @@ namespace WinApp.Code
 						"INSERT INTO map (id, name, arena_id) VALUES (102, 'Outpost', '128_last_frontier_v'); ";
 					sqlite = mssql;
 					break;
-                case 538:
-                    RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
-                    break;
-                case 537:
-                    mssql =
-                        "UPDATE map SET id = 101 WHERE id = 90;";
-                    sqlite = mssql;
-                    break;
-                case 536:
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
-                    break;
-                case 535:
-                    RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
-                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (90, 'Safe Haven', '127_japort'); ";
-                    sqlite = mssql;
-                    break;
-                case 530:
-                    mssql =
-                        "UPDATE map SET id = 800 WHERE id = 89;" +
-                        "UPDATE map SET id = 89 WHERE id = 72;";
-                    sqlite = mssql;
-                    break;
-                case 529:
-                    mssql =
-                        "UPDATE map SET arena_id = '60_asia_miao_OLD', name = 'Pearl River (old version)' WHERE Id = 52;" +
-                        "INSERT INTO map (id, name, arena_id) VALUES (60, 'Perl River (version 2)', '60_asia_miao'); ";
-                    sqlite = mssql;
-                    break;
-                case 527:
-                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (89, 'New Map', '251_br_battle_city3'); ";
-                    sqlite = mssql;
-                    break;
-                case 525:
-                    temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
-                    mssql =
-                        temp + "VALUES (231, 1, 246, 'playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun', 'Dmg Combined', 'Total combined damage = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 50, 'Int', NULL, NULL, 'SUM(playerTankBattle.assistStun)', 'SUM(battle.assistStun)', 0, NULL, 0);" +
-                        temp + "VALUES (232, 1, 259, 'CAST((playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Combined', 'Average combined damage per battle = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 50, 'Float', NULL, NULL, 'CAST(SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', 'SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)', 1, 'SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)', 0);";
-                    sqlite = mssql;
-                    break;
-                case 524:
-                    temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
-                    mssql =
-                        temp + "VALUES (230, 2, 222, 'battle.Dmg+battle.assistSpot+battle.assistTrack+battle.assistStun', 'Dmg Combined', 'All damage combined = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 47, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
-                    sqlite = mssql;
-                    break;
-                case 523:
-                    RunDossierFileCheckWithForceUpdate = true;
-                    break;
-                case 521:
-                    temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
-                    mssql =
-                        temp + "VALUES (227, 2, 222, 'battle.assistStun', 'Dmg Stun', 'Assisted damage casued by others to enemy tanks due to you stunning the enemy tank', 'Damage', 47, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);" +
-                        temp + "VALUES (228, 1, 246, 'playerTankBattle.assistStun', 'Dmg Stun', 'Damage to enemy tanks done by others after you stunned them', 'Damage', 50, 'Int', NULL, NULL, 'SUM(playerTankBattle.assistStun)', 'SUM(battle.assistStun)', 0, NULL, 0);" +
-                        temp + "VALUES (229, 1, 259, 'CAST(playerTankBattle.assistStun*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Stun', 'Average damge per battle to enemy tanks done by others after you stunned them', 'Damage', 50, 'Float', NULL, NULL, 'CAST(SUM(playerTankBattle.assistStun) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', 'SUM(battle.assistStun)', 1, 'SUM(playerTankBattle.assistStun)', 0);";
-                    sqlite = mssql;
-                    break;
-                case 520:
-                    temp =
-                        "SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-                            "              SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(assistStun) AS assistStun, SUM(cap) AS cap,  " +
-                            "              SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
-                            "              SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived) AS heHitsReceived,  " +
-                            "              SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-                            "              MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(wn9) AS wn9, MAX(wn9maxhist) AS wn9maxhist, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(rwr) as rwr, " +
-                            "			   MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun, SUM(dmgBlocked) as dmgBlocked, SUM(potentialDmgReceived) as potentialDmgReceived, " +
-                            "              SUM(credBtlCount) AS credBtlCount, SUM(credBtlLifetime) as credBtlLifetime, SUM(credAvgIncome) as credAvgIncome,  SUM(credAvgCost) as credAvgCost, " +
-                            "              SUM(credAvgResult) as credAvgResult,  SUM(credMaxIncome) as credMaxIncome,  SUM(credMaxCost) as credMaxCost, SUM(credMaxResult) as credMaxResult,  " +
-                            "              SUM(credAvgCost) ascredAvgCost " +
-                            "FROM            playerTankBattle " +
-                            "GROUP BY playerTankId; ";
-                    mssql =
-                        "ALTER VIEW playerTankBattleTotalsView AS " + temp;
-                    sqlite =
-                        "DROP VIEW playerTankBattleTotalsView; " +
-                        "CREATE VIEW playerTankBattleTotalsView AS " + temp;
-                    break;
-                case 519:
+				case 538:
+					RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
+					break;
+				case 537:
+					mssql =
+						"UPDATE map SET id = 101 WHERE id = 90;";
+					sqlite = mssql;
+					break;
+				case 536:
+					CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+					break;
+				case 535:
+					RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
+					mssql = "INSERT INTO map (id, name, arena_id) VALUES (90, 'Safe Haven', '127_japort'); ";
+					sqlite = mssql;
+					break;
+				case 530:
+					mssql =
+						"UPDATE map SET id = 800 WHERE id = 89;" +
+						"UPDATE map SET id = 89 WHERE id = 72;";
+					sqlite = mssql;
+					break;
+				case 529:
+					mssql =
+						"UPDATE map SET arena_id = '60_asia_miao_OLD', name = 'Pearl River (old version)' WHERE Id = 52;" +
+						"INSERT INTO map (id, name, arena_id) VALUES (60, 'Perl River (version 2)', '60_asia_miao'); ";
+					sqlite = mssql;
+					break;
+				case 527:
+					mssql = "INSERT INTO map (id, name, arena_id) VALUES (89, 'New Map', '251_br_battle_city3'); ";
+					sqlite = mssql;
+					break;
+				case 525:
+					temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
+					mssql =
+						temp + "VALUES (231, 1, 246, 'playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun', 'Dmg Combined', 'Total combined damage = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 50, 'Int', NULL, NULL, 'SUM(playerTankBattle.assistStun)', 'SUM(battle.assistStun)', 0, NULL, 0);" +
+						temp + "VALUES (232, 1, 259, 'CAST((playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Combined', 'Average combined damage per battle = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 50, 'Float', NULL, NULL, 'CAST(SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', 'SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)', 1, 'SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)', 0);";
+					sqlite = mssql;
+					break;
+				case 524:
+					temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
+					mssql =
+						temp + "VALUES (230, 2, 222, 'battle.Dmg+battle.assistSpot+battle.assistTrack+battle.assistStun', 'Dmg Combined', 'All damage combined = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 47, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
+					sqlite = mssql;
+					break;
+				case 523:
+					RunDossierFileCheckWithForceUpdate = true;
+					break;
+				case 521:
+					temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
+					mssql =
+						temp + "VALUES (227, 2, 222, 'battle.assistStun', 'Dmg Stun', 'Assisted damage casued by others to enemy tanks due to you stunning the enemy tank', 'Damage', 47, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);" +
+						temp + "VALUES (228, 1, 246, 'playerTankBattle.assistStun', 'Dmg Stun', 'Damage to enemy tanks done by others after you stunned them', 'Damage', 50, 'Int', NULL, NULL, 'SUM(playerTankBattle.assistStun)', 'SUM(battle.assistStun)', 0, NULL, 0);" +
+						temp + "VALUES (229, 1, 259, 'CAST(playerTankBattle.assistStun*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Stun', 'Average damge per battle to enemy tanks done by others after you stunned them', 'Damage', 50, 'Float', NULL, NULL, 'CAST(SUM(playerTankBattle.assistStun) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', 'SUM(battle.assistStun)', 1, 'SUM(playerTankBattle.assistStun)', 0);";
+					sqlite = mssql;
+					break;
+				case 520:
+					temp =
+						"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+							"              SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(assistStun) AS assistStun, SUM(cap) AS cap,  " +
+							"              SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
+							"              SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived) AS heHitsReceived,  " +
+							"              SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+							"              MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(wn9) AS wn9, MAX(wn9maxhist) AS wn9maxhist, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(rwr) as rwr, " +
+							"			   MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun, SUM(dmgBlocked) as dmgBlocked, SUM(potentialDmgReceived) as potentialDmgReceived, " +
+							"              SUM(credBtlCount) AS credBtlCount, SUM(credBtlLifetime) as credBtlLifetime, SUM(credAvgIncome) as credAvgIncome,  SUM(credAvgCost) as credAvgCost, " +
+							"              SUM(credAvgResult) as credAvgResult,  SUM(credMaxIncome) as credMaxIncome,  SUM(credMaxCost) as credMaxCost, SUM(credMaxResult) as credMaxResult,  " +
+							"              SUM(credAvgCost) ascredAvgCost " +
+							"FROM            playerTankBattle " +
+							"GROUP BY playerTankId; ";
+					mssql =
+						"ALTER VIEW playerTankBattleTotalsView AS " + temp;
+					sqlite =
+						"DROP VIEW playerTankBattleTotalsView; " +
+						"CREATE VIEW playerTankBattleTotalsView AS " + temp;
+					break;
+				case 519:
 
-                    temp = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) ";
-                    mssql =
-                        temp + "VALUES ('tanks_v2', 'a15x15_2', 'damageAssistedStun', 'Int', 'assistStun', 'assistStun', 'tanks_v2.a15x15_2.damageAssistedStun', '15'    );" +
-                        temp + "VALUES ('tanks_v2', 'a30x30',   'damageAssistedStun', 'Int', 'assistStun', 'assistStun', 'tanks_v2.a30x30.damageAssistedStun',   'Grand' );";
-                    sqlite = mssql;
-                    break;
-                case 518:
-                    mssql =
-                        "ALTER TABLE playerTankBattle ADD assistStun int NOT NULL default 0; " +
-                        "ALTER TABLE battle ADD assistStun int NOT NULL default 0; ";
-                    sqlite = mssql.Replace("int", "integer");
-                    break;
-                case 517:
-                    RunRecalcBattlePos = true;
-                    mssql = 
-                        "UPDATE columnSelection SET colGroup = 'Battle' WHERE colGroup='Mode'; " +
-                        "UPDATE columnSelection SET colGroup = 'Damage' WHERE ID IN (19,21,22,20,213,214,215,218) ";
-                    sqlite = mssql;
-                    break;
-                case 516:
-                    mssql = "UPDATE columnSelection SET colGroup = 'Result' WHERE ID IN (545, 546, 530, 531); ";
-                    sqlite = mssql;
-                    break;
-                case 515:
-                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
-                    mssql =
-                        temp + "VALUES (545, 2, 138, 'battle.posByXp', 'Pos XP', 'Your position on the battle result leaderboard by XP', 'Battle', 47, 'Int'); " +
-                        temp + "VALUES (546, 2, 139, 'battle.posByDmg', 'Pos Dmg', 'Your position on the battle result leaderboard by damage', 'Battle', 47, 'Int'); ";
-                    sqlite = mssql;
-                    break;
+					temp = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) ";
+					mssql =
+						temp + "VALUES ('tanks_v2', 'a15x15_2', 'damageAssistedStun', 'Int', 'assistStun', 'assistStun', 'tanks_v2.a15x15_2.damageAssistedStun', '15'    );" +
+						temp + "VALUES ('tanks_v2', 'a30x30',   'damageAssistedStun', 'Int', 'assistStun', 'assistStun', 'tanks_v2.a30x30.damageAssistedStun',   'Grand' );";
+					sqlite = mssql;
+					break;
+				case 518:
+					mssql =
+						"ALTER TABLE playerTankBattle ADD assistStun int NOT NULL default 0; " +
+						"ALTER TABLE battle ADD assistStun int NOT NULL default 0; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 517:
+					RunRecalcBattlePos = true;
+					mssql =
+						"UPDATE columnSelection SET colGroup = 'Battle' WHERE colGroup='Mode'; " +
+						"UPDATE columnSelection SET colGroup = 'Damage' WHERE ID IN (19,21,22,20,213,214,215,218) ";
+					sqlite = mssql;
+					break;
+				case 516:
+					mssql = "UPDATE columnSelection SET colGroup = 'Result' WHERE ID IN (545, 546, 530, 531); ";
+					sqlite = mssql;
+					break;
+				case 515:
+					temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql =
+						temp + "VALUES (545, 2, 138, 'battle.posByXp', 'Pos XP', 'Your position on the battle result leaderboard by XP', 'Battle', 47, 'Int'); " +
+						temp + "VALUES (546, 2, 139, 'battle.posByDmg', 'Pos Dmg', 'Your position on the battle result leaderboard by damage', 'Battle', 47, 'Int'); ";
+					sqlite = mssql;
+					break;
 
-                case 514:
-                    mssql =
-                        "ALTER TABLE battle ADD posByDmg int NULL; " +
-                        "ALTER TABLE battle ADD posByXp int NULL; ";
-                    sqlite = mssql.Replace("int", "integer");
-                    break;
+				case 514:
+					mssql =
+						"ALTER TABLE battle ADD posByDmg int NULL; " +
+						"ALTER TABLE battle ADD posByXp int NULL; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
 
-                case 511:
-                    mssql =
-                        "UPDATE map SET id = 701 WHERE id = 88;" +
-                        "UPDATE map SET id = 88 WHERE id = 60;";
-                    sqlite = mssql;
-                    break;
-                
-                case 508:
-                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (88, 'Dreamland', '250_br_battle_city2-1'); ";
-                    sqlite = mssql;
-                    break;
+				case 511:
+					mssql =
+						"UPDATE map SET id = 701 WHERE id = 88;" +
+						"UPDATE map SET id = 88 WHERE id = 60;";
+					sqlite = mssql;
+					break;
 
-                case 504:
-                    mssql = 
-                        "UPDATE map SET arena_id='95_lost_city' WHERE ID=68; " +
-                        "INSERT INTO map (id, name, arena_id) VALUES (87, 'Ghost Town', '95_lost_city_ctf'); ";
-                    sqlite = mssql;
-                    break;
+				case 508:
+					mssql = "INSERT INTO map (id, name, arena_id) VALUES (88, 'Dreamland', '250_br_battle_city2-1'); ";
+					sqlite = mssql;
+					break;
 
-                case 502:
-                    await ColListSystemDefault.NewSystemBattleColList();
-                    break;
+				case 504:
+					mssql =
+						"UPDATE map SET arena_id='95_lost_city' WHERE ID=68; " +
+						"INSERT INTO map (id, name, arena_id) VALUES (87, 'Ghost Town', '95_lost_city_ctf'); ";
+					sqlite = mssql;
+					break;
 
-                case 501:
-                    mssql = "UPDATE map SET id=54 WHERE ID=85; ";
-                    sqlite = mssql;
-                    break;
+				case 502:
+					await ColListSystemDefault.NewSystemBattleColList();
+					break;
 
-                case 500:
-                    mssql =
-                        "INSERT INTO map (id, name, arena_id) VALUES (86, 'Hinterland', '222_er_clime'); ";
-                    sqlite = mssql;
-                    break;
+				case 501:
+					mssql = "UPDATE map SET id=54 WHERE ID=85; ";
+					sqlite = mssql;
+					break;
 
-                case 489:
-                    mssql = "update player set vbaddictUploadActive=0, vbaddictUploadReplayActive=0";
-                    sqlite = mssql;
-                    break;
+				case 500:
+					mssql =
+						"INSERT INTO map (id, name, arena_id) VALUES (86, 'Hinterland', '222_er_clime'); ";
+					sqlite = mssql;
+					break;
 
-                case 488:
-                    mssql = "DELETE FROM json2dbMapping WHERE jsonMain = 'tanks' "; // cleanup old and no longer-used dossier params
-                    sqlite = mssql;
-                    break;
+				case 489:
+					mssql = "update player set vbaddictUploadActive=0, vbaddictUploadReplayActive=0";
+					sqlite = mssql;
+					break;
 
-                // OLDER UPGRADES FOR BACKWARDS COMPABILITY
+				case 488:
+					mssql = "DELETE FROM json2dbMapping WHERE jsonMain = 'tanks' "; // cleanup old and no longer-used dossier params
+					sqlite = mssql;
+					break;
 
-                case 1: 
+				// OLDER UPGRADES FOR BACKWARDS COMPABILITY
+
+				case 1:
 					break; // First version, no script
-				case 2:                                                
-					mssql=	"CREATE TABLE favListTank ( "+
+				case 2:
+					mssql = "CREATE TABLE favListTank ( " +
 							" favListId int NOT NULL, tankId int NOT NULL, sortorder int NOT NULL DEFAULT 0, " +
 							" primary key (favListId, tankId), " +
 							" foreign key (favListId) references favList (id), " +
 							" foreign key (tankId) references tank (id) " +
 							") ";
-					sqlite= "CREATE TABLE favListTank ( " +
+					sqlite = "CREATE TABLE favListTank ( " +
 							" favListId integer NOT NULL, tankId integer NOT NULL, sortorder integer NOT NULL DEFAULT 0, " +
 							" primary key (favListId, tankId), " +
 							" foreign key (favListId) references favList (id), " +
@@ -247,7 +246,7 @@ namespace WinApp.Code
 							") ";
 					break;
 				case 3:
-					mssql=	"create table columnSelection ( " +
+					mssql = "create table columnSelection ( " +
 							" id int primary key, " +
 							" colType int not null, " +
 							" position int not null, " +
@@ -255,7 +254,7 @@ namespace WinApp.Code
 							" name varchar(50) not null, " +
 							" description varchar(2000) not null " +
 							"); ";
-					sqlite=	"create table columnSelection ( " +
+					sqlite = "create table columnSelection ( " +
 							" id integer primary key, " +
 							" colType integer not null, " +
 							" position integer not null, " +
@@ -265,7 +264,7 @@ namespace WinApp.Code
 							"); ";
 					break;
 				case 4:
-					mssql=	"create table columnList ( " +
+					mssql = "create table columnList ( " +
 							" id int identity(1,1) primary key, " +
 							" colType int not null, " +
 							" name varchar(50) not null, " +
@@ -273,7 +272,7 @@ namespace WinApp.Code
 							" position int null, " +
 							" sysCol bit not null default 0 " +
 							"); ";
-					sqlite=	"create table columnList ( " +
+					sqlite = "create table columnList ( " +
 							" id integer primary key, " +
 							" colType integer not null, " +
 							" name varchar(50) not null, " +
@@ -291,7 +290,7 @@ namespace WinApp.Code
 							" foreign key (columnSelectionId) references columnSelection (id), " +
 							" foreign key (columnListId) references columnList (id) " +
 							") ";
-					sqlite= "create table columnListSelection ( " +
+					sqlite = "create table columnListSelection ( " +
 							" columnSelectionId integer not null, " +
 							" columnListId integer not null, " +
 							" sortorder integer not null default 0, " +
@@ -301,12 +300,12 @@ namespace WinApp.Code
 							") ";
 					break;
 				case 7:
-					mssql=	"ALTER TABLE columnSelection ADD colGroup varchar(50) NULL; ";
-					sqlite=mssql;
+					mssql = "ALTER TABLE columnSelection ADD colGroup varchar(50) NULL; ";
+					sqlite = mssql;
 					break;
 				case 8:
-					mssql=	"ALTER TABLE columnSelection ADD colWidth int NOT NULL default 70; ";
-					sqlite=	"ALTER TABLE columnSelection ADD colWidth integer NOT NULL default 70; ";;
+					mssql = "ALTER TABLE columnSelection ADD colWidth int NOT NULL default 70; ";
+					sqlite = "ALTER TABLE columnSelection ADD colWidth integer NOT NULL default 70; "; ;
 					break;
 				case 10:
 					mssql = "CREATE TABLE playerTankBattle( " +
@@ -466,7 +465,7 @@ namespace WinApp.Code
 
 				case 13:
 					mssql = "ALTER TABLE playerTankBattle ADD wn8 int NOT NULL default 0, eff int NOT NULL default 0; ";
-					sqlite= "ALTER TABLE playerTankBattle ADD wn8 integer NOT NULL default 0; ALTER TABLE playerTankBattle ADD eff integer NOT NULL default 0; "; ;
+					sqlite = "ALTER TABLE playerTankBattle ADD wn8 integer NOT NULL default 0; ALTER TABLE playerTankBattle ADD eff integer NOT NULL default 0; "; ;
 					break;
 				case 15:
 					mssql = "update json2dbMapping set dbBattle='modeClan' where jsonMainSubProperty='tanks.clan.battlesCount'; " +
@@ -496,124 +495,124 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 20:
-					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (1, 1, 1, 'tank.name', 'Tank', 'Tank name', 'Tank', 120, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (10, 2, 12, 'battleResult.name', 'Result', 'The result for battle (Victory, Draw, Defeat or Several if a combination occur when recorded several battles for one row) ', 'Result', 50, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (11, 2, 16, 'battleSurvive.name', 'Survived', 'If survived in battle (Yes / No or Several if a combination occur when recorded several battles for one row)', 'Result', 50, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (12, 1, 2, 'tank.tier', 'Tier', 'Tank tier (1-10)', 'Tank', 35, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (128, 1, 29, 'SUM(playerTankBattle.dmg)', 'Damage', 'Damge made on enemy tanks', 'Damage', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (129, 1, 30, 'SUM(playerTankBattle.assistSpot)', 'Damage Spot', 'Damage to enem tanks done by others after you spotted them', 'Damage', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (13, 2, 13, 'battle.victory', 'Victory', 'Number of victory battles for this row (normally 0/1, or more if battle result is Several)', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (130, 1, 31, 'SUM(playerTankBattle.assistTrack)', 'Damage Track', 'Damage to enem tanks done by others after you tracked them', 'Damage', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (131, 1, 33, 'SUM(playerTankBattle.frags)', 'Frags', 'Number of enemy tanks killed', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (132, 1, 32, 'SUM(playerTankBattle.dmgReceived)', 'Received Damage', 'Received Damage from enemy tanks', 'Damage', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (133, 1, 34, 'SUM(playerTankBattle.frags8p)', 'Frags pre 8.8', 'Number of enemy tanks killed before version 8.8', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (134, 1, 35, 'SUM(playerTankBattle.cap)', 'Cap', 'Capping points', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (135, 1, 36, 'SUM(playerTankBattle.def)', 'Def', 'Defence ponts caused by you reducing enemy cap', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (136, 1, 37, 'SUM(playerTankBattle.spot)', 'Spot', 'Enemy tanks spotted', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (137, 1, 38, 'SUM(playerTankBattle.xp)', 'XP Total', 'Total base XP earned, not included 50% extra for wins or 2X (or more) for first battle or events ', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (138, 1, 39, 'SUM(playerTankBattle.xp8p)', 'XP Total pre 8.8', 'Total base XP pre version 8.8', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (139, 1, 40, 'SUM(playerTankBattle.xpOriginal)', 'XP Total Original', 'Total Original XP, unknown parameter????', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (14, 2, 14, 'battle.draw', 'Draw', 'Number of drawed battles for this row (normally 0/1, or more if battle result is Several)', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (140, 1, 41, 'CAST(SUM(playerTankBattle.xp/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) AS INT)', 'XP Avg', 'Average base XP earned per battle', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (141, 1, 42, 'SUM(playerTankBattle.shots)', 'Shots Total', 'Total shots fired by you', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (142, 1, 43, 'SUM(playerTankBattle.hits)', 'Hits Total', 'Total hits on enemy tanks', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (143, 1, 44, 'SUM(playerTankBattle.heHits)', 'HE Hits Total', 'Total HE Hits on enemy tanks', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (144, 1, 45, 'SUM(playerTankBattle.pierced)', 'Pierced', 'Total pierced shots on enemy tanks', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (145, 1, 46, 'ROUND(SUM(playerTankBattle.hits*1000/nullif(playerTankBattle.shots,0)*playerTankBattle.battleOfTotal)  / 10,1)', 'Hit Rate', 'Hits in persentage of shots', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (146, 1, 47, 'ROUND(SUM(playerTankBattle.shots*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10,1)', 'Shots Avg', 'Average shots fired by you per battle', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (147, 1, 48, 'ROUND(SUM(playerTankBattle.hits*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) /10,1)', 'Hits Avg', 'Average Hits on enemy tanks', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (148, 1, 49, 'ROUND(SUM(playerTankBattle.heHits*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) /10,1)', 'HE Hits Avg', 'Average HE Hits on enemy tanks', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (149, 1, 50, 'ROUND(SUM(playerTankBattle.pierced*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) /10,1)', 'Pierced Avg', 'Average pierced shots on enemy tanks', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (15, 2, 15, 'battle.defeat', 'Defeat', 'Number of defeated battles for this row (normally 0/1, or more if battle result is Several)', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (150, 1, 51, 'SUM(playerTankBattle.shotsReceived)', 'Received Shots', 'Received shots from enemy tanks,  including bounces', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (151, 1, 52, 'SUM(playerTankBattle.piercedReceived)', 'Received Pierced', 'Received pierced shots', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (152, 1, 53, 'SUM(playerTankBattle.heHitsReceived)', 'Received HE Hits', 'Regeived hits, not counting bounces', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (153, 1, 54, 'SUM(playerTankBattle.noDmgShotsReceived)', 'Received No Dmg Shots', 'Received shots not damaging your tank', 'Shots', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (154, 1, 55, 'MAX(playerTankBattle.maxDmg)', 'Max Damage', 'Max damage achived in a single battle', 'Max', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (155, 1, 56, 'MAX(playerTankBattle.maxFrags)', 'Max Frags', 'Max frags in a single battle', 'Max', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (156, 1, 57, 'MAX(playerTankBattle.maxXp)', 'Max XP', 'Max XP earned in a single battle', 'Max', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (16, 2, 17, 'battle.survived', 'Survived Count', 'Number of battles where survived for this row (normally 0/1, or more if battle result is Several)', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (17, 2, 18, 'battle.killed', 'Killed Count', 'Number of battles where killed (not survived) for this row (normally 0/1, or more if battle result is Several)', 'Result', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (18, 2, 19, 'battle.frags', 'Frags', 'Number of enemy tanks you killed (frags)', 'Damage', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (19, 2, 20, 'battle.dmg', 'Damage', 'Damage to enemy tanks by you (shooting, ramming, put on fire)', 'Damage', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (2, 2, 3, 'tank.premium', 'Premium', 'Tank premium (yes/no)', 'Tank', 50, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (20, 2, 23, 'battle.dmgReceived', 'Damage Received', 'The damage received on your tank', 'Damage', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (21, 2, 21, 'battle.assistSpot', 'Damage Spotting', 'Assisted damage casued by others to enemy tanks due to you spotting the enemy tank', 'Damage', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (22, 2, 22, 'battle.assistTrack', 'Damgae Tracking', 'Assisted damage casued by others to enemy tanks due to you tracking of the enemy tank', 'Damage', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (23, 1, 3, 'tank.premium', 'Premium', 'Tank premium (yes/no)', 'Tank', 50, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (24, 2, 32, 'battle.cap', 'Cap', 'Cap ponts you achived by staying in cap circle (0 - 100)', 'Other', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (25, 2, 33, 'battle.def', 'Defense', 'Cap points reduced by damaging enemy tanks capping', 'Other', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (26, 2, 24, 'battle.shots', 'Shots', 'Number of shots you fired', 'Shooting', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (27, 2, 25, 'battle.hits', 'Hits', 'Number of hits from you shots', 'Shooting', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (28, 2, 26, 'battle.hits * 100 / nullif(battle.shots,0)', 'Hits %', 'Persentage hits (hits*100/shots)', 'Shooting', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (29, 2, 30, 'battle.shotsReceived', 'Shots Reveived', 'Number of shots received ', 'Shooting', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (3, 2, 4, 'tankType.name', 'Tank Type', 'Tank type full name', 'Tank', 100, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (30, 2, 27, 'battle.pierced', 'Pierced', 'Number of pierced shots', 'Shooting', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (31, 2, 31, 'battle.piercedReceived', 'Pierced Received', 'Number of pierced shots received ', 'Shooting', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (32, 2, 28, 'battle.pierced * 100 / nullif(battle.shots)', 'Pierced Shots %', 'Persentage pierced hits based on total shots (pierced*100/shots)', 'Shooting', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (33, 2, 29, 'battle.pierced * 100 / nullif(battle.hits)', 'Pierced Hts %', 'Persentage pierced hits based on total hits (pierced*100/hits)', 'Shooting', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (34, 1, 4, 'tankType.name', 'Tank Type', 'Tank type full name', 'Tank', 100, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (35, 2, 34, 'battle.spotted', 'Spotted', 'Enemy tanks spotted (only first spot on enemy tank counts)', 'Other', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (36, 2, 35, 'battle.mileage', 'Mileage', 'Distance driving the tank', 'Other', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (37, 2, 36, 'battle.treesCut', 'Trees Cut', 'Number of trees overturned by driving into it', 'Other', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (38, 2, 37, 'battle.xp', 'XP', 'Default XP earned, 50% extra for victory or 2X (or more) for first victory or campaign not included', 'Rating', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (39, 2, 8, 'tank.id', 'ID', 'Wargaming ID for tank', 'Tank', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (4, 2, 5, 'tankType.shortName', 'Type', 'Tank type short name (LT, MT, HT, TD, SPG)', 'Tank', 50, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (40, 2, 38, 'battle.eff', 'EFF', 'Calculated battle efficiency rating', 'Rating', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (41, 2, 40, 'battle.mode15', '15x15', 'Number of 15x15 battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (42, 2, 41, 'battle.mode7', '7x7', 'Number of 7x7 battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (43, 2, 42, 'battle.modeClan', 'Clan', 'Number of Clan battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (44, 1, 5, 'tankType.shortName', 'Type', 'Tank type short name (LT, MT, HT, TD, SPG)', 'Tank', 50, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (45, 2, 43, 'battle.modeCompany', 'Company', 'Number of Tank Company battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (46, 1, 8, 'tank.id', 'ID', 'Wargaming ID for tank', 'Tank', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (47, 2, 39, 'battle.wn8', 'WN8', 'Calculated battle WN8 (WRx) rating (according to formula from vbAddict)', 'Rating', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (48, 1, 16, 'CAST(SUM(playerTankBattle.eff*playerTankBattle.battleOfTotal) AS INT)', 'EFF', 'Calculated battle efficiency rating', 'Rating', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (49, 1, 17, 'CAST(SUM(playerTankBattle.wn8*playerTankBattle.battleOfTotal) AS INT)', 'WN8', 'Calculated battle WN8 (WRx) rating (according to formula from vbAddict)', 'Rating', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (5, 2, 6, 'country.name', 'Tank Nation', 'Tank nation full name', 'Tank', 100, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (50, 1, 20, 'SUM(playerTankBattle.battles)', 'Battles', 'Battle count', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (51, 1, 6, 'country.name', 'Tank Nation', 'Tank nation full name', 'Tank', 100, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (52, 1, 19, 'playerTank.battleLifeTime', 'Life Time', 'Total battle life time in seconds', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (53, 1, 15, 'playerTank.markOfMastery', 'Mastery Badge', 'Mastery Badge achived (0=None, 1=Ace Tanker, 2=I Class, 3=II Class, 4=III Class)', 'Rating', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (54, 1, 18, 'playerTank.lastBattleTime', 'Last Battle', 'Last battle time', 'Battle', 100, 'DateTime'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (55, 1, 11, 'playerTank.has15', '15x15', 'Used in 15x15 battles (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (56, 1, 14, 'playerTank.hasClan', 'Clan Wars', 'Used in clan wars (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (57, 1, 7, 'country.shortName', 'Nation', 'Tank nation short name (CHI, FRA, GET, JAP, UK, USA, USR)', 'Tank', 50, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (58, 2, 1, 'tank.name', 'Tank', 'Tank name', 'Tank', 120, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (59, 2, 2, 'tank.tier', 'Tier', 'Tank tier (1-10)', 'Tank', 35, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (6, 2, 7, 'country.shortName', 'Nation', 'Tank nation short name (CHI, FRA, GET, JAP, UK, USA, USR)', NULL, 50, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (60, 1, 13, 'playerTank.hasCompany', 'Company', 'Used in company battle (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (61, 1, 12, 'playerTank.has7', '7x7', 'Used in 7x7 battles (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (63, 1, 9, 'playerTank.mileage', 'Mileage', 'Total drive distance for tank, not dependent on battle mode', 'Tank', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (64, 1, 10, 'playerTank.treesCut', 'Trees Cut', 'Total tree cuts for tank, not dependent on battle mode', 'Tank', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (65, 1, 65, 'playerTank.eqBino', 'Binocular', 'If Binocular Telescope equipment is mounted', 'Equip/Crew', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (66, 1, 58, 'playerTank.eqCoated', 'Coated Optics', 'If Coated Optics equipment is mounted', 'Equip/Crew', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (67, 1, 59, 'playerTank.eqCamo', 'Comoflage', 'If Camoflage equipment is mounted', 'Equip/Crew', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (68, 1, 60, 'playerTank.equVent', 'Ventialtio', 'If Ventilation equipment is mounted', 'Equip/Crew', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (69, 1, 61, 'playerTank.skillReco', 'Reco', 'Level of Recon skill value (prosentage) achivived for crew', 'Equip/Crew', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (7, 2, 9, 'battle.battlesCount', 'Battles', 'Battle count, number of battles for the row', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (70, 1, 62, 'playerTank.skillAwareness', 'Awareness', 'Level of Awareness skill value (prosentage) achivived for crew', 'Equip/Crew', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (71, 1, 63, 'playerTank.skillCamo', 'Camo', 'Camo skill value (prosentage) achivived for crew', 'Equip/Crew', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (72, 1, 64, 'playerTank.skillBia', 'B.I.A.', 'If Brothers In Arms skill achivived for crew', 'Equip/Crew', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (73, 1, 65, 'playerTank.premiumCons', 'VR Cons', 'Premium Consumable affecting view rate is used', 'Equip/Crew', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (74, 1, 67, 'modRadio.name', 'Radio', 'Radio mounted on tank', 'Module', 120, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (75, 1, 68, 'modRadio.signalRange', 'Radio Range', 'Radio signal range ', 'Module', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (77, 1, 69, 'modTurret.name', 'Turret', 'Turret mounted on tank', 'Module', 120, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (78, 1, 50, 'modTurret.viewRange', 'Turret View Range', 'Turret view range', 'Module', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (79, 1, 71, 'modTurret.armourFront', 'Turret Front Armour', 'Turret front armour', 'Module', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (8, 2, 10, 'battleTime', 'Time', 'Battle time, the date/time the battle was finished', 'Battle', 100, 'DateTime'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (80, 1, 72, 'modTurret.armourSide', 'Turret Side Armour', 'Turret side armour', 'Module', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (81, 1, 73, 'modTurret.armourRear', 'Turret Side Armour', 'Turret rear armour', 'Module', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (83, 1, 74, 'motGun.name', 'Gun', 'Gun mounted on tank', 'Module', 120, 'VarChar'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (84, 1, 75, 'modGun.tier', 'Gun Tier', 'Gun tier', 'Module', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (85, 1, 21, 'SUM(playerTankBattle.battles8p)', 'Battles pre 8.8', 'Battle count performed before WoT version 8.8', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (86, 1, 22, 'SUM(playerTankBattle.wins)', 'Victory', 'Victory count', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (9, 2, 11, 'battleLifeTime', 'Life Time', 'Time staying alive in battle in seconds', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (91, 1, 23, 'SUM(playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)', 'Draw', 'Draw count', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (92, 1, 24, 'SUM(playerTankBattle.losses)', 'Defeat', 'Defeat count', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (95, 1, 25, 'CAST(SUM(playerTankBattle.wins*100/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) AS INT)', 'Win Rate', 'Win rate in percent of tank total battles', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (96, 1, 26, 'SUM(playerTankBattle.survived)', 'Survived', 'Survived count', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (97, 1, 27, 'SUM(playerTankBattle.battles-playerTankBattle.survived)', 'Killed', 'Killed count (not survived)', 'Battle', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (98, 1, 28, 'CAST(SUM(playerTankBattle.survived*100/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) AS INT)', 'Survived Rate', 'Survived in percent of tank total battles', 'Battle', 50, 'Int'); " ;
+					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (1, 1, 1, 'tank.name', 'Tank', 'Tank name', 'Tank', 120, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (10, 2, 12, 'battleResult.name', 'Result', 'The result for battle (Victory, Draw, Defeat or Several if a combination occur when recorded several battles for one row) ', 'Result', 50, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (11, 2, 16, 'battleSurvive.name', 'Survived', 'If survived in battle (Yes / No or Several if a combination occur when recorded several battles for one row)', 'Result', 50, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (12, 1, 2, 'tank.tier', 'Tier', 'Tank tier (1-10)', 'Tank', 35, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (128, 1, 29, 'SUM(playerTankBattle.dmg)', 'Damage', 'Damge made on enemy tanks', 'Damage', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (129, 1, 30, 'SUM(playerTankBattle.assistSpot)', 'Damage Spot', 'Damage to enem tanks done by others after you spotted them', 'Damage', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (13, 2, 13, 'battle.victory', 'Victory', 'Number of victory battles for this row (normally 0/1, or more if battle result is Several)', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (130, 1, 31, 'SUM(playerTankBattle.assistTrack)', 'Damage Track', 'Damage to enem tanks done by others after you tracked them', 'Damage', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (131, 1, 33, 'SUM(playerTankBattle.frags)', 'Frags', 'Number of enemy tanks killed', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (132, 1, 32, 'SUM(playerTankBattle.dmgReceived)', 'Received Damage', 'Received Damage from enemy tanks', 'Damage', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (133, 1, 34, 'SUM(playerTankBattle.frags8p)', 'Frags pre 8.8', 'Number of enemy tanks killed before version 8.8', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (134, 1, 35, 'SUM(playerTankBattle.cap)', 'Cap', 'Capping points', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (135, 1, 36, 'SUM(playerTankBattle.def)', 'Def', 'Defence ponts caused by you reducing enemy cap', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (136, 1, 37, 'SUM(playerTankBattle.spot)', 'Spot', 'Enemy tanks spotted', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (137, 1, 38, 'SUM(playerTankBattle.xp)', 'XP Total', 'Total base XP earned, not included 50% extra for wins or 2X (or more) for first battle or events ', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (138, 1, 39, 'SUM(playerTankBattle.xp8p)', 'XP Total pre 8.8', 'Total base XP pre version 8.8', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (139, 1, 40, 'SUM(playerTankBattle.xpOriginal)', 'XP Total Original', 'Total Original XP, unknown parameter????', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (14, 2, 14, 'battle.draw', 'Draw', 'Number of drawed battles for this row (normally 0/1, or more if battle result is Several)', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (140, 1, 41, 'CAST(SUM(playerTankBattle.xp/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) AS INT)', 'XP Avg', 'Average base XP earned per battle', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (141, 1, 42, 'SUM(playerTankBattle.shots)', 'Shots Total', 'Total shots fired by you', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (142, 1, 43, 'SUM(playerTankBattle.hits)', 'Hits Total', 'Total hits on enemy tanks', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (143, 1, 44, 'SUM(playerTankBattle.heHits)', 'HE Hits Total', 'Total HE Hits on enemy tanks', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (144, 1, 45, 'SUM(playerTankBattle.pierced)', 'Pierced', 'Total pierced shots on enemy tanks', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (145, 1, 46, 'ROUND(SUM(playerTankBattle.hits*1000/nullif(playerTankBattle.shots,0)*playerTankBattle.battleOfTotal)  / 10,1)', 'Hit Rate', 'Hits in persentage of shots', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (146, 1, 47, 'ROUND(SUM(playerTankBattle.shots*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10,1)', 'Shots Avg', 'Average shots fired by you per battle', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (147, 1, 48, 'ROUND(SUM(playerTankBattle.hits*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) /10,1)', 'Hits Avg', 'Average Hits on enemy tanks', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (148, 1, 49, 'ROUND(SUM(playerTankBattle.heHits*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) /10,1)', 'HE Hits Avg', 'Average HE Hits on enemy tanks', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (149, 1, 50, 'ROUND(SUM(playerTankBattle.pierced*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) /10,1)', 'Pierced Avg', 'Average pierced shots on enemy tanks', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (15, 2, 15, 'battle.defeat', 'Defeat', 'Number of defeated battles for this row (normally 0/1, or more if battle result is Several)', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (150, 1, 51, 'SUM(playerTankBattle.shotsReceived)', 'Received Shots', 'Received shots from enemy tanks,  including bounces', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (151, 1, 52, 'SUM(playerTankBattle.piercedReceived)', 'Received Pierced', 'Received pierced shots', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (152, 1, 53, 'SUM(playerTankBattle.heHitsReceived)', 'Received HE Hits', 'Regeived hits, not counting bounces', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (153, 1, 54, 'SUM(playerTankBattle.noDmgShotsReceived)', 'Received No Dmg Shots', 'Received shots not damaging your tank', 'Shots', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (154, 1, 55, 'MAX(playerTankBattle.maxDmg)', 'Max Damage', 'Max damage achived in a single battle', 'Max', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (155, 1, 56, 'MAX(playerTankBattle.maxFrags)', 'Max Frags', 'Max frags in a single battle', 'Max', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (156, 1, 57, 'MAX(playerTankBattle.maxXp)', 'Max XP', 'Max XP earned in a single battle', 'Max', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (16, 2, 17, 'battle.survived', 'Survived Count', 'Number of battles where survived for this row (normally 0/1, or more if battle result is Several)', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (17, 2, 18, 'battle.killed', 'Killed Count', 'Number of battles where killed (not survived) for this row (normally 0/1, or more if battle result is Several)', 'Result', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (18, 2, 19, 'battle.frags', 'Frags', 'Number of enemy tanks you killed (frags)', 'Damage', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (19, 2, 20, 'battle.dmg', 'Damage', 'Damage to enemy tanks by you (shooting, ramming, put on fire)', 'Damage', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (2, 2, 3, 'tank.premium', 'Premium', 'Tank premium (yes/no)', 'Tank', 50, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (20, 2, 23, 'battle.dmgReceived', 'Damage Received', 'The damage received on your tank', 'Damage', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (21, 2, 21, 'battle.assistSpot', 'Damage Spotting', 'Assisted damage casued by others to enemy tanks due to you spotting the enemy tank', 'Damage', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (22, 2, 22, 'battle.assistTrack', 'Damgae Tracking', 'Assisted damage casued by others to enemy tanks due to you tracking of the enemy tank', 'Damage', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (23, 1, 3, 'tank.premium', 'Premium', 'Tank premium (yes/no)', 'Tank', 50, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (24, 2, 32, 'battle.cap', 'Cap', 'Cap ponts you achived by staying in cap circle (0 - 100)', 'Other', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (25, 2, 33, 'battle.def', 'Defense', 'Cap points reduced by damaging enemy tanks capping', 'Other', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (26, 2, 24, 'battle.shots', 'Shots', 'Number of shots you fired', 'Shooting', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (27, 2, 25, 'battle.hits', 'Hits', 'Number of hits from you shots', 'Shooting', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (28, 2, 26, 'battle.hits * 100 / nullif(battle.shots,0)', 'Hits %', 'Persentage hits (hits*100/shots)', 'Shooting', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (29, 2, 30, 'battle.shotsReceived', 'Shots Reveived', 'Number of shots received ', 'Shooting', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (3, 2, 4, 'tankType.name', 'Tank Type', 'Tank type full name', 'Tank', 100, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (30, 2, 27, 'battle.pierced', 'Pierced', 'Number of pierced shots', 'Shooting', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (31, 2, 31, 'battle.piercedReceived', 'Pierced Received', 'Number of pierced shots received ', 'Shooting', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (32, 2, 28, 'battle.pierced * 100 / nullif(battle.shots)', 'Pierced Shots %', 'Persentage pierced hits based on total shots (pierced*100/shots)', 'Shooting', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (33, 2, 29, 'battle.pierced * 100 / nullif(battle.hits)', 'Pierced Hts %', 'Persentage pierced hits based on total hits (pierced*100/hits)', 'Shooting', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (34, 1, 4, 'tankType.name', 'Tank Type', 'Tank type full name', 'Tank', 100, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (35, 2, 34, 'battle.spotted', 'Spotted', 'Enemy tanks spotted (only first spot on enemy tank counts)', 'Other', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (36, 2, 35, 'battle.mileage', 'Mileage', 'Distance driving the tank', 'Other', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (37, 2, 36, 'battle.treesCut', 'Trees Cut', 'Number of trees overturned by driving into it', 'Other', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (38, 2, 37, 'battle.xp', 'XP', 'Default XP earned, 50% extra for victory or 2X (or more) for first victory or campaign not included', 'Rating', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (39, 2, 8, 'tank.id', 'ID', 'Wargaming ID for tank', 'Tank', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (4, 2, 5, 'tankType.shortName', 'Type', 'Tank type short name (LT, MT, HT, TD, SPG)', 'Tank', 50, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (40, 2, 38, 'battle.eff', 'EFF', 'Calculated battle efficiency rating', 'Rating', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (41, 2, 40, 'battle.mode15', '15x15', 'Number of 15x15 battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (42, 2, 41, 'battle.mode7', '7x7', 'Number of 7x7 battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (43, 2, 42, 'battle.modeClan', 'Clan', 'Number of Clan battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (44, 1, 5, 'tankType.shortName', 'Type', 'Tank type short name (LT, MT, HT, TD, SPG)', 'Tank', 50, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (45, 2, 43, 'battle.modeCompany', 'Company', 'Number of Tank Company battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (46, 1, 8, 'tank.id', 'ID', 'Wargaming ID for tank', 'Tank', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (47, 2, 39, 'battle.wn8', 'WN8', 'Calculated battle WN8 (WRx) rating (according to formula from vbAddict)', 'Rating', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (48, 1, 16, 'CAST(SUM(playerTankBattle.eff*playerTankBattle.battleOfTotal) AS INT)', 'EFF', 'Calculated battle efficiency rating', 'Rating', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (49, 1, 17, 'CAST(SUM(playerTankBattle.wn8*playerTankBattle.battleOfTotal) AS INT)', 'WN8', 'Calculated battle WN8 (WRx) rating (according to formula from vbAddict)', 'Rating', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (5, 2, 6, 'country.name', 'Tank Nation', 'Tank nation full name', 'Tank', 100, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (50, 1, 20, 'SUM(playerTankBattle.battles)', 'Battles', 'Battle count', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (51, 1, 6, 'country.name', 'Tank Nation', 'Tank nation full name', 'Tank', 100, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (52, 1, 19, 'playerTank.battleLifeTime', 'Life Time', 'Total battle life time in seconds', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (53, 1, 15, 'playerTank.markOfMastery', 'Mastery Badge', 'Mastery Badge achived (0=None, 1=Ace Tanker, 2=I Class, 3=II Class, 4=III Class)', 'Rating', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (54, 1, 18, 'playerTank.lastBattleTime', 'Last Battle', 'Last battle time', 'Battle', 100, 'DateTime'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (55, 1, 11, 'playerTank.has15', '15x15', 'Used in 15x15 battles (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (56, 1, 14, 'playerTank.hasClan', 'Clan Wars', 'Used in clan wars (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (57, 1, 7, 'country.shortName', 'Nation', 'Tank nation short name (CHI, FRA, GET, JAP, UK, USA, USR)', 'Tank', 50, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (58, 2, 1, 'tank.name', 'Tank', 'Tank name', 'Tank', 120, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (59, 2, 2, 'tank.tier', 'Tier', 'Tank tier (1-10)', 'Tank', 35, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (6, 2, 7, 'country.shortName', 'Nation', 'Tank nation short name (CHI, FRA, GET, JAP, UK, USA, USR)', NULL, 50, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (60, 1, 13, 'playerTank.hasCompany', 'Company', 'Used in company battle (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (61, 1, 12, 'playerTank.has7', '7x7', 'Used in 7x7 battles (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (63, 1, 9, 'playerTank.mileage', 'Mileage', 'Total drive distance for tank, not dependent on battle mode', 'Tank', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (64, 1, 10, 'playerTank.treesCut', 'Trees Cut', 'Total tree cuts for tank, not dependent on battle mode', 'Tank', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (65, 1, 65, 'playerTank.eqBino', 'Binocular', 'If Binocular Telescope equipment is mounted', 'Equip/Crew', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (66, 1, 58, 'playerTank.eqCoated', 'Coated Optics', 'If Coated Optics equipment is mounted', 'Equip/Crew', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (67, 1, 59, 'playerTank.eqCamo', 'Comoflage', 'If Camoflage equipment is mounted', 'Equip/Crew', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (68, 1, 60, 'playerTank.equVent', 'Ventialtio', 'If Ventilation equipment is mounted', 'Equip/Crew', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (69, 1, 61, 'playerTank.skillReco', 'Reco', 'Level of Recon skill value (prosentage) achivived for crew', 'Equip/Crew', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (7, 2, 9, 'battle.battlesCount', 'Battles', 'Battle count, number of battles for the row', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (70, 1, 62, 'playerTank.skillAwareness', 'Awareness', 'Level of Awareness skill value (prosentage) achivived for crew', 'Equip/Crew', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (71, 1, 63, 'playerTank.skillCamo', 'Camo', 'Camo skill value (prosentage) achivived for crew', 'Equip/Crew', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (72, 1, 64, 'playerTank.skillBia', 'B.I.A.', 'If Brothers In Arms skill achivived for crew', 'Equip/Crew', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (73, 1, 65, 'playerTank.premiumCons', 'VR Cons', 'Premium Consumable affecting view rate is used', 'Equip/Crew', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (74, 1, 67, 'modRadio.name', 'Radio', 'Radio mounted on tank', 'Module', 120, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (75, 1, 68, 'modRadio.signalRange', 'Radio Range', 'Radio signal range ', 'Module', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (77, 1, 69, 'modTurret.name', 'Turret', 'Turret mounted on tank', 'Module', 120, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (78, 1, 50, 'modTurret.viewRange', 'Turret View Range', 'Turret view range', 'Module', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (79, 1, 71, 'modTurret.armourFront', 'Turret Front Armour', 'Turret front armour', 'Module', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (8, 2, 10, 'battleTime', 'Time', 'Battle time, the date/time the battle was finished', 'Battle', 100, 'DateTime'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (80, 1, 72, 'modTurret.armourSide', 'Turret Side Armour', 'Turret side armour', 'Module', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (81, 1, 73, 'modTurret.armourRear', 'Turret Side Armour', 'Turret rear armour', 'Module', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (83, 1, 74, 'motGun.name', 'Gun', 'Gun mounted on tank', 'Module', 120, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (84, 1, 75, 'modGun.tier', 'Gun Tier', 'Gun tier', 'Module', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (85, 1, 21, 'SUM(playerTankBattle.battles8p)', 'Battles pre 8.8', 'Battle count performed before WoT version 8.8', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (86, 1, 22, 'SUM(playerTankBattle.wins)', 'Victory', 'Victory count', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (9, 2, 11, 'battleLifeTime', 'Life Time', 'Time staying alive in battle in seconds', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (91, 1, 23, 'SUM(playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)', 'Draw', 'Draw count', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (92, 1, 24, 'SUM(playerTankBattle.losses)', 'Defeat', 'Defeat count', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (95, 1, 25, 'CAST(SUM(playerTankBattle.wins*100/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) AS INT)', 'Win Rate', 'Win rate in percent of tank total battles', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (96, 1, 26, 'SUM(playerTankBattle.survived)', 'Survived', 'Survived count', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (97, 1, 27, 'SUM(playerTankBattle.battles-playerTankBattle.survived)', 'Killed', 'Killed count (not survived)', 'Battle', 50, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (98, 1, 28, 'CAST(SUM(playerTankBattle.survived*100/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) AS INT)', 'Survived Rate', 'Survived in percent of tank total battles', 'Battle', 50, 'Int'); ";
 					sqlite = mssql;
 					break;
 				case 22:
@@ -624,7 +623,7 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.shots*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 146 ; " +
 							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.hits*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 147 ; " +
 							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.heHits*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 148 ; " +
-							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.pierced*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 149" ; 
+							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.pierced*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 149";
 					sqlite = mssql;
 					break;
 				case 23:
@@ -747,7 +746,7 @@ namespace WinApp.Code
 				case 27:
 					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (162, 2, 40, 'battle.battleMode', 'Battle Mode', 'Battle mode, 15 = Random Battles, Tank Company and Clan Wars, 7 = Team Battle (Historical Battles not included yet)', 'Mode', 50, 'VarChar'); ";
 					sqlite = mssql;
-					break;	
+					break;
 				case 28:
 					mssql = "UPDATE columnSelection SET position=position+2 WHERE colType=2 AND position >= 11; " +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (163, 2, 11, 'CAST(battle.battleTime AS DATE)', 'Battle Date', 'Battle date, the date (DD/MM/YYYY) the battle was finished', 'Battle', 70, 'DateTime'); " +
@@ -756,7 +755,7 @@ namespace WinApp.Code
 							"update columnSelection set colWidth = 35 where id IN (59,18,26,27,30,159,29,31,157,158,24,25,35,37,43,45);" +
 							"update columnSelection set colWidth = 40 where id IN (28,32,33,160,161,162,36,38,40,47);";
 					sqlite = mssql;
-					break;	
+					break;
 				case 32:
 					mssql = "UPDATE columnSelection SET colDataType = 'Float' WHERE id IN (18,24,25,26,27,35,59)";
 					sqlite = mssql;
@@ -769,7 +768,7 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET name = 'Dmg' WHERE id = 128; " +
 							"UPDATE columnSelection SET name = 'Dmg Spot' WHERE id = 129; " +
 							"UPDATE columnSelection SET name = 'Dmg Track' WHERE id = 130; " +
-							"UPDATE columnSelection SET colWidth = 54 WHERE id = 20; " ;
+							"UPDATE columnSelection SET colWidth = 54 WHERE id = 20; ";
 					sqlite = mssql;
 					break;
 				case 35:
@@ -780,7 +779,7 @@ namespace WinApp.Code
 					mssql = "UPDATE columnSelection SET colWidth=70, name='XP Tot' WHERE id=137;" +
 							"UPDATE columnSelection SET name='XP Max' WHERE id=156;" +
 							"UPDATE columnSelection SET name='Dmg Max' WHERE id=154;" +
-							"UPDATE columnSelection SET name='Frags Max' WHERE id=155;" ;
+							"UPDATE columnSelection SET name='Frags Max' WHERE id=155;";
 					sqlite = mssql;
 					break;
 				case 37:
@@ -817,7 +816,7 @@ namespace WinApp.Code
 							"VALUES (177, 1, 82, 'playerTank.gProgressPercent', 'Prog %', 'Current progress in persent for this grinding', 'Grinding', 40, 'Int'); " +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
 							"VALUES (176, 1, 83, 'playerTank.gRestXP', 'Rest XP', 'Rest XP needed to reach goal', 'Grinding', 55, 'Int'); ";
-							
+
 					sqlite = mssql;
 					break;
 				case 41:
@@ -904,7 +903,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 49:
-					mssql = "ALTER TABLE columnList ADD defaultFavListId int NOT NULL default -1; " ;
+					mssql = "ALTER TABLE columnList ADD defaultFavListId int NOT NULL default -1; ";
 					sqlite = mssql.Replace("int", "integer");
 					break;
 				case 50:
@@ -932,8 +931,8 @@ namespace WinApp.Code
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
 							"VALUES (181, 1, 3, 'tank.smallImg', 'Tank Image', 'Tank image (small), suitable for grid', 'Tank', 90, 'Image'); " +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
-							"VALUES (182, 1, 4, 'tank.img', 'Tank Image Large', 'Tank large image, will only partly show if not expanding row height in grid', 'Tank', 145, 'Image'); "; 
-					sqlite = mssql; 
+							"VALUES (182, 1, 4, 'tank.img', 'Tank Image Large', 'Tank large image, will only partly show if not expanding row height in grid', 'Tank', 145, 'Image'); ";
+					sqlite = mssql;
 					break;
 				case 52:
 					mssql = "UPDATE columnSelection SET position=position+100 where colGroup <> 'Tank' and colType=2; " +
@@ -1112,12 +1111,12 @@ namespace WinApp.Code
 					sqlite = mssql.Replace("int", "integer");
 					break;
 				case 63:
-					mssql = "UPDATE columnListSelection SET columnListSelection.colWidth = CS.colWidth " + 
+					mssql = "UPDATE columnListSelection SET columnListSelection.colWidth = CS.colWidth " +
 							"FROM columnListSelection CLS INNER JOIN columnSelection CS ON CLS.columnSelectionId = CS.id ;";
 					sqlite = "UPDATE columnListSelection SET " +
 							 "colWidth = (SELECT colWidth FROM columnSelection WHERE id = columnListSelection.columnSelectionId)";
 					break;
-				case 64: 
+				case 64:
 					mssql = "ALTER TABLE columnSelection ADD colNameSQLite VARCHAR(255) NULL; ";
 					sqlite = mssql;
 					break;
@@ -1137,22 +1136,22 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET description='The total amount of XP that is the target for the grinding' WHERE id=171; " +
 							"UPDATE columnSelection SET description='Current progress in percent for this grinding' WHERE id=177; ";
 					sqlite = mssql;
-					break;	
+					break;
 				case 69:
 					mssql = "UPDATE columnSelection SET colName='coalesce(battle.hits * 100 / nullif(battle.shots,0),0)' WHERE id=28; ";
 					sqlite = mssql;
-					break;	
+					break;
 				case 70:
 					mssql = "UPDATE columnSelection SET colName='coalesce(battle.pierced * 100 / nullif(battle.shots,0),0)' WHERE id=32; " +
 							"UPDATE columnSelection SET colName='coalesce(battle.pierced * 100 / nullif(battle.hits,0),0)' WHERE id=33; " +
 							"UPDATE columnSelection SET colName='coalesce(battle.heHits * 100 / nullif(battle.shots, 0),0)' WHERE id=160; " +
-							"UPDATE columnSelection SET colName='coalesce(battle.heHits * 100 / nullif(battle.hits, 0),0)' WHERE id=161; " ;
+							"UPDATE columnSelection SET colName='coalesce(battle.heHits * 100 / nullif(battle.hits, 0),0)' WHERE id=161; ";
 					sqlite = mssql;
-					break;	
+					break;
 				case 72:
 					mssql = "insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (54289, 'Lowe', 1, 212); " +
 							"insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (57857, 'T-62A SPORT', 0, 226); " +
-							"insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (59921, 'Karl', 1, 234);" ;
+							"insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (59921, 'Karl', 1, 234);";
 					sqlite = mssql;
 					break;
 				case 73:
@@ -1172,7 +1171,7 @@ namespace WinApp.Code
 							"UPDATE battleResult SET color = '#30A8FF' where id = 4; " + // BLUE   several color
 							"UPDATE battleSurvive SET color = '#4CFF00' where id = 1; " + // GREEN Yes - survived color
 							"UPDATE battleSurvive SET color = '#30A8FF' where id = 2; " + // BLUE  Some - survived color
-							"UPDATE battleSurvive SET color = '#FF0000' where id = 3; " ; // RED   No - survived color
+							"UPDATE battleSurvive SET color = '#FF0000' where id = 3; "; // RED   No - survived color
 					sqlite = mssql;
 					break;
 				case 76:
@@ -1240,7 +1239,7 @@ namespace WinApp.Code
 					mssql = "UPDATE json2dbMapping SET jsonProperty='piercingsReceived' where jsonProperty='piercedReceived'; " +
 							"UPDATE json2dbMapping SET jsonMainSubProperty=jsonMain + '.' + jsonSub + '.' + jsonProperty; " +
 							"UPDATE battle SET piercedReceived = 0; ";
-					sqlite = mssql.Replace("+","||");
+					sqlite = mssql.Replace("+", "||");
 					break;
 				case 91:
 					mssql = "ALTER TABLE columnList ALTER COLUMN lastSortColumn varchar(255) NULL; ";
@@ -1342,15 +1341,15 @@ namespace WinApp.Code
 					sqlite = mssql.Replace("INT", "integer");
 					break;
 				case 94:
-                    await TankHelper.GetJson2dbMappingFromDB();
+					await TankHelper.GetJson2dbMappingFromDB();
 					break;
 				case 95:
-					mssql=  "ALTER TABLE battle ADD credits INT NULL;" +
+					mssql = "ALTER TABLE battle ADD credits INT NULL;" +
 							"UPDATE columnSelection SET position=158 WHERE ID=162; " +
 							"UPDATE columnSelection SET position=position+174 WHERE colType=2 and colGroup='Shooting'; " +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
 							"VALUES (500, 2, 500, 'credits', 'Income', 'Credits net income (without any cost)', 'Credits', 50, 'Int'); ";
-					sqlite= "ALTER TABLE battle ADD credits INTEGER NULL;" +
+					sqlite = "ALTER TABLE battle ADD credits INTEGER NULL;" +
 							"UPDATE columnSelection SET position=158 WHERE ID=162; " +
 							"UPDATE columnSelection SET position=position+174 WHERE colType=2 and colGroup='Shooting'; " +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
@@ -1386,7 +1385,7 @@ namespace WinApp.Code
 							"ALTER TABLE battle ADD fortResource INT NULL;" +
 							"ALTER TABLE battle ADD marksOnGun INT NULL;";
 					sqlite = mssql.Replace("INT", "INTEGER");
-					break;	
+					break;
 				case 98:
 					mssql = "ALTER TABLE battle ADD achievementCredits INT NULL;" + // missions?
 							"ALTER TABLE battle ADD achievementFreeXP INT NULL;" + // missions?
@@ -1396,11 +1395,11 @@ namespace WinApp.Code
 				case 99:
 					mssql = "ALTER TABLE battle ADD gameplayName VARCHAR(255) NULL;";
 					sqlite = mssql;
-					break;	
+					break;
 				case 100:
 					mssql = "ALTER TABLE battle ADD eventXP INT NULL;";
 					sqlite = mssql.Replace("INT", "INTEGER");
-					break;	
+					break;
 				case 101:
 					mssql = "ALTER TABLE battle ADD eventTMenXP INT NULL;";
 					sqlite = mssql.Replace("INT", "INTEGER");
@@ -1408,7 +1407,7 @@ namespace WinApp.Code
 				case 102:
 					mssql = "ALTER TABLE battle ADD creditsNet INT NULL;"; // calculated
 					sqlite = mssql.Replace("INT", "INTEGER");
-					break;	
+					break;
 				case 103:
 					mssql = "ALTER TABLE battle ADD autoEquipCost INT NULL;"; // calculated
 					sqlite = mssql.Replace("INT", "INTEGER");
@@ -1416,11 +1415,11 @@ namespace WinApp.Code
 				case 104:
 					mssql = "ALTER TABLE battle ADD mapId INT NULL;"; // calculated
 					sqlite = mssql.Replace("INT", "INTEGER");
-					break;	
+					break;
 				case 105:
 					mssql = "CREATE TABLE map (id int primary key, name varchar(255) not null);";
 					sqlite = "CREATE TABLE map (id integer primary key, name varchar(255) not null);";
-					break;	
+					break;
 				case 106:
 					mssql = "INSERT INTO map (id, name) VALUES (1,'Karelia'); " +
 							"INSERT INTO map (id, name) VALUES (2,'Malinovka'); " +
@@ -1627,7 +1626,7 @@ namespace WinApp.Code
 					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
 					mssql = s + "VALUES (203, 1, 225, 'CAST(playerTankBattle.cap*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Cap', 'Average capping points per battle', 'Result', 50, 'Float'); " +
 							s + "VALUES (204, 1, 227, 'CAST(playerTankBattle.def*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Def', 'Average defence points per battle', 'Result', 50, 'Float'); " +
-							s + "VALUES (205, 1, 229, 'CAST(playerTankBattle.spot*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Spot', 'Average enemy tanks spotted per battles', 'Result', 50, 'Float'); "+
+							s + "VALUES (205, 1, 229, 'CAST(playerTankBattle.spot*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Spot', 'Average enemy tanks spotted per battles', 'Result', 50, 'Float'); " +
 							"UPDATE columnSelection SET name='Avg Frags' where id=191; ";
 					sqlite = mssql;
 					break;
@@ -1681,7 +1680,7 @@ namespace WinApp.Code
 					mssql =
 						s + "VALUES ('tanks_v2','historical', 'damageBlockedByArmor','Int','dmgBlocked','dmgBlocked', NULL,'tanks_v2.historical.damageBlockedByArmor','7'); " +
 						s + "VALUES ('tanks_v2','historical', 'potentialDamageReceived','Int','potentialDmgReceived','potentialDmgReceived', NULL,'tanks_v2.historical.potentialDamageReceived','7'); ";
-						sqlite = mssql;
+					sqlite = mssql;
 					break;
 				case 129:
 					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
@@ -1697,7 +1696,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 130:
-                    await TankHelper.GetJson2dbMappingFromDB();
+					await TankHelper.GetJson2dbMappingFromDB();
 					break;
 				case 133:
 					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
@@ -1779,7 +1778,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 154:
-                    await TankHelper.GetJson2dbMappingFromDB();
+					await TankHelper.GetJson2dbMappingFromDB();
 					break;
 				case 156:
 					mssql =
@@ -1835,11 +1834,11 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 161:
-                    await TankHelper.GetJson2dbMappingFromDB();
+					await TankHelper.GetJson2dbMappingFromDB();
 					break;
 				case 162:
 					mssql = "ALTER TABLE playerTank ADD compactDescr int NOT NULL default 0; ";
-					sqlite = "ALTER TABLE playerTank ADD compactDescr integer NOT NULL default 0; "; 
+					sqlite = "ALTER TABLE playerTank ADD compactDescr integer NOT NULL default 0; ";
 					break;
 				case 163:
 					s = "INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) ";
@@ -1848,7 +1847,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 164:
-                    await TankHelper.GetJson2dbMappingFromDB();
+					await TankHelper.GetJson2dbMappingFromDB();
 					break;
 				case 167:
 					mssql =
@@ -1876,7 +1875,7 @@ namespace WinApp.Code
 						" tkills integer NOT NULL, fortResource integer NULL, " +
 						" foreign key (battleId) references battle (id) " +
 						" foreign key (tankId) references tank (id) ); ";
-					break; 
+					break;
 				case 168:
 					mssql = "ALTER TABLE battle ADD enemyClanAbbrev varchar(10) NULL;" +
 							"ALTER TABLE battle ADD enemyClanDBID INT NULL;" +
@@ -1902,9 +1901,9 @@ namespace WinApp.Code
 					break;
 				case 170:
 					mssql = "ALTER TABLE battle ADD battleResultMode varchar(20) NULL; " +
-						    "UPDATE columnSelection SET name='Main Mode' where id=162; " +
-					        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
-					        "VALUES (529, 2, 114, 'battle.battleResultMode', 'Battle Mode', 'Battle mode retrieved from enhanced battle fetch', 'Battle', 50, 'VarChar'); ";
+							"UPDATE columnSelection SET name='Main Mode' where id=162; " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (529, 2, 114, 'battle.battleResultMode', 'Battle Mode', 'Battle mode retrieved from enhanced battle fetch', 'Battle', 50, 'VarChar'); ";
 					sqlite = mssql;
 					break;
 				case 171:
@@ -1981,7 +1980,7 @@ namespace WinApp.Code
 					break;
 				case 183:
 					mssql = "ALTER TABLE battle ADD comment VARCHAR(MAX) NULL;";
-					sqlite = "ALTER TABLE battle ADD comment VARCHAR(10) NULL;"; 
+					sqlite = "ALTER TABLE battle ADD comment VARCHAR(10) NULL;";
 					break;
 				case 184:
 					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
@@ -1991,8 +1990,8 @@ namespace WinApp.Code
 				case 185:
 					Config.Settings.notifyIconUse = false;
 					Config.Settings.notifyIconFormExitToMinimize = false;
-                    await Config.SaveConfig();
-                    break;
+					await Config.SaveConfig();
+					break;
 				case 186:
 					mssql = "UPDATE map SET name='Fiery Salient' WHERE id=62;";
 					sqlite = mssql;
@@ -2022,8 +2021,8 @@ namespace WinApp.Code
 					break;
 				case 190:
 					Config.Settings.customBattleTimeFilter = new ConfigData.CustomBattleTimeFilter();
-                    await Config.SaveConfig();
-                    break;
+					await Config.SaveConfig();
+					break;
 				case 191:
 					mssql =
 						"insert into country (id, name, shortName) values (-1, 'Unknown', 'Unknown');" +
@@ -2081,14 +2080,14 @@ namespace WinApp.Code
 						"UPDATE battle SET gameplayName='Assault' WHERE gameplayName='assault';" +
 						"UPDATE columnSelection SET name='Game Mode', description='The game mode: Standard, Encounter or Assault' WHERE id = 511; ";
 					sqlite = mssql;
-					break;	
-				
+					break;
+
 				case 196:
 					// New maps
 					mssql = GetUpgradeSQL("196");
 					sqlite = mssql;
 					break;
-				
+
 				case 201:
 					// New maps
 					mssql = GetUpgradeSQL("201");
@@ -2145,7 +2144,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 216:
-					mssql = 
+					mssql =
 						"UPDATE columnSelection SET colGroup='Battle' WHERE id=522;" +
 						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
 						"VALUES (218, 2, 218, 'CAST(dmg AS FLOAT) / NULLIF(dmgReceived,0)', 'Dmg C/R', 'Damage Caused/Received = damage caused devided on damage received', 'Result', 47, 'Float', NULL); ";
@@ -2168,11 +2167,11 @@ namespace WinApp.Code
 					RunRecalcBattleKDratioCRdmg = true;
 					break;
 				case 222:
-					mssql = "ALTER TABLE battlePlayer ADD playerTeam bit NOT NULL DEFAULT 0;" ;
+					mssql = "ALTER TABLE battlePlayer ADD playerTeam bit NOT NULL DEFAULT 0;";
 					sqlite = mssql;
 					break;
 				case 223:
-                    await CalcPlayerTeam();
+					await CalcPlayerTeam();
 					break;
 				case 224:
 					mssql = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
@@ -2312,10 +2311,10 @@ namespace WinApp.Code
 						ins + "VALUES ('tanks_v2', 'rated7x7',  'damageBlockedByArmor',  'Int',  'dmgBlocked',  'dmgBlocked',  'tanks_v2.rated7x7.damageBlockedByArmor', '7Ranked'); " +
 						ins + "VALUES ('tanks_v2', 'maxrated7x7',  'maxDamage',  'Int',  'maxDmg',  'noDmgShotsReceived',  'tanks_v2.maxrated7x7.maxDamage', '7Ranked'); " +
 						ins + "VALUES ('tanks_v2', 'maxrated7x7',  'maxFrags',  'Int',  'maxFrags',  NULL,  'tanks_v2.maxrated7x7.maxFrags', '7Ranked'); " +
-						ins + "VALUES ('tanks_v2', 'maxrated7x7',  'maxXP',  'Int',  'maxXp',  NULL,  'tanks_v2.maxrated7x7.maxXP', '7Ranked'); ";														
+						ins + "VALUES ('tanks_v2', 'maxrated7x7',  'maxXP',  'Int',  'maxXp',  NULL,  'tanks_v2.maxrated7x7.maxXP', '7Ranked'); ";
 					sqlite = mssql;
 					break;
-				
+
 				case 239:
 					// New maps
 					mssql = GetUpgradeSQL("239");
@@ -2328,8 +2327,8 @@ namespace WinApp.Code
 					break;
 				case 241:
 					Config.Settings.CheckForBrrOnStartup = true;
-                    await Config.SaveConfig();
-                    break;
+					await Config.SaveConfig();
+					break;
 				case 242:
 					mssql = "ALTER TABLE playerTankBattle ADD damageRating float NOT NULL default 0; ";
 					sqlite = "ALTER TABLE playerTankBattle ADD damageRating real NOT NULL default 0; ";
@@ -2361,1017 +2360,1017 @@ namespace WinApp.Code
 					mssql = GetUpgradeSQL("250");
 					sqlite = mssql;
 					break;
-                case 253:
-                    mssql = "ALTER TABLE battle ADD maxBattleTier int NULL;";
+				case 253:
+					mssql = "ALTER TABLE battle ADD maxBattleTier int NULL;";
 					sqlite = mssql;
-                    break;
-                case 254:
-                    mssql =
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
-                        "VALUES (532, 2, 140, 'battle.maxBattleTier', 'Max Tier', 'Highest tier on any tank participated in battle', 'Battle', 47, 'Int', NULL); ";
-                    sqlite = mssql;
-                    break;
-                case 255:
-                    mssql =
-                        "UPDATE columnSelection SET colName = 'CAST(battle.maxBattleTier AS FLOAT)', colDataType = 'Float' WHERE id = 532;";
-                    sqlite = mssql;
-                    break;
-                case 256:
-                    mssql = "ALTER TABLE battle ADD damageRating float NOT NULL default 0; ";
-                    sqlite = "ALTER TABLE battle ADD damageRating real NOT NULL default 0; ";
-                    break;
-                case 257:
-                    mssql =
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
-                        "VALUES (223, 2, 305, 'CAST(battle.damageRating as FLOAT) / 100', 'Rank Dmg Progress', 'Progress of rank by average damage, used to determine marks of Excellence', 'Rating', 47, 'Float', NULL); ";
-                    sqlite = mssql;
-                    break;
-                case 258:
-                    mssql = "ALTER TABLE battle ADD damageRatingTotal float NOT NULL default 0; ";
-                    sqlite = "ALTER TABLE battle ADD damageRatingTotal real NOT NULL default 0; ";
-                    break;
-                case 259:
-                    mssql =
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
-                        "VALUES (224, 2, 306, 'CAST(battle.damageRatingTotal as FLOAT) / 100', 'Rank by avg dmg', 'Curernt total rank by average damage after battle done, used to determine marks of Excellence', 'Rating', 47, 'Float', NULL); ";
-                    sqlite = mssql;
-                    break;
-                case 260:
-                    mssql =
-                        "UPDATE columnSelection SET name = 'Rank by Avg Dmg' WHERE id IN (224, 221) ";
-                    sqlite = mssql;
-                    break;
-                case 261:
-                    mssql =
-                        "UPDATE columnSelection SET name = 'Dmg Rank' WHERE id IN (224, 221); " +
-                        "UPDATE columnSelection SET name = 'Dmg Rank Progress' WHERE id = 223; " +
-                        "UPDATE columnSelection SET description = 'Current total rank by average damage after battle done, used to determine Marks of Excellence' WHERE id = 224; ";
-                    sqlite = mssql;
-                    break;
-                case 262:
-                    mssql =
-                        "UPDATE columnSelection SET position = 296 WHERE id = 223; " +
-                        "UPDATE columnSelection SET position = 297 WHERE id = 224; ";
-                    sqlite = mssql;
-                    break;
-                case 263:
-                    mssql =
-                        "UPDATE columnSelection SET description = 'Progress of rank by average damage, used to determine Marks of Excellence' WHERE id = 223; ";
-                    sqlite = mssql;
-                    break;
-                case 264:
-                    mssql =
-                        "INSERT INTO map (id, name, arena_id) VALUES (72,'Berlin','105_germany'); " +
-                        "INSERT INTO map (id, name, arena_id) VALUES (73,'Ravaged Capital','112_eiffel_tower'); " +
-                        "INSERT INTO map (id, name, arena_id) VALUES (65,'Tank Rally','102_deathtrack'); ";
-                    sqlite = mssql;
-                    break;
-                case 265:
-                    mssql =
-                        "UPDATE map SET name = 'Port', arena_id = '42_north_america' WHERE id = 36; " +
-                        "UPDATE map SET name = 'Himmelsdorf Championship', arena_id = '99_himmelball' WHERE id = 61; " ;
-                    sqlite = mssql;
-                    break;
-                case 267:
-                    mssql =
-                        "ALTER TABLE playerTankBattle ADD credBtlCount Int NOT NULL DEFAULT 0 ; " +
-                        "ALTER TABLE playerTankBattle ADD credAvgIncome Int NULL ; " +
-                        "ALTER TABLE playerTankBattle ADD credAvgCost Int NULL ; " +
-                        "ALTER TABLE playerTankBattle ADD credAvgResult Int NULL ; " +
-                        "ALTER TABLE playerTankBattle ADD credMaxIncome Int NULL ; " +
-                        "ALTER TABLE playerTankBattle ADD credMaxCost Int NULL ; " +
-                        "ALTER TABLE playerTankBattle ADD credMaxResult Int NULL ; " +
-                        "ALTER TABLE playerTankBattle ADD credTotIncome BigInt NULL ; " +
-                        "ALTER TABLE playerTankBattle ADD credTotCost BigInt NULL ; " +
-                        "ALTER TABLE playerTankBattle ADD credTotResult BigInt NULL ; ";
-                    sqlite = mssql.Replace("Int", "Integer");
-                    sqlite = mssql.Replace("BigInt", "Integer");
-                    break;
-                case 269:
-                    mssql = "UPDATE columnSelection SET position = position + 100 WHERE colType = 1 AND position > 323; ";
-                    sqlite = mssql;
-                    break;
-                case 270:
-                    mssql = "UPDATE columnSelection SET colGroup = 'Result', position = position - 110 WHERE colType = 1 AND colGroup = 'Max'; ";
-                    sqlite = mssql;
-                    break;
-                case 271:
-                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
-                    mssql =
-                        temp + "VALUES (533, 1, 350, 'playerTankBattle.credBtlCount', 'Credit Btl Count', 'Number of battles where credits are recorded', 'Credit', 50, 'Int'); " +
-                        temp + "VALUES (534, 1, 351, 'playerTankBattle.credAvgIncome', 'Average Income', 'Average credit income for battles recorded (Credit Btl Count)', 'Credit', 50, 'Int'); " +
-                        temp + "VALUES (535, 1, 352, 'playerTankBattle.credAvgCost',   'Average Cost',   'Average credit cost for battles recorded (Credit Btl Count)', 'Credit', 50, 'Int'); " +
-                        temp + "VALUES (536, 1, 353, 'playerTankBattle.credAvgResult', 'Average Earned', 'Average credit earned (income - cost) for battles recorded (Credit Btl Count)', 'Credit', 50, 'Int'); " +
-                        temp + "VALUES (537, 1, 354, 'playerTankBattle.credMaxIncome', 'Max Income', 'Maximum credit income for any battles recorded', 'Credit', 50, 'Int'); " +
-                        temp + "VALUES (538, 1, 355, 'playerTankBattle.credMaxCost',   'Max Cost',   'Maximum credit cost for any battles recorded', 'Credit', 50, 'Int'); " +
-                        temp + "VALUES (539, 1, 356, 'playerTankBattle.credMaxResult', 'Max Earned', 'Maximum credit earned (income - cost) for any battles recorded', 'Credit', 50, 'Int'); " +
-                        temp + "VALUES (540, 1, 357, 'playerTankBattle.credTotIncome', 'Tot Income', 'Total credit income for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
-                        temp + "VALUES (541, 1, 358, 'playerTankBattle.credTotCost',   'Tot Cost',   'Total credit cost for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
-                        temp + "VALUES (542, 1, 359, 'playerTankBattle.credTotResult', 'Tot Earned', 'Total credit earned (income - cost) for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); ";
-                    sqlite = mssql;
-                    break;
-                case 275:
-                    mssql =
-                        "ALTER TABLE playerTankBattle ADD credBtlLifetime BigInt NULL; ";
-                    sqlite = mssql.Replace("Int", "Integer");
-                    sqlite = mssql.Replace("BigInt", "Integer");
-                    break;
-                case 276:
-                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
-                    mssql =
-                        temp + "VALUES (543, 1, 201, 'CAST(playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount * 10 AS FLOAT) / 600', 'Avg Btl Lifetime', 'Avg battle time in minutes for battles recorded', 'Battle', 60, 'Float'); ";
-                    sqlite = mssql;
-                    break;
-              case 278:
-                    // Change to estimates
-                    // temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
-                    // temp + "VALUES (540, 1, 357, 'playerTankBattle.credTotIncome', 'Tot Income', 'Total credit income for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
-                    // temp + "VALUES (541, 1, 358, 'playerTankBattle.credTotCost',   'Tot Cost',   'Total credit cost for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
-                    // temp + "VALUES (542, 1, 359, 'playerTankBattle.credTotResult', 'Tot Earned', 'Total credit earned (income - cost) for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); ";
-                    mssql =
-                        "UPDATE columnSelection SET colName='playerTankBattle.credAvgIncome * playerTankBattle.battles' WHERE ID = 540; " +
-                        "UPDATE columnSelection SET colName='playerTankBattle.credAvgCost * playerTankBattle.battles' WHERE ID = 541; " +
-                        "UPDATE columnSelection SET colName='playerTankBattle.credAvgResult * playerTankBattle.battles' WHERE ID = 542; " +
-                        "UPDATE columnSelection SET description='Estimated total credit income for all tank battles (Avg credit income * actual battles for tank)' WHERE ID = 540; " +
-                        "UPDATE columnSelection SET description='Estimated total credit cost for all tank battles (Avg credit cost * actual battles for tank)' WHERE ID = 541; " +
-                        "UPDATE columnSelection SET description='Estimated total credit earned for all tank battles (Avg credit (income - cost) * actual battles for tank)' WHERE ID = 542; ";
-
-                    sqlite = mssql;
-                    break;
-                case 279:
-                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
-                    mssql =
-                        temp + "VALUES (544, 1, 360, 'CAST(playerTankBattle.credAvgResult / CAST(playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount / 60 AS FLOAT) AS INT)', 'Earned per min', 'Estimated credit earned per minute', 'Credit', 60, 'Int'); ";
-                    sqlite = mssql;
-                    break;
-                case 281:
-                    RunRecalcBattleCreditPerTank = true;
-                    break;
-                case 284:
-                    mssql =
-                        "UPDATE columnSelection SET name='Avg Cred Income' WHERE id=534;" +
-                        "UPDATE columnSelection SET name='Avg Cred Cost' WHERE id=535;" +
-                        "UPDATE columnSelection SET name='Avg Cred Result' WHERE id=536;" +
-                        "UPDATE columnSelection SET name='Max Cred Income' WHERE id=537;" +
-                        "UPDATE columnSelection SET name='Max Cred Cost' WHERE id=538;" +
-                        "UPDATE columnSelection SET name='Max Cred Result' WHERE id=539;" +
-                        "UPDATE columnSelection SET name='Tot Cred Income' WHERE id=540;" +
-                        "UPDATE columnSelection SET name='Tot Cred Cost' WHERE id=541;" +
-                        "UPDATE columnSelection SET name='Tot Cred Result' WHERE id=542;" +
-                        "UPDATE columnSelection SET name='Cred Result per min' WHERE id=544;";
-                    sqlite = mssql;
-                    break;
-                case 287:
-                    mssql = 
-                        "CREATE TABLE replayFolder ( " +
-                        "id int IDENTITY(1,1) primary key, " + 
-                        "path varchar(max) NOT NULL, " + 
-                        "subfolder bit NOT NULL);";
-                    sqlite =
-                        "CREATE TABLE replayFolder ( " +
-                        "id integer primary key, " +
-                        "path varchar(999) NOT NULL, " +
-                        "subfolder bit NOT NULL);";
-                    break;
-                case 288:
-                    temp = ReplayHelper.GetWoTDefaultReplayFolder();
-                    if (temp != "")
-                        await ReplayHelper.AddReplayFolder(temp, false);
-                    break;
-                case 290:
-                    mssql = "ALTER TABLE battle ADD uploadedvBAddict datetime NULL; ";
-                    sqlite = mssql;
-                    break;
-                case 292:
-                    if (!await DB.HasColumn("tank", "imgpath"))
-                    {
-                        mssql = "ALTER TABLE tank ADD imgPath varchar(255) NULL; ";
-                        sqlite = mssql;
-                    }
-                    break;
-                case 293:
-                    mssql = "INSERT INTO country (id, name, shortName) VALUES (7, 'Czechoslovakia', 'CZ'); ";
-                    sqlite = mssql;
-                    break;
-                case 295:
-                    mssql = "ALTER TABLE country ADD vBAddictName varchar(50) NULL; ";
-                    sqlite = mssql;
-                    break;
-                case 296:
-                    mssql =
-                        "UPDATE country SET vBAddictName = 'soviet_union' WHERE ID = 0; " +
-                        "UPDATE country SET vBAddictName = 'germany' WHERE ID = 1; " +
-                        "UPDATE country SET vBAddictName = 'usa' WHERE ID = 2; " +
-                        "UPDATE country SET vBAddictName = 'china' WHERE ID = 3; " +
-                        "UPDATE country SET vBAddictName = 'france' WHERE ID = 4; " +
-                        "UPDATE country SET vBAddictName = 'uk' WHERE ID = 5; " +
-                        "UPDATE country SET vBAddictName = 'japan' WHERE ID = 6; " +
-                        "UPDATE country SET vBAddictName = 'czechoslovakia' WHERE ID = 7; ";
-                    sqlite = mssql;
-                    break;
-                case 298:
-                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (74,'Pilsen','114_czech'); ";
-                    sqlite = mssql;
-                    break;
-                case 300:
-                    mssql = "ALTER TABLE map ADD active BIT NOT NULL DEFAULT(0); ";
-                    sqlite = mssql;
-                    break;
-                case 301:
-                    Config.Settings.vBAddictShowToolBarMenu = false;
-                    await Config.SaveConfig();
-                    break;
-                case 304: // Recalculate max battle tier for all battles, also the one before this column was added
-                    RunRecalcBattleMaxTier = true;
-                    break;
-                case 305:
-                    mssql =
-                        "UPDATE columnSelection SET position = position + 13 WHERE position > 207 AND colType=1; ";
-                    sqlite = mssql;
-                    break;
-                case 306:
-                    mssql =
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
-                        "VALUES (99, 1, 208, 'CAST((playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)*1000/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Draw Rate', 'Draw rate in percent of tank total battles', 'Battle', 50, 'Float', NULL); " +
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
-                        "VALUES (100, 1, 209, 'CAST(playerTankBattle.losses*1000/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Defeat Rate', 'Defeat rate in percent of tank total battles', 'Battle', 50, 'Float', NULL); ";
-                    sqlite = mssql;
-                    break;
-                case 307:
-                    mssql = "ALTER TABLE columnSelection ADD colNameSum VARCHAR(255) NULL; ";
-                    sqlite = mssql;
-                    break;
-                case 316:
-                    Config.Settings.RatingColors = ColorRangeScheme.RatingColorScheme.WN_Official_Colors;
-                    await Config.SaveConfig();
-                    break;
-                case 329:
-                    mssql = "ALTER TABLE columnSelection ADD colNameBattleSum VARCHAR(255) NULL; ";
-                    sqlite = mssql;
-                    break;
-                case 331:
-                    mssql = "ALTER TABLE columnSelection ADD colNameBattleSumCalc BIT NOT NULL DEFAULT(0); ";
-                    sqlite = mssql;
-                    break;
-                case 332:
-                    mssql = "ALTER TABLE columnSelection ADD colNameBattleSumTank VARCHAR(255) NULL; ";
-                    sqlite = mssql;
-                    break;
-                case 335:
-                    mssql = "ALTER TABLE columnSelection ADD colNameBattleSumReversePos BIT NOT NULL DEFAULT(0); ";
-                    sqlite = mssql;
-                    break;
-                case 336:
-                    mssql = "update json2dbMapping set dbBattle = dbPlayerTank where dbPlayerTank = 'heHits';";
-                    sqlite = mssql;
-                    break;
-                case 343:
-                    Config.Settings.downloadFilePath = Config.AppDataDownloadFolder;
-                    Config.Settings.downloadFilePathAddSubfolder = false;
-                    await Config.SaveConfig();
-                    break;
-                case 349:
-                    mssql = "ALTER TABLE playerTankBattle ADD rwr float";
-                    sqlite = mssql;
-                    break;
-                case 350:
-                    mssql =
-                        "UPDATE columnSelection SET position = position + 10 WHERE position > 206 AND colType=1; ";
-                    sqlite = mssql;
-                    break;
-                case 351:
-                    mssql =
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
-                        "VALUES (101, 1, 207, 'playerTankBattle.rwr', 'RWR', 'Relative Win Rate is the tank win rate according to WN8 expected winrate', 'Battle', 50, 'Float', NULL); ";
-                    sqlite = mssql;
-                    break;
-                 case 355:
-                    //-- SQL SCRIPT TO GENERATE COMPLETE TOTAL STATS SETUP FROM MASTER DB
-                    //SELECT '"UPDATE columnSelection SET colNameSum='''+colNameSum+''', colNameBattleSum='+
-                    //  CASE WHEN colNameBattleSum IS NULL THEN 'NULL' ELSE '''' + colNameBattleSum + '''' END + ',colNameBattleSumTank='+
-                    //  CASE WHEN colNameBattleSumTank IS NULL THEN 'NULL' ELSE '''' + colNameBattleSumTank + '''' END + ', colNameBattleSumCalc='+
-                    //  CAST(colNameBattleSumCalc AS VARCHAR)+', colNameBattleSumReversePos='+
-                    //  CAST(colNameBattleSumReversePos AS VARCHAR)+' WHERE id='+
-                    //  CAST(id as VARCHAR)+';" + '
-                    //FROM columnSelection
-                    //WHERE colNameSum is not null;
-                    mssql =
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(tank.Tier * playerTankBattle.battles) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(tank.Tier * battle.battlescount)',colNameBattleSumTank='SUM(tank.Tier * playerTankBattle.battles)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=12;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(tank.premium)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=23;" +
-                        "UPDATE columnSelection SET colNameSum='0', colNameBattleSum='0',colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=48;" +
-                        "UPDATE columnSelection SET colNameSum='0', colNameBattleSum='0',colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=49;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.battles)', colNameBattleSum='SUM(battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=50;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.battleLifeTime)', colNameBattleSum='SUM(battle.battleLifeTime)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=52;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.mileage)', colNameBattleSum='SUM(battle.mileage)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=63;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.treesCut)', colNameBattleSum='SUM(battle.treesCut)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=64;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.battles8p)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=85;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.wins)', colNameBattleSum='SUM(battle.victory)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=86;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)', colNameBattleSum='SUM(battle.draw)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=91;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.losses)', colNameBattleSum='SUM(battle.defeat)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=92;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.wins) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.victory) * 100',colNameBattleSumTank='SUM(playerTankBattle.wins) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=95;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.survived)', colNameBattleSum='SUM(battle.survived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=96;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.battles-playerTankBattle.survived)', colNameBattleSum='SUM(battle.killed)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=97;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.survived) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.survived)',colNameBattleSumTank='SUM(playerTankBattle.survived) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=98;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM((playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.draw) * 100',colNameBattleSumTank='SUM((playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=99;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.losses) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.defeat) * 100',colNameBattleSumTank='SUM(playerTankBattle.losses) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=100;" +
-                        "UPDATE columnSelection SET colNameSum='0', colNameBattleSum='0',colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=101;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.dmg)', colNameBattleSum='SUM(battle.dmg)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=128;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.assistSpot)', colNameBattleSum='SUM(battle.assistSpot)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=129;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.assistTrack)', colNameBattleSum='SUM(battle.assistTrack)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=130;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.frags)', colNameBattleSum='SUM(battle.frags)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=131;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.dmgReceived)', colNameBattleSum='SUM(battle.dmgReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=132;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.frags8p)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=133;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.cap)', colNameBattleSum='SUM(battle.cap)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=134;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.def)', colNameBattleSum='SUM(battle.def)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=135;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.spot)', colNameBattleSum='SUM(battle.spotted)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=136;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.xp)', colNameBattleSum='SUM(battle.xp)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=137;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.xp8p)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=138;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.xpOriginal)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=139;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.xp) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.xp)',colNameBattleSumTank='SUM(playerTankBattle.xp)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=140;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.shots)', colNameBattleSum='SUM(battle.shots)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=141;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.hits)', colNameBattleSum='SUM(battle.hits)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=142;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.heHits)', colNameBattleSum='SUM(battle.hehits)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=143;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.pierced)', colNameBattleSum='SUM(battle.pierced)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=144;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.hits) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.shots),0)', colNameBattleSum='SUM(battle.hits)',colNameBattleSumTank='SUM(playerTankBattle.hits)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=145;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.shots) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.shots)',colNameBattleSumTank='SUM(playerTankBattle.shots)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=146;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.hits) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.hits)',colNameBattleSumTank='SUM(playerTankBattle.hits)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=147;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.heHits) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.hehits)',colNameBattleSumTank='SUM(playerTankBattle.heHits)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=148;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.pierced) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.pierced)',colNameBattleSumTank='SUM(playerTankBattle.pierced)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=149;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.shotsReceived)', colNameBattleSum='SUM(battle.shotsReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=150;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.piercedReceived)', colNameBattleSum='SUM(battle.piercedReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=151;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.heHitsReceived)', colNameBattleSum='SUM(battle.heHitsReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=152;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.noDmgShotsReceived)', colNameBattleSum='SUM(battle.noDmgShotsReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=153;" +
-                        "UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.maxDmg)', colNameBattleSum='MAX(battle.dmg / battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=154;" +
-                        "UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.maxFrags)', colNameBattleSum='MAX(battle.frags / battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=155;" +
-                        "UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.maxXp)', colNameBattleSum='MAX(xp / battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=156;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.gCurrentXP)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=170;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.gGrindXP)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=171;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.gGoalXP)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=172;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.gProgressXP)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=173;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.gBattlesDay)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=174;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.gRestXP)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=176;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTank.gProgressXP) AS FLOAT) / SUM(playerTank.gGoalXP) * 100', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=177;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.gRestBattles)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=178;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTank.gRestDays)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=179;" +
-                        "UPDATE columnSelection SET colNameSum='0', colNameBattleSum='0',colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=187;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.dmg) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.dmg)',colNameBattleSumTank='SUM(playerTankBattle.dmg)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=188;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.assistSpot) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.assistSpot)',colNameBattleSumTank='SUM(playerTankBattle.assistSpot)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=189;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.assistTrack) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.assistTrack)',colNameBattleSumTank='SUM(playerTankBattle.assistTrack)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=190;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.frags) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.frags)',colNameBattleSumTank='SUM(playerTankBattle.frags)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=191;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.cap) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.cap)',colNameBattleSumTank='SUM(playerTankBattle.cap)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=203;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.def) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.def)',colNameBattleSumTank='SUM(playerTankBattle.def)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=204;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.spot) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.spotted)',colNameBattleSumTank='SUM(playerTankBattle.spot) ', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=205;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(dmgBlocked)', colNameBattleSum='SUM(battle.dmgBlocked)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=206;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.dmgBlocked) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.dmgBlocked)',colNameBattleSumTank='SUM(playerTankBattle.dmgBlocked)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=207;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.potentialDmgReceived)', colNameBattleSum='SUM(battle.potentialDmgReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=208;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.potentialDmgReceived) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.potentialDmgReceived)',colNameBattleSumTank='SUM(playerTankBattle.potentialDmgReceived)', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=209;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.dmgReceived) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.dmgReceived)',colNameBattleSumTank='SUM(playerTankBattle.dmgReceived)', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=210;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.assistSpot+playerTankBattle.assistTrack)', colNameBattleSum='SUM(battle.assistSpot+battle.assistTrack)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=211;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.assistSpot+playerTankBattle.assistTrack) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.assistSpot+battle.assistTrack)',colNameBattleSumTank='SUM(playerTankBattle.assistSpot+playerTankBattle.assistTrack)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=212;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(frags) as float) / nullif(SUM(battles-survived),0)', colNameBattleSum='SUM(battle.frags)',colNameBattleSumTank='SUM(playerTankBattle.frags)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=219;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(dmg) as float) / nullif(SUM(dmgReceived),0)', colNameBattleSum='SUM(battle.dmg)',colNameBattleSumTank='SUM(playerTankBattle.dmg)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=220;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.damageRating) as FLOAT) / 100', colNameBattleSum='CAST(SUM(battle.damageRating) AS FLOAT) / 100',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=221;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.marksOnGun)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=222;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credBtlCount)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=533;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgIncome * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)', colNameBattleSum='SUM(battle.credits) / SUM(battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=534;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgCost * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)', colNameBattleSum='SUM(battle.credits-battle.creditsNet) / SUM(battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=535;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgResult * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)', colNameBattleSum='SUM(battle.creditsNet) / SUM(battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=536;" +
-                        "UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.credMaxIncome)', colNameBattleSum='MAX(battle.credits)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=537;" +
-                        "UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.credMaxCost)', colNameBattleSum='MAX(battle.credits-battle.creditsNet)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=538;" +
-                        "UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.credMaxResult)', colNameBattleSum='MAX(battle.creditsNet)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=539;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgIncome * playerTankBattle.battles)', colNameBattleSum='SUM(credits) ',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=540;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgCost * playerTankBattle.battles)', colNameBattleSum='SUM(credits - creditsNet)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=541;" +
-                        "UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgResult * playerTankBattle.battles)', colNameBattleSum='SUM(creditsNet)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=542;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.credBtlLifetime) AS FLOAT) / SUM(playerTankBattle.credBtlCount) / 60', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=543;" +
-                        "UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.credAvgResult) AS FLOAT) / SUM((playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount / 60))', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=544;";
-                    sqlite = mssql;
-                    break;
-                case 356:
-                    mssql =
-                        "UPDATE columnSelection SET description='WN8 tank rating (according to formula from vBAddict)' WHERE id=49;" +
-                        "UPDATE columnSelection SET description='WN8 WRx battle rating (according to formula from vBAddict)' WHERE id=47;";
-                    sqlite = mssql;
-                    break;
-                case 357:
-                    Config.Settings.newDayAtHour = 7;
-                    await Config.SaveConfig();
-                    break;
-                case 358:
-                    Config.Settings.databaseBackupFilePath = "";
-                    Config.Settings.databaseBackupLastPerformed = null;
-                    await Config.SaveConfig();
-                    break;
-                case 359:
-                    Config.Settings.tankSearchMainModeAdvanced = true;
-                    await Config.SaveConfig();
-                    break;
-                case 360:
-                    mssql = "ALTER TABLE country ADD sortOrder int NOT NULL default(0); ";
-                    sqlite = "ALTER TABLE country ADD sortOrder integer NOT NULL default(0); ";
-                    break;
-                case 361:
-                    mssql =
-                        "UPDATE country SET sortOrder = 20 WHERE ID = 0; " +
-                        "UPDATE country SET sortOrder = 10 WHERE ID = 1; " +
-                        "UPDATE country SET sortOrder = 30 WHERE ID = 2; " +
-                        "UPDATE country SET sortOrder = 60 WHERE ID = 3; " +
-                        "UPDATE country SET sortOrder = 40 WHERE ID = 4; " +
-                        "UPDATE country SET sortOrder = 50 WHERE ID = 5; " +
-                        "UPDATE country SET sortOrder = 70 WHERE ID = 6; " +
-                        "UPDATE country SET sortOrder = 80 WHERE ID = 7; ";
-                    sqlite = mssql;
-                    break;
-                case 362:
-                    mssql = "ALTER TABLE tank ADD short_name varchar(255) NULL, description varchar(MAX) NULL, price_credit float NULL; ";
-                    sqlite = 
-                        "ALTER TABLE tank ADD short_name varchar(255) NULL; " +
-                        "ALTER TABLE tank ADD description varchar(10) NULL; " +
-                        "ALTER TABLE tank ADD price_credit real NULL; ";
-                    break;
-                case 363:
-                    mssql =
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
-                        "VALUES (102, 1, 5, 'tank.name', 'Tank Name', 'Tank full name', 'Tank', 120, 'VarChar'); " +
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
-                        "VALUES (103, 1, 6, 'tank.description', 'Tank Description', 'Wargaming tank description', 'Tank', 250, 'VarChar'); " +
-                        "UPDATE columnSelection SET colName='tank.short_name', description = 'Tank short name' WHERE Id = 1";
-                    sqlite = mssql;
-                    break;
-                case 364:
-                    mssql =
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
-                        "VALUES (104, 2, 5, 'tank.name', 'Tank Name', 'Tank full name', 'Tank', 120, 'VarChar'); " +
-                        "UPDATE columnSelection SET colName='tank.short_name', description = 'Tank short name' WHERE Id = 58";
-                    sqlite = mssql;
-                    break;
-                case 365:
-                    mssql =
-                        "UPDATE tank SET short_name = name WHERE short_name IS NULL;";
-                    sqlite = mssql;
-                    break;
-                case 366:
-                    mssql =
-                        "UPDATE map SET arena_id = '01_karelia' WHERE id = 1; " +
-                        "UPDATE map SET arena_id = '02_malinovka' WHERE id = 2; " +
-                        "UPDATE map SET arena_id = '04_himmelsdorf' WHERE id = 3; " +
-                        "UPDATE map SET arena_id = '05_prohorovka' WHERE id = 4; " +
-                        "UPDATE map SET arena_id = '07_lakeville' WHERE id = 5; " +
-                        "UPDATE map SET arena_id = '06_ensk' WHERE id = 6; " +
-                        "UPDATE map SET arena_id = '11_murovanka' WHERE id = 7; " +
-                        "UPDATE map SET arena_id = '13_erlenberg' WHERE id = 8; " +
-                        "UPDATE map SET arena_id = '10_hills' WHERE id = 9; " +
-                        "UPDATE map SET arena_id = '15_komarin' WHERE id = 10; " +
-                        "UPDATE map SET arena_id = '18_cliff' WHERE id = 11; " +
-                        "UPDATE map SET arena_id = '19_monastery' WHERE id = 12; " +
-                        "UPDATE map SET arena_id = '28_desert' WHERE id = 13; " +
-                        "UPDATE map SET arena_id = '35_steppes' WHERE id = 14; " +
-                        "UPDATE map SET arena_id = '37_caucasus' WHERE id = 15; " +
-                        "UPDATE map SET arena_id = '33_fjord' WHERE id = 16; " +
-                        "UPDATE map SET arena_id = '34_redshire' WHERE id = 17; " +
-                        "UPDATE map SET arena_id = '36_fishing_bay' WHERE id = 18; " +
-                        "UPDATE map SET arena_id = '38_mannerheim_line' WHERE id = 19; " +
-                        "UPDATE map SET arena_id = '08_ruinberg' WHERE id = 20; " +
-                        "UPDATE map SET arena_id = '14_siegfried_line' WHERE id = 21; " +
-                        "UPDATE map SET arena_id = '22_slough' WHERE id = 22; " +
-                        "UPDATE map SET arena_id = '23_westfeld' WHERE id = 23; " +
-                        "UPDATE map SET arena_id = '29_el_hallouf' WHERE id = 24; " +
-                        "UPDATE map SET arena_id = '31_airfield' WHERE id = 26; " +
-                        "UPDATE map SET arena_id = '03_campania' WHERE id = 27; " +
-                        "UPDATE map SET arena_id = '17_munchen' WHERE id = 28; " +
-                        "UPDATE map SET arena_id = '44_north_america' WHERE id = 31; " +
-                        "UPDATE map SET arena_id = '39_crimea' WHERE id = 32; " +
-                        "UPDATE map SET arena_id = '43_north_america' WHERE id = 33; " +
-                        "UPDATE map SET arena_id = '45_north_america' WHERE id = 34; " +
-                        "UPDATE map SET arena_id = '42_north_america' WHERE id = 36; " +
-                        "UPDATE map SET arena_id = '53_japan' WHERE id = 43; " +
-                        "UPDATE map SET arena_id = '51_asia' WHERE id = 44; " +
-                        "UPDATE map SET arena_id = '47_canada_a' WHERE id = 49; " +
-                        "UPDATE map SET arena_id = '85_winter' WHERE id = 50; " +
-                        "UPDATE map SET arena_id = '73_asia_korea' WHERE id = 51; " +
-                        "UPDATE map SET arena_id = '60_asia_miao' WHERE id = 52; " +
-                        "UPDATE map SET arena_id = '00_tank_tutorial' WHERE id = 53; " +
-                        "UPDATE map SET arena_id = '63_tundra' WHERE id = 55; " +
-                        "UPDATE map SET arena_id = '84_winter' WHERE id = 56; " +
-                        "UPDATE map SET arena_id = '86_himmelsdorf_winter' WHERE id = 57; " +
-                        "UPDATE map SET arena_id = '87_ruinberg_on_fire' WHERE id = 58; " +
-                        "UPDATE map SET arena_id = '83_kharkiv' WHERE id = 60; " +
-                        "UPDATE map SET arena_id = '99_himmelball' WHERE id = 61; " +
-                        "UPDATE map SET arena_id = '96_prohorovka_defense' WHERE id = 62; " +
-                        "UPDATE map SET arena_id = '102_deathtrack' WHERE id = 65; " +
-                        "UPDATE map SET arena_id = '92_stalingrad' WHERE id = 66; " +
-                        "UPDATE map SET arena_id = '100_thepit' WHERE id = 67; " +
-                        "UPDATE map SET arena_id = '95_lost_city' WHERE id = 68; " +
-                        "UPDATE map SET arena_id = '103_ruinberg_winter' WHERE id = 69; " +
-                        "UPDATE map SET arena_id = '101_dday' WHERE id = 70; " +
-                        "UPDATE map SET arena_id = '111_paris' WHERE id = 71; " +
-                        "UPDATE map SET arena_id = '105_germany' WHERE id = 72; " +
-                        "UPDATE map SET arena_id = '112_eiffel_tower' WHERE id = 73; " +
-                        "UPDATE map SET arena_id = '114_czech' WHERE id = 74; " +
-                        "UPDATE map SET arena_id = '109_battlecity_ny' WHERE id = 700; " +
-                        "UPDATE map SET arena_id = '60_asia_miao' WHERE id = 1957; " +
-                        "UPDATE map SET arena_id = '73_asia_korea' WHERE id = 1983; " +
-                        "UPDATE map SET arena_id = '00_tank_tutorial' WHERE id = 2021; ";
-                    sqlite = mssql;
-                    break;
-                case 370:
-                    mssql = "ALTER TABLE playerTank ADD gProgressGoal int NOT NULL default 0; " +
-                            "ALTER TABLE playerTank ADD gCompleationDate datetime NULL; ";
-                    sqlite = mssql;
-                    break;
-                case 371:
-                    mssql =
-                        "ALTER TABLE playerTankBattle ADD wn9 int NOT NULL default 0; " +
-                        "ALTER TABLE battle ADD wn9 int NOT NULL default 0; ";
-                    sqlite = mssql.Replace("int", "integer");
 					break;
-                case 372:
-                    mssql = "UPDATE columnSelection SET position=position+7 WHERE colType=1 AND position>118 AND position<140";
-                    sqlite = mssql;
-                    break;
-                case 373:
-                    mssql =
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameBattleSumCalc) " +
-                        "VALUES (105, 1, 119, 'playerTankBattle.wn9', 'WN9', 'WN8 tank rating (experimental, according to info from WotLabs)', 'Rating', 50, 'Int', 1); " +
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
-                        "VALUES (106, 2, 294, 'battle.wn9', 'WN9', 'WN9 tank rating (experimental, according to info from WotLabs)', 'Rating', 47, 'Int'); ";
-                    sqlite = mssql;
-                    break;
-                case 375:
-                    mssql =
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
-                        "VALUES (225, 1, 491, 'playerTank.gCompleationDate', 'Compl Date', 'Grinding goal completion date ', 'Grinding', 80, 'DateTime'); ";
-                    sqlite = mssql;
-                    break;
-                case 376:
-                    Config.Settings.lastGrindingProgressRecalc = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Day);
-                    await Config.SaveConfig();
-                    break;
-                case 378:
-                    mssql =
-                        "ALTER TABLE tank ADD mmrange int NULL; " +
-                        "ALTER TABLE tank ADD wn9exp float NULL; " +
-                        "ALTER TABLE tank ADD wn9scale float NULL; " +
-                        "ALTER TABLE tank ADD wn9nerf float NULL; ";
-                    sqlite = mssql.Replace(" int "," integer ");
-                    break;
-                case 379:
-                    mssql = "INSERT INTO _version_ (id, version, description) VALUES (3, 0, 'WN9 version'); ";
-                    sqlite = mssql;
-                    break;
-                case 380:
-                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
-                    mssql =
-                        temp + "VALUES (107, 1, 10, 'tank.mmrange', 'MM Range', 'Match making range, fetched from WN9 API', 'Tank', 35, 'Int'); " +
-                        temp + "VALUES (108, 1, 131, 'tank.wn9exp', 'WN9 Exp', 'WN9 expected value', 'Rating', 80, 'Float'); " +
-                        temp + "VALUES (109, 1, 132, 'tank.wn9scale', 'WN9 Scale', 'WN9 scale parameter', 'Rating', 80, 'Float'); " +
-                        temp + "VALUES (110, 1, 133, 'tank.wn9nerf', 'WN9 Nerf', 'WN9 nerf parameter', 'Rating', 80, 'Float'); " +
-                        temp + "VALUES (111, 2, 10, 'CAST(tank.mmrange AS FLOAT)', 'MM Range', 'Match making range, fetched from WN9 API', 'Tank', 35, 'Float'); " +
-                        temp + "VALUES (112, 2, 310, 'tank.wn9exp', 'WN9 Exp', 'WN9 expected value', 'Rating', 80, 'Float'); " +
-                        temp + "VALUES (113, 2, 311, 'tank.wn9scale', 'WN9 Scale', 'WN9 scale parameter', 'Rating', 80, 'Float'); " +
-                        temp + "VALUES (114, 2, 312, 'tank.wn9nerf', 'WN9 Nerf', 'WN9 nerf parameter', 'Rating', 80, 'Float'); ";
-                    sqlite = mssql;
-                    break;
-                case 381:
-                    mssql = "UPDATE columnSelection SET description = 'WN9 tank rating according to http://jaj22.org.uk/wn9description.html' WHERE ID IN (105,106); ";
-                    sqlite = mssql;
-                    break;
-                case 382:
-                    RunRecalcBattleWN9 = true;
-                    break;
-                case 383:
-                    await ColListSystemDefault.NewSystemTankColList();
-                    break;
-                case 385:
-                    mssql = "ALTER TABLE playerTankBattle ADD wn9maxhist FLOAT NOT NULL default 0; ";
-                    sqlite = mssql;
-                    break;
-                case 386:
-                    mssql = "UPDATE columnSelection SET colNameSum=0, colNameBattleSum=0, colNameBattleSumCalc=1, colNameBattleSumTank=0, colNameBattleSumReversePos=0 WHERE ID = 105; ";
-                    sqlite = mssql;
-                    break;
-                case 388:
-                    mssql =
-                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameBattleSumCalc) " +
-                        "VALUES (115, 1, 120, 'playerTankBattle.wn9maxhist', 'WN9 Max Hist', 'WN9 tank rating using max history calculation according to http://jaj22.org.uk/wn9description.html', 'Rating', 50, 'Float', 1); ";
-                    sqlite = mssql;
-                    break;
-                case 391:
-                    temp =
-                        "SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-                            "              SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap) AS cap,  " +
-                            "              SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
-                            "              SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived) AS heHitsReceived,  " +
-                            "              SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-                            "              MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(wn9) AS wn9, MAX(wn9maxhist) AS wn9maxhist, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(rwr) as rwr, " +
-                            "			   MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun, SUM(dmgBlocked) as dmgBlocked, SUM(potentialDmgReceived) as potentialDmgReceived, " +
-                            "              SUM(credBtlCount) AS credBtlCount, SUM(credBtlLifetime) as credBtlLifetime, SUM(credAvgIncome) as credAvgIncome,  SUM(credAvgCost) as credAvgCost, " +
-                            "              SUM(credAvgResult) as credAvgResult,  SUM(credMaxIncome) as credMaxIncome,  SUM(credMaxCost) as credMaxCost, SUM(credMaxResult) as credMaxResult,  " +
-                            "              SUM(credAvgCost) ascredAvgCost " +
-                            "FROM            playerTankBattle " +
-                            "GROUP BY playerTankId; ";
-                    mssql =
-                        "ALTER VIEW playerTankBattleTotalsView AS " + temp;
-                    sqlite =
-                        "DROP VIEW playerTankBattleTotalsView; " +
-                        "CREATE VIEW playerTankBattleTotalsView AS " + temp;
-                    break;
-                case 392:
-                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
-                    mssql = temp + "VALUES (116, 2, 201, 'battle.id', 'Battle ID', 'Wot Numbers ID for the battle', 'Battle', 50, 'Int'); ";
-                    sqlite = mssql;
-                    break;
-                case 393:
-                    mssql = "update battle set spotted=0 where spotted < 0; ";
-                    sqlite = mssql;
-                    break;
-                case 395:
-                    mssql = "ALTER TABLE tank ADD customTankInfo BIT NOT NULL DEFAULT(0); ";
-                    sqlite = mssql;
-                    break;
-                case 397:
-                    mssql =
-                        "CREATE TABLE homeViewRecent ( " +
-                        "id int IDENTITY(1,1) primary key, " +
-                        "filename varchar(MAX) NOT NULL, " +
-                        "folder varchar(MAX) NOT NULL, " +
-                        "used datetime NOT NULL);";
-                    sqlite =
-                        "CREATE TABLE homeViewRecent ( " +
-                        "id integer primary key, " +
-                        "filename varchar(999) NOT NULL, " +
-                        "folder varchar(999) NOT NULL, " +
-                        "used datetime NOT NULL);";
-                    break;
-                case 398: // Autosave current home view, not if new database is created
-                    if (!newDatabase)
-                    {
-                        string filename = "Custom";
-                        if (File.Exists(Config.AppDataHomeViewFolder + filename + ".json"))
-                        {
-                            int i = 1;
-                            while (File.Exists(Config.AppDataHomeViewFolder + filename + " " + i.ToString() + ".json"))
-                            {
-                                i++;
-                            }
-                            filename = filename + " " + i.ToString();
-                        }
-                        await GadgetHelper.HomeViewSaveToFile(Config.AppDataHomeViewFolder + filename + ".json");
-                        await GadgetHelper.UpdateRecentHomeView(Config.AppDataHomeViewFolder + filename + ".json");
-                        Config.Settings.currentHomeView = filename;
-                        await Config.SaveConfig();
-                    }
-                    break;
-                case 399:
-                    mssql =
-                        "CREATE TABLE chartFavourite ( " +
-                        "id int IDENTITY(1,1) primary key, " +
-                        "favouriteName varchar(MAX) NOT NULL, " +
-                        "tankId int NOT NULL, " +
-                        "chartTypeName varchar(MAX) NOT NULL);";
-                    sqlite =
-                        "CREATE TABLE chartFavourite ( " +
-                        "id integer primary key, " +
-                        "favouriteName varchar(999) NOT NULL, " +
-                        "tankId integer NOT NULL, " +
-                        "chartTypeName varchar(999) NOT NULL);";
-                    break;
-                case 400:
-                    Config.Settings.currentChartFavourite = "";
-                    await Config.SaveConfig();
-                    break;
-                case 401:
-                    mssql = "ALTER TABLE chartFavourite ADD use2ndYaxis BIT NOT NULL DEFAULT(0);";
-                    sqlite = "ALTER TABLE chartFavourite ADD use2ndYaxis BIT NOT NULL DEFAULT(0);";
-                    break;
-                case 402:
-                    mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (8, 'Sweden', 'SE', 'sweden', 90); ";
-                    sqlite = mssql;
-                    break;
-                case 404:
-                    mssql = "ALTER TABLE battle ADD battleTimeStart datetime NOT NULL DEFAULT GETDATE(); ";
-                    sqlite = "ALTER TABLE battle ADD battleTimeStart datetime NULL;";
-                    break;
-                case 405:
-                    mssql = "UPDATE battle SET battleTimeStart=DATEADD(second, ISNULL(-battleLifeTime,-180), battleTime); ";
-                    sqlite = "UPDATE battle SET battleTimeStart=DATETIME(battleTime, '-' || IFNULL(battleLifeTime,180) || ' seconds'); ";
-                    break;
-                case 406:
-                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) ";
-                    mssql = temp + "VALUES (117, 2, 110, 'CAST(battle.battleTimeStart AS datetime)', 'Start Time', 'Battle date and time, the date/time the battle started', 'Battle', 100, 'DateTime', 'battle.battleTimeStart'); ";
-                    sqlite = mssql;
-                    break;
-                case 408:
-                    mssql = "UPDATE columnSelection SET colName='battle.battleTimeStart' WHERE id = 117; ";
-                    sqlite = mssql;
-                    break;
-                case 409:
-                    mssql = "UPDATE columnSelection SET colName='battle.battleTime' WHERE id = 8; ";
-                    sqlite = mssql;
-                    break;
-                case 411:
-                    mssql =
-                        "UPDATE columnSelection SET name='Finish Date' WHERE id = 163; " +
-                        "UPDATE columnSelection SET name='Finish Time' WHERE id = 164; " +
-                        "UPDATE columnSelection SET name='Finished' WHERE id = 8; " +
-                        "UPDATE columnSelection SET name='Started' WHERE id = 117; ";
-                    sqlite = mssql;
-                    break;
-                case 412:
-                    mssql = "ALTER TABLE player ADD vbaddictToken varchar(500) NULL; ";
-                    sqlite = mssql;
-                    break;
-                case 414:
-                    mssql =
-                        "ALTER TABLE player ADD vbaddictUploadActive BIT NOT NULL DEFAULT(0); " +
-                        "ALTER TABLE player ADD vbaddictUploadReplayActive BIT NOT NULL DEFAULT(0); ";
-                    sqlite = mssql;
-                    break;
-                case 415:
-                    //if (vBAddictHelper.Settings.Token != "")
-                    //{
-                    //    mssql = 
-                    //        "UPDATE player " +
-                    //        "SET vbaddictToken=@vbaddictToken, vbaddictUploadActive=@vbaddictUploadActive, vbaddictUploadReplayActive=@vbaddictUploadReplayActive " +
-                    //        "WHERE id=@id;";
-                    //    DB.AddWithValue(ref mssql, "@vbaddictToken", vBAddictHelper.Settings.Token, DB.SqlDataType.VarChar);
-                    //    DB.AddWithValue(ref mssql, "@vbaddictUploadActive", vBAddictHelper.Settings.UploadActive, DB.SqlDataType.Boolean);
-                    //    DB.AddWithValue(ref mssql, "@vbaddictUploadReplayActive", vBAddictHelper.Settings.UploadReplayActive, DB.SqlDataType.Boolean);
-                    //    DB.AddWithValue(ref mssql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
-                    //    sqlite = mssql;
-                    //}
-                    //break;
-                case 416:
-                    Config.Settings.res_mods_subfolder = "";
-                    await Config.SaveConfig();
-                    break;
-                case 417:
-                    RunRecalcBattleWN9 = true;
-                    break;
-                case 419:
-                    mssql = "ALTER TABLE battle ADD xpOriginal int NULL; ";
-                    sqlite = mssql.Replace("int", "integer");
-                    break;
-                case 420:
-                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
-                    mssql = temp + "VALUES (118, 2, 405, 'battle.xpOriginal', 'Original XP', 'Original XP earned, not included premium account xp, 2X (or more) for first victory or bonuses', 'XP', 50, 'Int'); ";
-                    sqlite = mssql;
-                    break;
-                case 421:
-                    mssql = "UPDATE json2dbMapping SET dbBattle=dbPlayerTank WHERE dbPlayerTank = 'xpOriginal';";
-                    sqlite = mssql;
-                    break;
-                case 422:
-                    mssql =
-                        "CREATE TABLE battleFilterCount ( " +
-                        "  id int primary key, " +
-                        "  count int NOT NULL); ";
-                    sqlite = mssql.Replace("int", "integer");
-                    break;
-                case 423:
-                    mssql =
-                        "INSERT INTO battleFilterCount (id, count) VALUES (1, 100); " +
-                        "INSERT INTO battleFilterCount (id, count) VALUES (2, 500); " +
-                        "INSERT INTO battleFilterCount (id, count) VALUES (3, 1000); " +
-                        "INSERT INTO battleFilterCount (id, count) VALUES (4, 2000); " +
-                        "INSERT INTO battleFilterCount (id, count) VALUES (5, 3000); ";
-                    sqlite = mssql;
-                    break;
-                case 424:
-                    mssql = "ALTER TABLE battle ADD battlesCountTotal int NULL; ";
-                    sqlite = mssql.Replace("int", "integer");
-                    break;
-                case 425:
-                    // BattleCountFilterHelper.RecalcalculateCountTotal(); Method did not work
-                    break;
-                case 426:
-                    mssql = "UPDATE battle SET battlesCountTotal = NULL; ";
-                    sqlite = mssql;
-                    break;
-                case 427:
-                    Config.Settings.databaseBackupPeriod = 1;
-                    await Config.SaveConfig();
-                    break;
-                case 428:
-                    mssql = "UPDATE map SET id = 75 WHERE id = 73; "; // correct id for map 112_eiffel_tower = Paris
-                    sqlite = mssql;
-                    break;
-                case 429:
-                    mssql =
-                        "CREATE TABLE chartFav ( " +
-                        "id int IDENTITY(1,1) primary key, " +
-                        "favouriteName varchar(MAX) NOT NULL, " +
-                        "battleMode varchar(50) NOT NULL, " +
-                        "battleTime varchar(5) NOT NULL, " +
-                        "xAxis varchar(10) NOT NULL, " +
-                        "bullet bit NOT NULL, " +
-                        "spline bit NOT NULL); ";
-                    sqlite =
-                        "CREATE TABLE chartFav ( " +
-                        "id integer primary key, " +
-                        "favouriteName varchar(999) NOT NULL, " +
-                        "battleMode varchar(50) NOT NULL, " +
-                        "battleTime varchar(5) NOT NULL, " +
-                        "xAxis varchar(10) NOT NULL, " +
-                        "bullet bit NOT NULL, " +
-                        "spline bit NOT NULL); ";
-                    break;
-                case 430:
-                    mssql =
-                        "CREATE TABLE chartFavLine ( " +
-                        "id int IDENTITY(1,1) primary key, " +
-                        "chartFavId int NOT NULL, " +
-                        "tankId int NOT NULL, " +
-                        "chartTypeName varchar(MAX) NOT NULL, " +
-                        "use2ndYaxis bit NOT NULL, " +
-                        "foreign key (chartFavId) references chartFav (id) ); ";
-                    sqlite =
-                        "CREATE TABLE chartFavLine ( " +
-                        "id integer primary key, " +
-                        "chartFavID integer NOT NULL, " +
-                        "tankId integer NOT NULL, " +
-                        "chartTypeName varchar(999) NOT NULL, " +
-                        "use2ndYaxis bit NOT NULL, " +
-                        "foreign key (chartFavId) references chartFav (id) ); ";
-                    break;
-                case 431:
-                    await ConvertChartFavourites();
-                    break;
-                case 432:
-                    Config.Settings.currentChartFavourite = "";
-                    await Config.SaveConfig();
-                    break;
-                case 433:
-                    mssql = "DROP TABLE chartFavourite; ";
-                    sqlite = mssql;
-                    break;
-                case 434:
-                    mssql =
-                        "UPDATE columnSelection SET description = 'Damage Caused/Received = damage caused divided by damage received' WHERE ID IN (220,218); " +
-                        "UPDATE columnSelection SET description = 'Kill/Death Ratio = enemy tanks you have killed (frags) divided by battles you did not survive' WHERE ID IN (219); ";
-                    sqlite = mssql;
-                    break;
-                case 437:
-                    mssql = "ALTER TABLE tank ADD hp int NULL; ";
-                    sqlite = "ALTER TABLE tank ADD hp integer NULL; ";
-                    break;
-                case 439:
-                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
-                    mssql = temp + "VALUES (226, 1, 7, 'tank.hp', 'HP', 'Tank HP', 'Tank', 50, 'Int'); ";
-                    sqlite = mssql;
-                    break;
-                case 443:
-                    mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (9, 'Poland', 'PL', 'poland', 85); ";
-                    sqlite = mssql;
-                    break;
-                case 447:
-                    temp = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) ";
-                    mssql = "DELETE FROM json2dbMapping WHERE dbPlayerTankMode = 'Grand'; " +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'battlesCount', 'Int', 'battles', 'battlesCount', 'tanks_v2.a30x30.battlesCount', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'battlesCountBefore8_8', 'Int', 'battles8p', NULL, 'tanks_v2.a30x30.battlesCountBefore8_8', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'wins', 'Int', 'wins', 'victory', 'tanks_v2.a30x30.wins', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'losses', 'Int', 'losses', 'defeat', 'tanks_v2.a30x30.losses', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'survivedBattles', 'Int', 'survived', 'survived', 'tanks_v2.a30x30.survivedBattles', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'frags', 'Int', 'frags', 'frags', 'tanks_v2.a30x30.frags', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'frags8p', 'Int', 'frags8p', NULL, 'tanks_v2.a30x30.frags8p', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'damageDealt', 'Int', 'dmg', 'dmg', 'tanks_v2.a30x30.damageDealt', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'damageReceived', 'Int', 'dmgReceived', 'dmgReceived', 'tanks_v2.a30x30.damageReceived', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'shots', 'Int', 'shots', 'shots', 'tanks_v2.a30x30.shots', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'hits', 'Int', 'hits', 'hits', 'tanks_v2.a30x30.hits', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'capturePoints', 'Int', 'cap', 'cap', 'tanks_v2.a30x30.capturePoints', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'droppedCapturePoints', 'Int', 'def', 'def', 'tanks_v2.a30x30.droppedCapturePoints', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'spotted', 'Int', 'spot', 'spotted', 'tanks_v2.a30x30.spotted', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'xp', 'Int', 'xp', 'xp', 'tanks_v2.a30x30.xp', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'xpBefore8_8', 'Int', 'xp8p', NULL, 'tanks_v2.a30x30.xpBefore8_8', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'originalXP', 'Int', 'xpOriginal', 'xpOriginal', 'tanks_v2.a30x30.originalXP', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'potentialDamageReceived', 'Int', 'potentialDmgReceived', 'potentialDmgReceived', 'tanks_v2.a30x30.potentialDamageReceived', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'damageBlockedByArmor', 'Int', 'dmgBlocked', 'dmgBlocked', 'tanks_v2.a30x30.damageBlockedByArmor', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'he_hits', 'Int', 'heHits', 'heHits', 'tanks_v2.a30x30.he_hits', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'pierced', 'Int', 'pierced', 'pierced', 'tanks_v2.a30x30.pierced', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'shotsReceived', 'Int', 'shotsReceived', 'shotsReceived', 'tanks_v2.a30x30.shotsReceived', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'piercingsReceived', 'Int', 'piercedReceived', 'piercedReceived', 'tanks_v2.a30x30.piercingsReceived', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'heHitsReceived', 'Int', 'heHitsReceived', 'heHitsReceived', 'tanks_v2.a30x30.heHitsReceived', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'noDamageShotsReceived', 'Int', 'noDmgShotsReceived', 'noDmgShotsReceived', 'tanks_v2.a30x30.noDamageShotsReceived', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'damageAssistedRadio', 'Int', 'assistSpot', 'assistSpot', 'tanks_v2.a30x30.damageAssistedRadio', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'a30x30', 'damageAssistedTrack', 'Int', 'assistTrack', 'assistTrack', 'tanks_v2.a30x30.damageAssistedTrack', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'max30x30', 'maxDamage', 'Int', 'maxDmg', NULL, 'tanks_v2.max30x30.maxDamage', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'max30x30', 'maxFrags', 'Int', 'maxFrags', NULL, 'tanks_v2.max30x30.maxFrags', 'Grand');" +
-                        temp + "VALUES ('tanks_v2', 'max30x30', 'maxXP', 'Int', 'maxXp', NULL, 'tanks_v2.max30x30.maxXP', 'Grand');";
-                    break;
-                case 448:
-                    mssql = "ALTER TABLE tank ADD wn8ExpApiFetch BIT NOT NULL DEFAULT 0; ";
-                    sqlite = "ALTER TABLE tank ADD wn8ExpApiFetch BIT NOT NULL DEFAULT 0; ";
-                    break;
-                case 450:
-                    mssql =
-                        "DELETE FROM map WHERE arena_id = '212_epic_random_valley' OR id > 700 OR ID = 75; " +
-                        "INSERT INTO map (id, name, arena_id) VALUES (81, 'Nebelburg', '212_epic_random_valley'); " +
-                        "INSERT INTO map (id, name, arena_id) VALUES (75, 'Paris', '112_eiffel_tower_ctf'); " +
-                        "UPDATE battle SET mapId = 81 WHERE battleMode = 'Grand'";
-                    sqlite = mssql;
-                    break;
-                case 453:
-                    mssql =
-                        "UPDATE battle SET battleResultMode='Random' WHERE bonusType=1 AND battleResultMode IS NULL;" +
-                        "UPDATE battle SET battleResultMode='Special Event' WHERE bonusType=9 AND battleResultMode='';" +
-                        "UPDATE battle SET battleResultMode='Grand' WHERE bonusType=24;" +
-                        "UPDATE battle SET battleResultMode='Skirmishes' WHERE bonusType=10 AND battleResultMode IS NULL;" +
-                        "UPDATE battle SET battleResultMode='Skirmishes' WHERE bonusType=10 AND battleResultMode='Skimish';" +
-                        "UPDATE battle SET battleResultMode='Stronghold' WHERE bonusType=11 AND battleResultMode='';" +
-                        "UPDATE battle SET battleResultMode='Global Map' WHERE bonusType=13 AND battleResultMode IS NULL;";
-                    sqlite = mssql;
-                    break;
-                case 456:
-                    mssql =
-                        "INSERT INTO map (id, name, arena_id) VALUES (82, 'Klondike', '217_er_alaska'); ";
-                    sqlite = mssql;
-                    break;
-                case 459:
-                    mssql =
-                        "ALTER TABLE player ADD playerName varchar(50) NULL; " +
-                        "ALTER TABLE player ADD playerServer varchar(10) NULL; " +
-                        "ALTER TABLE player ADD playerApiId int NULL; " +
-                        "ALTER TABLE player ADD playerApiToken varchar(50) NULL; ";
-                    sqlite = mssql.Replace("int", "integer");
-                    break;
-                case 460:
-                    await FixPlayerTable();
-                    break;
-                case 461:
-                    mssql = "UPDATE battle SET markOfMastery = NULL WHERE markOfMastery > 4;";
-                    sqlite = mssql;
-                    break;
-                case 462:
-                    mssql =
-                        "ALTER TABLE battle ADD transferred BIT NOT NULL DEFAULT 0; ";
-                    sqlite = mssql.Replace("int", "integer");
-                    break;
-                case 465:
-                    RunRecalcBattleWN8 = true;
-                    RunUploadAllToWotNumWeb = true;
-                    break;
-                case 466:
-                    mssql =
-                        "UPDATE player SET name = playerName + ' (NA)', playerServer = 'NA' WHERE playerServer = 'LOGIN'; " +
-                        "UPDATE player SET name = playerName + ' (RU)', playerServer = 'RU' WHERE playerServer = 'NET'; ";
-                    sqlite = mssql.Replace("+", "||");
-                    break;
-                case 468:
-                    mssql = "UPDATE columnSelection SET colNameBattleSumTank='SUM(playerTankBattle.survived) * 100', colNameBattleSumReversePos=0 WHERE id=98;";
-                    sqlite = mssql;
-                    break;
-                case 469:
-                    mssql =
-                        "INSERT INTO map (id, name, arena_id) VALUES (83, 'Glacier', '115_sweden'); ";
-                    sqlite = mssql;
-                    break;
-                case 471:
-                    RunInstallNewBrrVersion = true; // Force install BRR mod if activated in settings, even if no WoT game client is detected
-                    break;
-                case 472:
-                    mssql =
-                        "INSERT INTO map (id, name, arena_id) VALUES (76, 'Glacier', '115_sweden'); " +
-                        "DELETE FROM map WHERE id = 83";
-                    sqlite = mssql;
-                    break;
-                case 473:
-                    // Deactivate vbAddict features because of site currently not working - removed deactivation for releasing to prod, vbaddict fixed 4.4.2018
-                    //Config.Settings.vBAddictUploadActive = false;
-                    //Config.Settings.vBAddictUploadReplayActive = false;
-                    //Config.Settings.vBAddictShowToolBarMenu = false;
-                    //await Config.SaveConfig();
-                    //mssql = "UPDATE player SET vbaddictUploadActive=0, vbaddictUploadReplayActive=0";
-                    //sqlite = mssql;
-                    break;
-                case 474:
-                    mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (10, 'Italy', 'IT', 'italy', 95); ";
-                    sqlite = mssql;
-                    break;
-                case 478:
-                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (77, 'Province (big)', '03_campania_big'); ";
-                    sqlite = mssql;
-                    break;
-                case 484:
-                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (84, 'Minsk', '90_minsk'); ";
-                    sqlite = mssql;
-                    break;
-                case 485:
-                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (83, 'Studzianki', '99_poland'); ";
-                    sqlite = mssql;
-                    break;
-                case 487:
-                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (85, 'Empires Border', '59_asia_great_wall'); ";
-                    sqlite = mssql;
-                    break;
-                
+				case 254:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (532, 2, 140, 'battle.maxBattleTier', 'Max Tier', 'Highest tier on any tank participated in battle', 'Battle', 47, 'Int', NULL); ";
+					sqlite = mssql;
+					break;
+				case 255:
+					mssql =
+						"UPDATE columnSelection SET colName = 'CAST(battle.maxBattleTier AS FLOAT)', colDataType = 'Float' WHERE id = 532;";
+					sqlite = mssql;
+					break;
+				case 256:
+					mssql = "ALTER TABLE battle ADD damageRating float NOT NULL default 0; ";
+					sqlite = "ALTER TABLE battle ADD damageRating real NOT NULL default 0; ";
+					break;
+				case 257:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (223, 2, 305, 'CAST(battle.damageRating as FLOAT) / 100', 'Rank Dmg Progress', 'Progress of rank by average damage, used to determine marks of Excellence', 'Rating', 47, 'Float', NULL); ";
+					sqlite = mssql;
+					break;
+				case 258:
+					mssql = "ALTER TABLE battle ADD damageRatingTotal float NOT NULL default 0; ";
+					sqlite = "ALTER TABLE battle ADD damageRatingTotal real NOT NULL default 0; ";
+					break;
+				case 259:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (224, 2, 306, 'CAST(battle.damageRatingTotal as FLOAT) / 100', 'Rank by avg dmg', 'Curernt total rank by average damage after battle done, used to determine marks of Excellence', 'Rating', 47, 'Float', NULL); ";
+					sqlite = mssql;
+					break;
+				case 260:
+					mssql =
+						"UPDATE columnSelection SET name = 'Rank by Avg Dmg' WHERE id IN (224, 221) ";
+					sqlite = mssql;
+					break;
+				case 261:
+					mssql =
+						"UPDATE columnSelection SET name = 'Dmg Rank' WHERE id IN (224, 221); " +
+						"UPDATE columnSelection SET name = 'Dmg Rank Progress' WHERE id = 223; " +
+						"UPDATE columnSelection SET description = 'Current total rank by average damage after battle done, used to determine Marks of Excellence' WHERE id = 224; ";
+					sqlite = mssql;
+					break;
+				case 262:
+					mssql =
+						"UPDATE columnSelection SET position = 296 WHERE id = 223; " +
+						"UPDATE columnSelection SET position = 297 WHERE id = 224; ";
+					sqlite = mssql;
+					break;
+				case 263:
+					mssql =
+						"UPDATE columnSelection SET description = 'Progress of rank by average damage, used to determine Marks of Excellence' WHERE id = 223; ";
+					sqlite = mssql;
+					break;
+				case 264:
+					mssql =
+						"INSERT INTO map (id, name, arena_id) VALUES (72,'Berlin','105_germany'); " +
+						"INSERT INTO map (id, name, arena_id) VALUES (73,'Ravaged Capital','112_eiffel_tower'); " +
+						"INSERT INTO map (id, name, arena_id) VALUES (65,'Tank Rally','102_deathtrack'); ";
+					sqlite = mssql;
+					break;
+				case 265:
+					mssql =
+						"UPDATE map SET name = 'Port', arena_id = '42_north_america' WHERE id = 36; " +
+						"UPDATE map SET name = 'Himmelsdorf Championship', arena_id = '99_himmelball' WHERE id = 61; ";
+					sqlite = mssql;
+					break;
+				case 267:
+					mssql =
+						"ALTER TABLE playerTankBattle ADD credBtlCount Int NOT NULL DEFAULT 0 ; " +
+						"ALTER TABLE playerTankBattle ADD credAvgIncome Int NULL ; " +
+						"ALTER TABLE playerTankBattle ADD credAvgCost Int NULL ; " +
+						"ALTER TABLE playerTankBattle ADD credAvgResult Int NULL ; " +
+						"ALTER TABLE playerTankBattle ADD credMaxIncome Int NULL ; " +
+						"ALTER TABLE playerTankBattle ADD credMaxCost Int NULL ; " +
+						"ALTER TABLE playerTankBattle ADD credMaxResult Int NULL ; " +
+						"ALTER TABLE playerTankBattle ADD credTotIncome BigInt NULL ; " +
+						"ALTER TABLE playerTankBattle ADD credTotCost BigInt NULL ; " +
+						"ALTER TABLE playerTankBattle ADD credTotResult BigInt NULL ; ";
+					sqlite = mssql.Replace("Int", "Integer");
+					sqlite = mssql.Replace("BigInt", "Integer");
+					break;
+				case 269:
+					mssql = "UPDATE columnSelection SET position = position + 100 WHERE colType = 1 AND position > 323; ";
+					sqlite = mssql;
+					break;
+				case 270:
+					mssql = "UPDATE columnSelection SET colGroup = 'Result', position = position - 110 WHERE colType = 1 AND colGroup = 'Max'; ";
+					sqlite = mssql;
+					break;
+				case 271:
+					temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql =
+						temp + "VALUES (533, 1, 350, 'playerTankBattle.credBtlCount', 'Credit Btl Count', 'Number of battles where credits are recorded', 'Credit', 50, 'Int'); " +
+						temp + "VALUES (534, 1, 351, 'playerTankBattle.credAvgIncome', 'Average Income', 'Average credit income for battles recorded (Credit Btl Count)', 'Credit', 50, 'Int'); " +
+						temp + "VALUES (535, 1, 352, 'playerTankBattle.credAvgCost',   'Average Cost',   'Average credit cost for battles recorded (Credit Btl Count)', 'Credit', 50, 'Int'); " +
+						temp + "VALUES (536, 1, 353, 'playerTankBattle.credAvgResult', 'Average Earned', 'Average credit earned (income - cost) for battles recorded (Credit Btl Count)', 'Credit', 50, 'Int'); " +
+						temp + "VALUES (537, 1, 354, 'playerTankBattle.credMaxIncome', 'Max Income', 'Maximum credit income for any battles recorded', 'Credit', 50, 'Int'); " +
+						temp + "VALUES (538, 1, 355, 'playerTankBattle.credMaxCost',   'Max Cost',   'Maximum credit cost for any battles recorded', 'Credit', 50, 'Int'); " +
+						temp + "VALUES (539, 1, 356, 'playerTankBattle.credMaxResult', 'Max Earned', 'Maximum credit earned (income - cost) for any battles recorded', 'Credit', 50, 'Int'); " +
+						temp + "VALUES (540, 1, 357, 'playerTankBattle.credTotIncome', 'Tot Income', 'Total credit income for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
+						temp + "VALUES (541, 1, 358, 'playerTankBattle.credTotCost',   'Tot Cost',   'Total credit cost for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
+						temp + "VALUES (542, 1, 359, 'playerTankBattle.credTotResult', 'Tot Earned', 'Total credit earned (income - cost) for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); ";
+					sqlite = mssql;
+					break;
+				case 275:
+					mssql =
+						"ALTER TABLE playerTankBattle ADD credBtlLifetime BigInt NULL; ";
+					sqlite = mssql.Replace("Int", "Integer");
+					sqlite = mssql.Replace("BigInt", "Integer");
+					break;
+				case 276:
+					temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql =
+						temp + "VALUES (543, 1, 201, 'CAST(playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount * 10 AS FLOAT) / 600', 'Avg Btl Lifetime', 'Avg battle time in minutes for battles recorded', 'Battle', 60, 'Float'); ";
+					sqlite = mssql;
+					break;
+				case 278:
+					// Change to estimates
+					// temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					// temp + "VALUES (540, 1, 357, 'playerTankBattle.credTotIncome', 'Tot Income', 'Total credit income for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
+					// temp + "VALUES (541, 1, 358, 'playerTankBattle.credTotCost',   'Tot Cost',   'Total credit cost for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
+					// temp + "VALUES (542, 1, 359, 'playerTankBattle.credTotResult', 'Tot Earned', 'Total credit earned (income - cost) for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); ";
+					mssql =
+						"UPDATE columnSelection SET colName='playerTankBattle.credAvgIncome * playerTankBattle.battles' WHERE ID = 540; " +
+						"UPDATE columnSelection SET colName='playerTankBattle.credAvgCost * playerTankBattle.battles' WHERE ID = 541; " +
+						"UPDATE columnSelection SET colName='playerTankBattle.credAvgResult * playerTankBattle.battles' WHERE ID = 542; " +
+						"UPDATE columnSelection SET description='Estimated total credit income for all tank battles (Avg credit income * actual battles for tank)' WHERE ID = 540; " +
+						"UPDATE columnSelection SET description='Estimated total credit cost for all tank battles (Avg credit cost * actual battles for tank)' WHERE ID = 541; " +
+						"UPDATE columnSelection SET description='Estimated total credit earned for all tank battles (Avg credit (income - cost) * actual battles for tank)' WHERE ID = 542; ";
+
+					sqlite = mssql;
+					break;
+				case 279:
+					temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql =
+						temp + "VALUES (544, 1, 360, 'CAST(playerTankBattle.credAvgResult / CAST(playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount / 60 AS FLOAT) AS INT)', 'Earned per min', 'Estimated credit earned per minute', 'Credit', 60, 'Int'); ";
+					sqlite = mssql;
+					break;
+				case 281:
+					RunRecalcBattleCreditPerTank = true;
+					break;
+				case 284:
+					mssql =
+						"UPDATE columnSelection SET name='Avg Cred Income' WHERE id=534;" +
+						"UPDATE columnSelection SET name='Avg Cred Cost' WHERE id=535;" +
+						"UPDATE columnSelection SET name='Avg Cred Result' WHERE id=536;" +
+						"UPDATE columnSelection SET name='Max Cred Income' WHERE id=537;" +
+						"UPDATE columnSelection SET name='Max Cred Cost' WHERE id=538;" +
+						"UPDATE columnSelection SET name='Max Cred Result' WHERE id=539;" +
+						"UPDATE columnSelection SET name='Tot Cred Income' WHERE id=540;" +
+						"UPDATE columnSelection SET name='Tot Cred Cost' WHERE id=541;" +
+						"UPDATE columnSelection SET name='Tot Cred Result' WHERE id=542;" +
+						"UPDATE columnSelection SET name='Cred Result per min' WHERE id=544;";
+					sqlite = mssql;
+					break;
+				case 287:
+					mssql =
+						"CREATE TABLE replayFolder ( " +
+						"id int IDENTITY(1,1) primary key, " +
+						"path varchar(max) NOT NULL, " +
+						"subfolder bit NOT NULL);";
+					sqlite =
+						"CREATE TABLE replayFolder ( " +
+						"id integer primary key, " +
+						"path varchar(999) NOT NULL, " +
+						"subfolder bit NOT NULL);";
+					break;
+				case 288:
+					temp = ReplayHelper.GetWoTDefaultReplayFolder();
+					if (temp != "")
+						await ReplayHelper.AddReplayFolder(temp, false);
+					break;
+				case 290:
+					mssql = "ALTER TABLE battle ADD uploadedvBAddict datetime NULL; ";
+					sqlite = mssql;
+					break;
+				case 292:
+					if (!await DB.HasColumn("tank", "imgpath"))
+					{
+						mssql = "ALTER TABLE tank ADD imgPath varchar(255) NULL; ";
+						sqlite = mssql;
+					}
+					break;
+				case 293:
+					mssql = "INSERT INTO country (id, name, shortName) VALUES (7, 'Czechoslovakia', 'CZ'); ";
+					sqlite = mssql;
+					break;
+				case 295:
+					mssql = "ALTER TABLE country ADD vBAddictName varchar(50) NULL; ";
+					sqlite = mssql;
+					break;
+				case 296:
+					mssql =
+						"UPDATE country SET vBAddictName = 'soviet_union' WHERE ID = 0; " +
+						"UPDATE country SET vBAddictName = 'germany' WHERE ID = 1; " +
+						"UPDATE country SET vBAddictName = 'usa' WHERE ID = 2; " +
+						"UPDATE country SET vBAddictName = 'china' WHERE ID = 3; " +
+						"UPDATE country SET vBAddictName = 'france' WHERE ID = 4; " +
+						"UPDATE country SET vBAddictName = 'uk' WHERE ID = 5; " +
+						"UPDATE country SET vBAddictName = 'japan' WHERE ID = 6; " +
+						"UPDATE country SET vBAddictName = 'czechoslovakia' WHERE ID = 7; ";
+					sqlite = mssql;
+					break;
+				case 298:
+					mssql = "INSERT INTO map (id, name, arena_id) VALUES (74,'Pilsen','114_czech'); ";
+					sqlite = mssql;
+					break;
+				case 300:
+					mssql = "ALTER TABLE map ADD active BIT NOT NULL DEFAULT(0); ";
+					sqlite = mssql;
+					break;
+				case 301:
+					Config.Settings.vBAddictShowToolBarMenu = false;
+					await Config.SaveConfig();
+					break;
+				case 304: // Recalculate max battle tier for all battles, also the one before this column was added
+					RunRecalcBattleMaxTier = true;
+					break;
+				case 305:
+					mssql =
+						"UPDATE columnSelection SET position = position + 13 WHERE position > 207 AND colType=1; ";
+					sqlite = mssql;
+					break;
+				case 306:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (99, 1, 208, 'CAST((playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)*1000/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Draw Rate', 'Draw rate in percent of tank total battles', 'Battle', 50, 'Float', NULL); " +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (100, 1, 209, 'CAST(playerTankBattle.losses*1000/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Defeat Rate', 'Defeat rate in percent of tank total battles', 'Battle', 50, 'Float', NULL); ";
+					sqlite = mssql;
+					break;
+				case 307:
+					mssql = "ALTER TABLE columnSelection ADD colNameSum VARCHAR(255) NULL; ";
+					sqlite = mssql;
+					break;
+				case 316:
+					Config.Settings.RatingColors = ColorRangeScheme.RatingColorScheme.WN_Official_Colors;
+					await Config.SaveConfig();
+					break;
+				case 329:
+					mssql = "ALTER TABLE columnSelection ADD colNameBattleSum VARCHAR(255) NULL; ";
+					sqlite = mssql;
+					break;
+				case 331:
+					mssql = "ALTER TABLE columnSelection ADD colNameBattleSumCalc BIT NOT NULL DEFAULT(0); ";
+					sqlite = mssql;
+					break;
+				case 332:
+					mssql = "ALTER TABLE columnSelection ADD colNameBattleSumTank VARCHAR(255) NULL; ";
+					sqlite = mssql;
+					break;
+				case 335:
+					mssql = "ALTER TABLE columnSelection ADD colNameBattleSumReversePos BIT NOT NULL DEFAULT(0); ";
+					sqlite = mssql;
+					break;
+				case 336:
+					mssql = "update json2dbMapping set dbBattle = dbPlayerTank where dbPlayerTank = 'heHits';";
+					sqlite = mssql;
+					break;
+				case 343:
+					Config.Settings.downloadFilePath = Config.AppDataDownloadFolder;
+					Config.Settings.downloadFilePathAddSubfolder = false;
+					await Config.SaveConfig();
+					break;
+				case 349:
+					mssql = "ALTER TABLE playerTankBattle ADD rwr float";
+					sqlite = mssql;
+					break;
+				case 350:
+					mssql =
+						"UPDATE columnSelection SET position = position + 10 WHERE position > 206 AND colType=1; ";
+					sqlite = mssql;
+					break;
+				case 351:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (101, 1, 207, 'playerTankBattle.rwr', 'RWR', 'Relative Win Rate is the tank win rate according to WN8 expected winrate', 'Battle', 50, 'Float', NULL); ";
+					sqlite = mssql;
+					break;
+				case 355:
+					//-- SQL SCRIPT TO GENERATE COMPLETE TOTAL STATS SETUP FROM MASTER DB
+					//SELECT '"UPDATE columnSelection SET colNameSum='''+colNameSum+''', colNameBattleSum='+
+					//  CASE WHEN colNameBattleSum IS NULL THEN 'NULL' ELSE '''' + colNameBattleSum + '''' END + ',colNameBattleSumTank='+
+					//  CASE WHEN colNameBattleSumTank IS NULL THEN 'NULL' ELSE '''' + colNameBattleSumTank + '''' END + ', colNameBattleSumCalc='+
+					//  CAST(colNameBattleSumCalc AS VARCHAR)+', colNameBattleSumReversePos='+
+					//  CAST(colNameBattleSumReversePos AS VARCHAR)+' WHERE id='+
+					//  CAST(id as VARCHAR)+';" + '
+					//FROM columnSelection
+					//WHERE colNameSum is not null;
+					mssql =
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(tank.Tier * playerTankBattle.battles) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(tank.Tier * battle.battlescount)',colNameBattleSumTank='SUM(tank.Tier * playerTankBattle.battles)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=12;" +
+						"UPDATE columnSelection SET colNameSum='SUM(tank.premium)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=23;" +
+						"UPDATE columnSelection SET colNameSum='0', colNameBattleSum='0',colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=48;" +
+						"UPDATE columnSelection SET colNameSum='0', colNameBattleSum='0',colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=49;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.battles)', colNameBattleSum='SUM(battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=50;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.battleLifeTime)', colNameBattleSum='SUM(battle.battleLifeTime)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=52;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.mileage)', colNameBattleSum='SUM(battle.mileage)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=63;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.treesCut)', colNameBattleSum='SUM(battle.treesCut)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=64;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.battles8p)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=85;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.wins)', colNameBattleSum='SUM(battle.victory)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=86;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)', colNameBattleSum='SUM(battle.draw)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=91;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.losses)', colNameBattleSum='SUM(battle.defeat)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=92;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.wins) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.victory) * 100',colNameBattleSumTank='SUM(playerTankBattle.wins) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=95;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.survived)', colNameBattleSum='SUM(battle.survived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=96;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.battles-playerTankBattle.survived)', colNameBattleSum='SUM(battle.killed)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=97;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.survived) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.survived)',colNameBattleSumTank='SUM(playerTankBattle.survived) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=98;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM((playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.draw) * 100',colNameBattleSumTank='SUM((playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=99;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.losses) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.defeat) * 100',colNameBattleSumTank='SUM(playerTankBattle.losses) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=100;" +
+						"UPDATE columnSelection SET colNameSum='0', colNameBattleSum='0',colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=101;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.dmg)', colNameBattleSum='SUM(battle.dmg)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=128;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.assistSpot)', colNameBattleSum='SUM(battle.assistSpot)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=129;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.assistTrack)', colNameBattleSum='SUM(battle.assistTrack)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=130;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.frags)', colNameBattleSum='SUM(battle.frags)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=131;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.dmgReceived)', colNameBattleSum='SUM(battle.dmgReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=132;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.frags8p)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=133;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.cap)', colNameBattleSum='SUM(battle.cap)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=134;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.def)', colNameBattleSum='SUM(battle.def)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=135;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.spot)', colNameBattleSum='SUM(battle.spotted)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=136;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.xp)', colNameBattleSum='SUM(battle.xp)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=137;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.xp8p)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=138;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.xpOriginal)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=139;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.xp) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.xp)',colNameBattleSumTank='SUM(playerTankBattle.xp)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=140;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.shots)', colNameBattleSum='SUM(battle.shots)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=141;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.hits)', colNameBattleSum='SUM(battle.hits)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=142;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.heHits)', colNameBattleSum='SUM(battle.hehits)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=143;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.pierced)', colNameBattleSum='SUM(battle.pierced)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=144;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.hits) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.shots),0)', colNameBattleSum='SUM(battle.hits)',colNameBattleSumTank='SUM(playerTankBattle.hits)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=145;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.shots) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.shots)',colNameBattleSumTank='SUM(playerTankBattle.shots)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=146;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.hits) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.hits)',colNameBattleSumTank='SUM(playerTankBattle.hits)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=147;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.heHits) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.hehits)',colNameBattleSumTank='SUM(playerTankBattle.heHits)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=148;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.pierced) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.pierced)',colNameBattleSumTank='SUM(playerTankBattle.pierced)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=149;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.shotsReceived)', colNameBattleSum='SUM(battle.shotsReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=150;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.piercedReceived)', colNameBattleSum='SUM(battle.piercedReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=151;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.heHitsReceived)', colNameBattleSum='SUM(battle.heHitsReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=152;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.noDmgShotsReceived)', colNameBattleSum='SUM(battle.noDmgShotsReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=153;" +
+						"UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.maxDmg)', colNameBattleSum='MAX(battle.dmg / battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=154;" +
+						"UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.maxFrags)', colNameBattleSum='MAX(battle.frags / battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=155;" +
+						"UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.maxXp)', colNameBattleSum='MAX(xp / battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=156;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.gCurrentXP)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=170;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.gGrindXP)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=171;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.gGoalXP)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=172;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.gProgressXP)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=173;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.gBattlesDay)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=174;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.gRestXP)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=176;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTank.gProgressXP) AS FLOAT) / SUM(playerTank.gGoalXP) * 100', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=177;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.gRestBattles)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=178;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTank.gRestDays)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=179;" +
+						"UPDATE columnSelection SET colNameSum='0', colNameBattleSum='0',colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=187;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.dmg) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.dmg)',colNameBattleSumTank='SUM(playerTankBattle.dmg)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=188;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.assistSpot) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.assistSpot)',colNameBattleSumTank='SUM(playerTankBattle.assistSpot)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=189;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.assistTrack) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.assistTrack)',colNameBattleSumTank='SUM(playerTankBattle.assistTrack)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=190;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.frags) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.frags)',colNameBattleSumTank='SUM(playerTankBattle.frags)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=191;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.cap) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.cap)',colNameBattleSumTank='SUM(playerTankBattle.cap)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=203;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.def) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.def)',colNameBattleSumTank='SUM(playerTankBattle.def)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=204;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.spot) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.spotted)',colNameBattleSumTank='SUM(playerTankBattle.spot) ', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=205;" +
+						"UPDATE columnSelection SET colNameSum='SUM(dmgBlocked)', colNameBattleSum='SUM(battle.dmgBlocked)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=206;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.dmgBlocked) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.dmgBlocked)',colNameBattleSumTank='SUM(playerTankBattle.dmgBlocked)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=207;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.potentialDmgReceived)', colNameBattleSum='SUM(battle.potentialDmgReceived)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=208;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.potentialDmgReceived) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.potentialDmgReceived)',colNameBattleSumTank='SUM(playerTankBattle.potentialDmgReceived)', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=209;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.dmgReceived) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.dmgReceived)',colNameBattleSumTank='SUM(playerTankBattle.dmgReceived)', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=210;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.assistSpot+playerTankBattle.assistTrack)', colNameBattleSum='SUM(battle.assistSpot+battle.assistTrack)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=211;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.assistSpot+playerTankBattle.assistTrack) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(battle.assistSpot+battle.assistTrack)',colNameBattleSumTank='SUM(playerTankBattle.assistSpot+playerTankBattle.assistTrack)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=212;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(frags) as float) / nullif(SUM(battles-survived),0)', colNameBattleSum='SUM(battle.frags)',colNameBattleSumTank='SUM(playerTankBattle.frags)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=219;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(dmg) as float) / nullif(SUM(dmgReceived),0)', colNameBattleSum='SUM(battle.dmg)',colNameBattleSumTank='SUM(playerTankBattle.dmg)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=220;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.damageRating) as FLOAT) / 100', colNameBattleSum='CAST(SUM(battle.damageRating) AS FLOAT) / 100',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=221;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.marksOnGun)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=222;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credBtlCount)', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=533;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgIncome * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)', colNameBattleSum='SUM(battle.credits) / SUM(battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=534;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgCost * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)', colNameBattleSum='SUM(battle.credits-battle.creditsNet) / SUM(battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=535;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgResult * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)', colNameBattleSum='SUM(battle.creditsNet) / SUM(battle.battlesCount)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=536;" +
+						"UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.credMaxIncome)', colNameBattleSum='MAX(battle.credits)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=537;" +
+						"UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.credMaxCost)', colNameBattleSum='MAX(battle.credits-battle.creditsNet)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=538;" +
+						"UPDATE columnSelection SET colNameSum='MAX(playerTankBattle.credMaxResult)', colNameBattleSum='MAX(battle.creditsNet)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=539;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgIncome * playerTankBattle.battles)', colNameBattleSum='SUM(credits) ',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=540;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgCost * playerTankBattle.battles)', colNameBattleSum='SUM(credits - creditsNet)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=541;" +
+						"UPDATE columnSelection SET colNameSum='SUM(playerTankBattle.credAvgResult * playerTankBattle.battles)', colNameBattleSum='SUM(creditsNet)',colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=542;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.credBtlLifetime) AS FLOAT) / SUM(playerTankBattle.credBtlCount) / 60', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=543;" +
+						"UPDATE columnSelection SET colNameSum='CAST(SUM(playerTankBattle.credAvgResult) AS FLOAT) / SUM((playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount / 60))', colNameBattleSum=NULL,colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=544;";
+					sqlite = mssql;
+					break;
+				case 356:
+					mssql =
+						"UPDATE columnSelection SET description='WN8 tank rating (according to formula from vBAddict)' WHERE id=49;" +
+						"UPDATE columnSelection SET description='WN8 WRx battle rating (according to formula from vBAddict)' WHERE id=47;";
+					sqlite = mssql;
+					break;
+				case 357:
+					Config.Settings.newDayAtHour = 7;
+					await Config.SaveConfig();
+					break;
+				case 358:
+					Config.Settings.databaseBackupFilePath = "";
+					Config.Settings.databaseBackupLastPerformed = null;
+					await Config.SaveConfig();
+					break;
+				case 359:
+					Config.Settings.tankSearchMainModeAdvanced = true;
+					await Config.SaveConfig();
+					break;
+				case 360:
+					mssql = "ALTER TABLE country ADD sortOrder int NOT NULL default(0); ";
+					sqlite = "ALTER TABLE country ADD sortOrder integer NOT NULL default(0); ";
+					break;
+				case 361:
+					mssql =
+						"UPDATE country SET sortOrder = 20 WHERE ID = 0; " +
+						"UPDATE country SET sortOrder = 10 WHERE ID = 1; " +
+						"UPDATE country SET sortOrder = 30 WHERE ID = 2; " +
+						"UPDATE country SET sortOrder = 60 WHERE ID = 3; " +
+						"UPDATE country SET sortOrder = 40 WHERE ID = 4; " +
+						"UPDATE country SET sortOrder = 50 WHERE ID = 5; " +
+						"UPDATE country SET sortOrder = 70 WHERE ID = 6; " +
+						"UPDATE country SET sortOrder = 80 WHERE ID = 7; ";
+					sqlite = mssql;
+					break;
+				case 362:
+					mssql = "ALTER TABLE tank ADD short_name varchar(255) NULL, description varchar(MAX) NULL, price_credit float NULL; ";
+					sqlite =
+						"ALTER TABLE tank ADD short_name varchar(255) NULL; " +
+						"ALTER TABLE tank ADD description varchar(10) NULL; " +
+						"ALTER TABLE tank ADD price_credit real NULL; ";
+					break;
+				case 363:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+						"VALUES (102, 1, 5, 'tank.name', 'Tank Name', 'Tank full name', 'Tank', 120, 'VarChar'); " +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+						"VALUES (103, 1, 6, 'tank.description', 'Tank Description', 'Wargaming tank description', 'Tank', 250, 'VarChar'); " +
+						"UPDATE columnSelection SET colName='tank.short_name', description = 'Tank short name' WHERE Id = 1";
+					sqlite = mssql;
+					break;
+				case 364:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+						"VALUES (104, 2, 5, 'tank.name', 'Tank Name', 'Tank full name', 'Tank', 120, 'VarChar'); " +
+						"UPDATE columnSelection SET colName='tank.short_name', description = 'Tank short name' WHERE Id = 58";
+					sqlite = mssql;
+					break;
+				case 365:
+					mssql =
+						"UPDATE tank SET short_name = name WHERE short_name IS NULL;";
+					sqlite = mssql;
+					break;
+				case 366:
+					mssql =
+						"UPDATE map SET arena_id = '01_karelia' WHERE id = 1; " +
+						"UPDATE map SET arena_id = '02_malinovka' WHERE id = 2; " +
+						"UPDATE map SET arena_id = '04_himmelsdorf' WHERE id = 3; " +
+						"UPDATE map SET arena_id = '05_prohorovka' WHERE id = 4; " +
+						"UPDATE map SET arena_id = '07_lakeville' WHERE id = 5; " +
+						"UPDATE map SET arena_id = '06_ensk' WHERE id = 6; " +
+						"UPDATE map SET arena_id = '11_murovanka' WHERE id = 7; " +
+						"UPDATE map SET arena_id = '13_erlenberg' WHERE id = 8; " +
+						"UPDATE map SET arena_id = '10_hills' WHERE id = 9; " +
+						"UPDATE map SET arena_id = '15_komarin' WHERE id = 10; " +
+						"UPDATE map SET arena_id = '18_cliff' WHERE id = 11; " +
+						"UPDATE map SET arena_id = '19_monastery' WHERE id = 12; " +
+						"UPDATE map SET arena_id = '28_desert' WHERE id = 13; " +
+						"UPDATE map SET arena_id = '35_steppes' WHERE id = 14; " +
+						"UPDATE map SET arena_id = '37_caucasus' WHERE id = 15; " +
+						"UPDATE map SET arena_id = '33_fjord' WHERE id = 16; " +
+						"UPDATE map SET arena_id = '34_redshire' WHERE id = 17; " +
+						"UPDATE map SET arena_id = '36_fishing_bay' WHERE id = 18; " +
+						"UPDATE map SET arena_id = '38_mannerheim_line' WHERE id = 19; " +
+						"UPDATE map SET arena_id = '08_ruinberg' WHERE id = 20; " +
+						"UPDATE map SET arena_id = '14_siegfried_line' WHERE id = 21; " +
+						"UPDATE map SET arena_id = '22_slough' WHERE id = 22; " +
+						"UPDATE map SET arena_id = '23_westfeld' WHERE id = 23; " +
+						"UPDATE map SET arena_id = '29_el_hallouf' WHERE id = 24; " +
+						"UPDATE map SET arena_id = '31_airfield' WHERE id = 26; " +
+						"UPDATE map SET arena_id = '03_campania' WHERE id = 27; " +
+						"UPDATE map SET arena_id = '17_munchen' WHERE id = 28; " +
+						"UPDATE map SET arena_id = '44_north_america' WHERE id = 31; " +
+						"UPDATE map SET arena_id = '39_crimea' WHERE id = 32; " +
+						"UPDATE map SET arena_id = '43_north_america' WHERE id = 33; " +
+						"UPDATE map SET arena_id = '45_north_america' WHERE id = 34; " +
+						"UPDATE map SET arena_id = '42_north_america' WHERE id = 36; " +
+						"UPDATE map SET arena_id = '53_japan' WHERE id = 43; " +
+						"UPDATE map SET arena_id = '51_asia' WHERE id = 44; " +
+						"UPDATE map SET arena_id = '47_canada_a' WHERE id = 49; " +
+						"UPDATE map SET arena_id = '85_winter' WHERE id = 50; " +
+						"UPDATE map SET arena_id = '73_asia_korea' WHERE id = 51; " +
+						"UPDATE map SET arena_id = '60_asia_miao' WHERE id = 52; " +
+						"UPDATE map SET arena_id = '00_tank_tutorial' WHERE id = 53; " +
+						"UPDATE map SET arena_id = '63_tundra' WHERE id = 55; " +
+						"UPDATE map SET arena_id = '84_winter' WHERE id = 56; " +
+						"UPDATE map SET arena_id = '86_himmelsdorf_winter' WHERE id = 57; " +
+						"UPDATE map SET arena_id = '87_ruinberg_on_fire' WHERE id = 58; " +
+						"UPDATE map SET arena_id = '83_kharkiv' WHERE id = 60; " +
+						"UPDATE map SET arena_id = '99_himmelball' WHERE id = 61; " +
+						"UPDATE map SET arena_id = '96_prohorovka_defense' WHERE id = 62; " +
+						"UPDATE map SET arena_id = '102_deathtrack' WHERE id = 65; " +
+						"UPDATE map SET arena_id = '92_stalingrad' WHERE id = 66; " +
+						"UPDATE map SET arena_id = '100_thepit' WHERE id = 67; " +
+						"UPDATE map SET arena_id = '95_lost_city' WHERE id = 68; " +
+						"UPDATE map SET arena_id = '103_ruinberg_winter' WHERE id = 69; " +
+						"UPDATE map SET arena_id = '101_dday' WHERE id = 70; " +
+						"UPDATE map SET arena_id = '111_paris' WHERE id = 71; " +
+						"UPDATE map SET arena_id = '105_germany' WHERE id = 72; " +
+						"UPDATE map SET arena_id = '112_eiffel_tower' WHERE id = 73; " +
+						"UPDATE map SET arena_id = '114_czech' WHERE id = 74; " +
+						"UPDATE map SET arena_id = '109_battlecity_ny' WHERE id = 700; " +
+						"UPDATE map SET arena_id = '60_asia_miao' WHERE id = 1957; " +
+						"UPDATE map SET arena_id = '73_asia_korea' WHERE id = 1983; " +
+						"UPDATE map SET arena_id = '00_tank_tutorial' WHERE id = 2021; ";
+					sqlite = mssql;
+					break;
+				case 370:
+					mssql = "ALTER TABLE playerTank ADD gProgressGoal int NOT NULL default 0; " +
+							"ALTER TABLE playerTank ADD gCompleationDate datetime NULL; ";
+					sqlite = mssql;
+					break;
+				case 371:
+					mssql =
+						"ALTER TABLE playerTankBattle ADD wn9 int NOT NULL default 0; " +
+						"ALTER TABLE battle ADD wn9 int NOT NULL default 0; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 372:
+					mssql = "UPDATE columnSelection SET position=position+7 WHERE colType=1 AND position>118 AND position<140";
+					sqlite = mssql;
+					break;
+				case 373:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameBattleSumCalc) " +
+						"VALUES (105, 1, 119, 'playerTankBattle.wn9', 'WN9', 'WN8 tank rating (experimental, according to info from WotLabs)', 'Rating', 50, 'Int', 1); " +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+						"VALUES (106, 2, 294, 'battle.wn9', 'WN9', 'WN9 tank rating (experimental, according to info from WotLabs)', 'Rating', 47, 'Int'); ";
+					sqlite = mssql;
+					break;
+				case 375:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+						"VALUES (225, 1, 491, 'playerTank.gCompleationDate', 'Compl Date', 'Grinding goal completion date ', 'Grinding', 80, 'DateTime'); ";
+					sqlite = mssql;
+					break;
+				case 376:
+					Config.Settings.lastGrindingProgressRecalc = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Day);
+					await Config.SaveConfig();
+					break;
+				case 378:
+					mssql =
+						"ALTER TABLE tank ADD mmrange int NULL; " +
+						"ALTER TABLE tank ADD wn9exp float NULL; " +
+						"ALTER TABLE tank ADD wn9scale float NULL; " +
+						"ALTER TABLE tank ADD wn9nerf float NULL; ";
+					sqlite = mssql.Replace(" int ", " integer ");
+					break;
+				case 379:
+					mssql = "INSERT INTO _version_ (id, version, description) VALUES (3, 0, 'WN9 version'); ";
+					sqlite = mssql;
+					break;
+				case 380:
+					temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql =
+						temp + "VALUES (107, 1, 10, 'tank.mmrange', 'MM Range', 'Match making range, fetched from WN9 API', 'Tank', 35, 'Int'); " +
+						temp + "VALUES (108, 1, 131, 'tank.wn9exp', 'WN9 Exp', 'WN9 expected value', 'Rating', 80, 'Float'); " +
+						temp + "VALUES (109, 1, 132, 'tank.wn9scale', 'WN9 Scale', 'WN9 scale parameter', 'Rating', 80, 'Float'); " +
+						temp + "VALUES (110, 1, 133, 'tank.wn9nerf', 'WN9 Nerf', 'WN9 nerf parameter', 'Rating', 80, 'Float'); " +
+						temp + "VALUES (111, 2, 10, 'CAST(tank.mmrange AS FLOAT)', 'MM Range', 'Match making range, fetched from WN9 API', 'Tank', 35, 'Float'); " +
+						temp + "VALUES (112, 2, 310, 'tank.wn9exp', 'WN9 Exp', 'WN9 expected value', 'Rating', 80, 'Float'); " +
+						temp + "VALUES (113, 2, 311, 'tank.wn9scale', 'WN9 Scale', 'WN9 scale parameter', 'Rating', 80, 'Float'); " +
+						temp + "VALUES (114, 2, 312, 'tank.wn9nerf', 'WN9 Nerf', 'WN9 nerf parameter', 'Rating', 80, 'Float'); ";
+					sqlite = mssql;
+					break;
+				case 381:
+					mssql = "UPDATE columnSelection SET description = 'WN9 tank rating according to http://jaj22.org.uk/wn9description.html' WHERE ID IN (105,106); ";
+					sqlite = mssql;
+					break;
+				case 382:
+					RunRecalcBattleWN9 = true;
+					break;
+				case 383:
+					await ColListSystemDefault.NewSystemTankColList();
+					break;
+				case 385:
+					mssql = "ALTER TABLE playerTankBattle ADD wn9maxhist FLOAT NOT NULL default 0; ";
+					sqlite = mssql;
+					break;
+				case 386:
+					mssql = "UPDATE columnSelection SET colNameSum=0, colNameBattleSum=0, colNameBattleSumCalc=1, colNameBattleSumTank=0, colNameBattleSumReversePos=0 WHERE ID = 105; ";
+					sqlite = mssql;
+					break;
+				case 388:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameBattleSumCalc) " +
+						"VALUES (115, 1, 120, 'playerTankBattle.wn9maxhist', 'WN9 Max Hist', 'WN9 tank rating using max history calculation according to http://jaj22.org.uk/wn9description.html', 'Rating', 50, 'Float', 1); ";
+					sqlite = mssql;
+					break;
+				case 391:
+					temp =
+						"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+							"              SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap) AS cap,  " +
+							"              SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
+							"              SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived) AS heHitsReceived,  " +
+							"              SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+							"              MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(wn9) AS wn9, MAX(wn9maxhist) AS wn9maxhist, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(rwr) as rwr, " +
+							"			   MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun, SUM(dmgBlocked) as dmgBlocked, SUM(potentialDmgReceived) as potentialDmgReceived, " +
+							"              SUM(credBtlCount) AS credBtlCount, SUM(credBtlLifetime) as credBtlLifetime, SUM(credAvgIncome) as credAvgIncome,  SUM(credAvgCost) as credAvgCost, " +
+							"              SUM(credAvgResult) as credAvgResult,  SUM(credMaxIncome) as credMaxIncome,  SUM(credMaxCost) as credMaxCost, SUM(credMaxResult) as credMaxResult,  " +
+							"              SUM(credAvgCost) ascredAvgCost " +
+							"FROM            playerTankBattle " +
+							"GROUP BY playerTankId; ";
+					mssql =
+						"ALTER VIEW playerTankBattleTotalsView AS " + temp;
+					sqlite =
+						"DROP VIEW playerTankBattleTotalsView; " +
+						"CREATE VIEW playerTankBattleTotalsView AS " + temp;
+					break;
+				case 392:
+					temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql = temp + "VALUES (116, 2, 201, 'battle.id', 'Battle ID', 'Wot Numbers ID for the battle', 'Battle', 50, 'Int'); ";
+					sqlite = mssql;
+					break;
+				case 393:
+					mssql = "update battle set spotted=0 where spotted < 0; ";
+					sqlite = mssql;
+					break;
+				case 395:
+					mssql = "ALTER TABLE tank ADD customTankInfo BIT NOT NULL DEFAULT(0); ";
+					sqlite = mssql;
+					break;
+				case 397:
+					mssql =
+						"CREATE TABLE homeViewRecent ( " +
+						"id int IDENTITY(1,1) primary key, " +
+						"filename varchar(MAX) NOT NULL, " +
+						"folder varchar(MAX) NOT NULL, " +
+						"used datetime NOT NULL);";
+					sqlite =
+						"CREATE TABLE homeViewRecent ( " +
+						"id integer primary key, " +
+						"filename varchar(999) NOT NULL, " +
+						"folder varchar(999) NOT NULL, " +
+						"used datetime NOT NULL);";
+					break;
+				case 398: // Autosave current home view, not if new database is created
+					if (!newDatabase)
+					{
+						string filename = "Custom";
+						if (File.Exists(Config.AppDataHomeViewFolder + filename + ".json"))
+						{
+							int i = 1;
+							while (File.Exists(Config.AppDataHomeViewFolder + filename + " " + i.ToString() + ".json"))
+							{
+								i++;
+							}
+							filename = filename + " " + i.ToString();
+						}
+						await GadgetHelper.HomeViewSaveToFile(Config.AppDataHomeViewFolder + filename + ".json");
+						await GadgetHelper.UpdateRecentHomeView(Config.AppDataHomeViewFolder + filename + ".json");
+						Config.Settings.currentHomeView = filename;
+						await Config.SaveConfig();
+					}
+					break;
+				case 399:
+					mssql =
+						"CREATE TABLE chartFavourite ( " +
+						"id int IDENTITY(1,1) primary key, " +
+						"favouriteName varchar(MAX) NOT NULL, " +
+						"tankId int NOT NULL, " +
+						"chartTypeName varchar(MAX) NOT NULL);";
+					sqlite =
+						"CREATE TABLE chartFavourite ( " +
+						"id integer primary key, " +
+						"favouriteName varchar(999) NOT NULL, " +
+						"tankId integer NOT NULL, " +
+						"chartTypeName varchar(999) NOT NULL);";
+					break;
+				case 400:
+					Config.Settings.currentChartFavourite = "";
+					await Config.SaveConfig();
+					break;
+				case 401:
+					mssql = "ALTER TABLE chartFavourite ADD use2ndYaxis BIT NOT NULL DEFAULT(0);";
+					sqlite = "ALTER TABLE chartFavourite ADD use2ndYaxis BIT NOT NULL DEFAULT(0);";
+					break;
+				case 402:
+					mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (8, 'Sweden', 'SE', 'sweden', 90); ";
+					sqlite = mssql;
+					break;
+				case 404:
+					mssql = "ALTER TABLE battle ADD battleTimeStart datetime NOT NULL DEFAULT GETDATE(); ";
+					sqlite = "ALTER TABLE battle ADD battleTimeStart datetime NULL;";
+					break;
+				case 405:
+					mssql = "UPDATE battle SET battleTimeStart=DATEADD(second, ISNULL(-battleLifeTime,-180), battleTime); ";
+					sqlite = "UPDATE battle SET battleTimeStart=DATETIME(battleTime, '-' || IFNULL(battleLifeTime,180) || ' seconds'); ";
+					break;
+				case 406:
+					temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) ";
+					mssql = temp + "VALUES (117, 2, 110, 'CAST(battle.battleTimeStart AS datetime)', 'Start Time', 'Battle date and time, the date/time the battle started', 'Battle', 100, 'DateTime', 'battle.battleTimeStart'); ";
+					sqlite = mssql;
+					break;
+				case 408:
+					mssql = "UPDATE columnSelection SET colName='battle.battleTimeStart' WHERE id = 117; ";
+					sqlite = mssql;
+					break;
+				case 409:
+					mssql = "UPDATE columnSelection SET colName='battle.battleTime' WHERE id = 8; ";
+					sqlite = mssql;
+					break;
+				case 411:
+					mssql =
+						"UPDATE columnSelection SET name='Finish Date' WHERE id = 163; " +
+						"UPDATE columnSelection SET name='Finish Time' WHERE id = 164; " +
+						"UPDATE columnSelection SET name='Finished' WHERE id = 8; " +
+						"UPDATE columnSelection SET name='Started' WHERE id = 117; ";
+					sqlite = mssql;
+					break;
+				case 412:
+					mssql = "ALTER TABLE player ADD vbaddictToken varchar(500) NULL; ";
+					sqlite = mssql;
+					break;
+				case 414:
+					mssql =
+						"ALTER TABLE player ADD vbaddictUploadActive BIT NOT NULL DEFAULT(0); " +
+						"ALTER TABLE player ADD vbaddictUploadReplayActive BIT NOT NULL DEFAULT(0); ";
+					sqlite = mssql;
+					break;
+				case 415:
+				//if (vBAddictHelper.Settings.Token != "")
+				//{
+				//    mssql = 
+				//        "UPDATE player " +
+				//        "SET vbaddictToken=@vbaddictToken, vbaddictUploadActive=@vbaddictUploadActive, vbaddictUploadReplayActive=@vbaddictUploadReplayActive " +
+				//        "WHERE id=@id;";
+				//    DB.AddWithValue(ref mssql, "@vbaddictToken", vBAddictHelper.Settings.Token, DB.SqlDataType.VarChar);
+				//    DB.AddWithValue(ref mssql, "@vbaddictUploadActive", vBAddictHelper.Settings.UploadActive, DB.SqlDataType.Boolean);
+				//    DB.AddWithValue(ref mssql, "@vbaddictUploadReplayActive", vBAddictHelper.Settings.UploadReplayActive, DB.SqlDataType.Boolean);
+				//    DB.AddWithValue(ref mssql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
+				//    sqlite = mssql;
+				//}
+				//break;
+				case 416:
+					Config.Settings.res_mods_subfolder = "";
+					await Config.SaveConfig();
+					break;
+				case 417:
+					RunRecalcBattleWN9 = true;
+					break;
+				case 419:
+					mssql = "ALTER TABLE battle ADD xpOriginal int NULL; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 420:
+					temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql = temp + "VALUES (118, 2, 405, 'battle.xpOriginal', 'Original XP', 'Original XP earned, not included premium account xp, 2X (or more) for first victory or bonuses', 'XP', 50, 'Int'); ";
+					sqlite = mssql;
+					break;
+				case 421:
+					mssql = "UPDATE json2dbMapping SET dbBattle=dbPlayerTank WHERE dbPlayerTank = 'xpOriginal';";
+					sqlite = mssql;
+					break;
+				case 422:
+					mssql =
+						"CREATE TABLE battleFilterCount ( " +
+						"  id int primary key, " +
+						"  count int NOT NULL); ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 423:
+					mssql =
+						"INSERT INTO battleFilterCount (id, count) VALUES (1, 100); " +
+						"INSERT INTO battleFilterCount (id, count) VALUES (2, 500); " +
+						"INSERT INTO battleFilterCount (id, count) VALUES (3, 1000); " +
+						"INSERT INTO battleFilterCount (id, count) VALUES (4, 2000); " +
+						"INSERT INTO battleFilterCount (id, count) VALUES (5, 3000); ";
+					sqlite = mssql;
+					break;
+				case 424:
+					mssql = "ALTER TABLE battle ADD battlesCountTotal int NULL; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 425:
+					// BattleCountFilterHelper.RecalcalculateCountTotal(); Method did not work
+					break;
+				case 426:
+					mssql = "UPDATE battle SET battlesCountTotal = NULL; ";
+					sqlite = mssql;
+					break;
+				case 427:
+					Config.Settings.databaseBackupPeriod = 1;
+					await Config.SaveConfig();
+					break;
+				case 428:
+					mssql = "UPDATE map SET id = 75 WHERE id = 73; "; // correct id for map 112_eiffel_tower = Paris
+					sqlite = mssql;
+					break;
+				case 429:
+					mssql =
+						"CREATE TABLE chartFav ( " +
+						"id int IDENTITY(1,1) primary key, " +
+						"favouriteName varchar(MAX) NOT NULL, " +
+						"battleMode varchar(50) NOT NULL, " +
+						"battleTime varchar(5) NOT NULL, " +
+						"xAxis varchar(10) NOT NULL, " +
+						"bullet bit NOT NULL, " +
+						"spline bit NOT NULL); ";
+					sqlite =
+						"CREATE TABLE chartFav ( " +
+						"id integer primary key, " +
+						"favouriteName varchar(999) NOT NULL, " +
+						"battleMode varchar(50) NOT NULL, " +
+						"battleTime varchar(5) NOT NULL, " +
+						"xAxis varchar(10) NOT NULL, " +
+						"bullet bit NOT NULL, " +
+						"spline bit NOT NULL); ";
+					break;
+				case 430:
+					mssql =
+						"CREATE TABLE chartFavLine ( " +
+						"id int IDENTITY(1,1) primary key, " +
+						"chartFavId int NOT NULL, " +
+						"tankId int NOT NULL, " +
+						"chartTypeName varchar(MAX) NOT NULL, " +
+						"use2ndYaxis bit NOT NULL, " +
+						"foreign key (chartFavId) references chartFav (id) ); ";
+					sqlite =
+						"CREATE TABLE chartFavLine ( " +
+						"id integer primary key, " +
+						"chartFavID integer NOT NULL, " +
+						"tankId integer NOT NULL, " +
+						"chartTypeName varchar(999) NOT NULL, " +
+						"use2ndYaxis bit NOT NULL, " +
+						"foreign key (chartFavId) references chartFav (id) ); ";
+					break;
+				case 431:
+					await ConvertChartFavourites();
+					break;
+				case 432:
+					Config.Settings.currentChartFavourite = "";
+					await Config.SaveConfig();
+					break;
+				case 433:
+					mssql = "DROP TABLE chartFavourite; ";
+					sqlite = mssql;
+					break;
+				case 434:
+					mssql =
+						"UPDATE columnSelection SET description = 'Damage Caused/Received = damage caused divided by damage received' WHERE ID IN (220,218); " +
+						"UPDATE columnSelection SET description = 'Kill/Death Ratio = enemy tanks you have killed (frags) divided by battles you did not survive' WHERE ID IN (219); ";
+					sqlite = mssql;
+					break;
+				case 437:
+					mssql = "ALTER TABLE tank ADD hp int NULL; ";
+					sqlite = "ALTER TABLE tank ADD hp integer NULL; ";
+					break;
+				case 439:
+					temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql = temp + "VALUES (226, 1, 7, 'tank.hp', 'HP', 'Tank HP', 'Tank', 50, 'Int'); ";
+					sqlite = mssql;
+					break;
+				case 443:
+					mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (9, 'Poland', 'PL', 'poland', 85); ";
+					sqlite = mssql;
+					break;
+				case 447:
+					temp = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) ";
+					mssql = "DELETE FROM json2dbMapping WHERE dbPlayerTankMode = 'Grand'; " +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'battlesCount', 'Int', 'battles', 'battlesCount', 'tanks_v2.a30x30.battlesCount', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'battlesCountBefore8_8', 'Int', 'battles8p', NULL, 'tanks_v2.a30x30.battlesCountBefore8_8', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'wins', 'Int', 'wins', 'victory', 'tanks_v2.a30x30.wins', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'losses', 'Int', 'losses', 'defeat', 'tanks_v2.a30x30.losses', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'survivedBattles', 'Int', 'survived', 'survived', 'tanks_v2.a30x30.survivedBattles', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'frags', 'Int', 'frags', 'frags', 'tanks_v2.a30x30.frags', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'frags8p', 'Int', 'frags8p', NULL, 'tanks_v2.a30x30.frags8p', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'damageDealt', 'Int', 'dmg', 'dmg', 'tanks_v2.a30x30.damageDealt', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'damageReceived', 'Int', 'dmgReceived', 'dmgReceived', 'tanks_v2.a30x30.damageReceived', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'shots', 'Int', 'shots', 'shots', 'tanks_v2.a30x30.shots', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'hits', 'Int', 'hits', 'hits', 'tanks_v2.a30x30.hits', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'capturePoints', 'Int', 'cap', 'cap', 'tanks_v2.a30x30.capturePoints', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'droppedCapturePoints', 'Int', 'def', 'def', 'tanks_v2.a30x30.droppedCapturePoints', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'spotted', 'Int', 'spot', 'spotted', 'tanks_v2.a30x30.spotted', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'xp', 'Int', 'xp', 'xp', 'tanks_v2.a30x30.xp', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'xpBefore8_8', 'Int', 'xp8p', NULL, 'tanks_v2.a30x30.xpBefore8_8', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'originalXP', 'Int', 'xpOriginal', 'xpOriginal', 'tanks_v2.a30x30.originalXP', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'potentialDamageReceived', 'Int', 'potentialDmgReceived', 'potentialDmgReceived', 'tanks_v2.a30x30.potentialDamageReceived', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'damageBlockedByArmor', 'Int', 'dmgBlocked', 'dmgBlocked', 'tanks_v2.a30x30.damageBlockedByArmor', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'he_hits', 'Int', 'heHits', 'heHits', 'tanks_v2.a30x30.he_hits', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'pierced', 'Int', 'pierced', 'pierced', 'tanks_v2.a30x30.pierced', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'shotsReceived', 'Int', 'shotsReceived', 'shotsReceived', 'tanks_v2.a30x30.shotsReceived', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'piercingsReceived', 'Int', 'piercedReceived', 'piercedReceived', 'tanks_v2.a30x30.piercingsReceived', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'heHitsReceived', 'Int', 'heHitsReceived', 'heHitsReceived', 'tanks_v2.a30x30.heHitsReceived', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'noDamageShotsReceived', 'Int', 'noDmgShotsReceived', 'noDmgShotsReceived', 'tanks_v2.a30x30.noDamageShotsReceived', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'damageAssistedRadio', 'Int', 'assistSpot', 'assistSpot', 'tanks_v2.a30x30.damageAssistedRadio', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'a30x30', 'damageAssistedTrack', 'Int', 'assistTrack', 'assistTrack', 'tanks_v2.a30x30.damageAssistedTrack', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'max30x30', 'maxDamage', 'Int', 'maxDmg', NULL, 'tanks_v2.max30x30.maxDamage', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'max30x30', 'maxFrags', 'Int', 'maxFrags', NULL, 'tanks_v2.max30x30.maxFrags', 'Grand');" +
+						temp + "VALUES ('tanks_v2', 'max30x30', 'maxXP', 'Int', 'maxXp', NULL, 'tanks_v2.max30x30.maxXP', 'Grand');";
+					break;
+				case 448:
+					mssql = "ALTER TABLE tank ADD wn8ExpApiFetch BIT NOT NULL DEFAULT 0; ";
+					sqlite = "ALTER TABLE tank ADD wn8ExpApiFetch BIT NOT NULL DEFAULT 0; ";
+					break;
+				case 450:
+					mssql =
+						"DELETE FROM map WHERE arena_id = '212_epic_random_valley' OR id > 700 OR ID = 75; " +
+						"INSERT INTO map (id, name, arena_id) VALUES (81, 'Nebelburg', '212_epic_random_valley'); " +
+						"INSERT INTO map (id, name, arena_id) VALUES (75, 'Paris', '112_eiffel_tower_ctf'); " +
+						"UPDATE battle SET mapId = 81 WHERE battleMode = 'Grand'";
+					sqlite = mssql;
+					break;
+				case 453:
+					mssql =
+						"UPDATE battle SET battleResultMode='Random' WHERE bonusType=1 AND battleResultMode IS NULL;" +
+						"UPDATE battle SET battleResultMode='Special Event' WHERE bonusType=9 AND battleResultMode='';" +
+						"UPDATE battle SET battleResultMode='Grand' WHERE bonusType=24;" +
+						"UPDATE battle SET battleResultMode='Skirmishes' WHERE bonusType=10 AND battleResultMode IS NULL;" +
+						"UPDATE battle SET battleResultMode='Skirmishes' WHERE bonusType=10 AND battleResultMode='Skimish';" +
+						"UPDATE battle SET battleResultMode='Stronghold' WHERE bonusType=11 AND battleResultMode='';" +
+						"UPDATE battle SET battleResultMode='Global Map' WHERE bonusType=13 AND battleResultMode IS NULL;";
+					sqlite = mssql;
+					break;
+				case 456:
+					mssql =
+						"INSERT INTO map (id, name, arena_id) VALUES (82, 'Klondike', '217_er_alaska'); ";
+					sqlite = mssql;
+					break;
+				case 459:
+					mssql =
+						"ALTER TABLE player ADD playerName varchar(50) NULL; " +
+						"ALTER TABLE player ADD playerServer varchar(10) NULL; " +
+						"ALTER TABLE player ADD playerApiId int NULL; " +
+						"ALTER TABLE player ADD playerApiToken varchar(50) NULL; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 460:
+					await FixPlayerTable();
+					break;
+				case 461:
+					mssql = "UPDATE battle SET markOfMastery = NULL WHERE markOfMastery > 4;";
+					sqlite = mssql;
+					break;
+				case 462:
+					mssql =
+						"ALTER TABLE battle ADD transferred BIT NOT NULL DEFAULT 0; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 465:
+					RunRecalcBattleWN8 = true;
+					RunUploadAllToWotNumWeb = true;
+					break;
+				case 466:
+					mssql =
+						"UPDATE player SET name = playerName + ' (NA)', playerServer = 'NA' WHERE playerServer = 'LOGIN'; " +
+						"UPDATE player SET name = playerName + ' (RU)', playerServer = 'RU' WHERE playerServer = 'NET'; ";
+					sqlite = mssql.Replace("+", "||");
+					break;
+				case 468:
+					mssql = "UPDATE columnSelection SET colNameBattleSumTank='SUM(playerTankBattle.survived) * 100', colNameBattleSumReversePos=0 WHERE id=98;";
+					sqlite = mssql;
+					break;
+				case 469:
+					mssql =
+						"INSERT INTO map (id, name, arena_id) VALUES (83, 'Glacier', '115_sweden'); ";
+					sqlite = mssql;
+					break;
+				case 471:
+					RunInstallNewBrrVersion = true; // Force install BRR mod if activated in settings, even if no WoT game client is detected
+					break;
+				case 472:
+					mssql =
+						"INSERT INTO map (id, name, arena_id) VALUES (76, 'Glacier', '115_sweden'); " +
+						"DELETE FROM map WHERE id = 83";
+					sqlite = mssql;
+					break;
+				case 473:
+					// Deactivate vbAddict features because of site currently not working - removed deactivation for releasing to prod, vbaddict fixed 4.4.2018
+					//Config.Settings.vBAddictUploadActive = false;
+					//Config.Settings.vBAddictUploadReplayActive = false;
+					//Config.Settings.vBAddictShowToolBarMenu = false;
+					//await Config.SaveConfig();
+					//mssql = "UPDATE player SET vbaddictUploadActive=0, vbaddictUploadReplayActive=0";
+					//sqlite = mssql;
+					break;
+				case 474:
+					mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (10, 'Italy', 'IT', 'italy', 95); ";
+					sqlite = mssql;
+					break;
+				case 478:
+					mssql = "INSERT INTO map (id, name, arena_id) VALUES (77, 'Province (big)', '03_campania_big'); ";
+					sqlite = mssql;
+					break;
+				case 484:
+					mssql = "INSERT INTO map (id, name, arena_id) VALUES (84, 'Minsk', '90_minsk'); ";
+					sqlite = mssql;
+					break;
+				case 485:
+					mssql = "INSERT INTO map (id, name, arena_id) VALUES (83, 'Studzianki', '99_poland'); ";
+					sqlite = mssql;
+					break;
+				case 487:
+					mssql = "INSERT INTO map (id, name, arena_id) VALUES (85, 'Empires Border', '59_asia_great_wall'); ";
+					sqlite = mssql;
+					break;
 
 
 
-            }
-            string sql = "";
+
+			}
+			string sql = "";
 			// get sql for correct dbtype
-			if (dbType == ConfigData.dbType.MSSQLserver) 
+			if (dbType == ConfigData.dbType.MSSQLserver)
 				sql = mssql;
-			else if (dbType == ConfigData.dbType.SQLite) 
+			else if (dbType == ConfigData.dbType.SQLite)
 				sql = sqlite;
 			// return sql
 			return sql;
@@ -3398,8 +3397,8 @@ namespace WinApp.Code
 			return sql;
 		}
 
-        // Procedure upgrading DB to latest version
-        public async static Task<bool> CheckForDbUpgrade(Form parentForm, bool newDatabase = false)
+		// Procedure upgrading DB to latest version
+		public async static Task<bool> CheckForDbUpgrade(Form parentForm, bool newDatabase = false)
 		{
 			bool upgradeOK = true;
 			int DBVersionCurrentNumber = await GetDBVersion(); // Get current DB version
@@ -3417,20 +3416,20 @@ namespace WinApp.Code
 					string sql = await UpgradeSQL(DBVersionCurrentNumber, Config.Settings.databaseType, parentForm, newDatabase); // Get upgrade script for this version and dbType 
 					if (sql != "")
 						continueNext = await DB.ExecuteNonQuery(sql); // Run upgrade script
-					// Update db _version_ if success
+																	  // Update db _version_ if success
 					if (continueNext)
 					{
 						sql = "update _version_ set version=" + DBVersionCurrentNumber.ToString() + " where id=1";
 						continueNext = await DB.ExecuteNonQuery(sql);
 					}
-                    // Perform new list update
-                    await TankHelper.GetAllLists();
+					// Perform new list update
+					await TankHelper.GetAllLists();
 				}
 				// If anything went wrong (continueNext == false), supply error notification here
 				if (!continueNext)
 					MsgBox.Show("Error occured during database upgrade, failed running SQL script for version: " + DBVersionCurrentNumber.ToString("0000"), "Error Upgrading Database", parentForm);
 				upgradeOK = continueNext;
-				
+
 			}
 			return upgradeOK;
 		}
@@ -3462,33 +3461,33 @@ namespace WinApp.Code
 
 		public async static Task<double> GetWNVersion(int WNversion)
 		{
-            int id = 0;
-            switch (WNversion)
-            {
-                case 8: id = 2; break;
-                case 9: id = 3; break;
-            }
-            double version = 0;
+			int id = 0;
+			switch (WNversion)
+			{
+				case 8: id = 2; break;
+				case 9: id = 3; break;
+			}
+			double version = 0;
 			string sql = "select version from _version_ where id=@id; ";
-            DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
 			DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
 				version = Convert.ToDouble(dt.Rows[0][0]);
 			}
 			else
-                version = 0;
-            switch (WNversion)
-            {
-                case 9: version = version / 100; break;
-            }
-            return version;
+				version = 0;
+			switch (WNversion)
+			{
+				case 9: version = version / 100; break;
+			}
+			return version;
 		}
 
 		private async static Task CalcPlayerTeam()
 		{
 			string sql = "";
-            // battlePlayer.playerTeam = bit, 0=false (this is not player team thus enemy team) 1=true (this is players team)
+			// battlePlayer.playerTeam = bit, 0=false (this is not player team thus enemy team) 1=true (this is players team)
 			//sql = "UPDATE battlePlayer SET playerTeam = 0";
 			//DB.ExecuteNonQuery(sql);
 			DataTable dtPlayer = await DB.FetchData("SELECT * FROM player");
@@ -3497,12 +3496,12 @@ namespace WinApp.Code
 			{
 				// Get player info, when this upgrade was made the player fields playerName and playerServer did not exits
 				int playerId = Convert.ToInt32(drPlayer["id"]);
-                string playerNameAndServer = drPlayer["name"].ToString();
-                string playerName = "";
-                int pos = playerNameAndServer.IndexOf(" ");
-                if (pos > 0)
-                    playerName = playerNameAndServer.Substring(0, pos);
-                // Update for team 1 and 2 if this is players team
+				string playerNameAndServer = drPlayer["name"].ToString();
+				string playerName = "";
+				int pos = playerNameAndServer.IndexOf(" ");
+				if (pos > 0)
+					playerName = playerNameAndServer.Substring(0, pos);
+				// Update for team 1 and 2 if this is players team
 				sql =
 					"UPDATE battlePlayer SET playerTeam = 1 WHERE team=1 AND battleId IN " +
 					"(SELECT        battle.id " +
@@ -3520,75 +3519,75 @@ namespace WinApp.Code
 					"WHERE        (player.id = @playerId) AND (battlePlayer.name = @playerName) AND battlePlayer.team=2); ";
 				DB.AddWithValue(ref sql, "@playerId", playerId, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
-                await DB.ExecuteNonQuery(sql);
+				await DB.ExecuteNonQuery(sql);
 			}
 		}
 
-        private async static Task ConvertChartFavourites()
-        {
-            // Create chartFav from chartFavourite
-            string sql = "SELECT favouriteName FROM chartFavourite GROUP BY favouriteName;";
-            DataTable dt = await DB.FetchData(sql, true);
-            if (dt.Rows.Count > 0)
-            {
-                sql = "";
-                foreach (DataRow dr in dt.Rows)
-                {
-                    string insert =
-                        "INSERT INTO chartFav (favouriteName, battleMode, battleTime, xAxis, bullet, spline ) " +
-                        "VALUES (@favouriteName, '15', 'ALL', 'Date', 0, 0); ";
-                    DB.AddWithValue(ref insert, "@favouriteName", dr["favouriteName"].ToString(), DB.SqlDataType.VarChar);
-                    sql += insert;
-                }
-                await DB.ExecuteNonQuery(sql, false, true);
-            }
-            // Create chartFavLine from chartFavourite
-            sql = 
-                "SELECT chartFavourite.*, chartFav.Id as chartFavId " + 
-                "FROM chartFavourite INNER JOIN chartFav ON chartFavourite.favouriteName = chartFav.favouriteName; ";
-            dt = await DB.FetchData(sql, true);
-            foreach (DataRow dr in dt.Rows)
-            {
-                string insert =
-                    "INSERT INTO chartFavLine (chartFavID, tankId, chartTypeName, use2ndYaxis) " +
-                    "VALUES (@chartFavID, @tankId, @chartTypeName, @use2ndYaxis); ";
-                DB.AddWithValue(ref insert, "@chartFavID", Convert.ToInt32(dr["chartFavId"]), DB.SqlDataType.Int);
-                DB.AddWithValue(ref insert, "@tankId", Convert.ToInt32(dr["tankId"]), DB.SqlDataType.Int);
-                DB.AddWithValue(ref insert, "@chartTypeName", dr["chartTypeName"].ToString(), DB.SqlDataType.VarChar);
-                DB.AddWithValue(ref insert, "@use2ndYaxis", Convert.ToBoolean(dr["use2ndYaxis"]), DB.SqlDataType.Boolean);
-                sql += insert;
-            }
-            await DB.ExecuteNonQuery(sql, false, true);
-        }
+		private async static Task ConvertChartFavourites()
+		{
+			// Create chartFav from chartFavourite
+			string sql = "SELECT favouriteName FROM chartFavourite GROUP BY favouriteName;";
+			DataTable dt = await DB.FetchData(sql, true);
+			if (dt.Rows.Count > 0)
+			{
+				sql = "";
+				foreach (DataRow dr in dt.Rows)
+				{
+					string insert =
+						"INSERT INTO chartFav (favouriteName, battleMode, battleTime, xAxis, bullet, spline ) " +
+						"VALUES (@favouriteName, '15', 'ALL', 'Date', 0, 0); ";
+					DB.AddWithValue(ref insert, "@favouriteName", dr["favouriteName"].ToString(), DB.SqlDataType.VarChar);
+					sql += insert;
+				}
+				await DB.ExecuteNonQuery(sql, false, true);
+			}
+			// Create chartFavLine from chartFavourite
+			sql =
+				"SELECT chartFavourite.*, chartFav.Id as chartFavId " +
+				"FROM chartFavourite INNER JOIN chartFav ON chartFavourite.favouriteName = chartFav.favouriteName; ";
+			dt = await DB.FetchData(sql, true);
+			foreach (DataRow dr in dt.Rows)
+			{
+				string insert =
+					"INSERT INTO chartFavLine (chartFavID, tankId, chartTypeName, use2ndYaxis) " +
+					"VALUES (@chartFavID, @tankId, @chartTypeName, @use2ndYaxis); ";
+				DB.AddWithValue(ref insert, "@chartFavID", Convert.ToInt32(dr["chartFavId"]), DB.SqlDataType.Int);
+				DB.AddWithValue(ref insert, "@tankId", Convert.ToInt32(dr["tankId"]), DB.SqlDataType.Int);
+				DB.AddWithValue(ref insert, "@chartTypeName", dr["chartTypeName"].ToString(), DB.SqlDataType.VarChar);
+				DB.AddWithValue(ref insert, "@use2ndYaxis", Convert.ToBoolean(dr["use2ndYaxis"]), DB.SqlDataType.Boolean);
+				sql += insert;
+			}
+			await DB.ExecuteNonQuery(sql, false, true);
+		}
 
-        private async static Task FixPlayerTable()
-        {
-            DataTable dt = await DB.FetchData("SELECT * FROM player");
-            foreach (DataRow dr in dt.Rows)
-            {
-                int id = Convert.ToInt32(dr["id"]);
-                string playerNameAndServer = dr["name"].ToString();
-                // get player name
-                string playerName = "";
-                int pos = playerNameAndServer.IndexOf(" ");
-                if (pos > 0)
-                    playerName = playerNameAndServer.Substring(0, pos);
-                // get player server
-                string playerServer = "";
-                pos = playerNameAndServer.IndexOf(" (");
-                if (pos > 0)
-                    playerServer = playerNameAndServer.Substring(pos + 2);
-                pos = playerServer.IndexOf(")");
-                if (pos > 0)
-                    playerServer = playerServer.Substring(0, pos);
-                // update
-                string sql = "UPDATE player SET playerName=@playerName, playerServer=@playerServer WHERE id=@id;";
-                DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
-                DB.AddWithValue(ref sql, "@playerServer", playerServer, DB.SqlDataType.VarChar);
-                DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
-                await DB.ExecuteNonQuery(sql);
-            }
-        }
+		private async static Task FixPlayerTable()
+		{
+			DataTable dt = await DB.FetchData("SELECT * FROM player");
+			foreach (DataRow dr in dt.Rows)
+			{
+				int id = Convert.ToInt32(dr["id"]);
+				string playerNameAndServer = dr["name"].ToString();
+				// get player name
+				string playerName = "";
+				int pos = playerNameAndServer.IndexOf(" ");
+				if (pos > 0)
+					playerName = playerNameAndServer.Substring(0, pos);
+				// get player server
+				string playerServer = "";
+				pos = playerNameAndServer.IndexOf(" (");
+				if (pos > 0)
+					playerServer = playerNameAndServer.Substring(pos + 2);
+				pos = playerServer.IndexOf(")");
+				if (pos > 0)
+					playerServer = playerServer.Substring(0, pos);
+				// update
+				string sql = "UPDATE player SET playerName=@playerName, playerServer=@playerServer WHERE id=@id;";
+				DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
+				DB.AddWithValue(ref sql, "@playerServer", playerServer, DB.SqlDataType.VarChar);
+				DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
+				await DB.ExecuteNonQuery(sql);
+			}
+		}
 
-    }
+	}
 }

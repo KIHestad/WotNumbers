@@ -178,6 +178,8 @@
     <Content Include="Img\Map\114_czech.jpg" />
     <Content Include="Img\Map\115_sweden.jpg" />
     <Content Include="Img\Map\11_murovanka.jpg" />
+    <Content Include="Img\Map\127_japort.jpg" />
+    <Content Include="Img\Map\128_last_frontier_v.jpg" />
     <Content Include="Img\Map\13_erlenberg.jpg" />
     <Content Include="Img\Map\14_siegfried_line.jpg" />
     <Content Include="Img\Map\15_komarin.jpg" />
@@ -185,6 +187,7 @@
     <Content Include="Img\Map\18_cliff.jpg" />
     <Content Include="Img\Map\19_monastery.jpg" />
     <Content Include="Img\Map\208_bf_epic_normandy.jpg" />
+    <Content Include="Img\Map\209_wg_epic_suburbia.jpg" />
     <Content Include="Img\Map\212_epic_random_valley.jpg" />
     <Content Include="Img\Map\217_er_alaska.jpg" />
     <Content Include="Img\Map\222_er_clime.jpg" />
@@ -252,6 +255,8 @@
     <Content Include="Img\Map\Illustration\114_czech_fallout.jpg" />
     <Content Include="Img\Map\Illustration\115_sweden.jpg" />
     <Content Include="Img\Map\Illustration\11_murovanka.jpg" />
+    <Content Include="Img\Map\Illustration\127_japort.jpg" />
+    <Content Include="Img\Map\Illustration\128_last_frontier_v.jpg" />
     <Content Include="Img\Map\Illustration\13_erlenberg.jpg" />
     <Content Include="Img\Map\Illustration\14_siegfried_line.jpg" />
     <Content Include="Img\Map\Illustration\15_komarin.jpg" />
@@ -260,6 +265,7 @@
     <Content Include="Img\Map\Illustration\18_cliff_fallout.jpg" />
     <Content Include="Img\Map\Illustration\19_monastery.jpg" />
     <Content Include="Img\Map\Illustration\208_bf_epic_normandy.jpg" />
+    <Content Include="Img\Map\Illustration\209_wg_epic_suburbia.jpg" />
     <Content Include="Img\Map\Illustration\212_epic_random_valley.jpg" />
     <Content Include="Img\Map\Illustration\217_er_alaska.jpg" />
     <Content Include="Img\Map\Illustration\222_er_clime.jpg" />
