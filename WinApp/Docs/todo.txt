@@ -1,0 +1,4 @@
+﻿14-10-2022
+Move BattleResults python files from DossierJSON to its own directory. And make the application work with the changes.
+
+Modify Product.wxs to reflect new distribution

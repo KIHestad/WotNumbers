@@ -1,0 +1,5 @@
+﻿14 Oct 2022
+Added LOG.txt to keep track of changes introduced in the project
+Added TODO.txt to store ideas or tasks still not implemented. Once they're implemented they should be removed and passed to log.txt.
+Added Bugs.txt to store known bugs. Once a bug is fixed it should be removed and passed to log.txt
+Removed unused deployed files

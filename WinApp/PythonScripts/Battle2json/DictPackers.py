@@ -3,7 +3,7 @@
 # Decompiled from: Python 2.7.8 (default, Jun 30 2014, 16:08:48) [MSC v.1500 64 bit (AMD64)]
 # Embedded file name: scripts/common/DictPackers.py
 import copy
-#Modified for WotNumbers
+#Modified for WoTNumbers
 #from debug_utils import LOG_ERROR
 from binascii import crc32
 from functools import partial
@@ -83,7 +83,7 @@ class DictPacker(object):
                         v = None
                 l[index + 1] = v
             except Exception as e:
-				#Modified for WotNumbers
+				#Modified for WoTNumbers
                 #LOG_ERROR('error while packing:', index, metaEntry, str(e))
                 raise
 

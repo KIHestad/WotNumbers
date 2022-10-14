@@ -17,3 +17,4 @@ if not exist "%BACKUP_DATFILE%" (
 	copy /Y %1 "%BATTLE_RESULTS_DST_DATA_FOLDER%"
 	python "%WOTBR2J%" "%BACKUP_DATFILE%" -f
 )
+

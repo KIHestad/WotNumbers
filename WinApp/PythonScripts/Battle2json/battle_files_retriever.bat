@@ -1,7 +1,7 @@
 @echo off
 SET BATCH_DRIVE=%~d0
 SET BATCH_FOLDER=%~dp0
-SET PROCESS_FILE=%BATCH_FOLDER%\process_battle_results_file.bat
+SET PROCESS_FILE=%BATCH_FOLDER%\process_battle_results_directory.bat
 
 rem SET BATTLE_RESULTS_SRC_DATA_FOLDER=D:\temp\BadButton-wot-battle-parser\battle_files\WoT_1.18.0.0
 SET BATTLE_RESULTS_SRC_DATA_FOLDER=%APPDATA%\Wargaming.net\WorldOfTanks\battle_results
@@ -17,11 +17,7 @@ if not exist "%DATFILES_BACKUP_DIR%" (
 pushd "%BATTLE_RESULTS_SRC_DATA_FOLDER%"
 
 for /d %%d in (*) do (
-	cd %%d
-	for %%f in (*.dat) do (
-		call "%PROCESS_FILE%" %%f
-	)
-	cd ..
+	call "%PROCESS_FILE%" "%%d"
 )
 
 popd

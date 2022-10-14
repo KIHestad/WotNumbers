@@ -30,7 +30,7 @@
     <ProductName>Wot Numbers</ProductName>
     <PublisherName>Wot Numbers Team</PublisherName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -931,25 +931,6 @@
     <None Include="Docs\New_Default_Setup.json" />
     <None Include="Docs\Old_Default_Setup.json" />
     <None Include="DevDocs\OLD_BRR\__init__.pyc" />
-    <None Include="Dossier2json\structures_101.json" />
-    <None Include="Dossier2json\structures_102.json" />
-    <None Include="Dossier2json\structures_103.json" />
-    <None Include="Dossier2json\structures_104.json" />
-    <None Include="Dossier2json\structures_105.json" />
-    <None Include="Dossier2json\structures_106.json" />
-    <None Include="Dossier2json\structures_77.json" />
-    <None Include="Dossier2json\structures_81.json" />
-    <None Include="Dossier2json\structures_85.json" />
-    <None Include="Dossier2json\structures_87.json" />
-    <None Include="Dossier2json\structures_88.json" />
-    <None Include="Dossier2json\structures_89.json" />
-    <None Include="Dossier2json\structures_92.json" />
-    <None Include="Dossier2json\structures_94.json" />
-    <None Include="Dossier2json\structures_95.json" />
-    <None Include="Dossier2json\structures_96.json" />
-    <None Include="Dossier2json\structures_97.json" />
-    <None Include="Dossier2json\structures_98.json" />
-    <None Include="Dossier2json\structures_99.json" />
     <None Include="Lib\ensurepip\_bundled\pip-8.1.1-py2.py3-none-any.whl" />
     <None Include="Lib\ensurepip\_bundled\setuptools-20.10.1-py2.py3-none-any.whl" />
     <None Include="packages.config" />
@@ -1685,15 +1666,10 @@
     <Content Include="DevDocs\Python277\_weakrefset.py" />
     <Content Include="DevDocs\Python277\__future__.py" />
     <Content Include="DevDocs\Python277\__phello__.foo.py" />
+    <Content Include="Docs\bugs.txt" />
     <Content Include="Docs\Database\insert_dbver488.txt" />
-    <Content Include="Dossier2json\battle_results_common.py" />
-    <Content Include="Dossier2json\battle_results_constants.py" />
-    <Content Include="Dossier2json\battle_results_event.py" />
-    <Content Include="Dossier2json\battle_results_frontline.py" />
-    <Content Include="Dossier2json\battle_results_random.py" />
-    <Content Include="Dossier2json\battle_results_ranked.py" />
-    <Content Include="Dossier2json\DictPackers.py" />
-    <Content Include="Dossier2json\enumerations.py" />
+    <Content Include="Docs\log.txt" />
+    <Content Include="Docs\todo.txt" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />
@@ -2241,6 +2217,21 @@
     <Content Include="PythonLib\weakref.py" />
     <Content Include="PythonLib\_abcoll.py" />
     <Content Include="PythonLib\_weakrefset.py" />
+    <Content Include="PythonScripts\Battle2Json\battle_results_common.py" />
+    <Content Include="PythonScripts\Battle2Json\battle_results_constants.py" />
+    <Content Include="PythonScripts\Battle2Json\battle_results_random.py" />
+    <Content Include="PythonScripts\Battle2Json\DictPackers.py" />
+    <Content Include="PythonScripts\Battle2Json\wotbr2j.py" />
+    <Content Include="PythonScripts\Dossier2json\battle_results_common.py" />
+    <Content Include="PythonScripts\Dossier2json\battle_results_constants.py" />
+    <Content Include="PythonScripts\Dossier2json\battle_results_event.py" />
+    <Content Include="PythonScripts\Dossier2json\battle_results_frontline.py" />
+    <Content Include="PythonScripts\Dossier2json\battle_results_random.py" />
+    <Content Include="PythonScripts\Dossier2json\battle_results_ranked.py" />
+    <Content Include="PythonScripts\Dossier2json\DictPackers.py" />
+    <Content Include="PythonScripts\Dossier2json\enumerations.py" />
+    <Content Include="PythonScripts\Dossier2json\wotbr2j.py" />
+    <Content Include="PythonScripts\Dossier2json\wotdc2j.py" />
     <None Include="DevDocs\battle_result\battle_result_analyze.json" />
     <Content Include="DevDocs\battle_result\Parameters of interest.txt" />
     <Content Include="Docs\Database\createTableSQLite.txt" />
@@ -2262,11 +2253,39 @@
     <Content Include="Docs\Database\createTableMSSQL.txt" />
     <Content Include="Docs\Database\insert.txt" />
     <None Include="Docs\Database\upgrade.json" />
-    <Content Include="Dossier2json\wotbr2j.py" />
-    <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="form_ico_6.ico" />
     <Content Include="logo_org_icon2.ico" />
     <Content Include="logo_org_icon3.ico" />
+    <None Include="PythonScripts\Battle2Json\battle_files_retriever.bat" />
+    <None Include="PythonScripts\Battle2Json\force_refresh_battle_resullts_from_backup.bat" />
+    <None Include="PythonScripts\Battle2Json\periodic_battle_checker.bat" />
+    <None Include="PythonScripts\Battle2Json\process_battle_results_directory.bat" />
+    <None Include="PythonScripts\Battle2Json\process_battle_results_file.bat" />
+    <None Include="PythonScripts\Dossier2json\battle_files_retriever.bat" />
+    <None Include="PythonScripts\Dossier2json\force_refresh_battle_resullts_from_backup.bat" />
+    <None Include="PythonScripts\Dossier2json\periodic_battle_checker.bat" />
+    <None Include="PythonScripts\Dossier2json\process_battle_results_directory.bat" />
+    <None Include="PythonScripts\Dossier2json\process_battle_results_file.bat" />
+    <None Include="PythonScripts\Dossier2json\structures_101.json" />
+    <None Include="PythonScripts\Dossier2json\structures_102.json" />
+    <None Include="PythonScripts\Dossier2json\structures_103.json" />
+    <None Include="PythonScripts\Dossier2json\structures_104.json" />
+    <None Include="PythonScripts\Dossier2json\structures_105.json" />
+    <None Include="PythonScripts\Dossier2json\structures_106.json" />
+    <None Include="PythonScripts\Dossier2json\structures_107.json" />
+    <None Include="PythonScripts\Dossier2json\structures_77.json" />
+    <None Include="PythonScripts\Dossier2json\structures_81.json" />
+    <None Include="PythonScripts\Dossier2json\structures_85.json" />
+    <None Include="PythonScripts\Dossier2json\structures_87.json" />
+    <None Include="PythonScripts\Dossier2json\structures_88.json" />
+    <None Include="PythonScripts\Dossier2json\structures_89.json" />
+    <None Include="PythonScripts\Dossier2json\structures_92.json" />
+    <None Include="PythonScripts\Dossier2json\structures_94.json" />
+    <None Include="PythonScripts\Dossier2json\structures_95.json" />
+    <None Include="PythonScripts\Dossier2json\structures_96.json" />
+    <None Include="PythonScripts\Dossier2json\structures_97.json" />
+    <None Include="PythonScripts\Dossier2json\structures_98.json" />
+    <None Include="PythonScripts\Dossier2json\structures_99.json" />
     <None Include="Resources\menucheck.bmp" />
   </ItemGroup>
   <ItemGroup>
@@ -2301,10 +2320,16 @@
   <PropertyGroup>
     <PreBuildEvent>md "$(TargetDir)Dossier2json"
 del "$(TargetDir)Dossier2json" /q /s 
-xcopy "$(ProjectDir)Dossier2json" "$(TargetDir)Dossier2json" /y /s
+xcopy "$(ProjectDir)/PythonScripts/Dossier2json" "$(TargetDir)Dossier2json" /y /s
+md "$(TargetDir)Battle2json"
+del "$(TargetDir)Battle2json" /q /s 
+xcopy "$(ProjectDir)/PythonScripts/Battle2json" "$(TargetDir)Battle2json" /y /s
+xcopy "$(ProjectDir)/PythonScripts/Dossier2json" "$(TargetDir)Battle2json" /y /s
 md "$(TargetDir)Docs"
+md "$(TargetDir)Docs/Database"
 del "$(TargetDir)Docs" /q /s 
-xcopy "$(ProjectDir)Docs" "$(TargetDir)Docs" /y /s
+xcopy "$(ProjectDir)Docs\mod_BRR.pyc" "$(TargetDir)Docs" /y
+xcopy "$(ProjectDir)Docs\Database\Admin.db" "$(TargetDir)Docs\Database" /y
 md "$(TargetDir)Lib"
 del "$(TargetDir)Lib" /q /s 
 xcopy "$(ProjectDir)PythonLib" "$(TargetDir)Lib" /y /s</PreBuildEvent>
