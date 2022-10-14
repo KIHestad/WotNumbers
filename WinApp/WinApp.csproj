@@ -2222,15 +2222,6 @@
     <Content Include="PythonScripts\Battle2Json\battle_results_random.py" />
     <Content Include="PythonScripts\Battle2Json\DictPackers.py" />
     <Content Include="PythonScripts\Battle2Json\wotbr2j.py" />
-    <Content Include="PythonScripts\Dossier2json\battle_results_common.py" />
-    <Content Include="PythonScripts\Dossier2json\battle_results_constants.py" />
-    <Content Include="PythonScripts\Dossier2json\battle_results_event.py" />
-    <Content Include="PythonScripts\Dossier2json\battle_results_frontline.py" />
-    <Content Include="PythonScripts\Dossier2json\battle_results_random.py" />
-    <Content Include="PythonScripts\Dossier2json\battle_results_ranked.py" />
-    <Content Include="PythonScripts\Dossier2json\DictPackers.py" />
-    <Content Include="PythonScripts\Dossier2json\enumerations.py" />
-    <Content Include="PythonScripts\Dossier2json\wotbr2j.py" />
     <Content Include="PythonScripts\Dossier2json\wotdc2j.py" />
     <None Include="DevDocs\battle_result\battle_result_analyze.json" />
     <Content Include="DevDocs\battle_result\Parameters of interest.txt" />
@@ -2261,11 +2252,6 @@
     <None Include="PythonScripts\Battle2Json\periodic_battle_checker.bat" />
     <None Include="PythonScripts\Battle2Json\process_battle_results_directory.bat" />
     <None Include="PythonScripts\Battle2Json\process_battle_results_file.bat" />
-    <None Include="PythonScripts\Dossier2json\battle_files_retriever.bat" />
-    <None Include="PythonScripts\Dossier2json\force_refresh_battle_resullts_from_backup.bat" />
-    <None Include="PythonScripts\Dossier2json\periodic_battle_checker.bat" />
-    <None Include="PythonScripts\Dossier2json\process_battle_results_directory.bat" />
-    <None Include="PythonScripts\Dossier2json\process_battle_results_file.bat" />
     <None Include="PythonScripts\Dossier2json\structures_101.json" />
     <None Include="PythonScripts\Dossier2json\structures_102.json" />
     <None Include="PythonScripts\Dossier2json\structures_103.json" />
