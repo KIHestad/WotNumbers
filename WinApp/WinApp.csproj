@@ -940,6 +940,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DevDocs\bugs.txt" />
     <Content Include="DevDocs\DatabaseLog\script backup\createTable.txt" />
     <Content Include="DevDocs\DatabaseLog\script backup\createView.txt" />
     <Content Include="DevDocs\DatabaseLog\script backup\dropFk.txt" />
@@ -1154,6 +1155,7 @@
     <Content Include="DevDocs\Img\ToolStripIcons\WoT_2.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\WoT_3.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\xp.png" />
+    <Content Include="DevDocs\log.txt" />
     <Content Include="DevDocs\Python277\abc.py" />
     <Content Include="DevDocs\Python277\aifc.py" />
     <Content Include="DevDocs\Python277\antigravity.py" />
@@ -1666,10 +1668,9 @@
     <Content Include="DevDocs\Python277\_weakrefset.py" />
     <Content Include="DevDocs\Python277\__future__.py" />
     <Content Include="DevDocs\Python277\__phello__.foo.py" />
-    <Content Include="Docs\bugs.txt" />
+    <Content Include="DevDocs\todo.txt" />
     <Content Include="Docs\Database\insert_dbver488.txt" />
     <Content Include="Docs\log.txt" />
-    <Content Include="Docs\todo.txt" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />

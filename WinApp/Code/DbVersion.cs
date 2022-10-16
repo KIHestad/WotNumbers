@@ -29,7 +29,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 542; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 543; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -41,6 +41,14 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
+				case 543:
+					mssql = "UPDATE map SET description = 'The dense central structures in the center of the map are the key point for the location. Controlling this area allows you to hold an all - around defense by firing across the vast fields around the town.Beyond the walls of the fortifications, you should take advantage of terrain irregularities, as most of the area is very exposed to enemy fire.'" +
+							"WHERE id = 206;" +
+							"INSERT INTO map (id, name, arena_id, description) VALUES (801, 'Firnulfir', '252_br_battle_city4', " +
+							"'The main objective is to be the last player (or Platoon) standing. Collect resources, upgrade your vehicle, and survive!'); ";
+					sqlite = mssql;
+					CopyAdminDB = true;
+					break;
 				case 542:
 					mssql =
 						"UPDATE columnSelection SET colName = 'CAST(battle.minBattleTier AS FLOAT)', colDataType = 'Float' WHERE id = 547;";

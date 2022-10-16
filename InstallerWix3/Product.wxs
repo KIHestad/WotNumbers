@@ -7,7 +7,7 @@
 		<Package Id="*" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Description="Installs Wot Numbers, created by the Wot Numbers Team"/>
 
 		<Upgrade Id="$(var.UpgradeCode)">
-			<!-- Detect older product versions -->
+			<!-- Detect older product verInstallExecuteSequence sions -->
 			<!--<UpgradeVersion OnlyDetect="no" IncludeMinimum="yes" IncludeMaximum="no" Minimum="0.0.1" Maximum="$(var.ProductVersion)" Property="PREVIOUSVERSIONSINSTALLED"/>-->
 			<UpgradeVersion OnlyDetect="yes" Minimum="$(var.ProductVersion)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
 			<UpgradeVersion OnlyDetect="no" Maximum="$(var.ProductVersion)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="no" />
@@ -61,7 +61,10 @@
 			<ComponentGroupRef Id="ProductComponents" />
 			<ComponentGroupRef Id="ProductComponents_Bin" />
 			<ComponentGroupRef Id="ProductComponents_Lib" />
+			<ComponentRef Id="removeDossier2JsonComponent" />
 			<ComponentGroupRef Id="ProductComponents_Dossier2json" />
+			<ComponentRef Id="removeBattle2JsonComponent" />
+			<ComponentGroupRef Id="ProductComponents_Battle2json" />
 			<ComponentGroupRef Id="ProductComponents_Docs" />
 			<ComponentGroupRef Id="ProductComponents_Docs_Database" />
 		</Feature>
@@ -267,8 +270,14 @@
 	<?define D2jSource = "..\WinApp\bin\Release\Dossier2json"?>
 
 	<Fragment>
-		<DirectoryRef Id="INSTALLFOLDER_Dossier2json" />
+		<DirectoryRef Id="INSTALLFOLDER_Dossier2json">
+			<!-- Remove old files just in case -->
+			<Component Id="removeDossier2JsonComponent" Guid="8B2B9CBA-1BEB-4AAE-AB1F-89802EB3A8BE">
+				<RemoveFile Id="removeDossier2JsonFiles" On ="install" Name="*.*"/>
+			</Component>
+		</DirectoryRef >
 	</Fragment>
+
 	<Fragment>
 		<ComponentGroup Id="ProductComponents_Dossier2json">
 			<!-- Dossier parsers -->
@@ -344,26 +353,32 @@
 	<?define B2jSource = "..\WinApp\bin\Release\Battle2json"?>
 
 	<Fragment>
-		<DirectoryRef Id="INSTALLFOLDER_Battle2json" />
+		<DirectoryRef Id="INSTALLFOLDER_Battle2json">
+			<!-- Remove old files just in case -->
+			<Component Id="removeBattle2JsonComponent" Guid="72C27B10-39F7-48EE-A950-AF0E30CDDD1E">
+				<RemoveFile Id="removeBattle2JsonFiles" On ="install" Name="*.*"/>
+			</Component>
+		</DirectoryRef>
 	</Fragment>
+
 	<Fragment>
 		<ComponentGroup Id="ProductComponents_Battle2json">
 			<!-- Battle parsers -->
 			<Component Id="cmpwotbr2j" Directory="INSTALLFOLDER_Battle2json" Guid="{07EF3C67-0722-46A1-9405-7FB2ED97576F}">
-				<File Id="filwotbr2j" KeyPath="yes" Source="$(var.D2jSource)\wotbr2j.py" />
+				<File Id="filwotbr2j" KeyPath="yes" Source="$(var.B2jSource)\wotbr2j.py" />
 			</Component>
 			<!-- Battle classes -->
 			<Component Id="cmp_battle_results_common" Directory="INSTALLFOLDER_Battle2json" Guid="{499C9315-F235-490D-A659-5983B3CED27E}">
-				<File Id="fil_battle_results_common" KeyPath="yes" Source="$(var.D2jSource)\battle_results_common.py" />
+				<File Id="fil_battle_results_common" KeyPath="yes" Source="$(var.B2jSource)\battle_results_common.py" />
 			</Component>
 			<Component Id="cmp_battle_results_constants" Directory="INSTALLFOLDER_Battle2json" Guid="{E7E75DED-FE8D-4BF4-9CA4-67721CF9077B}">
-				<File Id="fil_battle_results_constants" KeyPath="yes" Source="$(var.D2jSource)\battle_results_constants.py" />
+				<File Id="fil_battle_results_constants" KeyPath="yes" Source="$(var.B2jSource)\battle_results_constants.py" />
 			</Component>
 			<Component Id="cmp_battle_results_random" Directory="INSTALLFOLDER_Battle2json" Guid="{3B82BA11-561C-448E-BBDF-25785485BAEE}">
-				<File Id="fil_battle_results_random" KeyPath="yes" Source="$(var.D2jSource)\battle_results_random.py" />
+				<File Id="fil_battle_results_random" KeyPath="yes" Source="$(var.B2jSource)\battle_results_random.py" />
 			</Component>
 			<Component Id="cmp_DictPackers" Directory="INSTALLFOLDER_Battle2json" Guid="{666D608A-3F02-4694-A7CF-7810503157A1}">
-				<File Id="fil_DictPackers" KeyPath="yes" Source="$(var.D2jSource)\DictPackers.py" />
+				<File Id="fil_DictPackers" KeyPath="yes" Source="$(var.B2jSource)\DictPackers.py" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>

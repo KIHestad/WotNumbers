@@ -1,3 +1,0 @@
-﻿14 Oct 2022
-Added LOG.txt to keep track of changes introduced in the project
-Added TODO.txt to store ideas or tasks still not implemented.
