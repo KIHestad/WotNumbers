@@ -1,0 +1,13 @@
+﻿14 Oct 2022
+Added LOG.txt to keep track of changes introduced in the project
+Added TODO.txt to store ideas or tasks still not implemented. Once they're implemented they should be removed and passed to log.txt.
+Added Bugs.txt to store known bugs. Once a bug is fixed it should be removed and passed to log.txt
+Removed unused deployed files
+
+Move BattleResults python files from DossierJSON to its own directory. And make the application work with the changes.
+Modify Product.wxs to reflect new distribution.
+
+16 Oct 2022
+Add missing Description for map last_frontier.
+Add firmulfir map into DB.
+Include latest tank data into AdminDB.

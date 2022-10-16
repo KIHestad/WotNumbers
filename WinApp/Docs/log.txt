@@ -1,0 +1,16 @@
+﻿14 Oct 2022
+v1.0.3
+- Removed some unused deployed files
+- Move BattleResults python files from DossierJSON to its own directory. And make the application work with the changes.
+- Add missing Description for map last_frontier.
+- Add firmulfir map into DB.
+- Update AdminDB database.
+
+26 Sept 2022
+v1.0.2
+- Updated version of the application with the latests scripts for battle results.
+- Added new tracking stat: MinBattleTier to track the minimum tier of battles. Useful if you want to inspect how the MM behaves. This is trackable in charts too.
+- Add new chart types to track MoE evolution. Until now we could track MoE through Damage Rating. Now it's possible to track specific aspects of MoE evolution, like raw datage, assisted track damage, assisted spotted damage or combined damage.
+- Map updated images and data like Outpost and Safe Haven
+- New tank images added to the database.
+- Some small bugs were fixed.

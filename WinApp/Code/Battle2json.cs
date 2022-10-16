@@ -15,15 +15,15 @@ using Newtonsoft.Json.Linq;
 
 namespace WinApp.Code
 {
-	class Battle2json
-	{
-		private static List<string> battleResultDatFileCopied = new List<string>(); // List of dat-files copyied from wargaming battle folder, to avoid copy several times
-		private static List<string> battleResultJsonFileExists = new List<string>(); // List of json-files already existing in battle folder, to avoid converting several times
-		
+    class Battle2json
+    {
+        private static List<string> battleResultDatFileCopied = new List<string>(); // List of dat-files copyied from wargaming battle folder, to avoid copy several times
+        private static List<string> battleResultJsonFileExists = new List<string>(); // List of json-files already existing in battle folder, to avoid converting several times
+
         private class ClanInfo
         {
             public int ClanDBID { get; set; }
-            public string ClanAbbrev { get; set;  }
+            public string ClanAbbrev { get; set; }
             public int Count { get; set; }
         }
 
@@ -90,7 +90,7 @@ namespace WinApp.Code
                                     Log.AddToLogBuffer(" > > Start copying battle DAT-file: " + file);
                                     FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
                                     string filename = Path.GetFileName(file);
-                                    if( !WaitUntilFileReadyToRead(file, 4000)) // Since we cannot read the file, skip it rather then crash further down.
+                                    if (!WaitUntilFileReadyToRead(file, 4000)) // Since we cannot read the file, skip it rather then crash further down.
                                     {
                                         Log.AddToLogBuffer(" > > > Could not read battle DAT-file: " + file);
                                         continue;
@@ -256,7 +256,7 @@ namespace WinApp.Code
                         JToken token_private = token_root["private"];
                         // Now find battle created from dossier, or create now if special tank = special Event
                         DataTable dt;
-                        string sql = 
+                        string sql =
                             "select b.id as battleId, pt.id as playerTankId, pt.gGrindXP, b.arenaUniqueID, b.battleMode  " +
                             "from battle b left join playerTank pt on b.playerTankId = pt.id " +
                             "where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1;";
@@ -282,9 +282,9 @@ namespace WinApp.Code
                                     // common initial values
                                     new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") }
                                 };
-                                
+
                                 int playerAccountId = (int)token_private["account"].SelectToken("accountDBID");
-                       
+
                                 if (playerAccountId != Config.Settings.playerAccountId)
                                 {
                                     // Dossier2json changed player and the new player has not playerAccountId setup.
@@ -293,10 +293,10 @@ namespace WinApp.Code
 
                                     // update database
                                     sql = "UPDATE player SET accountId = @accountId WHERE name = @name;";
-                                    
+
                                     DB.AddWithValue(ref sql, "@accountId", playerAccountId, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@name", Config.Settings.playerNameAndServer, DB.SqlDataType.VarChar);
-                                   
+
                                     await DB.ExecuteNonQuery(sql);
                                 }
 
@@ -424,7 +424,7 @@ namespace WinApp.Code
                                 }
                                 battleValues.Add(new BattleValue() { colname = "gameplayName", value = "'" + gameplayName + "'" });
                                 // Correct battle start time
-                                battleValues.Add(new BattleValue() { colname = "battleTimeStart", value = battleTimeStart});
+                                battleValues.Add(new BattleValue() { colname = "battleTimeStart", value = battleTimeStart });
                                 // insert data
                                 string fields = "";
                                 foreach (var battleValue in battleValues)
@@ -465,7 +465,7 @@ namespace WinApp.Code
                                 int killedByAccountId = 0;
                                 string killedByPlayerName = "";
                                 List<ClanInfo> clanCount = new List<ClanInfo>();
-                                
+
                                 // Iterate over all battles players and get data
                                 foreach (JToken player in token_players)
                                 {
@@ -484,7 +484,7 @@ namespace WinApp.Code
 
                                     // Save for use later, to find killer info
                                     battlePlayers.Add(newPlayer);
-                                    
+
                                     // Get values for saving to battle
                                     if (getEnemyClan && newPlayer.clanDBID > 0 && newPlayer.team == enemyTeam) // Get enemy clan
                                     {
@@ -621,7 +621,7 @@ namespace WinApp.Code
                                     teamFortResources[newPlayer.team] += fortResourceValue;
                                     // Create SQL and update db
                                     sql = "insert into battlePlayer (" + fields + ") values (" + values + ")";
-                                    bool success = await DB.ExecuteNonQuery(sql,false);
+                                    bool success = await DB.ExecuteNonQuery(sql, false);
                                     if (!success)
                                     {
                                         // Add tank if missing
@@ -664,10 +664,10 @@ namespace WinApp.Code
                                     "  survivedenemy=@survivedenemy, " +
                                     "  fragsteam=@fragsteam, " +
                                     "  fragsenemy=@fragsenemy, " +
-                                    "  minBattleTier=@minBattleTier, " + 
+                                    "  minBattleTier=@minBattleTier, " +
                                     "  maxBattleTier=@maxBattleTier, " +
                                     "  posByXp=@posByXp, " +
-                                    "  posByDmg=@posByDmg " + 
+                                    "  posByDmg=@posByDmg " +
                                     "where id=@battleId;";
                                 // Clan info
                                 int maxClanCount = 0;
@@ -898,6 +898,28 @@ namespace WinApp.Code
             public bool DeleteFile { get; set; }
         }
 
+        private static void CheckBr2JSearchModulesPath()
+        {
+            // Look if script path is on search module paths list
+            string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
+            string battle2jsonScriptFolder = appPath + "\\battle2json";  // python-script for converting dossier file
+
+            ICollection<string> searchPaths = PythonEngine.Engine.GetSearchPaths();
+            bool pathFound = false;
+            foreach (string path in searchPaths)
+            {
+                if (path == battle2jsonScriptFolder)
+                {
+                    pathFound = true;
+                    break;
+                }
+            }
+            if (!pathFound)
+            {
+                searchPaths.Add(battle2jsonScriptFolder);
+                PythonEngine.Engine.SetSearchPaths(searchPaths);
+            }
+        }
         private async static Task<ConvBtlUsingPythonResult> ConvertBattleUsingPython(string filename)
         {
             ConvBtlUsingPythonResult result = new ConvBtlUsingPythonResult()
@@ -905,10 +927,13 @@ namespace WinApp.Code
                 Success = false,
                 DeleteFile = false
             };
+            
             // Locate Python script
             string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
-            string battle2jsonScript = appPath + "\\dossier2json\\wotbr2j.py"; // python-script for converting dossier file
-                                                                               // Use IronPython
+            string battle2jsonScriptFolder = appPath + "\\battle2json";  // python-script for converting dossier file
+            string battle2jsonScript = battle2jsonScriptFolder + "\\wotbr2j.py";  // python-script for converting dossier file
+
+            CheckBr2JSearchModulesPath();
             if (PythonEngine.LockPython(timeout: 10))
             {
                 try
@@ -916,7 +941,6 @@ namespace WinApp.Code
                     PythonEngine.ipyOutput = ""; // clear ipy output
                     try
                     {
-
                         Log.AddToLogBuffer(" > > Starting to converted battle DAT-file to JSON file: " + filename);
                         var argv = new List
                         {

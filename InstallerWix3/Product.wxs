@@ -1,484 +1,500 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "1.0.1"?>
+<?define ProductVersion = "!(bind.FileVersion.filApp)"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Product Id="*" Name="Wot Numbers" Language="1033" Version="$(var.ProductVersion)" Manufacturer="Wot Numbers Team" UpgradeCode="$(var.UpgradeCode)">
 		<Package Id="*" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Description="Installs Wot Numbers, created by the Wot Numbers Team"/>
 
-    <Upgrade Id="$(var.UpgradeCode)">
-      <!-- Detect older product versions -->
-      <!--<UpgradeVersion OnlyDetect="no" IncludeMinimum="yes" IncludeMaximum="no" Minimum="0.0.1" Maximum="$(var.ProductVersion)" Property="PREVIOUSVERSIONSINSTALLED"/>-->
-      <UpgradeVersion OnlyDetect="yes" Minimum="$(var.ProductVersion)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
-      <UpgradeVersion OnlyDetect="no" Maximum="$(var.ProductVersion)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="no" />
-    </Upgrade>
-    <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
+		<Upgrade Id="$(var.UpgradeCode)">
+			<!-- Detect older product verInstallExecuteSequence sions -->
+			<!--<UpgradeVersion OnlyDetect="no" IncludeMinimum="yes" IncludeMaximum="no" Minimum="0.0.1" Maximum="$(var.ProductVersion)" Property="PREVIOUSVERSIONSINSTALLED"/>-->
+			<UpgradeVersion OnlyDetect="yes" Minimum="$(var.ProductVersion)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
+			<UpgradeVersion OnlyDetect="no" Maximum="$(var.ProductVersion)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="no" />
+		</Upgrade>
+		<!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
 
-    <InstallExecuteSequence>
-      <RemoveExistingProducts After="InstallInitialize" />
-    </InstallExecuteSequence>
+		<InstallExecuteSequence>
+			<RemoveExistingProducts After="InstallInitialize" />
+		</InstallExecuteSequence>
 
-    <MediaTemplate EmbedCab="yes"/>
-    <!-- WixUI_Advanced, WixUI_FeatureTree, WixUI_InstallDir, WixUI_Minimal, WixUI_Mondo = Everything, where to install, features to install ... -->
-    <!-- Required for install -->
-    <PropertyRef Id="NETFRAMEWORK45" />
-    <Condition Message='This setup requires Microsoft .NET Framework 4.5 package to be installed for this installation to continue.'>
-      <![CDATA[Installed OR NETFRAMEWORK45]]>
-    </Condition>
-    <!-- EULA -->
-    <WixVariable Id="WixUILicenseRtf" Value="WotNumbersLicense.rtf" />
-    <!-- Icon -->
-    <Icon Id="icon.ico" SourceFile="wotnumsetup.ico"/>
-    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
-    <!-- Images -->
-    <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
-    <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
-    <!-- UI values -->
-    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start Wot Numbers now" />
-    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
-    <!-- Custom Install folder -->
-    <Property Id="INSTALLFOLDER">
-      <RegistrySearch Id='WotNumbersRegistry' Type="raw" Root="HKCU" Key="Software\Wot Numbers\Installer" Name="installfolder" />
-    </Property>
-    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
-    <!-- Set initial string value for execute app after install -->
-    <Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]WotNumbers.exe" />
-    <!-- Set correct string value for execute app after install -->
-    <!--CustomAction Id="SetWixShellExecTarget" Property="WixShellExecTarget" Value="WotNumbers.exe" /-->
-    <!-- Set launch application checkbos -->
-    <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
-    <UI>
-      <UIRef Id="WixUI_InstallDir" />
-      <Publish Dialog="ExitDialog"
-				Control="Finish"
-				Event="DoAction"
-				Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
-    </UI>
-    <!-- Installer content -->
-    <Feature Id="ProductFeature" Title="Wot Numbers Setup" Level="1">
-      <ComponentRef Id="ProductComponent_ShortCut"/>
-      <!--<ComponentRef Id="DesktopShortcut"/>-->
-      <ComponentGroupRef Id="ProductComponents" />
-      <ComponentGroupRef Id="ProductComponents_Bin" />
-      <ComponentGroupRef Id="ProductComponents_Lib" />
-      <ComponentGroupRef Id="ProductComponents_Dossier2json" />
-      <ComponentGroupRef Id="ProductComponents_Docs" />
-      <ComponentGroupRef Id="ProductComponents_Docs_Database" />
-    </Feature>
+		<MediaTemplate EmbedCab="yes"/>
+		<!-- WixUI_Advanced, WixUI_FeatureTree, WixUI_InstallDir, WixUI_Minimal, WixUI_Mondo = Everything, where to install, features to install ... -->
+		<!-- Required for install -->
+		<PropertyRef Id="NETFRAMEWORK45" />
+		<Condition Message='This setup requires Microsoft .NET Framework 4.5 package to be installed for this installation to continue.'>
+			<![CDATA[Installed OR NETFRAMEWORK45]]>
+		</Condition>
+		<!-- EULA -->
+		<WixVariable Id="WixUILicenseRtf" Value="WotNumbersLicense.rtf" />
+		<!-- Icon -->
+		<Icon Id="icon.ico" SourceFile="wotnumsetup.ico"/>
+		<Property Id="ARPPRODUCTICON" Value="icon.ico" />
+		<!-- Images -->
+		<WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
+		<WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
+		<!-- UI values -->
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start Wot Numbers now" />
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+		<!-- Custom Install folder -->
+		<Property Id="INSTALLFOLDER">
+			<RegistrySearch Id='WotNumbersRegistry' Type="raw" Root="HKCU" Key="Software\Wot Numbers\Installer" Name="installfolder" />
+		</Property>
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+		<!-- Set initial string value for execute app after install -->
+		<Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]WotNumbers.exe" />
+		<!-- Set correct string value for execute app after install -->
+		<!--CustomAction Id="SetWixShellExecTarget" Property="WixShellExecTarget" Value="WotNumbers.exe" /-->
+		<!-- Set launch application checkbos -->
+		<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+		<UI>
+			<UIRef Id="WixUI_InstallDir" />
+			<Publish Dialog="ExitDialog"
+					  Control="Finish"
+					  Event="DoAction"
+					  Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+		</UI>
+		<!-- Installer content -->
+		<Feature Id="ProductFeature" Title="Wot Numbers Setup" Level="1">
+			<ComponentRef Id="ProductComponent_ShortCut"/>
+			<!--<ComponentRef Id="DesktopShortcut"/>-->
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="ProductComponents_Bin" />
+			<ComponentGroupRef Id="ProductComponents_Lib" />
+			<ComponentRef Id="removeDossier2JsonComponent" />
+			<ComponentGroupRef Id="ProductComponents_Dossier2json" />
+			<ComponentRef Id="removeBattle2JsonComponent" />
+			<ComponentGroupRef Id="ProductComponents_Battle2json" />
+			<ComponentGroupRef Id="ProductComponents_Docs" />
+			<ComponentGroupRef Id="ProductComponents_Docs_Database" />
+		</Feature>
 
-  </Product>
+	</Product>
 
-  <!-- Files folder structure-->
+	<!-- Files folder structure-->
 
-  <Fragment>
-    <Directory Id="TARGETDIR" Name="SourceDir">
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
 
-      <Directory Id="ProgramMenuFolder">
-        <Directory Id="MyProgramFolder" Name="Wot Numbers" />
-      </Directory>
-      <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLFOLDER" Name="Wot Numbers">
-          <Directory Id="INSTALLFOLDER_x64" Name="x64" />
-          <Directory Id="INSTALLFOLDER_x86" Name="x86" />
-          <Directory Id="INSTALLFOLDER_Lib" Name="Lib" />
-          <Directory Id="INSTALLFOLDER_Dossier2json" Name="Dossier2json" />
-          <Directory Id="INSTALLFOLDER_Docs" Name="Docs">
-            <Directory Id="INSTALLFOLDER_Docs_Database" Name="Database" />
-          </Directory>
-        </Directory>
-      </Directory>
+			<Directory Id="ProgramMenuFolder">
+				<Directory Id="MyProgramFolder" Name="Wot Numbers" />
+			</Directory>
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Wot Numbers">
+					<Directory Id="INSTALLFOLDER_x64" Name="x64" />
+					<Directory Id="INSTALLFOLDER_x86" Name="x86" />
+					<Directory Id="INSTALLFOLDER_Lib" Name="Lib" />
+					<Directory Id="INSTALLFOLDER_Dossier2json" Name="Dossier2json" />
+					<Directory Id="INSTALLFOLDER_Battle2json" Name="Battle2json" />
+					<Directory Id="INSTALLFOLDER_Docs" Name="Docs">
+						<Directory Id="INSTALLFOLDER_Docs_Database" Name="Database" />
+					</Directory>
+				</Directory>
+			</Directory>
 
-    </Directory>
-  </Fragment>
+		</Directory>
+	</Fragment>
 
-  <!-- Startmenu Shortcut and install location -->
+	<!-- Startmenu Shortcut and install location -->
 
-  <Fragment>
-    <DirectoryRef Id="MyProgramFolder">
-      <Component Id="ProductComponent_ShortCut" Guid="{03BC264B-1F73-46D3-BE24-54D68C779959}">
-        <Shortcut Id="ProgramProgramFolderShortcut"
-						  Name="Wot Numbers"
-						  Description="Track your WoT progress and performance"
-						  Advertise="no"
-						  WorkingDirectory="INSTALLFOLDER"
-						  Target="[INSTALLFOLDER]WotNumbers.exe"/>
-        <RemoveFolder Id="MyProgramFolder" Directory="MyProgramFolder" On="uninstall"/>
-        <RegistryValue Root="HKCU" Key="Software\Wot Numbers\Installer" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
-        <RegistryValue Root="HKCU" Key="Software\Wot Numbers\Installer" Name="installfolder" Type="string" Value="[INSTALLFOLDER]" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
+	<Fragment>
+		<DirectoryRef Id="MyProgramFolder">
+			<Component Id="ProductComponent_ShortCut" Guid="{03BC264B-1F73-46D3-BE24-54D68C779959}">
+				<Shortcut Id="ProgramProgramFolderShortcut"
+								  Name="Wot Numbers"
+								  Description="Track your WoT progress and performance"
+								  Advertise="no"
+								  WorkingDirectory="INSTALLFOLDER"
+								  Target="[INSTALLFOLDER]WotNumbers.exe"/>
+				<RemoveFolder Id="MyProgramFolder" Directory="MyProgramFolder" On="uninstall"/>
+				<RegistryValue Root="HKCU" Key="Software\Wot Numbers\Installer" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+				<RegistryValue Root="HKCU" Key="Software\Wot Numbers\Installer" Name="installfolder" Type="string" Value="[INSTALLFOLDER]" />
+			</Component>
+		</DirectoryRef>
+	</Fragment>
 
-  <!-- Application -->
+	<!-- Application -->
 
-  <Fragment>
-    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <Component Id="cmpApp" Guid="{C892598C-7A0D-40A2-8E47-E2F57DC8C80A}">
-        <File Id="filApp" KeyPath="yes" Source="..\WinApp\bin\Release\WotNumbers.exe"></File>  <!-- $(var.WinApp.TargetPath) -->
-      </Component>
-      <Component Id="cmpAppConfig" Guid="{9D1B48C0-1D04-4E5E-96B2-21BB75FBA9CE}">
-        <File Id="filAppConfig" Source="..\WinApp\bin\Release\WotNumbers.exe.config" KeyPath="yes"></File>
-      </Component>
-    </ComponentGroup>
-  </Fragment>
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<Component Id="cmpApp" Guid="{C892598C-7A0D-40A2-8E47-E2F57DC8C80A}">
+				<File Id="filApp" KeyPath="yes" Source="..\WinApp\bin\Release\WotNumbers.exe"></File>
+				<!-- $(var.WinApp.TargetPath) -->
+			</Component>
+			<Component Id="cmpAppConfig" Guid="{9D1B48C0-1D04-4E5E-96B2-21BB75FBA9CE}">
+				<File Id="filAppConfig" Source="..\WinApp\bin\Release\WotNumbers.exe.config" KeyPath="yes"></File>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
 
-  <!-- Docs  -->
+	<!-- Docs  -->
 
-  <Fragment>
-    <ComponentGroup Id="ProductComponents_Docs" Directory="INSTALLFOLDER_Docs">
-      <Component Id="cmpmod_BRR" Guid="{4059006D-2378-4AFF-82FC-0194FF3F6AD4}">
-        <File Id="filmod_BRR" Source="..\WinApp\Docs\mod_BRR.pyc"  KeyPath="yes"></File>
-      </Component>
-      <Component Id="cmpHomeViewOld" Guid="{2941A278-8B8D-4CF6-BED2-2EAA8C2F669D}">
-        <File Id="filHomeViewOld" Source="..\WinApp\Docs\Old_Default_Setup.json"  KeyPath="yes"></File>
-      </Component>
-      <Component Id="cmpHomeViewNew" Guid="{FD82AAC1-9B4D-4C95-9E45-10E3CA64DB74}">
-        <File Id="filHomeViewNew" Source="..\WinApp\Docs\New_Default_Setup.json"  KeyPath="yes"></File>
-      </Component>
-    </ComponentGroup>
-  </Fragment>
-
-
-  <!-- Docs Database -->
-
-  <Fragment>
-    <ComponentGroup Id="ProductComponents_Docs_Database" Directory="INSTALLFOLDER_Docs_Database">
-      <Component Id="cmpcreateTableMSSQL" Guid="{A2B13E40-47FB-46D8-83DB-E815374A9F88}">
-        <File Id="filcreateTableMSSQL" Source="..\WinApp\Docs\Database\createTableMSSQL.txt"  KeyPath="yes"></File>
-      </Component>
-      <Component Id="cmpcreateTableSQLite" Guid="{DB01F4A2-4351-43D0-8AC6-AD9C54CF399B}">
-        <File Id="filcreateTableSQLite" Source="..\WinApp\Docs\Database\createTableSQLite.txt"  KeyPath="yes"></File>
-      </Component>
-      <Component Id="cmpinsert" Guid="{93BB94DA-096B-42BC-883B-2B38D08697C7}">
-        <File Id="filinsert" Source="..\WinApp\Docs\Database\insert.txt"  KeyPath="yes"></File>
-      </Component>
-      <Component Id="cmpinsert488" Guid="{BC94636B-7260-4E5E-98E8-C9E07AACB798}">
-        <File Id="filinsert488" Source="..\WinApp\Docs\Database\insert_dbver488.txt"  KeyPath="yes"></File>
-      </Component>
-      <Component Id="cmpAdminDB" Guid="{E3A9263F-EC63-4E01-B68B-24D2F010CE42}">
-        <File Id="filAdminDB" Source="..\WinApp\Docs\Database\Admin.db"  KeyPath="yes"></File>
-      </Component>
-      <Component Id="cmpupgrade" Guid="{42D6E6C4-0AF6-4000-B19F-76D56F5A75F2}">
-        <File Id="filupgrade" Source="..\WinApp\Docs\Database\upgrade.json"  KeyPath="yes"></File>
-      </Component>
-    </ComponentGroup>
-  </Fragment>
-
-  <!-- Bin -->
-
-  <?define BinSource = "..\WinApp\bin\Release"?>
-
-  <Fragment>
-    <DirectoryRef Id="INSTALLFOLDER">
-      <Directory Id="dir14D5FAC7840CD2D7C4ABE5B3FE0CE93F" Name="x64" />
-      <Directory Id="dir333657C7E637B67D52AB9F6D83C62C08" Name="x86" />
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <ComponentGroup Id="ProductComponents_Bin">
-      <Component Id="cmpBase32" Directory="INSTALLFOLDER" Guid="{0038F450-31E8-459B-B435-3C6E363B10E6}">
-        <File Id="filBase32" KeyPath="yes" Source="$(var.BinSource)\Base32.dll" />
-      </Component>
-      <Component Id="cmp39029DA5C28B02EA89473DB34C487883" Directory="INSTALLFOLDER" Guid="{2CC00E41-0F73-465E-A201-6527532C3FE5}">
-        <File Id="fil026FA8F9463E0F87A33F6935627A0225" KeyPath="yes" Source="$(var.BinSource)\EntityFramework.dll" />
-      </Component>
-      <Component Id="cmp252C5D28B89A69DEF6F51D984574CD53" Directory="INSTALLFOLDER" Guid="{CAF2D185-A50E-4504-A153-5BE27AA71E4A}">
-        <File Id="filE574CC6DE15BF84629F79053BFE80CAD" KeyPath="yes" Source="$(var.BinSource)\EntityFramework.SqlServer.dll" />
-      </Component>
-      <Component Id="cmpEDF1E175F1DEB460FC4B3B8A23DAD745" Directory="INSTALLFOLDER" Guid="{EEE7448D-9A6F-4202-93D3-7D2E96745E54}">
-        <File Id="filBA974E27C00AA214538C713096C46448" KeyPath="yes" Source="$(var.BinSource)\EntityFramework.SqlServer.xml" />
-      </Component>
-      <Component Id="cmpB86E04B692F4E61CD5B6C4D4D1B585D9" Directory="INSTALLFOLDER" Guid="{E8B5CF2D-C4EA-43BC-9BA8-EB4DB0A141CE}">
-        <File Id="fil656C5EE261C80086C377DEDEFD30671F" KeyPath="yes" Source="$(var.BinSource)\EntityFramework.xml" />
-      </Component>
-      <Component Id="cmp12064CE4ED97A7C9B2E15FA259C1E0AC" Directory="INSTALLFOLDER" Guid="{64489BED-7447-4248-B41D-A0E89D750818}">
-        <File Id="fil55A0775FBD558B17D42A87F84D949BC6" KeyPath="yes" Source="$(var.BinSource)\IronPython.dll" />
-      </Component>
-      <Component Id="cmpCC422A0439C069B692BD9AE5678E9866" Directory="INSTALLFOLDER" Guid="{46425C6B-DF43-422B-A9FA-96542437D3F2}">
-        <File Id="fil524150F47E5F90DE4ED6D2C72DAEEE8A" KeyPath="yes" Source="$(var.BinSource)\IronPython.Modules.dll" />
-      </Component>
-      <Component Id="cmpBAD1D6DDA30F6DE5F8C2FAB1792602A5" Directory="INSTALLFOLDER" Guid="{803E7F7E-BDD5-47DF-880E-41B19727758D}">
-        <File Id="filB8748801E8FF22C8F44BC8D1C44CC0F7" KeyPath="yes" Source="$(var.BinSource)\IronPython.Modules.xml" />
-      </Component>
-      <Component Id="cmp43284962FF0968F543FF3CB1769A9D46" Directory="INSTALLFOLDER" Guid="{FC50DC10-5AAE-436C-9A8B-D14A463B2D6A}">
-        <File Id="filEFC46EED1E01855DF0868678BB750D27" KeyPath="yes" Source="$(var.BinSource)\IronPython.SQLite.dll" />
-      </Component>
-      <Component Id="cmpFB1FA07B9AC5B9B3EE20D6A16B9F1FA8" Directory="INSTALLFOLDER" Guid="{8F9E4AEC-4792-4964-9B28-CB7A45971ED2}">
-        <File Id="fil9E5E518196CC5695AAF4F42775E02AE6" KeyPath="yes" Source="$(var.BinSource)\IronPython.SQLite.xml" />
-      </Component>
-      <Component Id="cmpA23E6F2930E6CD99CDF6DC9B37F9A1E9" Directory="INSTALLFOLDER" Guid="{34199DAA-D7B1-4371-B6C0-3539B6F64772}">
-        <File Id="fil63B8E2680890D68B1FE299536A42ED8D" KeyPath="yes" Source="$(var.BinSource)\IronPython.Wpf.dll" />
-      </Component>
-      <Component Id="cmpB5D142B705CEA3D45DF07DBBF7B57207" Directory="INSTALLFOLDER" Guid="{CC02BE46-48E9-4C90-92FF-C3B0A7C33039}">
-        <File Id="filDABCB5CB10F79030E23D1F9CF34A4BC9" KeyPath="yes" Source="$(var.BinSource)\IronPython.Wpf.xml" />
-      </Component>
-      <Component Id="cmp3A49B8E51A59D47EF8932A589347AC64" Directory="INSTALLFOLDER" Guid="{2CDAC0DF-0132-412C-A398-1847ED358949}">
-        <File Id="filD3975B84C242B8A2E0071B8C52FB2E6A" KeyPath="yes" Source="$(var.BinSource)\IronPython.xml" />
-      </Component>
-      <Component Id="cmp7CC7489EC2A48E137F69DA29524EE38B" Directory="INSTALLFOLDER" Guid="{D7C4BAE4-C26A-45C4-B178-2659F0BB733C}">
-        <File Id="fil1E4CFA009FF3F86CF63E853CA306C75B" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Dynamic.dll" />
-      </Component>
-      <Component Id="cmpE7446C97687A08DFB1111FBA2F145980" Directory="INSTALLFOLDER" Guid="{A704C9BF-77C1-4168-9BAB-7883DDA47D80}">
-        <File Id="filE26B5A7D8E0F2612D937943B85AB5D3C" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Dynamic.xml" />
-      </Component>
-      <Component Id="cmpA7AACFA38CB5C95BA9750BA57A7143F4" Directory="INSTALLFOLDER" Guid="{C7510957-069A-403D-B2D6-E50335002691}">
-        <File Id="fil19E03100E6442E27D7AF4E247F92D7C0" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Scripting.dll" />
-      </Component>
-      <Component Id="cmp0F00EDC88EEDDFFB7A685419AACB1BC5" Directory="INSTALLFOLDER" Guid="{FC2BC3F8-97CF-4E1F-9CB3-14294F64E2EA}">
-        <File Id="fil3627D6B0A33FF4F70A15ADE581CAAAFF" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Scripting.Metadata.dll" />
-      </Component>
-      <Component Id="cmp6B2F4825E60968E8745D73F62C2A2617" Directory="INSTALLFOLDER" Guid="{35FC449D-EC07-464F-A178-E9CFE5184BEC}">
-        <File Id="fil68A84737043172F53D2736E9574C5C2E" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Scripting.Metadata.xml" />
-      </Component>
-      <Component Id="cmpC3CFA5AD8C8282BB84ACE8CBFF6279DA" Directory="INSTALLFOLDER" Guid="{B9E56FCD-A8F9-433A-92B9-0B3A9AB7E3CD}">
-        <File Id="filB6385BA25C797A5F897976C65146D845" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Scripting.xml" />
-      </Component>
-      <Component Id="cmp3AAC4917373A2E3243AEC1EFB422E757" Directory="INSTALLFOLDER" Guid="{1BDE573D-3A54-4B52-A10B-385BA688E135}">
-        <File Id="fil3712AE3EEDCBA6897B067E00FFA53510" KeyPath="yes" Source="$(var.BinSource)\Newtonsoft.Json.dll" />
-      </Component>
-      <Component Id="cmpEC78F3B7FB6B3BDADD56AC393D28D607" Directory="INSTALLFOLDER" Guid="{57AFE458-E543-448C-8343-153D86380A0C}">
-        <File Id="filC5DBC9BC77B887A43154F71FB6BAFC3A" KeyPath="yes" Source="$(var.BinSource)\Newtonsoft.Json.xml" />
-      </Component>
-      <Component Id="cmp52EB323BCEBC7915720D89D536BF61B5" Directory="INSTALLFOLDER" Guid="{32492100-A642-4A1C-86C2-E6C72848FEF4}">
-        <File Id="fil86C5CD1E4F2C918F8881AA564619AEF7" KeyPath="yes" Source="$(var.BinSource)\System.Data.SQLite.dll" />
-      </Component>
-      <Component Id="cmp0598E098E2F0E868F8F1C94926817E4E" Directory="INSTALLFOLDER" Guid="{B3560308-5138-40D1-8418-2E0A3241A2F1}">
-        <File Id="filD8D54D2E1F45F55F6BC57D685503C857" KeyPath="yes" Source="$(var.BinSource)\System.Data.SQLite.EF6.dll" />
-      </Component>
-      <Component Id="cmpFA2518312087D820AAC9F929ECA70DED" Directory="INSTALLFOLDER" Guid="{F67F96BD-9EAF-4923-805C-8F4B2E4D7DFA}">
-        <File Id="fil247D62A4CE8817AAAAEF7E52E96B2A54" KeyPath="yes" Source="$(var.BinSource)\System.Data.SQLite.Linq.dll" />
-      </Component>
-      <Component Id="cmpF7C4BFAE4A90C5C03E301D2654DC1B65" Directory="INSTALLFOLDER" Guid="{75EC9B3B-E5D9-47B7-BA38-148EBF978382}">
-        <File Id="fil896705EC482332B526E5789CF769B981" KeyPath="yes" Source="$(var.BinSource)\System.Data.SQLite.xml" />
-      </Component>
-      <Component Id="cmpCF5139C84EC3D067110BB10F9EF015CA" Directory="dir14D5FAC7840CD2D7C4ABE5B3FE0CE93F" Guid="{026DBA4F-5874-4AD8-9D03-D791E0B7A237}">
-        <File Id="fil1B11A24B32B565BB383AE8CF52F80A92" KeyPath="yes" Source="$(var.BinSource)\x64\SQLite.Interop.dll" />
-      </Component>
-      <Component Id="cmpB1151D54BFE2511483AC48AC0AC82352" Directory="dir333657C7E637B67D52AB9F6D83C62C08" Guid="{975FF102-904C-4CF3-820B-F9D6099ADA7F}">
-        <File Id="fil3424BAD48E96451636FBDE97C2A3DB16" KeyPath="yes" Source="$(var.BinSource)\x86\SQLite.Interop.dll" />
-      </Component>
-    </ComponentGroup>
-  </Fragment>
-
-  <!-- Dossier2json -->
-
-  <?define D2jSource = "..\WinApp\bin\Release\Dossier2json"?>
-
-  <Fragment>
-    <DirectoryRef Id="INSTALLFOLDER_Dossier2json" />
-  </Fragment>
-  <Fragment>
-    <ComponentGroup Id="ProductComponents_Dossier2json">
-
-      <!-- Battle & Dossier parsers -->
-      <Component Id="cmp9118B4EF27BCC49090F03ABFEB1661DC" Directory="INSTALLFOLDER_Dossier2json" Guid="{57D92770-C430-4636-963B-A3217901533C}">
-        <File Id="fil65135394BD3BB3D345ACBA402F678618" KeyPath="yes" Source="$(var.D2jSource)\wotdc2j.py" />
-      </Component>
-      <Component Id="cmpwotbr2j" Directory="INSTALLFOLDER_Dossier2json" Guid="{07EF3C67-0722-46A1-9405-7FB2ED97576F}">
-        <File Id="filwotbr2j" KeyPath="yes" Source="$(var.D2jSource)\wotbr2j.py" />
-      </Component>
-      
-      <!-- Battle classes -->
-      <Component Id="cmp_battle_results_common" Directory="INSTALLFOLDER_Dossier2json" Guid="{499C9315-F235-490D-A659-5983B3CED27E}">
-        <File Id="fil_battle_results_common" KeyPath="yes" Source="$(var.D2jSource)\battle_results_common.py" />
-      </Component>
-      <Component Id="cmp_battle_results_constants" Directory="INSTALLFOLDER_Dossier2json" Guid="{E7E75DED-FE8D-4BF4-9CA4-67721CF9077B}">
-        <File Id="fil_battle_results_constants" KeyPath="yes" Source="$(var.D2jSource)\battle_results_constants.py" />
-      </Component>
-      <Component Id="cmp_battle_results_event" Directory="INSTALLFOLDER_Dossier2json" Guid="{9172E6DC-D0AB-4E24-9E9A-8FFE7D20FDA8}">
-        <File Id="fil_battle_results_event" KeyPath="yes" Source="$(var.D2jSource)\battle_results_event.py" />
-      </Component>
-      <Component Id="cmp_battle_results_frontline" Directory="INSTALLFOLDER_Dossier2json" Guid="{8D706356-5FFF-4D51-AAC3-15A787227A23}">
-        <File Id="fil_battle_results_frontline" KeyPath="yes" Source="$(var.D2jSource)\battle_results_frontline.py" />
-      </Component>
-      <Component Id="cmp_battle_results_random" Directory="INSTALLFOLDER_Dossier2json" Guid="{3B82BA11-561C-448E-BBDF-25785485BAEE}">
-        <File Id="fil_battle_results_random" KeyPath="yes" Source="$(var.D2jSource)\battle_results_random.py" />
-      </Component>
-      <Component Id="cmp_battle_results_ranked" Directory="INSTALLFOLDER_Dossier2json" Guid="{7D043DA7-3EFD-4769-8BA6-0CEB10672652}">
-        <File Id="fil_battle_results_ranked" KeyPath="yes" Source="$(var.D2jSource)\battle_results_ranked.py" />
-      </Component>
-      <Component Id="cmp_DictPackers" Directory="INSTALLFOLDER_Dossier2json" Guid="{666D608A-3F02-4694-A7CF-7810503157A1}">
-        <File Id="fil_DictPackers" KeyPath="yes" Source="$(var.D2jSource)\DictPackers.py" />
-      </Component>
-      <Component Id="cmp_enumerations" Directory="INSTALLFOLDER_Dossier2json" Guid="{9D05D33F-CFF2-443E-95F0-D0B5637EF508}">
-        <File Id="fil_enumerations" KeyPath="yes" Source="$(var.D2jSource)\enumerations.py" />
-      </Component>
-      
-      <!-- Dossier Structs -->
-      <Component Id="cmp96ED4D657BF7F033C19C3D7987CC5A69" Directory="INSTALLFOLDER_Dossier2json" Guid="{41285207-7044-4E56-92D1-165F81FD2618}">
-        <File Id="filFEBE5B17926BD73FF7965E255F11160E" KeyPath="yes" Source="$(var.D2jSource)\structures_77.json" />
-      </Component>
-      <Component Id="cmp8DB446119A3BC32F2FF4D0FC54F0F51A" Directory="INSTALLFOLDER_Dossier2json" Guid="{C922F1E5-131F-474B-AEA0-61E8055944E0}">
-        <File Id="fil16B05629FF023AA4E53B479AD85706F2" KeyPath="yes" Source="$(var.D2jSource)\structures_81.json" />
-      </Component>
-      <Component Id="cmpstructures85" Directory="INSTALLFOLDER_Dossier2json" Guid="{5ADC5A31-F916-4D6A-B45A-0C0360B3B727}">
-        <File Id="filstructures85" KeyPath="yes" Source="$(var.D2jSource)\structures_85.json" />
-      </Component>
-      <Component Id="cmpstructures87" Directory="INSTALLFOLDER_Dossier2json" Guid="{837B30CE-84DA-4EE8-85F4-D06499EE1F04}">
-        <File Id="filstructures87" KeyPath="yes" Source="$(var.D2jSource)\structures_87.json" />
-      </Component>
-      <Component Id="cmpstructures88" Directory="INSTALLFOLDER_Dossier2json" Guid="{9E8A251C-56A8-4872-929E-46A2B506A30E}">
-        <File Id="filstructures88" KeyPath="yes" Source="$(var.D2jSource)\structures_88.json" />
-      </Component>
-      <Component Id="cmpstructures89" Directory="INSTALLFOLDER_Dossier2json" Guid="{29321199-BC72-4DED-999D-78ADA45FB363}">
-        <File Id="filstructures89" KeyPath="yes" Source="$(var.D2jSource)\structures_89.json" />
-      </Component>
-      <Component Id="cmpstructures92" Directory="INSTALLFOLDER_Dossier2json" Guid="{1063934C-AC4F-4E0E-89DE-73032CD53467}">
-        <File Id="filstructures92" KeyPath="yes" Source="$(var.D2jSource)\structures_92.json" />
-      </Component>
-      <Component Id="cmpstructures94" Directory="INSTALLFOLDER_Dossier2json" Guid="{64541E5F-1CDA-4370-B1D8-216FFFDFB649}">
-        <File Id="filstructures94" KeyPath="yes" Source="$(var.D2jSource)\structures_94.json" />
-      </Component>
-      <Component Id="cmpstructures95" Directory="INSTALLFOLDER_Dossier2json" Guid="{FDE6E8CE-D65D-405C-A810-43B6E73E25D1}">
-        <File Id="filstructures95" KeyPath="yes" Source="$(var.D2jSource)\structures_95.json" />
-      </Component>
-      <Component Id="cmpstructures96" Directory="INSTALLFOLDER_Dossier2json" Guid="{4D4F229D-5F7D-40D0-9D15-19599B60F6DA}">
-        <File Id="filstructures96" KeyPath="yes" Source="$(var.D2jSource)\structures_96.json" />
-      </Component>
-      <Component Id="cmpstructures97" Directory="INSTALLFOLDER_Dossier2json" Guid="{207F6075-D974-458B-83EE-D9471D0D52E2}">
-        <File Id="filstructures97" KeyPath="yes" Source="$(var.D2jSource)\structures_97.json" />
-      </Component>
-      <Component Id="cmpstructures98" Directory="INSTALLFOLDER_Dossier2json" Guid="{2FF208C2-EB5E-4B66-A9CE-FE8E945DE2B4}">
-        <File Id="filstructures98" KeyPath="yes" Source="$(var.D2jSource)\structures_98.json" />
-      </Component>
-      <Component Id="cmpstructures99" Directory="INSTALLFOLDER_Dossier2json" Guid="{74B38BDC-AD1F-4DF1-BCCA-F1AC6E11F446}">
-        <File Id="filstructures99" KeyPath="yes" Source="$(var.D2jSource)\structures_99.json" />
-      </Component>
-      <Component Id="cmpstructures101" Directory="INSTALLFOLDER_Dossier2json" Guid="{2EB078AC-87AC-42A6-A49F-B471E8FAC50E}">
-        <File Id="filstructures101" KeyPath="yes" Source="$(var.D2jSource)\structures_101.json" />
-      </Component>
-      <Component Id="cmpstructures102" Directory="INSTALLFOLDER_Dossier2json" Guid="{AD373D05-4D99-4169-B340-6F9FF7CDC889}">
-        <File Id="filstructures102" KeyPath="yes" Source="$(var.D2jSource)\structures_102.json" />
-      </Component>
-      <Component Id="cmpstructures103" Directory="INSTALLFOLDER_Dossier2json" Guid="{8CF03748-CDA1-49FB-90DC-F68F06E0A3B0}">
-        <File Id="filstructures103" KeyPath="yes" Source="$(var.D2jSource)\structures_103.json" />
-      </Component>
-      <Component Id="cmpstructures104" Directory="INSTALLFOLDER_Dossier2json" Guid="{1616C6E8-8610-4E21-A6B4-B0F1A1D1146D}">
-        <File Id="filstructures104" KeyPath="yes" Source="$(var.D2jSource)\structures_104.json" />
-      </Component>
-      <Component Id="cmpstructures105" Directory="INSTALLFOLDER_Dossier2json" Guid="{F1574D68-3C87-4583-8EA4-203949D52BDD}">
-        <File Id="filstructures105" KeyPath="yes" Source="$(var.D2jSource)\structures_105.json" />
-      </Component>
-      <Component Id="cmpstructures106" Directory="INSTALLFOLDER_Dossier2json" Guid="{42F65FC9-4304-4FF6-BC73-66ABA8638840}">
-        <File Id="filstructures106" KeyPath="yes" Source="$(var.D2jSource)\structures_106.json" />
-      </Component>
-
-    </ComponentGroup>
-  </Fragment>
+	<Fragment>
+		<ComponentGroup Id="ProductComponents_Docs" Directory="INSTALLFOLDER_Docs">
+			<Component Id="cmpmod_BRR" Guid="{4059006D-2378-4AFF-82FC-0194FF3F6AD4}">
+				<File Id="filmod_BRR" Source="..\WinApp\Docs\mod_BRR.pyc"  KeyPath="yes"></File>
+			</Component>
+			<Component Id="cmpHomeViewOld" Guid="{2941A278-8B8D-4CF6-BED2-2EAA8C2F669D}">
+				<File Id="filHomeViewOld" Source="..\WinApp\Docs\Old_Default_Setup.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Id="cmpHomeViewNew" Guid="{FD82AAC1-9B4D-4C95-9E45-10E3CA64DB74}">
+				<File Id="filHomeViewNew" Source="..\WinApp\Docs\New_Default_Setup.json"  KeyPath="yes"></File>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
 
 
-  <!-- Lib - Python -->
+	<!-- Docs Database -->
 
-  <?define LibSource = "..\WinApp\PythonLib"?>
+	<Fragment>
+		<ComponentGroup Id="ProductComponents_Docs_Database" Directory="INSTALLFOLDER_Docs_Database">
+			<Component Id="cmpcreateTableMSSQL" Guid="{A2B13E40-47FB-46D8-83DB-E815374A9F88}">
+				<File Id="filcreateTableMSSQL" Source="..\WinApp\Docs\Database\createTableMSSQL.txt"  KeyPath="yes"></File>
+			</Component>
+			<Component Id="cmpcreateTableSQLite" Guid="{DB01F4A2-4351-43D0-8AC6-AD9C54CF399B}">
+				<File Id="filcreateTableSQLite" Source="..\WinApp\Docs\Database\createTableSQLite.txt"  KeyPath="yes"></File>
+			</Component>
+			<Component Id="cmpinsert" Guid="{93BB94DA-096B-42BC-883B-2B38D08697C7}">
+				<File Id="filinsert" Source="..\WinApp\Docs\Database\insert.txt"  KeyPath="yes"></File>
+			</Component>
+			<Component Id="cmpinsert488" Guid="{BC94636B-7260-4E5E-98E8-C9E07AACB798}">
+				<File Id="filinsert488" Source="..\WinApp\Docs\Database\insert_dbver488.txt"  KeyPath="yes"></File>
+			</Component>
+			<Component Id="cmpAdminDB" Guid="{E3A9263F-EC63-4E01-B68B-24D2F010CE42}">
+				<File Id="filAdminDB" Source="..\WinApp\Docs\Database\Admin.db"  KeyPath="yes"></File>
+			</Component>
+			<Component Id="cmpupgrade" Guid="{42D6E6C4-0AF6-4000-B19F-76D56F5A75F2}">
+				<File Id="filupgrade" Source="..\WinApp\Docs\Database\upgrade.json"  KeyPath="yes"></File>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
 
-  <Fragment>
-    <DirectoryRef Id="INSTALLFOLDER_Lib">
-      <Directory Id="dirPythonImportlib" Name="importlib" />
-      <Directory Id="dirPythonEnum" Name="enum" />
-      <Directory Id="dirPythonJson" Name="json" />
-    </DirectoryRef>
-  </Fragment>
+	<!-- Bin -->
 
-  <Fragment>
-    <ComponentGroup Id="ProductComponents_Lib">
+	<?define BinSource = "..\WinApp\bin\Release"?>
 
-      <Component Id="cmp6A4F5D0D9049F8BE7FC1711861F4D8B4" Directory="dirPythonImportlib" Guid="{987C4F6A-9668-4B1C-8C16-D5E16E3B17A3}">
-        <File Id="fil7010E2F892346ED2311A72799BDCC9F1" KeyPath="yes" Source="$(var.LibSource)\importlib\__init__.py" />
-      </Component>
+	<Fragment>
+		<DirectoryRef Id="INSTALLFOLDER">
+			<Directory Id="dir14D5FAC7840CD2D7C4ABE5B3FE0CE93F" Name="x64" />
+			<Directory Id="dir333657C7E637B67D52AB9F6D83C62C08" Name="x86" />
+		</DirectoryRef>
+	</Fragment>
+	<Fragment>
+		<ComponentGroup Id="ProductComponents_Bin">
+			<Component Id="cmpBase32" Directory="INSTALLFOLDER" Guid="{0038F450-31E8-459B-B435-3C6E363B10E6}">
+				<File Id="filBase32" KeyPath="yes" Source="$(var.BinSource)\Base32.dll" />
+			</Component>
+			<Component Id="cmp39029DA5C28B02EA89473DB34C487883" Directory="INSTALLFOLDER" Guid="{2CC00E41-0F73-465E-A201-6527532C3FE5}">
+				<File Id="fil026FA8F9463E0F87A33F6935627A0225" KeyPath="yes" Source="$(var.BinSource)\EntityFramework.dll" />
+			</Component>
+			<Component Id="cmp252C5D28B89A69DEF6F51D984574CD53" Directory="INSTALLFOLDER" Guid="{CAF2D185-A50E-4504-A153-5BE27AA71E4A}">
+				<File Id="filE574CC6DE15BF84629F79053BFE80CAD" KeyPath="yes" Source="$(var.BinSource)\EntityFramework.SqlServer.dll" />
+			</Component>
+			<Component Id="cmpEDF1E175F1DEB460FC4B3B8A23DAD745" Directory="INSTALLFOLDER" Guid="{EEE7448D-9A6F-4202-93D3-7D2E96745E54}">
+				<File Id="filBA974E27C00AA214538C713096C46448" KeyPath="yes" Source="$(var.BinSource)\EntityFramework.SqlServer.xml" />
+			</Component>
+			<Component Id="cmpB86E04B692F4E61CD5B6C4D4D1B585D9" Directory="INSTALLFOLDER" Guid="{E8B5CF2D-C4EA-43BC-9BA8-EB4DB0A141CE}">
+				<File Id="fil656C5EE261C80086C377DEDEFD30671F" KeyPath="yes" Source="$(var.BinSource)\EntityFramework.xml" />
+			</Component>
+			<Component Id="cmp12064CE4ED97A7C9B2E15FA259C1E0AC" Directory="INSTALLFOLDER" Guid="{64489BED-7447-4248-B41D-A0E89D750818}">
+				<File Id="fil55A0775FBD558B17D42A87F84D949BC6" KeyPath="yes" Source="$(var.BinSource)\IronPython.dll" />
+			</Component>
+			<Component Id="cmpCC422A0439C069B692BD9AE5678E9866" Directory="INSTALLFOLDER" Guid="{46425C6B-DF43-422B-A9FA-96542437D3F2}">
+				<File Id="fil524150F47E5F90DE4ED6D2C72DAEEE8A" KeyPath="yes" Source="$(var.BinSource)\IronPython.Modules.dll" />
+			</Component>
+			<Component Id="cmpBAD1D6DDA30F6DE5F8C2FAB1792602A5" Directory="INSTALLFOLDER" Guid="{803E7F7E-BDD5-47DF-880E-41B19727758D}">
+				<File Id="filB8748801E8FF22C8F44BC8D1C44CC0F7" KeyPath="yes" Source="$(var.BinSource)\IronPython.Modules.xml" />
+			</Component>
+			<Component Id="cmp43284962FF0968F543FF3CB1769A9D46" Directory="INSTALLFOLDER" Guid="{FC50DC10-5AAE-436C-9A8B-D14A463B2D6A}">
+				<File Id="filEFC46EED1E01855DF0868678BB750D27" KeyPath="yes" Source="$(var.BinSource)\IronPython.SQLite.dll" />
+			</Component>
+			<Component Id="cmpFB1FA07B9AC5B9B3EE20D6A16B9F1FA8" Directory="INSTALLFOLDER" Guid="{8F9E4AEC-4792-4964-9B28-CB7A45971ED2}">
+				<File Id="fil9E5E518196CC5695AAF4F42775E02AE6" KeyPath="yes" Source="$(var.BinSource)\IronPython.SQLite.xml" />
+			</Component>
+			<Component Id="cmpA23E6F2930E6CD99CDF6DC9B37F9A1E9" Directory="INSTALLFOLDER" Guid="{34199DAA-D7B1-4371-B6C0-3539B6F64772}">
+				<File Id="fil63B8E2680890D68B1FE299536A42ED8D" KeyPath="yes" Source="$(var.BinSource)\IronPython.Wpf.dll" />
+			</Component>
+			<Component Id="cmpB5D142B705CEA3D45DF07DBBF7B57207" Directory="INSTALLFOLDER" Guid="{CC02BE46-48E9-4C90-92FF-C3B0A7C33039}">
+				<File Id="filDABCB5CB10F79030E23D1F9CF34A4BC9" KeyPath="yes" Source="$(var.BinSource)\IronPython.Wpf.xml" />
+			</Component>
+			<Component Id="cmp3A49B8E51A59D47EF8932A589347AC64" Directory="INSTALLFOLDER" Guid="{2CDAC0DF-0132-412C-A398-1847ED358949}">
+				<File Id="filD3975B84C242B8A2E0071B8C52FB2E6A" KeyPath="yes" Source="$(var.BinSource)\IronPython.xml" />
+			</Component>
+			<Component Id="cmp7CC7489EC2A48E137F69DA29524EE38B" Directory="INSTALLFOLDER" Guid="{D7C4BAE4-C26A-45C4-B178-2659F0BB733C}">
+				<File Id="fil1E4CFA009FF3F86CF63E853CA306C75B" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Dynamic.dll" />
+			</Component>
+			<Component Id="cmpE7446C97687A08DFB1111FBA2F145980" Directory="INSTALLFOLDER" Guid="{A704C9BF-77C1-4168-9BAB-7883DDA47D80}">
+				<File Id="filE26B5A7D8E0F2612D937943B85AB5D3C" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Dynamic.xml" />
+			</Component>
+			<Component Id="cmpA7AACFA38CB5C95BA9750BA57A7143F4" Directory="INSTALLFOLDER" Guid="{C7510957-069A-403D-B2D6-E50335002691}">
+				<File Id="fil19E03100E6442E27D7AF4E247F92D7C0" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Scripting.dll" />
+			</Component>
+			<Component Id="cmp0F00EDC88EEDDFFB7A685419AACB1BC5" Directory="INSTALLFOLDER" Guid="{FC2BC3F8-97CF-4E1F-9CB3-14294F64E2EA}">
+				<File Id="fil3627D6B0A33FF4F70A15ADE581CAAAFF" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Scripting.Metadata.dll" />
+			</Component>
+			<Component Id="cmp6B2F4825E60968E8745D73F62C2A2617" Directory="INSTALLFOLDER" Guid="{35FC449D-EC07-464F-A178-E9CFE5184BEC}">
+				<File Id="fil68A84737043172F53D2736E9574C5C2E" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Scripting.Metadata.xml" />
+			</Component>
+			<Component Id="cmpC3CFA5AD8C8282BB84ACE8CBFF6279DA" Directory="INSTALLFOLDER" Guid="{B9E56FCD-A8F9-433A-92B9-0B3A9AB7E3CD}">
+				<File Id="filB6385BA25C797A5F897976C65146D845" KeyPath="yes" Source="$(var.BinSource)\Microsoft.Scripting.xml" />
+			</Component>
+			<Component Id="cmp3AAC4917373A2E3243AEC1EFB422E757" Directory="INSTALLFOLDER" Guid="{1BDE573D-3A54-4B52-A10B-385BA688E135}">
+				<File Id="fil3712AE3EEDCBA6897B067E00FFA53510" KeyPath="yes" Source="$(var.BinSource)\Newtonsoft.Json.dll" />
+			</Component>
+			<Component Id="cmpEC78F3B7FB6B3BDADD56AC393D28D607" Directory="INSTALLFOLDER" Guid="{57AFE458-E543-448C-8343-153D86380A0C}">
+				<File Id="filC5DBC9BC77B887A43154F71FB6BAFC3A" KeyPath="yes" Source="$(var.BinSource)\Newtonsoft.Json.xml" />
+			</Component>
+			<Component Id="cmp52EB323BCEBC7915720D89D536BF61B5" Directory="INSTALLFOLDER" Guid="{32492100-A642-4A1C-86C2-E6C72848FEF4}">
+				<File Id="fil86C5CD1E4F2C918F8881AA564619AEF7" KeyPath="yes" Source="$(var.BinSource)\System.Data.SQLite.dll" />
+			</Component>
+			<Component Id="cmp0598E098E2F0E868F8F1C94926817E4E" Directory="INSTALLFOLDER" Guid="{B3560308-5138-40D1-8418-2E0A3241A2F1}">
+				<File Id="filD8D54D2E1F45F55F6BC57D685503C857" KeyPath="yes" Source="$(var.BinSource)\System.Data.SQLite.EF6.dll" />
+			</Component>
+			<Component Id="cmpFA2518312087D820AAC9F929ECA70DED" Directory="INSTALLFOLDER" Guid="{F67F96BD-9EAF-4923-805C-8F4B2E4D7DFA}">
+				<File Id="fil247D62A4CE8817AAAAEF7E52E96B2A54" KeyPath="yes" Source="$(var.BinSource)\System.Data.SQLite.Linq.dll" />
+			</Component>
+			<Component Id="cmpF7C4BFAE4A90C5C03E301D2654DC1B65" Directory="INSTALLFOLDER" Guid="{75EC9B3B-E5D9-47B7-BA38-148EBF978382}">
+				<File Id="fil896705EC482332B526E5789CF769B981" KeyPath="yes" Source="$(var.BinSource)\System.Data.SQLite.xml" />
+			</Component>
+			<Component Id="cmpCF5139C84EC3D067110BB10F9EF015CA" Directory="dir14D5FAC7840CD2D7C4ABE5B3FE0CE93F" Guid="{026DBA4F-5874-4AD8-9D03-D791E0B7A237}">
+				<File Id="fil1B11A24B32B565BB383AE8CF52F80A92" KeyPath="yes" Source="$(var.BinSource)\x64\SQLite.Interop.dll" />
+			</Component>
+			<Component Id="cmpB1151D54BFE2511483AC48AC0AC82352" Directory="dir333657C7E637B67D52AB9F6D83C62C08" Guid="{975FF102-904C-4CF3-820B-F9D6099ADA7F}">
+				<File Id="fil3424BAD48E96451636FBDE97C2A3DB16" KeyPath="yes" Source="$(var.BinSource)\x86\SQLite.Interop.dll" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
 
-      <Component Id="cmp_python_enum" Directory="dirPythonEnum" Guid="{7168EA90-E76A-4F87-8926-2F685BCB124B}">
-        <File Id="fil_python_enum" KeyPath="yes" Source="$(var.LibSource)\enum\__init__.py" />
-      </Component>
+	<!-- Dossier2json -->
 
-      <Component Id="cmpB20DAB89CAB0EBF08847C869670B3C62" Directory="dirPythonJson" Guid="{8B483B92-F60C-4B48-B637-2858BD3BF85D}">
-        <File Id="fil20E2DF1931C7A3414FD11DB728DF7CBF" KeyPath="yes" Source="$(var.LibSource)\json\decoder.py" />
-      </Component>
-      <Component Id="cmp65E00F3DA72100C0DCE1B4499B0CCA2F" Directory="dirPythonJson" Guid="{28E2CE4D-B5DC-410D-AFF6-BDACFE55E531}">
-        <File Id="fil1B74DB3DC6DD6F2627F2F881CD4FC1EB" KeyPath="yes" Source="$(var.LibSource)\json\encoder.py" />
-      </Component>
-      <Component Id="cmp376AF44462AB683D0EDF3FC5E3A159A8" Directory="dirPythonJson" Guid="{563F8537-9677-4325-97F2-FC3300B82EF1}">
-        <File Id="fil2AE0EA9F7D20C0494281FBBA0DBF0A26" KeyPath="yes" Source="$(var.LibSource)\json\scanner.py" />
-      </Component>
-      <Component Id="cmp2E4C0FD5B65F342B78F7EB251E3ED00C" Directory="dirPythonJson" Guid="{A880204E-87C5-400B-9121-9E41C5B1C887}">
-        <File Id="fil0B4E6A5604AE3F6FDEB501FE54828946" KeyPath="yes" Source="$(var.LibSource)\json\tool.py" />
-      </Component>
-      <Component Id="cmp07484846DB15D8CC049B2E7BDEDFCE34" Directory="dirPythonJson" Guid="{14B19140-7F74-4670-A952-8B528E31BE93}">
-        <File Id="filB65CCC39A6A371E3EFFB1136240D133F" KeyPath="yes" Source="$(var.LibSource)\json\__init__.py" />
-      </Component>
+	<?define D2jSource = "..\WinApp\bin\Release\Dossier2json"?>
 
-      <Component Id="cmp44772524DA9C53AA7E9CE3D8344DC293" Directory="INSTALLFOLDER_Lib" Guid="{804FB7F1-1D1D-4A7F-A733-0AFEE5DEF916}">
-        <File Id="fil3945705CD951C5B04596C7384F4278DF" KeyPath="yes" Source="$(var.LibSource)\_abcoll.py" />
-      </Component>
-      <Component Id="cmpBC7B97CB08E19570F504F23CAD3A28CB" Directory="INSTALLFOLDER_Lib" Guid="{67B3547C-FE7A-4C31-8C2A-8F8BD8427F00}">
-        <File Id="fil5F8D6BD5C36D238FC19DB5826A6B3515" KeyPath="yes" Source="$(var.LibSource)\_weakrefset.py" />
-      </Component>
-      <Component Id="cmpD0A9FD6F0927C3757F0DF8B9B9F92D8D" Directory="INSTALLFOLDER_Lib" Guid="{F9D3366A-8170-4132-B852-4DBAB20B6991}">
-        <File Id="filE9FA1B0EC204931C8935D59F45933406" KeyPath="yes" Source="$(var.LibSource)\abc.py" />
-      </Component>
-      <Component Id="cmpA2ADEDC1912EADA35FFF924819F9C2B7" Directory="INSTALLFOLDER_Lib" Guid="{E7877011-ED0F-4269-BCBD-3FA3A46FE063}">
-        <File Id="filCA97FC63CE0904F18BD05373E995F8E9" KeyPath="yes" Source="$(var.LibSource)\base64.py" />
-      </Component>
-      <Component Id="cmp316FAD2D18DEAAE755E5931F66F511CB" Directory="INSTALLFOLDER_Lib" Guid="{85E978B8-009D-4517-9F6D-78B105DDC554}">
-        <File Id="filE41D5F4D5A00E3E1B9D87BBE1A130912" KeyPath="yes" Source="$(var.LibSource)\collections.py" />
-      </Component>
-      <Component Id="cmp1AD0D395AE646750D1351838D815B20E" Directory="INSTALLFOLDER_Lib" Guid="{926BC5C6-9AB3-40B8-89BC-F9E2300ACD73}">
-        <File Id="fil93BF44268C6797CED7C1C5CBD59164D7" KeyPath="yes" Source="$(var.LibSource)\copy.py" />
-      </Component>
-      <Component Id="cmp0EE0660318D37D415CB20F7582FAD7E4" Directory="INSTALLFOLDER_Lib" Guid="{69BA556B-922F-4559-9725-3B31CAF74732}">
-        <File Id="fil3CFC209996AA4DCA073619937F3D8808" KeyPath="yes" Source="$(var.LibSource)\fnmatch.py" />
-      </Component>
-      <Component Id="cmp6021CB00F321E03BE5681FC72A3A5577" Directory="INSTALLFOLDER_Lib" Guid="{CF4F7C74-D449-4624-9692-0C15ACF4294D}">
-        <File Id="filC07596C6A516AEC87B5019C1775E19E6" KeyPath="yes" Source="$(var.LibSource)\genericpath.py" />
-      </Component>
-      <Component Id="cmpC9EEC7C8343AF41EA870F92C77C91E4A" Directory="INSTALLFOLDER_Lib" Guid="{3C85B4BD-98EF-4EFD-94D0-CDF6DD2EF7CA}">
-        <File Id="fil53492A28174E7F02E7438EC8E56AD873" KeyPath="yes" Source="$(var.LibSource)\heapq.py" />
-      </Component>
-      <Component Id="cmpC5257F6DEC671AB908255860F6AFB090" Directory="INSTALLFOLDER_Lib" Guid="{18677FB6-9842-4AA7-9A7E-0BF3316E937E}">
-        <File Id="fil0050016C5153B38CCE8BC5A6C896BBA1" KeyPath="yes" Source="$(var.LibSource)\keyword.py" />
-      </Component>
-      <Component Id="cmp8EBCB5948D0DEE111BA9D86637962290" Directory="INSTALLFOLDER_Lib" Guid="{FEABC2C3-035E-43FD-BCCD-5F937BE56276}">
-        <File Id="fil9F768905854DAE5942300642198010FA" KeyPath="yes" Source="$(var.LibSource)\linecache.py" />
-      </Component>
-      <Component Id="cmpA6A5235227026171BE5276D4CFA4B6F0" Directory="INSTALLFOLDER_Lib" Guid="{5FFAE470-11FB-475E-9402-6EEC92A4F77B}">
-        <File Id="fil75E1D0BB94AA6382C3BDD608FDA80C6E" KeyPath="yes" Source="$(var.LibSource)\ntpath.py" />
-      </Component>
-      <Component Id="cmp459D3FE5BEBCA2AE11040F04E03063D7" Directory="INSTALLFOLDER_Lib" Guid="{4FC6074C-E011-4A0F-9179-676ECF165681}">
-        <File Id="fil6BED1DAFF5E7B76D12682AC31E3F8656" KeyPath="yes" Source="$(var.LibSource)\os.py" />
-      </Component>
-      <Component Id="cmpFEA07CDAA789904F83AD507471FA9E0A" Directory="INSTALLFOLDER_Lib" Guid="{3BBB5CBF-9A97-4AE3-9C76-935387C08830}">
-        <File Id="fil4CEFF27EE76E62436128DE968F1B741F" KeyPath="yes" Source="$(var.LibSource)\shutil.py" />
-      </Component>
-      <Component Id="cmpD284EFC7FA3C7A086390BC7721FCCC48" Directory="INSTALLFOLDER_Lib" Guid="{DCCC1FB3-159F-4BFC-8356-766C0019D7BD}">
-        <File Id="fil8E1AB999C048F9563FC8B77D21262D9C" KeyPath="yes" Source="$(var.LibSource)\stat.py" />
-      </Component>
-      <Component Id="cmp8F7AF8CB8F3918E55870C3FCC4741146" Directory="INSTALLFOLDER_Lib" Guid="{4633F3A0-3066-4D74-9DBB-94425771BA58}">
-        <File Id="fil80D26ACAC8AC969270FECB2316509DB0" KeyPath="yes" Source="$(var.LibSource)\string.py" />
-      </Component>
-      <Component Id="cmp49A079893207B767C71D23E399AC03B8" Directory="INSTALLFOLDER_Lib" Guid="{0588EBB6-2CAE-4328-A5AA-F06A58000802}">
-        <File Id="filB864251A18A0046074C208BF2C06263B" KeyPath="yes" Source="$(var.LibSource)\StringIO.py" />
-      </Component>
-      <Component Id="cmpPythonFileStruct" Directory="INSTALLFOLDER_Lib" Guid="{375F45B3-9737-4E85-9D8F-BFE5F69D176E}">
-        <File Id="filPythonFileStruct" KeyPath="yes" Source="$(var.LibSource)\struct.py" />
-      </Component>
-      <Component Id="cmpCA4CD0CCDC7373ABF3FA9BE0071742CB" Directory="INSTALLFOLDER_Lib" Guid="{AD294688-5424-4C99-ABE5-0668D4F917AD}">
-        <File Id="fil22BBACAA0EC53DF0FD6753D9C434F6BC" KeyPath="yes" Source="$(var.LibSource)\traceback.py" />
-      </Component>
-      <Component Id="cmp612D7B1E1C220593D5A8B1E00DB0500F" Directory="INSTALLFOLDER_Lib" Guid="{0231ED8A-F44F-4687-88FA-465E7B4B8350}">
-        <File Id="fil9C0B632D3C7E1CD342D2CB4EC5612673" KeyPath="yes" Source="$(var.LibSource)\types.py" />
-      </Component>
-      <Component Id="cmp6AECF244C88B3B309BB44EB120D3B29C" Directory="INSTALLFOLDER_Lib" Guid="{E6AC4D0E-9F69-40FD-B8CE-7AA7D95094C4}">
-        <File Id="filF252C6CA99FC0043F4A1E5775E7042D0" KeyPath="yes" Source="$(var.LibSource)\UserDict.py" />
-      </Component>
-      <Component Id="cmp7A285C538A03FB5B2CDDBA6340DE9F0A" Directory="INSTALLFOLDER_Lib" Guid="{5CBD1FBA-C10D-4201-904B-F9E2AD781C2D}">
-        <File Id="fil9D06633ADF0A799BF53F335A24E91147" KeyPath="yes" Source="$(var.LibSource)\warnings.py" />
-      </Component>
-      <Component Id="cmp910378290F3D621F37BB6E0E69072AE4" Directory="INSTALLFOLDER_Lib" Guid="{288BE286-18DA-4E23-848B-2353F26437B9}">
-        <File Id="filAE49CCFFD6E5862290145C1B48AF9D17" KeyPath="yes" Source="$(var.LibSource)\weakref.py" />
-      </Component>
-      <Component Id="cmp_python_functools" Directory="INSTALLFOLDER_Lib" Guid="{8DC4BD14-2EB0-4D8D-AEFD-4DA49AC1AF14}">
-        <File Id="fil_python_functools" KeyPath="yes" Source="$(var.LibSource)\functools.py" />
-      </Component>
-    </ComponentGroup>
-  </Fragment>
+	<Fragment>
+		<DirectoryRef Id="INSTALLFOLDER_Dossier2json">
+			<!-- Remove old files just in case -->
+			<Component Id="removeDossier2JsonComponent" Guid="8B2B9CBA-1BEB-4AAE-AB1F-89802EB3A8BE">
+				<RemoveFile Id="removeDossier2JsonFiles" On ="install" Name="*.*"/>
+			</Component>
+		</DirectoryRef >
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents_Dossier2json">
+			<!-- Dossier parsers -->
+			<Component Id="cmp9118B4EF27BCC49090F03ABFEB1661DC" Directory="INSTALLFOLDER_Dossier2json" Guid="{57D92770-C430-4636-963B-A3217901533C}">
+				<File Id="fil65135394BD3BB3D345ACBA402F678618" KeyPath="yes" Source="$(var.D2jSource)\wotdc2j.py" />
+			</Component>
+			<!-- Dossier Structs -->
+			<Component Id="cmp96ED4D657BF7F033C19C3D7987CC5A69" Directory="INSTALLFOLDER_Dossier2json" Guid="{41285207-7044-4E56-92D1-165F81FD2618}">
+				<File Id="filFEBE5B17926BD73FF7965E255F11160E" KeyPath="yes" Source="$(var.D2jSource)\structures_77.json" />
+			</Component>
+			<Component Id="cmp8DB446119A3BC32F2FF4D0FC54F0F51A" Directory="INSTALLFOLDER_Dossier2json" Guid="{C922F1E5-131F-474B-AEA0-61E8055944E0}">
+				<File Id="fil16B05629FF023AA4E53B479AD85706F2" KeyPath="yes" Source="$(var.D2jSource)\structures_81.json" />
+			</Component>
+			<Component Id="cmpstructures85" Directory="INSTALLFOLDER_Dossier2json" Guid="{5ADC5A31-F916-4D6A-B45A-0C0360B3B727}">
+				<File Id="filstructures85" KeyPath="yes" Source="$(var.D2jSource)\structures_85.json" />
+			</Component>
+			<Component Id="cmpstructures87" Directory="INSTALLFOLDER_Dossier2json" Guid="{837B30CE-84DA-4EE8-85F4-D06499EE1F04}">
+				<File Id="filstructures87" KeyPath="yes" Source="$(var.D2jSource)\structures_87.json" />
+			</Component>
+			<Component Id="cmpstructures88" Directory="INSTALLFOLDER_Dossier2json" Guid="{9E8A251C-56A8-4872-929E-46A2B506A30E}">
+				<File Id="filstructures88" KeyPath="yes" Source="$(var.D2jSource)\structures_88.json" />
+			</Component>
+			<Component Id="cmpstructures89" Directory="INSTALLFOLDER_Dossier2json" Guid="{29321199-BC72-4DED-999D-78ADA45FB363}">
+				<File Id="filstructures89" KeyPath="yes" Source="$(var.D2jSource)\structures_89.json" />
+			</Component>
+			<Component Id="cmpstructures92" Directory="INSTALLFOLDER_Dossier2json" Guid="{1063934C-AC4F-4E0E-89DE-73032CD53467}">
+				<File Id="filstructures92" KeyPath="yes" Source="$(var.D2jSource)\structures_92.json" />
+			</Component>
+			<Component Id="cmpstructures94" Directory="INSTALLFOLDER_Dossier2json" Guid="{64541E5F-1CDA-4370-B1D8-216FFFDFB649}">
+				<File Id="filstructures94" KeyPath="yes" Source="$(var.D2jSource)\structures_94.json" />
+			</Component>
+			<Component Id="cmpstructures95" Directory="INSTALLFOLDER_Dossier2json" Guid="{FDE6E8CE-D65D-405C-A810-43B6E73E25D1}">
+				<File Id="filstructures95" KeyPath="yes" Source="$(var.D2jSource)\structures_95.json" />
+			</Component>
+			<Component Id="cmpstructures96" Directory="INSTALLFOLDER_Dossier2json" Guid="{4D4F229D-5F7D-40D0-9D15-19599B60F6DA}">
+				<File Id="filstructures96" KeyPath="yes" Source="$(var.D2jSource)\structures_96.json" />
+			</Component>
+			<Component Id="cmpstructures97" Directory="INSTALLFOLDER_Dossier2json" Guid="{207F6075-D974-458B-83EE-D9471D0D52E2}">
+				<File Id="filstructures97" KeyPath="yes" Source="$(var.D2jSource)\structures_97.json" />
+			</Component>
+			<Component Id="cmpstructures98" Directory="INSTALLFOLDER_Dossier2json" Guid="{2FF208C2-EB5E-4B66-A9CE-FE8E945DE2B4}">
+				<File Id="filstructures98" KeyPath="yes" Source="$(var.D2jSource)\structures_98.json" />
+			</Component>
+			<Component Id="cmpstructures99" Directory="INSTALLFOLDER_Dossier2json" Guid="{74B38BDC-AD1F-4DF1-BCCA-F1AC6E11F446}">
+				<File Id="filstructures99" KeyPath="yes" Source="$(var.D2jSource)\structures_99.json" />
+			</Component>
+			<Component Id="cmpstructures101" Directory="INSTALLFOLDER_Dossier2json" Guid="{2EB078AC-87AC-42A6-A49F-B471E8FAC50E}">
+				<File Id="filstructures101" KeyPath="yes" Source="$(var.D2jSource)\structures_101.json" />
+			</Component>
+			<Component Id="cmpstructures102" Directory="INSTALLFOLDER_Dossier2json" Guid="{AD373D05-4D99-4169-B340-6F9FF7CDC889}">
+				<File Id="filstructures102" KeyPath="yes" Source="$(var.D2jSource)\structures_102.json" />
+			</Component>
+			<Component Id="cmpstructures103" Directory="INSTALLFOLDER_Dossier2json" Guid="{8CF03748-CDA1-49FB-90DC-F68F06E0A3B0}">
+				<File Id="filstructures103" KeyPath="yes" Source="$(var.D2jSource)\structures_103.json" />
+			</Component>
+			<Component Id="cmpstructures104" Directory="INSTALLFOLDER_Dossier2json" Guid="{1616C6E8-8610-4E21-A6B4-B0F1A1D1146D}">
+				<File Id="filstructures104" KeyPath="yes" Source="$(var.D2jSource)\structures_104.json" />
+			</Component>
+			<Component Id="cmpstructures105" Directory="INSTALLFOLDER_Dossier2json" Guid="{F1574D68-3C87-4583-8EA4-203949D52BDD}">
+				<File Id="filstructures105" KeyPath="yes" Source="$(var.D2jSource)\structures_105.json" />
+			</Component>
+			<Component Id="cmpstructures106" Directory="INSTALLFOLDER_Dossier2json" Guid="{42F65FC9-4304-4FF6-BC73-66ABA8638840}">
+				<File Id="filstructures106" KeyPath="yes" Source="$(var.D2jSource)\structures_106.json" />
+			</Component>
+			<Component Id="cmpstructures107" Directory="INSTALLFOLDER_Dossier2json" Guid="{74E19490-DB88-4523-81E3-9DFBCC61A11C}">
+				<File Id="filstructures107" KeyPath="yes" Source="$(var.D2jSource)\structures_107.json" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
+	<!-- Battle2json -->
+
+	<?define B2jSource = "..\WinApp\bin\Release\Battle2json"?>
+
+	<Fragment>
+		<DirectoryRef Id="INSTALLFOLDER_Battle2json">
+			<!-- Remove old files just in case -->
+			<Component Id="removeBattle2JsonComponent" Guid="72C27B10-39F7-48EE-A950-AF0E30CDDD1E">
+				<RemoveFile Id="removeBattle2JsonFiles" On ="install" Name="*.*"/>
+			</Component>
+		</DirectoryRef>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents_Battle2json">
+			<!-- Battle parsers -->
+			<Component Id="cmpwotbr2j" Directory="INSTALLFOLDER_Battle2json" Guid="{07EF3C67-0722-46A1-9405-7FB2ED97576F}">
+				<File Id="filwotbr2j" KeyPath="yes" Source="$(var.B2jSource)\wotbr2j.py" />
+			</Component>
+			<!-- Battle classes -->
+			<Component Id="cmp_battle_results_common" Directory="INSTALLFOLDER_Battle2json" Guid="{499C9315-F235-490D-A659-5983B3CED27E}">
+				<File Id="fil_battle_results_common" KeyPath="yes" Source="$(var.B2jSource)\battle_results_common.py" />
+			</Component>
+			<Component Id="cmp_battle_results_constants" Directory="INSTALLFOLDER_Battle2json" Guid="{E7E75DED-FE8D-4BF4-9CA4-67721CF9077B}">
+				<File Id="fil_battle_results_constants" KeyPath="yes" Source="$(var.B2jSource)\battle_results_constants.py" />
+			</Component>
+			<Component Id="cmp_battle_results_random" Directory="INSTALLFOLDER_Battle2json" Guid="{3B82BA11-561C-448E-BBDF-25785485BAEE}">
+				<File Id="fil_battle_results_random" KeyPath="yes" Source="$(var.B2jSource)\battle_results_random.py" />
+			</Component>
+			<Component Id="cmp_DictPackers" Directory="INSTALLFOLDER_Battle2json" Guid="{666D608A-3F02-4694-A7CF-7810503157A1}">
+				<File Id="fil_DictPackers" KeyPath="yes" Source="$(var.B2jSource)\DictPackers.py" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
+	<!-- Lib - Python -->
+
+	<?define LibSource = "..\WinApp\PythonLib"?>
+
+	<Fragment>
+		<DirectoryRef Id="INSTALLFOLDER_Lib">
+			<Directory Id="dirPythonImportlib" Name="importlib" />
+			<Directory Id="dirPythonEnum" Name="enum" />
+			<Directory Id="dirPythonJson" Name="json" />
+		</DirectoryRef>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents_Lib">
+
+			<Component Id="cmp6A4F5D0D9049F8BE7FC1711861F4D8B4" Directory="dirPythonImportlib" Guid="{987C4F6A-9668-4B1C-8C16-D5E16E3B17A3}">
+				<File Id="fil7010E2F892346ED2311A72799BDCC9F1" KeyPath="yes" Source="$(var.LibSource)\importlib\__init__.py" />
+			</Component>
+
+			<Component Id="cmp_python_enum" Directory="dirPythonEnum" Guid="{7168EA90-E76A-4F87-8926-2F685BCB124B}">
+				<File Id="fil_python_enum" KeyPath="yes" Source="$(var.LibSource)\enum\__init__.py" />
+			</Component>
+
+			<Component Id="cmpB20DAB89CAB0EBF08847C869670B3C62" Directory="dirPythonJson" Guid="{8B483B92-F60C-4B48-B637-2858BD3BF85D}">
+				<File Id="fil20E2DF1931C7A3414FD11DB728DF7CBF" KeyPath="yes" Source="$(var.LibSource)\json\decoder.py" />
+			</Component>
+			<Component Id="cmp65E00F3DA72100C0DCE1B4499B0CCA2F" Directory="dirPythonJson" Guid="{28E2CE4D-B5DC-410D-AFF6-BDACFE55E531}">
+				<File Id="fil1B74DB3DC6DD6F2627F2F881CD4FC1EB" KeyPath="yes" Source="$(var.LibSource)\json\encoder.py" />
+			</Component>
+			<Component Id="cmp376AF44462AB683D0EDF3FC5E3A159A8" Directory="dirPythonJson" Guid="{563F8537-9677-4325-97F2-FC3300B82EF1}">
+				<File Id="fil2AE0EA9F7D20C0494281FBBA0DBF0A26" KeyPath="yes" Source="$(var.LibSource)\json\scanner.py" />
+			</Component>
+			<Component Id="cmp2E4C0FD5B65F342B78F7EB251E3ED00C" Directory="dirPythonJson" Guid="{A880204E-87C5-400B-9121-9E41C5B1C887}">
+				<File Id="fil0B4E6A5604AE3F6FDEB501FE54828946" KeyPath="yes" Source="$(var.LibSource)\json\tool.py" />
+			</Component>
+			<Component Id="cmp07484846DB15D8CC049B2E7BDEDFCE34" Directory="dirPythonJson" Guid="{14B19140-7F74-4670-A952-8B528E31BE93}">
+				<File Id="filB65CCC39A6A371E3EFFB1136240D133F" KeyPath="yes" Source="$(var.LibSource)\json\__init__.py" />
+			</Component>
+
+			<Component Id="cmp44772524DA9C53AA7E9CE3D8344DC293" Directory="INSTALLFOLDER_Lib" Guid="{804FB7F1-1D1D-4A7F-A733-0AFEE5DEF916}">
+				<File Id="fil3945705CD951C5B04596C7384F4278DF" KeyPath="yes" Source="$(var.LibSource)\_abcoll.py" />
+			</Component>
+			<Component Id="cmpBC7B97CB08E19570F504F23CAD3A28CB" Directory="INSTALLFOLDER_Lib" Guid="{67B3547C-FE7A-4C31-8C2A-8F8BD8427F00}">
+				<File Id="fil5F8D6BD5C36D238FC19DB5826A6B3515" KeyPath="yes" Source="$(var.LibSource)\_weakrefset.py" />
+			</Component>
+			<Component Id="cmpD0A9FD6F0927C3757F0DF8B9B9F92D8D" Directory="INSTALLFOLDER_Lib" Guid="{F9D3366A-8170-4132-B852-4DBAB20B6991}">
+				<File Id="filE9FA1B0EC204931C8935D59F45933406" KeyPath="yes" Source="$(var.LibSource)\abc.py" />
+			</Component>
+			<Component Id="cmpA2ADEDC1912EADA35FFF924819F9C2B7" Directory="INSTALLFOLDER_Lib" Guid="{E7877011-ED0F-4269-BCBD-3FA3A46FE063}">
+				<File Id="filCA97FC63CE0904F18BD05373E995F8E9" KeyPath="yes" Source="$(var.LibSource)\base64.py" />
+			</Component>
+			<Component Id="cmp316FAD2D18DEAAE755E5931F66F511CB" Directory="INSTALLFOLDER_Lib" Guid="{85E978B8-009D-4517-9F6D-78B105DDC554}">
+				<File Id="filE41D5F4D5A00E3E1B9D87BBE1A130912" KeyPath="yes" Source="$(var.LibSource)\collections.py" />
+			</Component>
+			<Component Id="cmp1AD0D395AE646750D1351838D815B20E" Directory="INSTALLFOLDER_Lib" Guid="{926BC5C6-9AB3-40B8-89BC-F9E2300ACD73}">
+				<File Id="fil93BF44268C6797CED7C1C5CBD59164D7" KeyPath="yes" Source="$(var.LibSource)\copy.py" />
+			</Component>
+			<Component Id="cmp0EE0660318D37D415CB20F7582FAD7E4" Directory="INSTALLFOLDER_Lib" Guid="{69BA556B-922F-4559-9725-3B31CAF74732}">
+				<File Id="fil3CFC209996AA4DCA073619937F3D8808" KeyPath="yes" Source="$(var.LibSource)\fnmatch.py" />
+			</Component>
+			<Component Id="cmp6021CB00F321E03BE5681FC72A3A5577" Directory="INSTALLFOLDER_Lib" Guid="{CF4F7C74-D449-4624-9692-0C15ACF4294D}">
+				<File Id="filC07596C6A516AEC87B5019C1775E19E6" KeyPath="yes" Source="$(var.LibSource)\genericpath.py" />
+			</Component>
+			<Component Id="cmpC9EEC7C8343AF41EA870F92C77C91E4A" Directory="INSTALLFOLDER_Lib" Guid="{3C85B4BD-98EF-4EFD-94D0-CDF6DD2EF7CA}">
+				<File Id="fil53492A28174E7F02E7438EC8E56AD873" KeyPath="yes" Source="$(var.LibSource)\heapq.py" />
+			</Component>
+			<Component Id="cmpC5257F6DEC671AB908255860F6AFB090" Directory="INSTALLFOLDER_Lib" Guid="{18677FB6-9842-4AA7-9A7E-0BF3316E937E}">
+				<File Id="fil0050016C5153B38CCE8BC5A6C896BBA1" KeyPath="yes" Source="$(var.LibSource)\keyword.py" />
+			</Component>
+			<Component Id="cmp8EBCB5948D0DEE111BA9D86637962290" Directory="INSTALLFOLDER_Lib" Guid="{FEABC2C3-035E-43FD-BCCD-5F937BE56276}">
+				<File Id="fil9F768905854DAE5942300642198010FA" KeyPath="yes" Source="$(var.LibSource)\linecache.py" />
+			</Component>
+			<Component Id="cmpA6A5235227026171BE5276D4CFA4B6F0" Directory="INSTALLFOLDER_Lib" Guid="{5FFAE470-11FB-475E-9402-6EEC92A4F77B}">
+				<File Id="fil75E1D0BB94AA6382C3BDD608FDA80C6E" KeyPath="yes" Source="$(var.LibSource)\ntpath.py" />
+			</Component>
+			<Component Id="cmp459D3FE5BEBCA2AE11040F04E03063D7" Directory="INSTALLFOLDER_Lib" Guid="{4FC6074C-E011-4A0F-9179-676ECF165681}">
+				<File Id="fil6BED1DAFF5E7B76D12682AC31E3F8656" KeyPath="yes" Source="$(var.LibSource)\os.py" />
+			</Component>
+			<Component Id="cmpFEA07CDAA789904F83AD507471FA9E0A" Directory="INSTALLFOLDER_Lib" Guid="{3BBB5CBF-9A97-4AE3-9C76-935387C08830}">
+				<File Id="fil4CEFF27EE76E62436128DE968F1B741F" KeyPath="yes" Source="$(var.LibSource)\shutil.py" />
+			</Component>
+			<Component Id="cmpD284EFC7FA3C7A086390BC7721FCCC48" Directory="INSTALLFOLDER_Lib" Guid="{DCCC1FB3-159F-4BFC-8356-766C0019D7BD}">
+				<File Id="fil8E1AB999C048F9563FC8B77D21262D9C" KeyPath="yes" Source="$(var.LibSource)\stat.py" />
+			</Component>
+			<Component Id="cmp8F7AF8CB8F3918E55870C3FCC4741146" Directory="INSTALLFOLDER_Lib" Guid="{4633F3A0-3066-4D74-9DBB-94425771BA58}">
+				<File Id="fil80D26ACAC8AC969270FECB2316509DB0" KeyPath="yes" Source="$(var.LibSource)\string.py" />
+			</Component>
+			<Component Id="cmp49A079893207B767C71D23E399AC03B8" Directory="INSTALLFOLDER_Lib" Guid="{0588EBB6-2CAE-4328-A5AA-F06A58000802}">
+				<File Id="filB864251A18A0046074C208BF2C06263B" KeyPath="yes" Source="$(var.LibSource)\StringIO.py" />
+			</Component>
+			<Component Id="cmpPythonFileStruct" Directory="INSTALLFOLDER_Lib" Guid="{375F45B3-9737-4E85-9D8F-BFE5F69D176E}">
+				<File Id="filPythonFileStruct" KeyPath="yes" Source="$(var.LibSource)\struct.py" />
+			</Component>
+			<Component Id="cmpCA4CD0CCDC7373ABF3FA9BE0071742CB" Directory="INSTALLFOLDER_Lib" Guid="{AD294688-5424-4C99-ABE5-0668D4F917AD}">
+				<File Id="fil22BBACAA0EC53DF0FD6753D9C434F6BC" KeyPath="yes" Source="$(var.LibSource)\traceback.py" />
+			</Component>
+			<Component Id="cmp612D7B1E1C220593D5A8B1E00DB0500F" Directory="INSTALLFOLDER_Lib" Guid="{0231ED8A-F44F-4687-88FA-465E7B4B8350}">
+				<File Id="fil9C0B632D3C7E1CD342D2CB4EC5612673" KeyPath="yes" Source="$(var.LibSource)\types.py" />
+			</Component>
+			<Component Id="cmp6AECF244C88B3B309BB44EB120D3B29C" Directory="INSTALLFOLDER_Lib" Guid="{E6AC4D0E-9F69-40FD-B8CE-7AA7D95094C4}">
+				<File Id="filF252C6CA99FC0043F4A1E5775E7042D0" KeyPath="yes" Source="$(var.LibSource)\UserDict.py" />
+			</Component>
+			<Component Id="cmp7A285C538A03FB5B2CDDBA6340DE9F0A" Directory="INSTALLFOLDER_Lib" Guid="{5CBD1FBA-C10D-4201-904B-F9E2AD781C2D}">
+				<File Id="fil9D06633ADF0A799BF53F335A24E91147" KeyPath="yes" Source="$(var.LibSource)\warnings.py" />
+			</Component>
+			<Component Id="cmp910378290F3D621F37BB6E0E69072AE4" Directory="INSTALLFOLDER_Lib" Guid="{288BE286-18DA-4E23-848B-2353F26437B9}">
+				<File Id="filAE49CCFFD6E5862290145C1B48AF9D17" KeyPath="yes" Source="$(var.LibSource)\weakref.py" />
+			</Component>
+			<Component Id="cmp_python_functools" Directory="INSTALLFOLDER_Lib" Guid="{8DC4BD14-2EB0-4D8D-AEFD-4DA49AC1AF14}">
+				<File Id="fil_python_functools" KeyPath="yes" Source="$(var.LibSource)\functools.py" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
 
 </Wix>
