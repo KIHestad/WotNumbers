@@ -1,10 +1,10 @@
-﻿14 Oct 2022
+﻿16 Oct 2022
 v1.0.3
 - Removed some unused deployed files
 - Move BattleResults python files from DossierJSON to its own directory. And make the application work with the changes.
 - Add missing Description for map last_frontier.
 - Add firmulfir map into DB.
-- Update AdminDB database.
+- Update AdminDB database with new maps and tanks.
 
 26 Sept 2022
 v1.0.2

@@ -1,6 +1,11 @@
 ﻿17-Oct-2022
 Fixed battle results to display proper team for the players. It was relying on playerName instead of accountId, so this was failing for anonymized players.
 
+16 Oct 2022
+Add missing Description for map last_frontier.
+Add firmulfir map into DB.
+Include latest tank data into AdminDB.
+
 14 Oct 2022
 Updated Battle2Json and Dossier2Json scripts to WoT 1.18.1
 Added LOG.txt to keep track of changes introduced in the project
@@ -10,8 +15,3 @@ Removed unused deployed files
 
 Move BattleResults python files from DossierJSON to its own directory. And make the application work with the changes.
 Modify Product.wxs to reflect new distribution.
-
-16 Oct 2022
-Add missing Description for map last_frontier.
-Add firmulfir map into DB.
-Include latest tank data into AdminDB.
