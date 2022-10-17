@@ -1,4 +1,9 @@
-﻿16 Oct 2022
+﻿17-Oct-2022
+v1.0.3
+- Fix app crash when creating DB from scratch.
+- Fixed battle results to display proper team for the players.
+
+16 Oct 2022
 v1.0.3
 - Removed some unused deployed files
 - Move BattleResults python files from DossierJSON to its own directory. And make the application work with the changes.

@@ -1,7 +1,5 @@
-﻿18-Oct-2022
+﻿17-Oct-2022
 Fix app crash when creating DB from scratch (Revert changes in Database creation scripts in Docs folder)
-
-17-Oct-2022
 Fixed battle results to display proper team for the players. It was relying on playerName instead of accountId, so this was failing for anonymized players.
 
 16 Oct 2022
