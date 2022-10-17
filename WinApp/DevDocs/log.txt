@@ -1,4 +1,7 @@
-﻿14 Oct 2022
+﻿17-Oct-2022
+Fixed battle results to display proper team for the players. It was relying on playerName instead of accountId, so this was failing for anonymized players.
+
+14 Oct 2022
 Updated Battle2Json and Dossier2Json scripts to WoT 1.18.1
 Added LOG.txt to keep track of changes introduced in the project
 Added TODO.txt to store ideas or tasks still not implemented. Once they're implemented they should be removed and passed to log.txt.
