@@ -112,9 +112,9 @@ namespace WinApp.Forms
                     scroll.MouseUp += new MouseEventHandler(scroll_MouseUp);
                     scroll.MouseMove += new MouseEventHandler(scroll_MouseMove);
                     // Find team 1 and 2
-                    sql = "select team from battlePlayer where battleId=@battleId and name=@name";
+                    sql = "select team from battlePlayer where battleId=@battleId and accountId=@accountId";
                     DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-                    DB.AddWithValue(ref sql, "@name", Config.Settings.playerName, DB.SqlDataType.VarChar);
+                    DB.AddWithValue(ref sql, "@accountId", Config.Settings.playerAccountId, DB.SqlDataType.VarChar);
                     DataTable dt = await DB.FetchData(sql);
                     if (dt.Rows.Count > 0)
                     {
