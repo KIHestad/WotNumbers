@@ -25,7 +25,7 @@ namespace WinApp.Forms.Settings
         {
             await DataBind();
         }
-        
+
         private async Task DataBind()
         {
             // Startup settings
@@ -40,6 +40,7 @@ namespace WinApp.Forms.Settings
             lblDbSettings.Text = databaseInfo;
             // Player
             cboSelectPlayer.Text = Config.Settings.playerNameAndServer;
+            lblWargamingId.Text = Convert.ToString(Config.Settings.playerAccountId);
             chkShowDBError.Checked = Config.Settings.showDBErrors;
             await PlayerPanel();
             EditChangesApply(false);
@@ -89,13 +90,14 @@ namespace WinApp.Forms.Settings
             Config.Settings.showDBErrors = chkShowDBError.Checked;
             // Player
             Config.Settings.playerNameAndServer = cboSelectPlayer.Text;
-            DataTable dt = await DB.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'", Config.Settings.showDBErrors);
+            DataTable dt = await DB.FetchData("SELECT id, accountId FROM player WHERE name='" + cboSelectPlayer.Text + "'", Config.Settings.showDBErrors);
             if (dt.Rows.Count > 0)
             {
-                int playerId = 0;
-                if (dt.Rows[0][0] != DBNull.Value)
-                    playerId = Convert.ToInt32(dt.Rows[0][0]);
+                int playerId = DB.SafeConvertToInt(dt.Rows[0][0]);
+                int playerAccountId = DB.SafeConvertToInt(dt.Rows[0][1]);
+
                 Config.Settings.playerId = playerId;
+                Config.Settings.playerAccountId = playerAccountId;
             }
             // vBAddict settings
             // await vBAddictHelper.GetSettings();
@@ -160,10 +162,18 @@ namespace WinApp.Forms.Settings
             EditChangesApply(true);
         }
 
-        private void cboSelectPlayer_TextChanged(object sender, EventArgs e)
+        private async void cboSelectPlayer_TextChanged(object sender, EventArgs e)
         {
             if (currentSelectedPlayer != cboSelectPlayer.Text)
+            {
+                DataTable dt = await DB.FetchData("SELECT accountId FROM player WHERE name='" + cboSelectPlayer.Text + "'", false);
+                if (dt.Rows.Count > 0)
+                {
+                    int playerAccountId = DB.SafeConvertToInt(dt.Rows[0][0]);
+                    lblWargamingId.Text = Convert.ToString(playerAccountId);
+                }
                 EditChangesApply(true);
+            }
         }
 
         private void txtDownloadFilePath_TextChanged(object sender, EventArgs e)
