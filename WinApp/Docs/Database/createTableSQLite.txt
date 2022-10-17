@@ -27,7 +27,6 @@ create table country (
 
 create table player (
 	id integer primary key,
-	accountId int NOT NULL DEFAULT(0),
 	name varchar(255),
 	vbaddictToken varchar(500) NULL,
 	vbaddictUploadActive bit NOT NULL default 0,
@@ -239,7 +238,6 @@ create table battle (
 	survivedenemy integer NULL,
 	fragsteam integer NULL,
 	fragsenemy integer NULL,
-	minBattleTier integer NULL,
 	maxBattleTier integer NULL,
 	damageRating float NOT NULL default 0,
 	damageRatingTotal float NOT NULL default 0,

@@ -950,6 +950,7 @@
     <Content Include="DevDocs\DatabaseLog\script backup\transferBattles.txt" />
     <Content Include="DevDocs\DatabaseLog\wsTankId.txt" />
     <Content Include="DevDocs\Dev log\Locate_Map_Img.txt" />
+    <Content Include="DevDocs\files.txt" />
     <Content Include="DevDocs\Img\Cursors\erasor_10.png" />
     <Content Include="DevDocs\Img\Cursors\erasor_20.png" />
     <Content Include="DevDocs\Img\Cursors\erasor_40.png" />
@@ -2315,8 +2316,7 @@ xcopy "$(ProjectDir)/PythonScripts/Dossier2json" "$(TargetDir)Battle2json" /y /s
 md "$(TargetDir)Docs"
 md "$(TargetDir)Docs/Database"
 del "$(TargetDir)Docs" /q /s 
-xcopy "$(ProjectDir)Docs\mod_BRR.pyc" "$(TargetDir)Docs" /y
-xcopy "$(ProjectDir)Docs\Database\Admin.db" "$(TargetDir)Docs\Database" /y
+xcopy "$(ProjectDir)Docs" "$(TargetDir)Docs" /y /s
 md "$(TargetDir)Lib"
 del "$(TargetDir)Lib" /q /s 
 xcopy "$(ProjectDir)PythonLib" "$(TargetDir)Lib" /y /s</PreBuildEvent>
