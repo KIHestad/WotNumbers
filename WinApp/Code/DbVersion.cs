@@ -29,8 +29,8 @@ namespace WinApp.Code
 		public static bool RunUploadAllToWotNumWeb = false;
 		public static bool CopyAdminDB = false;
 
-	// The current databaseversion
-	public static int ExpectedNumber = 544; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		// The current databaseversion
+		public static int ExpectedNumber = 544; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -119,7 +119,7 @@ namespace WinApp.Code
 				case 525:
 					temp = "INSERT INTO columnSelection(id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) ";
 					mssql =
-						temp + "VALUES (231, 1, 246, 'playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun', 'Dmg Combined', 'Total combined damage = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 50, 'Int', NULL, NULL, 'SUM(playerTankBattle.assistStun)', 'SUM(battle.assistStun)', 0, NULL, 0);" +
+						temp + "VALUES (231, 1, 246, 'playerTankBattle.Dmg+playerTankIt'sBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun', 'Dmg Combined', 'Total combined damage = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 50, 'Int', NULL, NULL, 'SUM(playerTankBattle.assistStun)', 'SUM(battle.assistStun)', 0, NULL, 0);" +
 						temp + "VALUES (232, 1, 259, 'CAST((playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Combined', 'Average combined damage per battle = damage done by you + assisted damage casued by others to enemy tanks due to you spotting, tracking or stunning the enemy tank', 'Damage', 50, 'Float', NULL, NULL, 'CAST(SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', 'SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)', 1, 'SUM(playerTankBattle.Dmg+playerTankBattle.assistSpot+playerTankBattle.assistTrack+playerTankBattle.assistStun)', 0);";
 					sqlite = mssql;
 					break;
