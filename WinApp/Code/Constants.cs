@@ -26,10 +26,22 @@ namespace WinApp.Code
         {
             if (IsDebugging())
                 // Alternative user local web server
+                return "https://wotnumbers.com";
+            else
+                return "https://wotnumbers.com";
+        }
+        public static string WotNumDownloadUrl()
+        {
+            if (IsDebugging())
+                // Alternative user local web server
                 return "https://github.com/KIHestad/WotNumbers/tree/master/LatestRelease";
             else
                 return "https://github.com/KIHestad/WotNumbers/tree/master/LatestRelease";
         }
 
+        public static string WotNumVersionSettingsUrl()
+        {
+            return WotNumWebUrl() + "/VersionSettings.json";
+        }
     }
 }
