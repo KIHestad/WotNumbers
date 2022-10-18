@@ -29,7 +29,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 543; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 544; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -41,6 +41,12 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
+				case 544:
+					mssql =
+						// Add column for orphan Dat files.
+						"ALTER TABLE battle ADD orphanDat bit NOT NULL default 0;";
+					sqlite = mssql;
+					break;
 				case 543:
 					mssql = "UPDATE map SET description = 'The dense central structures in the center of the map are the key point for the location. Controlling this area allows you to hold an all - around defense by firing across the vast fields around the town.Beyond the walls of the fortifications, you should take advantage of terrain irregularities, as most of the area is very exposed to enemy fire.'" +
 							"WHERE id = 206;" +
@@ -65,7 +71,7 @@ namespace WinApp.Code
 					mssql =
 						// Add column for minTier
 						"ALTER TABLE battle ADD minBattleTier int NULL;";
-					sqlite = mssql;
+					sqlite = mssql.Replace("int", "integer");
 					RunRecalcBattleMinTier = true;
 					break;
 				case 539:
@@ -74,7 +80,7 @@ namespace WinApp.Code
 						"ALTER TABLE player ADD accountId int NOT NULL DEFAULT(0);" +
 						// adding new map "outpost"
 						"INSERT INTO map (id, name, arena_id) VALUES (206, 'Outpost', '128_last_frontier_v'); ";
-					sqlite = mssql;
+					sqlite = mssql.Replace("int", "integer");
 					break;
 				case 538:
 					RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
