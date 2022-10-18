@@ -30,7 +30,7 @@ namespace WinApp.Code
         {
             if (IsDebugging())
                 // Alternative user local web server
-                return "https://github.com/KIHestad/WotNumbers/tree/master/LatestRelease";
+                return "https://github.com/D0ct0rDave/WotNumbers/tree/master/LatestRelease";
             else
                 return "https://github.com/KIHestad/WotNumbers/tree/master/LatestRelease";
         }
