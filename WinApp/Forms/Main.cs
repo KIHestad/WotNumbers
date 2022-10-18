@@ -2427,6 +2427,26 @@ namespace WinApp.Forms
 			}
 		}
 
+		private void BattleViewModeFilter(out string battleViewModeFilter)
+		{
+			battleViewModeFilter = "";
+			// Normal predefined battle time filters
+			
+			switch (Config.Settings.battleViewMode)
+			{
+				 case ConfigData.BattleViewMode.Old:
+					{
+						battleViewModeFilter = " AND orphanDat = 0";
+					}
+					break;
+				case ConfigData.BattleViewMode.New:
+					{
+						battleViewModeFilter = " AND arenaUniqueID IS NOT NULL";
+					}
+					break;
+			}
+		}
+
 		private void BattleTimeAndCountFilter(out string battleTimeFilter, out string battleTimeReadable, out bool battleCountFilter)
 		{
 			battleTimeFilter = "";
@@ -2860,6 +2880,9 @@ namespace WinApp.Forms
 					sortOrder = "ORDER BY " + sorting.ColumnName + " " + sortDirection + " ";
 				}
 
+				// Get Battle View Mode filter
+				BattleViewModeFilter(out string battleViewModeFilter);
+
 				// Get Battle Time filer or battle count filter
 				BattleTimeAndCountFilter(out string battleTimeFilter, out string battleTimeReadable, out bool battleCountFilter);
 
@@ -2879,7 +2902,8 @@ namespace WinApp.Forms
 					"        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
 					"        map on battle.mapId = map.id INNER JOIN " +
 					"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin + " ";
-				string where = "WHERE playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + " ";
+				string where = "WHERE playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + battleViewModeFilter + " ";
+				
 				DB.AddWithValue(ref where, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				if (battleCountFilter)
 				{
