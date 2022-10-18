@@ -24,11 +24,7 @@ namespace WinApp.Code
 
         public static string WotNumWebUrl()
         {
-            if (IsDebugging())
-                // Alternative user local web server
-                return "https://wotnumbers.com";
-            else
-                return "https://wotnumbers.com";
+            return "https://wotnumbers.com";
         }
         public static string WotNumDownloadUrl()
         {
