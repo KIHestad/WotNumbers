@@ -15,7 +15,7 @@ namespace WinApp.Services
         {
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-            string json = (new WebClient()).DownloadString($"{Constants.WotNumWebUrl()}/download/settings.json");
+            string json = (new WebClient()).DownloadString($"{Constants.WotNumWebUrl()}/VersionSettings.json");
             try
             {
                 return new Models.AppNewVersionApiResult

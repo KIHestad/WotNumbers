@@ -25,9 +25,10 @@ namespace WinApp.Code
         public static string WotNumWebUrl()
         {
             if (IsDebugging())
-                return "https://wotnumbers.com"; // Alternative user local web server
+                // Alternative user local web server
+                return "https://github.com/KIHestad/WotNumbers/tree/master/LatestRelease";
             else
-                return "https://wotnumbers.com";
+                return "https://github.com/KIHestad/WotNumbers/tree/master/LatestRelease";
         }
 
     }
