@@ -24,11 +24,20 @@ namespace WinApp.Code
 
         public static string WotNumWebUrl()
         {
+            return "https://wotnumbers.com";
+        }
+        public static string WotNumDownloadUrl()
+        {
             if (IsDebugging())
-                return "https://wotnumbers.com"; // Alternative user local web server
+                // Alternative user local web server
+                return "https://github.com/D0ct0rDave/WotNumbers/tree/master/LatestRelease";
             else
-                return "https://wotnumbers.com";
+                return "https://github.com/KIHestad/WotNumbers/tree/master/LatestRelease";
         }
 
+        public static string WotNumVersionSettingsUrl()
+        {
+            return WotNumWebUrl() + "/VersionSettings.json";
+        }
     }
 }

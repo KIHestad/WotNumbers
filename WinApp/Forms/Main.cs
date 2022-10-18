@@ -687,7 +687,7 @@ namespace WinApp.Forms
 							"New version is available: " + websiteVersionCheck.DownloadSettings.Version + Environment.NewLine + Environment.NewLine +
 							"Click OK to go to the download site." + Environment.NewLine + Environment.NewLine;
 						MsgBox.Show(msg, "Website version check", MsgBox.Type.OK, this);
-						Process.Start(Constants.WotNumWebUrl());
+						Process.Start(Constants.WotNumDownloadUrl());
 						this.Close();
 						Application.Exit();
 					}
@@ -704,7 +704,7 @@ namespace WinApp.Forms
 							MsgBox.Button answer = MsgBox.Show(msg, "Website version check", MsgBox.Type.YesNo, this);
 							if (answer == MsgBox.Button.Yes)
 							{
-								Process.Start(Constants.WotNumWebUrl());
+								Process.Start(Constants.WotNumDownloadUrl());
 							}
 						}
 						else
