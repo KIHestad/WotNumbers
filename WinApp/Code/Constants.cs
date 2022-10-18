@@ -28,16 +28,20 @@ namespace WinApp.Code
         }
         public static string WotNumDownloadUrl()
         {
+            return "https://github.com/KIHestad/WotNumbers/tree/master/LatestRelease";
+        }
+        public static string WotNumVersionSettingsFolderUrl()
+        {
             if (IsDebugging())
                 // Alternative user local web server
-                return "https://github.com/D0ct0rDave/WotNumbers/tree/master/LatestRelease";
+                return "https://raw.githubusercontent.com/D0ct0rDave/WotNumbers/master/LatestRelease";
             else
-                return "https://github.com/KIHestad/WotNumbers/tree/master/LatestRelease";
+                return "https://raw.githubusercontent.com/KIHestad/WotNumbers/tree/master/LatestRelease";
         }
 
         public static string WotNumVersionSettingsUrl()
         {
-            return WotNumWebUrl() + "/VersionSettings.json";
+            return WotNumVersionSettingsFolderUrl() + "/VersionSettings.json";
         }
     }
 }
