@@ -1,4 +1,7 @@
-﻿18-Oct-2022
+﻿20-Oct-2022
+Update wotbr2j script to accept new WoT 1.18.1.1 battle dat files.
+
+18-Oct-2022
 Fix "Check For New Update" to retrieve last version information from GitHUB.
 
 17-Oct-2022
