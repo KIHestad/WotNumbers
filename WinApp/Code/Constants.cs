@@ -36,7 +36,7 @@ namespace WinApp.Code
                 // Alternative user local web server
                 return "https://raw.githubusercontent.com/D0ct0rDave/WotNumbers/master/LatestRelease";
             else
-                return "https://raw.githubusercontent.com/KIHestad/WotNumbers/tree/master/LatestRelease";
+                return "https://raw.githubusercontent.com/KIHestad/WotNumbers/master/LatestRelease";
         }
 
         public static string WotNumVersionSettingsUrl()
