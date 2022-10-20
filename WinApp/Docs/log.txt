@@ -1,4 +1,5 @@
 ﻿18-Oct-2022
+v1.0.4
 Fix "Check For New Update" to retrieve last version information from GitHUB.
 
 17-Oct-2022
