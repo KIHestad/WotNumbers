@@ -44,6 +44,8 @@
             this.lblDbSettings = new BadLabel();
             this.badGroupBox1 = new BadGroupBox();
             this.badGroupBox2 = new BadGroupBox();
+            this.lblWargamingId = new BadLabel();
+            this.badLabel3 = new BadLabel();
             this.SuspendLayout();
             // 
             // btnMergePlayers
@@ -92,7 +94,7 @@
             this.chkShowDBError.BackColor = System.Drawing.Color.Transparent;
             this.chkShowDBError.Checked = false;
             this.chkShowDBError.Image = ((System.Drawing.Image)(resources.GetObject("chkShowDBError.Image")));
-            this.chkShowDBError.Location = new System.Drawing.Point(-4, 271);
+            this.chkShowDBError.Location = new System.Drawing.Point(16, 269);
             this.chkShowDBError.Name = "chkShowDBError";
             this.chkShowDBError.Size = new System.Drawing.Size(277, 23);
             this.chkShowDBError.TabIndex = 30;
@@ -116,7 +118,7 @@
             this.btnCancel.BlackButton = false;
             this.btnCancel.Checked = false;
             this.btnCancel.Image = null;
-            this.btnCancel.Location = new System.Drawing.Point(375, 271);
+            this.btnCancel.Location = new System.Drawing.Point(376, 269);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(70, 23);
             this.btnCancel.TabIndex = 28;
@@ -165,7 +167,7 @@
             this.btnSave.BlackButton = false;
             this.btnSave.Checked = false;
             this.btnSave.Image = null;
-            this.btnSave.Location = new System.Drawing.Point(298, 271);
+            this.btnSave.Location = new System.Drawing.Point(299, 269);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(70, 23);
             this.btnSave.TabIndex = 27;
@@ -203,16 +205,42 @@
             this.badGroupBox2.Image = null;
             this.badGroupBox2.Location = new System.Drawing.Point(1, 129);
             this.badGroupBox2.Name = "badGroupBox2";
-            this.badGroupBox2.Size = new System.Drawing.Size(445, 125);
+            this.badGroupBox2.Size = new System.Drawing.Size(445, 134);
             this.badGroupBox2.TabIndex = 22;
             this.badGroupBox2.TabStop = false;
             this.badGroupBox2.Text = "Database and Player";
+            // 
+            // lblWargamingId
+            // 
+            this.lblWargamingId.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.lblWargamingId.Dimmed = false;
+            this.lblWargamingId.Image = null;
+            this.lblWargamingId.Location = new System.Drawing.Point(101, 230);
+            this.lblWargamingId.Name = "lblWargamingId";
+            this.lblWargamingId.Size = new System.Drawing.Size(85, 23);
+            this.lblWargamingId.TabIndex = 37;
+            this.lblWargamingId.Text = "loading...";
+            this.lblWargamingId.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // badLabel3
+            // 
+            this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel3.Dimmed = false;
+            this.badLabel3.Image = null;
+            this.badLabel3.Location = new System.Drawing.Point(17, 230);
+            this.badLabel3.Name = "badLabel3";
+            this.badLabel3.Size = new System.Drawing.Size(85, 23);
+            this.badLabel3.TabIndex = 38;
+            this.badLabel3.Text = "Wargaming ID:";
+            this.badLabel3.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // AppSettingsMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.Controls.Add(this.badLabel3);
+            this.Controls.Add(this.lblWargamingId);
             this.Controls.Add(this.btnMergePlayers);
             this.Controls.Add(this.txtDossierFilePath);
             this.Controls.Add(this.badLabel1);
@@ -249,5 +277,7 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogDossier;
         private BadLabel badLabel1;
         private BadButton btnMergePlayers;
+        private BadLabel lblWargamingId;
+        private BadLabel badLabel3;
     }
 }
