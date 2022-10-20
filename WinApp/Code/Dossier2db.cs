@@ -572,7 +572,7 @@ namespace WinApp.Code
 			return battleSave;
 		}
 
-		private async static Task SaveNewPlayerTank(int tankId)
+		public async static Task SaveNewPlayerTank(int tankId)
 		{
 			// Check if this tank exists
 			if (!TankHelper.TankExists(tankId))
