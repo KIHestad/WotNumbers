@@ -1,1 +1,7 @@
-﻿
+﻿20-10-2022
+Add realName to battlePlayer table
+
+16-10-2022
+Fix battle details to reflect the correctly "Our Team" and "Enemy Team"
+Rigth now Team 1 is always ours, and Team 2 is always "Enemy team"
+Also in the Teams Overview show at the left always "our team", and at the right "enemy team" like in the game.
