@@ -43,5 +43,6 @@ namespace WinApp.Code
         {
             return WotNumVersionSettingsFolderUrl() + "/VersionSettings.json";
         }
+        public static readonly int RecalcDataBatchSize = 100; 
     }
 }
