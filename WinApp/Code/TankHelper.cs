@@ -200,20 +200,25 @@ namespace WinApp.Code
 			return lookupTankId;
 		}
 
-
-		public async static Task<int> GetPlayerTankId(int tankId)
+		public async static Task<int> GetPlayerTankId(int tankId, int playerId)
 		{
 			string sql = "SELECT playerTank.id " +
 						 "FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " +
 						 "WHERE tank.id=@id and playerTank.playerId=@playerId; ";
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@playerId", playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", tankId, DB.SqlDataType.Int);
 			DataTable dt = await DB.FetchData(sql);
-			int lookupTankId = 0;
+
+			int lookupTankId = -1;
 			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0][0]);
 			dt.Dispose();
 			dt.Clear();
 			return lookupTankId;
+		}
+
+		public async static Task<int> GetPlayerTankId(int tankId)
+		{
+			return await GetPlayerTankId(tankId, Config.Settings.playerId);
 		}
 
 		public async static Task<int> GetPlayerTankId(string tankName)
@@ -371,20 +376,27 @@ namespace WinApp.Code
 			}
 			return tankID;
 		}
-
-		public async static Task<int> GetTankID(int PlayerTankId)
+		public async static Task<int> GetTankID(int PlayerTankId, int playerId)
 		{
 			string sql = "SELECT tank.id " +
 						 "FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " +
 						 "WHERE playerTank.Id=@PlayerTankId AND playerTank.playerId=@playerId; ";
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@playerId", playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@PlayerTankId", PlayerTankId, DB.SqlDataType.Int);
+
 			DataTable dt = await DB.FetchData(sql);
-			int tankId = 0;
+
+			int tankId = -1;
 			if (dt.Rows.Count > 0) tankId = Convert.ToInt32(dt.Rows[0]["id"]);
 			dt.Dispose();
 			dt.Clear();
+
 			return tankId;
+		}
+
+		public async static Task<int> GetTankID(int PlayerTankId)
+		{
+			return await GetTankID(PlayerTankId, Config.Settings.playerId);
 		}
 
 		public async static Task<bool> GetAchievmentExist(string achName)

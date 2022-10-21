@@ -30,5 +30,6 @@ namespace WinApp.Code
                 return "https://wotnumbers.com";
         }
 
+        public static readonly int RecalcDataBatchSize = 100; 
     }
 }

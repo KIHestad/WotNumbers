@@ -261,13 +261,14 @@ namespace WinApp.Code
                             bool isOrphanBattle = await IsOrphanBattle(battleTime, tankId);
                             if (isOrphanBattle)
                             {
-                                CreateOrphanBattleFromJSON(json);
+                                await CreateOrphanBattleFromJSON(json);
                             }
 
                             // Private token
                             JToken token_private = token_root["private"];
 
                             // Now find battle created from dossier, or create now if special tank = special Event
+                            // This also works for orphan battles.
                             DataTable dt;
                             string sql =
                                 "select b.id as battleId, pt.id as playerTankId, pt.gGrindXP, b.arenaUniqueID, b.battleMode  " +
@@ -279,7 +280,6 @@ namespace WinApp.Code
                             dt = await DB.FetchData(sql);
 
                             // If battle found from DB add enhanced values from battle file now
-
                             if (dt.Rows.Count > 0)
                             {
                                 customErrMsg = "Module: Player data";
@@ -291,13 +291,6 @@ namespace WinApp.Code
                                     int playerTankId = Convert.ToInt32(dt.Rows[0]["playerTankId"]);
                                     //string battleMode = dt.Rows[0]["battleMode"].ToString();
                                     int grindXP = Convert.ToInt32(dt.Rows[0]["gGrindXP"]);
-                                    // Get values
-                                    List<BattleValue> battleValues = new List<BattleValue>
-                                    {
-                                        // common initial valuesIx
-                                        new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") }
-                                    };
-
                                     int playerAccountId = (int)token_private["account"].SelectToken("accountDBID");
 
                                     if (playerAccountId != Config.Settings.playerAccountId)
@@ -309,32 +302,40 @@ namespace WinApp.Code
                                         // update database
                                         sql = "UPDATE player SET accountId = @accountId WHERE name = @name;";
 
-                                        DB.AddWithValue(ref sql, "@accountId", playerAccountId, DB.SqlDataType.VarChar);
+                                        // DB.AddWithValue(ref sql, "@accountId", playerAccountId, DB.SqlDataType.VarChar);
                                         DB.AddWithValue(ref sql, "@name", Config.Settings.playerNameAndServer, DB.SqlDataType.VarChar);
 
                                         await DB.ExecuteNonQuery(sql);
                                     }
 
+                                    // Get values
+                                    List<BattleValue> battleValues = new List<BattleValue>
+                                    {
+                                        // common initial valuesIx
+                                        new BattleValue() { colname = "accountId", value = playerAccountId },
+                                        new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") }
+                                    };
+
                                     int playerTeam = (int)token_private["account"].SelectToken("team");
                                     int enemyTeam = playerTeam == 1 ? 2 : 1;
-                                    // Find game type
-                                    int bonusType = (int)token_common.SelectToken("bonusType");
-                                    battleValues.Add(new BattleValue() { colname = "bonusType", value = bonusType });
-                                    // Get platoon
-                                    bool getPlatoon = false;
-                                    if (bonusType == 1)
-                                        getPlatoon = true;
-                                    // Get Industrial Resource
-                                    bool getFortResource = false;
-                                    if (bonusType == 10)
-                                        getFortResource = true;
-                                    // Get battle mode as text from bonus type, also set flag for get clan for spesific battle types
-                                    
-                                    bool getEnemyClan = false;
-                                    string battleResultMode = GetBattleResultModeParamsFromBonusType(bonusType, out getEnemyClan);
 
-                                    battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
-                                    battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
+                                    // Find game type
+                                    BonusType bonusType = (int)token_common.SelectToken("bonusType");
+                                    battleValues.Add(new BattleValue() { colname = "bonusType", value = Convert.ToInt32(bonusType) });
+
+                                    // Get platoon
+                                    bool getPlatoon = bonusType.GetPlatoon();
+                                    
+                                    // Get Industrial Resource
+                                    bool getFortResource = bonusType.GetFortResource();
+
+                                    // Get battle mode as text from bonus type, also set flag for get clan for spesific battle types
+                                    bool getEnemyClan = bonusType.GetEnemyClan();
+                                    string battleResultMode = bonusType.GetBattleResultMode();
+
+                                    battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = Convert.ToString(token_common.SelectToken("bonusTypeName")) });
+                                    battleValues.Add(new BattleValue() { colname = "finishReasonName", value = Convert.ToString(token_common.SelectToken("finishReasonName")) });
+
                                     // personal - credits
                                     battleValues.Add(new BattleValue() { colname = "originalCredits", value = (int)token_private["vehicle"].SelectToken("originalCredits") });
                                     battleValues.Add(new BattleValue() { colname = "credits", value = (int)token_private["vehicle"].SelectToken("credits") });
@@ -346,6 +347,7 @@ namespace WinApp.Code
                                     battleValues.Add(new BattleValue() { colname = "eventCredits", value = (int)token_private["vehicle"].SelectToken("eventCredits") });
                                     battleValues.Add(new BattleValue() { colname = "premiumCreditsFactor10", value = (int)token_private["vehicle"].SelectToken("premiumCreditsFactor100") / 10 });
                                     battleValues.Add(new BattleValue() { colname = "achievementCredits", value = (int)token_private["vehicle"].SelectToken("achievementCredits") });
+
                                     // personal XP
                                     battleValues.Add(new BattleValue() { colname = "real_xp", value = (int)token_private["vehicle"].SelectToken("xp") });
                                     battleValues.Add(new BattleValue() { colname = "xpPenalty", value = (int)token_private["vehicle"].SelectToken("xpPenalty") });
@@ -357,11 +359,14 @@ namespace WinApp.Code
                                     battleValues.Add(new BattleValue() { colname = "achievementXP", value = (int)token_private["vehicle"].SelectToken("achievementXP") });
                                     battleValues.Add(new BattleValue() { colname = "eventXP", value = (int)token_private["vehicle"].SelectToken("eventXP") });
                                     battleValues.Add(new BattleValue() { colname = "eventTMenXP", value = (int)token_private["vehicle"].SelectToken("eventTMenXP") });
+
                                     // personal markOfMastery
                                     battleValues.Add(new BattleValue() { colname = "markOfMastery", value = (int)token_private["vehicle"].SelectToken("markOfMastery") });
+
                                     // Other
                                     battleValues.Add(new BattleValue() { colname = "vehTypeLockTime", value = (int)token_private["vehicle"].SelectToken("vehTypeLockTime") });
                                     battleValues.Add(new BattleValue() { colname = "marksOnGun", value = (int)token_private["vehicle"].SelectToken("marksOnGun") });
+
                                     // Rating values, more adds later
                                     Rating.WNHelper.RatingParameters rp = new Rating.WNHelper.RatingParameters
                                     {
@@ -374,7 +379,7 @@ namespace WinApp.Code
                                             battleValues.Add(new BattleValue() { colname = "fortResource", value = (int)token_private["vehicle"].SelectToken("fortResource") });
                                     // dayly double
                                     int dailyXPFactor = (int)token_private["vehicle"].SelectToken("dailyXPFactor10") / 10;
-                                    battleValues.Add(new BattleValue() { colname = "dailyXPFactorTxt", value = "'" + dailyXPFactor.ToString() + " X'" });
+                                    battleValues.Add(new BattleValue() { colname = "dailyXPFactorTxt", value = dailyXPFactor.ToString() + " X" });
                                     // Special fields: death reason, convert to string
                                     int deathReasonId = (int)token_private["vehicle"].SelectToken("deathReason");
                                     string deathReason = "Unknown";
@@ -388,7 +393,7 @@ namespace WinApp.Code
                                         case 4: deathReason = "Death zone"; break;
                                         case 5: deathReason = "Drowned"; break;
                                     }
-                                    battleValues.Add(new BattleValue() { colname = "deathReason", value = "'" + deathReason + "'" });
+                                    battleValues.Add(new BattleValue() { colname = "deathReason", value = deathReason });
                                     // Get from array autoLoadCost
                                     JArray array_autoload = (JArray)token_private["vehicle"].SelectToken("autoLoadCost");
                                     int autoLoadCost = (int)array_autoload[0];
@@ -419,27 +424,18 @@ namespace WinApp.Code
                                         case 1: gameplayName = "Encounter"; break;
                                         case 2: gameplayName = "Assault"; break;
                                     }
-                                    battleValues.Add(new BattleValue() { colname = "gameplayName", value = "'" + gameplayName + "'" });
+                                    battleValues.Add(new BattleValue() { colname = "gameplayName", value = gameplayName });
                                     // Correct battle start time
                                     battleValues.Add(new BattleValue() { colname = "battleTimeStart", value = battleTimeStart });
+
                                     // insert data
-                                    string fields = "";
-                                    foreach (var battleValue in battleValues)
-                                    {
-                                        if (battleValue.value.GetType() == typeof(DateTime))
-                                        {
-                                            string temp = "@datetimevalue";
-                                            DB.AddWithValue(ref temp, "@datetimevalue", battleValue.value, DB.SqlDataType.DateTime);
-                                            fields += battleValue.colname + " = " + temp + ", ";
-                                        }
-                                        else
-                                            fields += battleValue.colname + " = " + battleValue.value.ToString() + ", ";
-                                    }
-                                    sql = "update battle set " + fields + " arenaUniqueID=@arenaUniqueID where id=@battleId";
+                                    string fields = GetUpdateFieldsStringFromBattleValues(battleValues);
+
+                                    sql = "update battle set " + fields + ", arenaUniqueID=@arenaUniqueID where id=@battleId";
                                     DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
                                     DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Float);
                                     await DB.ExecuteNonQuery(sql);
-
+                                    
                                     // Add Battle Players *******************************
                                     customErrMsg = "Module: Battle Players";
                                     List<BattlePlayer> battlePlayers = new List<BattlePlayer>();
@@ -1041,6 +1037,24 @@ namespace WinApp.Code
             return dt.Rows.Count > 0;
         }
 
+        private async static Task<int> GetPlayerIdFromAccountId(int accountId)
+        {
+            string sql = "SELECT id FROM player WHERE accountId = @accountId;";
+
+            DB.AddWithValue(ref sql, "@accountId", accountId, DB.SqlDataType.Int);
+            DataTable dt = await DB.FetchData(sql);
+
+            // If battle found from DB add enhanced values from battle file now
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0][0]);
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
         private async static Task<bool> IsOrphanBattle(DateTime battleTime, int tankId)
         {
             DataTable dt;
@@ -1058,52 +1072,7 @@ namespace WinApp.Code
             // If battle found from DB add enhanced values from battle file now
             return (dt.Rows.Count == 0);
         }
-    
-        private static string GetBattleResultModeParamsFromBonusType(int bonusType, out bool getEnemyClan)
-        {
-            // TODO: Include grand battles, take a chance on 14
-            string battleResultMode = "Unknown";
-            getEnemyClan = false;
 
-            switch (bonusType)
-            {
-                case 0: battleResultMode = "Unknown"; break;
-                case 1: battleResultMode = "Random"; break;
-                case 2: battleResultMode = "Trainig Room"; break;
-                case 3: battleResultMode = "Tank Company"; getEnemyClan = true; break;
-                case 4: battleResultMode = "Tournament"; getEnemyClan = true; break;
-                case 5: battleResultMode = "Clan War"; getEnemyClan = true; break;
-                case 6: battleResultMode = "Tutorial"; break;
-                case 7: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeam).Name; break;
-                case 8: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeHistorical).Name; break;
-                case 9: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeSpecial).Name; break;
-                case 10: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeSkirmishes).Name; getEnemyClan = true; break;
-                case 11: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeStronghold).Name; getEnemyClan = true; break;
-                case 12: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeamRanked).Name; getEnemyClan = true; break;
-                case 13: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeGlobalMap).Name; getEnemyClan = true; break;
-                case 24: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeGrand).Name; break;
-            }
-
-            return battleResultMode;
-        }
-
-        private static BattleMode.TypeEnum GetBattleResultModeFromBonusType(int bonusType)
-        {
-            switch (bonusType)
-            {
-                case 1: return BattleMode.TypeEnum.ModeRandom_TC;
-                case 7: return BattleMode.TypeEnum.ModeTeam;
-                case 8: return BattleMode.TypeEnum.ModeHistorical;
-                case 9: return BattleMode.TypeEnum.ModeSpecial;
-                case 10: return BattleMode.TypeEnum.ModeSkirmishes;
-                case 11: return BattleMode.TypeEnum.ModeStronghold;
-                case 12: return BattleMode.TypeEnum.ModeTeamRanked;
-                case 13: return BattleMode.TypeEnum.ModeGlobalMap;
-                case 24: return BattleMode.TypeEnum.ModeGrand;
-            }
-
-            return BattleMode.TypeEnum.AllModes;
-        }
         private static string GetUpdateFieldsStringFromBattleValues(List<BattleValue> battleValues)
         {
             string fields = "";
@@ -1121,8 +1090,14 @@ namespace WinApp.Code
                     DB.AddWithValue(ref temp, "@datetimevalue", battleValue.value, DB.SqlDataType.DateTime);
                     fields += battleValue.colname + " = " + temp;
                 }
+                else if (battleValue.value.GetType() == typeof(String))
+                {
+                    fields += battleValue.colname + " = " + "'" + battleValue.value.ToString() + "'";
+                }
                 else
+                {
                     fields += battleValue.colname + " = " + battleValue.value.ToString();
+                }
 
                 addComma = true;
             }
@@ -1130,13 +1105,13 @@ namespace WinApp.Code
             return fields;
         }
 
-        class InsertTuple
+        class InsertPair
         {
             public string fields;
             public string values;
         };
 
-        private static InsertTuple GetInsertFieldsStringFromBattleValues(List<BattleValue> battleValues)
+        private static InsertPair GetInsertFieldsStringFromBattleValues(List<BattleValue> battleValues)
         {
             string fields = "";
             string values = "";
@@ -1159,27 +1134,29 @@ namespace WinApp.Code
                     // string temp = dateTime.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                     // values += "'" + temp + "'";
                 }
+                else if (battleValue.value.GetType() == typeof(string))
+                {
+                    values += "'" + battleValue.value.ToString() + "'";
+                }
                 else
                 {
-                    values += battleValue.value.ToString();
+                    values += battleValue.value.ToString(); 
                 }
 
                 fields += battleValue.colname;
                 addComma = true;
             }
 
-            InsertTuple tuple = new InsertTuple();
-            tuple.fields = fields;
-            tuple.values = values;
+            InsertPair pair = new InsertPair();
+            pair.fields = fields;
+            pair.values = values;
 
-            return tuple;
-            // return new InsertTuple{ fields, values };
+            return pair;
+            // return new InsertPair{ fields, values };
         }
 
         private async static Task CreateOrphanBattleFromJSON(string jsonString)
         {
-            // Por otro lado, hay que rellenar la tabla battlePlayer, con los players de la batalla.
-
             // This should create a battle entry exactly as if it was created from the Dossier, but
             // with the orphanDat flag enabled.
 
@@ -1188,44 +1165,56 @@ namespace WinApp.Code
             JToken token_private = token_root["private"];
             JToken token_account = token_private["account"];
 
+            int accountId = Convert.ToInt32(token_account.SelectToken("accountDBID"));
+
+            // Get the player ID from the player table using the accountDBID
+            int playerId = await GetPlayerIdFromAccountId(accountId);
+            if (playerId == -1)
+            {
+                // This dat file is not from a player in our WotNumbers database.
+                return;
+            }
+
             // we can get the data from vehicle or getting the AccountDBId and looking in the 
             // player list with this id. They contain the same values.
             JToken token_vehicle = token_private["vehicle"];
             int tankId = Convert.ToInt32(token_root.SelectToken("tankId"));
 
             // Return Existing Player Tank Data
-            DataTable playerTankTable = await TankHelper.GetPlayerTank(tankId); 
-            
+            int playerTankId = await TankHelper.GetPlayerTankId(tankId, playerId);
+
             // Check if Player has this tank
-            if (playerTankTable.Rows.Count == 0)
+            if (playerTankId  == -1)
             {
                 // New tank detected, this parts only run when new tank is detected
-                await Dossier2db.SaveNewPlayerTank(tankId); // Save new tank
-                playerTankTable = await TankHelper.GetPlayerTank(tankId); // Get data into DataTable once more now after row is added
+                await Dossier2db.SaveNewPlayerTank(tankId, playerId); // Save new tank
+                // Get data into DataTable once more now after row is added
+                playerTankId = await TankHelper.GetPlayerTankId(tankId, playerId); 
             }
-            int playerTankId = Convert.ToInt32(playerTankTable.Rows[0]["id"]);
 
-            int bonusType = Convert.ToInt32(token_common.SelectToken("bonusType"));
-            BattleMode.TypeEnum battleMode = GetBattleResultModeFromBonusType(bonusType);
+            BonusType bonusType = Convert.ToInt32(token_common.SelectToken("bonusType"));
+            BattleMode.TypeEnum battleMode = bonusType.GetBattleMode();
 
-           // Compute fields to add.
-            List < BattleValue> battleValues = new List<BattleValue>
+            // Compute fields to add.
+            List<BattleValue> battleValues = new List<BattleValue>
             {
                 // common initial values
-                new BattleValue() { colname = "playerTankId", value = playerTankId }
-                , new BattleValue() { colname = "orphanDat", value = 1 }
-                , new BattleValue() { colname = "arenaTypeID", value = Convert.ToInt64(token_common.SelectToken("arenaTypeID")) }
+                  new BattleValue() { colname = "orphanDat", value = 1 }
+                // , new BattleValue() { colname = "accountId", value = accountId }
+                , new BattleValue() { colname = "playerTankId", value = playerTankId }
                 , new BattleValue() { colname = "battlesCount", value = 1 }
             };
 
-            // https://wiki.wargaming.net/en/Player_Ratings_(WoT)#WN8
+            battleValues.Add(new BattleValue() { colname = "arenaTypeID", value = Convert.ToInt32(token_common.SelectToken("arenaTypeID")) });
+
+            // Compute rating parameters
             Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
             rp.DAMAGE = Convert.ToDouble(token_vehicle.SelectToken("damageDealt"));
-            rp.SPOT = Convert.ToDouble(token_vehicle.SelectToken("spotted")); 
+            rp.SPOT = Convert.ToDouble(token_vehicle.SelectToken("spotted"));
             rp.FRAGS = Convert.ToDouble(token_vehicle.SelectToken("kills"));
             rp.DEF = Convert.ToDouble(token_vehicle.SelectToken("numDefended"));
             rp.CAP = Convert.ToDouble(token_vehicle.SelectToken("capturePoints"));
-            
+
             int winnerTeam = Convert.ToInt32(token_common.SelectToken("winnerTeam"));
             int playerTeam = Convert.ToInt32(token_vehicle.SelectToken("team"));
             rp.WINS = (winnerTeam == playerTeam) ? 1.0 : 0.0;
@@ -1261,9 +1250,7 @@ namespace WinApp.Code
             });
 
             battleValues.Add(new BattleValue() { colname = "battleMode", value = BattleMode.GetItemFromType(battleMode).SqlName });
-            // battleValues.Add(new BattleValue() { colname = "battleMode", value = "@battleMode" });
-            // DB.AddWithValue(ref sqlValues, "@battleMode", BattleMode.GetItemFromType(battleMode).SqlName, DB.SqlDataType.VarChar);
-            
+
             // Calculate battle result
             battleValues.Add(new BattleValue() { colname = "battleResultId", value = (winnerTeam == playerTeam) ? 1 : (winnerTeam == -1) ? 3 : 2 });
             battleValues.Add(new BattleValue() { colname = "victory", value = (winnerTeam == playerTeam) ? 1 : 0 });
@@ -1289,7 +1276,7 @@ namespace WinApp.Code
             battleValues.Add(new BattleValue() { colname = "assistStun", value = Convert.ToInt32(token_vehicle.SelectToken("damageAssistedStun")) });
 
             battleValues.Add(new BattleValue() { colname = "shots", value = Convert.ToInt32(token_vehicle.SelectToken("shots")) });
-            battleValues.Add(new BattleValue() { colname = "hits", value = Convert.ToInt32(token_vehicle.SelectToken("directEnemyHits")) });
+            battleValues.Add(new BattleValue() { colname = "hits", value = Convert.ToInt32(token_vehicle.SelectToken("directHits")) });
             battleValues.Add(new BattleValue() { colname = "shotsReceived", value = Convert.ToInt32(token_vehicle.SelectToken("directHitsReceived")) });
             battleValues.Add(new BattleValue() { colname = "pierced", value = Convert.ToInt32(token_vehicle.SelectToken("piercingEnemyHits")) });
             battleValues.Add(new BattleValue() { colname = "piercedReceived", value = Convert.ToInt32(token_vehicle.SelectToken("piercingsReceived")) });
@@ -1320,26 +1307,137 @@ namespace WinApp.Code
             {
                 int damageRating = Convert.ToInt32(token_vehicle.SelectToken("damageRating"));
                 int damageRatingDelta = 0;//  Convert.ToInt32(token_vehicle.SelectToken("damageRating");
-                
+
                 battleValues.Add(new BattleValue() { colname = "damageRatingTotal", value = damageRating });
                 battleValues.Add(new BattleValue() { colname = "damageRating", value = damageRatingDelta });
             }
 
-            // Calc battle start time
+            // Calc battle times
             double arenaCreateTime = (double)token_common.SelectToken("arenaCreateTime"); // Arena create time
+            double duration = (double)token_common.SelectToken("duration"); // Arena duration
+            double battlefinishUnix = arenaCreateTime + duration; // Battle finish time
+
             DateTime battleTimeStart = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(arenaCreateTime));
             int battleLifeTime = Convert.ToInt32(token_vehicle.SelectToken("lifeTime"));
+            DateTime battleFinishTime = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(battlefinishUnix)).AddSeconds(45);
 
-            battleValues.Add(new BattleValue() { colname = "battleTime", value = battleTimeStart }); 
+            battleValues.Add(new BattleValue() { colname = "battleTime", value = battleFinishTime });
             battleValues.Add(new BattleValue() { colname = "battleTimeStart", value = battleTimeStart });
             battleValues.Add(new BattleValue() { colname = "battleLifeTime", value = battleLifeTime });
 
             // create a string with all the fields from the field list
-            string fields = GetUpdateFieldsStringFromBattleValues(battleValues);
-            InsertTuple fieldTuple = GetInsertFieldsStringFromBattleValues(battleValues);
+            string updateSql = GetUpdateFieldsStringFromBattleValues(battleValues);
+            
+            InsertPair fieldPair = GetInsertFieldsStringFromBattleValues(battleValues);
+            string sql = "INSERT INTO battle (" + fieldPair.fields + ") VALUES(" + fieldPair.values + ")";
+            await DB.ExecuteNonQuery(sql);
 
-            // string sql = "UPDATE battle SET " + fields + " arenaUniqueID=@arenaUniqueID";
-            string sql = "INSERT INTO battle (" + fieldTuple.fields + ") VALUES(" + fieldTuple.values + ")";
+            /* 
+            // This will be done in the "update" phase of the battle data.
+
+            int battleId = 0;
+            sql = "select max(id) as battleId from battle";
+            DataTable dt = await DB.FetchData(sql);
+            if (dt.Rows.Count > 0)
+                battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
+
+            await CreateBattlePlayersForOrphanBattle(battleId, jsonString);
+            */
+        }
+
+        private async static Task CreateBattlePlayersForOrphanBattle(int battleId, string jsonString)
+        {
+            JToken token_root = JObject.Parse(jsonString);
+            JToken token_players = token_root["players"];
+
+            // Create a list of players with basic information for later use in CreateBattlePlayerForOrphanBattle
+            List<BattlePlayer> battlePlayers = new List<BattlePlayer>();
+            foreach (JProperty playerToken in token_players)
+            {
+                JToken playerInfo = playerToken.First;
+
+                BattlePlayer player = new BattlePlayer();
+                player.accountDBID = Convert.ToInt32(playerToken.Name);
+                player.name = Convert.ToString(playerInfo.SelectToken("name"));
+
+                JToken token_vehicle = playerInfo["vehicle"];
+                player.vehicleid = Convert.ToInt32(token_vehicle.SelectToken("vehicleId"));
+
+                battlePlayers.Add(player);
+            }
+            
+            // For each player in the battle create an entry in the battlePlayers table.
+            foreach (JProperty playerToken in token_players)
+            {
+                await CreateBattlePlayerForOrphanBattle(battleId, playerToken.First, battlePlayers);
+            }
+        }
+        private async static Task CreateBattlePlayerForOrphanBattle(int battleId, JToken playerToken, List<BattlePlayer> battlePlayers)
+        {
+            JToken token_vehicle = playerToken["vehicle"];
+
+            List<BattleValue> battleValues = new List<BattleValue>
+            {
+                // common initial values
+                new BattleValue() { colname = "battleId", value = battleId }
+            };
+
+            battleValues.Add(new BattleValue() { colname = "accountId", value = Convert.ToInt32(token_vehicle.SelectToken("accountDBID")) });
+            battleValues.Add(new BattleValue() { colname = "name", value = Convert.ToString(playerToken.SelectToken("name")) });
+
+            int team = Convert.ToInt32(token_vehicle.SelectToken("team"));
+            battleValues.Add(new BattleValue() { colname = "team", value = team });
+
+            battleValues.Add(new BattleValue() { colname = "tankId", value = Convert.ToInt32(token_vehicle.SelectToken("typeCompDescr")) });
+            battleValues.Add(new BattleValue() { colname = "clanDBID", value = Convert.ToInt32(playerToken.SelectToken("clanDBID")) });
+            battleValues.Add(new BattleValue() { colname = "clanAbbrev", value = Convert.ToString(playerToken.SelectToken("clanAbbrev")) });
+            battleValues.Add(new BattleValue() { colname = "platoonID", value = Convert.ToInt32(playerToken.SelectToken("prebattleID")) });
+            battleValues.Add(new BattleValue() { colname = "xp", value = Convert.ToInt32(token_vehicle.SelectToken("xp")) });
+            battleValues.Add(new BattleValue() { colname = "damageDealt", value = Convert.ToInt32(token_vehicle.SelectToken("damageDealt")) });
+            battleValues.Add(new BattleValue() { colname = "credits", value = Convert.ToInt32(token_vehicle.SelectToken("credits")) });
+            battleValues.Add(new BattleValue() { colname = "capturePoints", value = Convert.ToInt32(token_vehicle.SelectToken("capturePoints")) });
+            battleValues.Add(new BattleValue() { colname = "damageReceived", value = Convert.ToInt32(token_vehicle.SelectToken("damageReceived")) });
+            battleValues.Add(new BattleValue() { colname = "deathReason", value = Convert.ToInt32(token_vehicle.SelectToken("deathReason")) });
+            battleValues.Add(new BattleValue() { colname = "directHits", value = Convert.ToInt32(token_vehicle.SelectToken("directHits")) });
+            battleValues.Add(new BattleValue() { colname = "directHitsReceived", value = Convert.ToInt32(token_vehicle.SelectToken("directHitsReceived")) });
+            battleValues.Add(new BattleValue() { colname = "droppedCapturePoints", value = Convert.ToInt32(token_vehicle.SelectToken("droppedCapturePoints")) });
+            battleValues.Add(new BattleValue() { colname = "hits", value = Convert.ToInt32(token_vehicle.SelectToken("directHits")) });
+            battleValues.Add(new BattleValue() { colname = "kills", value = Convert.ToInt32(token_vehicle.SelectToken("kills")) });
+            battleValues.Add(new BattleValue() { colname = "shots", value = Convert.ToInt32(token_vehicle.SelectToken("shots")) });
+            battleValues.Add(new BattleValue() { colname = "shotsReceived", value = Convert.ToInt32(token_vehicle.SelectToken("directHitsReceived")) });
+            battleValues.Add(new BattleValue() { colname = "spotted", value = Convert.ToInt32(token_vehicle.SelectToken("spotted")) });
+            battleValues.Add(new BattleValue() { colname = "tkills", value = Convert.ToInt32(token_vehicle.SelectToken("tkills")) });
+            // battleValues.Add(new BattleValue() { colname = "fortResource", value = Convert.ToInt32(token_vehicle.SelectToken("fortResource")) });
+            battleValues.Add(new BattleValue() { colname = "potentialDamageReceived", value = Convert.ToInt32(token_vehicle.SelectToken("potentialDamageReceived")) });
+            battleValues.Add(new BattleValue() { colname = "noDamageShotsReceived", value = Convert.ToInt32(token_vehicle.SelectToken("noDamageDirectHitsReceived")) });
+            battleValues.Add(new BattleValue() { colname = "sniperDamageDealt", value = Convert.ToInt32(token_vehicle.SelectToken("sniperDamageDealt")) });
+            battleValues.Add(new BattleValue() { colname = "piercingsReceived", value = Convert.ToInt32(token_vehicle.SelectToken("piercingsReceived")) });
+            battleValues.Add(new BattleValue() { colname = "pierced", value = Convert.ToInt32(token_vehicle.SelectToken("piercingEnemyHits")) });
+            battleValues.Add(new BattleValue() { colname = "mileage", value = Convert.ToInt32(token_vehicle.SelectToken("mileage")) });
+            battleValues.Add(new BattleValue() { colname = "lifeTime", value = Convert.ToInt32(token_vehicle.SelectToken("lifeTime")) });
+            battleValues.Add(new BattleValue() { colname = "isPrematureLeave", value = Convert.ToInt32(token_vehicle.SelectToken("isPrematureLeave")) });
+            battleValues.Add(new BattleValue() { colname = "explosionHits", value = Convert.ToInt32(token_vehicle.SelectToken("explosionHits")) });
+            battleValues.Add(new BattleValue() { colname = "explosionHitsReceived", value = Convert.ToInt32(token_vehicle.SelectToken("explosionHitsReceived")) });
+            battleValues.Add(new BattleValue() { colname = "damageBlockedByArmor", value = Convert.ToInt32(token_vehicle.SelectToken("damageBlockedByArmor")) });
+            battleValues.Add(new BattleValue() { colname = "damageAssistedTrack", value = Convert.ToInt32(token_vehicle.SelectToken("damageAssistedTrack")) });
+            battleValues.Add(new BattleValue() { colname = "damageAssistedRadio", value = Convert.ToInt32(token_vehicle.SelectToken("damageAssistedRadio")) });
+            battleValues.Add(new BattleValue() { colname = "isTeamKiller", value = Convert.ToInt32(token_vehicle.SelectToken("isTeamKiller")) });
+
+            int killerId = Convert.ToInt32(token_vehicle.SelectToken("killerID"));
+            battleValues.Add(new BattleValue() { colname = "killerID", value = killerId });
+
+            int idx = battlePlayers.FindIndex(p => p.vehicleid == killerId);
+            if (idx != -1)
+            {
+                battleValues.Add(new BattleValue() { colname = "killerName", value = battlePlayers[idx].name });
+            }
+
+            int playerTeam = (team == 1) ? 0 : 1;
+            battleValues.Add(new BattleValue() { colname = "playerTeam", value = playerTeam });
+
+            InsertPair insertPair = GetInsertFieldsStringFromBattleValues(battleValues);
+
+            string sql = "INSERT INTO battlePlayer (" + insertPair.fields + ") VALUES(" + insertPair.values + ")";
             await DB.ExecuteNonQuery(sql);
         }
     }
