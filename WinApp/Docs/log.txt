@@ -1,4 +1,10 @@
-﻿18-Oct-2022
+﻿21-Oct-2022
+Change explicit string castings to Convert.ToString in Battle2JSon.
+since SelectToken may return null value not convertible to string through casting
+like bonusTypeName and finishReasonName
+
+
+18-Oct-2022
 v1.0.4
 Fix "Check For New Update" to retrieve last version information from GitHUB.
 
