@@ -11,38 +11,38 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class RecalcBattleCreditPerTank : FormCloseOnEsc
+    public partial class RecalcBattleCreditPerTank : FormCloseOnEsc
     {
-		private static bool _autoRun = false;
+        private static bool _autoRun = false;
         public RecalcBattleCreditPerTank(bool autoRun = false)
-		{
-			InitializeComponent();
-			_autoRun = autoRun; 
-		}
+        {
+            InitializeComponent();
+            _autoRun = autoRun;
+        }
 
-		private async void UpdateFromApi_Shown(object sender, EventArgs e)
-		{
-			if (_autoRun)
+        private async void UpdateFromApi_Shown(object sender, EventArgs e)
+        {
+            if (_autoRun)
                 await RunNow();
-		}
+        }
 
-		private void UpdateProgressBar(string statusText)
-		{
-			lblProgressStatus.Text = statusText;
-			if (statusText == "")
-				badProgressBar.Value = 0;
-			else
-				badProgressBar.Value++;
-			Refresh();
-		}
+        private void UpdateProgressBar(string statusText)
+        {
+            lblProgressStatus.Text = statusText;
+            if (statusText == "")
+                badProgressBar.Value = 0;
+            else
+                badProgressBar.Value++;
+            Refresh();
+        }
 
-		private async Task RunNow()
-		{
-			this.Cursor = Cursors.WaitCursor;
-			RecalcBattleCreditsPerTheme.Cursor = Cursors.WaitCursor;
-			btnStart.Enabled = false;
-			badProgressBar.Value = 0;
-			badProgressBar.Visible = true;
+        private async Task RunNow()
+        {
+            this.Cursor = Cursors.WaitCursor;
+            RecalcBattleCreditsPerTheme.Cursor = Cursors.WaitCursor;
+            btnStart.Enabled = false;
+            badProgressBar.Value = 0;
+            badProgressBar.Visible = true;
             // Reset all old values
             UpdateProgressBar("Reset old values");
             string resetSQL =
@@ -59,8 +59,8 @@ namespace WinApp.Forms
                 "  credTotResult=null, " +
                 "  credBtlLifetime=null ";
             await DB.ExecuteNonQuery(resetSQL);
-			// Get battles
-			UpdateProgressBar("Getting battle count");
+            // Get battles
+            UpdateProgressBar("Getting battle count");
             // Credits = total income
             // CreditsNet = total income - all cost pre calculated
             string sql =
@@ -75,57 +75,64 @@ namespace WinApp.Forms
                 "where credits is not null and creditsNet is not null " +
                 "group by playerTank.id, tank.name, battle.battleMode " +
                 "order by tank.name, battle.battleMode";
-				
-			DataTable dt = await DB.FetchData(sql);
-			int tot = dt.Rows.Count;
-			badProgressBar.ValueMax = tot + 2;
-			sql = "";
-			foreach (DataRow dr in dt.Rows)
-			{
+            DataTable dt = await DB.FetchData(sql);
+
+            int tot = dt.Rows.Count;
+            badProgressBar.ValueMax = tot + 2;
+            sql = "";
+            int loopCount = 0;
+
+            UpdateProgressBar("Starting updates...");
+            foreach (DataRow dr in dt.Rows)
+            {
                 TankCreditCalculation.TankCreditItem tci = new TankCreditCalculation.TankCreditItem();
                 tci.battleCount = Convert.ToDouble(dr["battlesCount"]);
                 tci.battleMode = dr["battleMode"].ToString();
                 UpdateProgressBar("Calc credits " + badProgressBar.Value + "/" + tot.ToString() + " " + dr["tankName"].ToString() + " - " + tci.battleMode);
-				// Update
+                // Update
+
                 if (tci.battleCount > 0)
                 {
                     tci.playerTankId = Convert.ToInt32(dr["playerTankId"]);
-				    tci.creditsIncome = Convert.ToDouble(dr["credits"]);
+                    tci.creditsIncome = Convert.ToDouble(dr["credits"]);
                     tci.creditsNet = Convert.ToDouble(dr["creditsNet"]);
                     tci.maxcreditsIncome = Convert.ToDouble(dr["maxcredits"]);
                     tci.maxcreditsNet = Convert.ToDouble(dr["maxcreditsNet"]);
                     tci.battleLifeTime = Convert.ToDouble(dr["battleLifeTime"]);
-                    string newSQL = TankCreditCalculation.CreateSQL(tci);                    
+                    string newSQL = TankCreditCalculation.CreateSQL(tci);
                     sql += newSQL;
-                    if (sql.Length >= 5000) // Approx 50 updates
+                    loopCount++;
+
+                    if (loopCount >= Constants.RecalcDataBatchSize)
                     {
                         lblProgressStatus.Text = "Saving to database...";
                         await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+
+                        loopCount = 0;
                         sql = "";
                     }
                 }
-			}
-			if (sql != "") // Update last batch of sql's
-			{
+            }
+            if (sql != "") // Update last batch of sql's
+            {
                 await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
-				sql = "";
-			}
+                sql = "";
+            }
 
-			// Done
-			UpdateProgressBar("");
-			lblProgressStatus.Text = "Update finished: " + DateTime.Now.ToString();
-			btnStart.Enabled = true;
+            // Done
+            UpdateProgressBar("");
+            lblProgressStatus.Text = "Update finished: " + DateTime.Now.ToString();
+            btnStart.Enabled = true;
 
-			// Done
-			this.Cursor = Cursors.Default;
-			this.Close();
-		}
+            // Done
+            this.Cursor = Cursors.Default;
+            this.Close();
+        }
 
-		private async void btnStart_Click(object sender, EventArgs e)
-		{
+        private async void btnStart_Click(object sender, EventArgs e)
+        {
             await RunNow();
-		}
+        }
 
-		
-	}
+    }
 }

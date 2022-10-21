@@ -12,9 +12,9 @@ using static WinApp.Code.BattleHelper;
 
 namespace WinApp.Forms
 {
-	public partial class RecalcBattleRating : FormCloseOnEsc
+    public partial class RecalcBattleRating : FormCloseOnEsc
     {
-		private bool _autoRun = false;
+        private bool _autoRun = false;
         private bool _forWN9 = true;
         private bool _forWN8 = true;
         private bool _forWN7 = false;
@@ -23,22 +23,22 @@ namespace WinApp.Forms
         private int _forBattleId = 0;
 
         public RecalcBattleRating(bool autoRun, bool forWN9, bool forWN8, bool forWN7, bool forEFF, bool forPlayerPosition, int forBattleId = 0)
-		{
-			InitializeComponent();
-			_autoRun = autoRun;
+        {
+            InitializeComponent();
+            _autoRun = autoRun;
             _forWN9 = forWN9;
             _forWN8 = forWN8;
             _forWN7 = forWN7;
             _forEFF = forEFF;
             _forPlayerPosition = forPlayerPosition;
             _forBattleId = forBattleId;
-            chkLimitToolTip.SetToolTip(chkLimit, 
-                "By default the system only recalculates latest 1000 battles. " + 
+            chkLimitToolTip.SetToolTip(chkLimit,
+                "By default the system only recalculates latest 1000 battles. " +
                 "Check the checkbox to recalculate all battles, might take a long time.");
         }
 
-		private async void UpdateFromApi_Shown(object sender, EventArgs e)
-		{
+        private async void UpdateFromApi_Shown(object sender, EventArgs e)
+        {
             string ratings = "";
             if (_forWN9)
                 ratings += "WN9, ";
@@ -57,26 +57,26 @@ namespace WinApp.Forms
                 await RunNow();
             else if (_forBattleId == 0)
                 chkLimit.Visible = (await BattleHelper.GetTotalBattleRows()) > 1000;
-            
-		}
 
-		private void UpdateProgressBar(string statusText)
-		{
-			lblProgressStatus.Text = statusText;
-			if (statusText == "")
-				badProgressBar.Value = 0;
-			else
-				badProgressBar.Value++;
-			Refresh();
-		}
+        }
 
-		private async Task RunNow()
-		{
-			this.Cursor = Cursors.WaitCursor;
-			RecalcBattleWN8Theme.Cursor = Cursors.WaitCursor;
-			btnStart.Enabled = false;
-			badProgressBar.Value = 0;
-			badProgressBar.Visible = true;
+        private void UpdateProgressBar(string statusText)
+        {
+            lblProgressStatus.Text = statusText;
+            if (statusText == "")
+                badProgressBar.Value = 0;
+            else
+                badProgressBar.Value++;
+            Refresh();
+        }
+
+        private async Task RunNow()
+        {
+            this.Cursor = Cursors.WaitCursor;
+            RecalcBattleWN8Theme.Cursor = Cursors.WaitCursor;
+            btnStart.Enabled = false;
+            badProgressBar.Value = 0;
+            badProgressBar.Visible = true;
             // Get battles
             UpdateProgressBar("Getting battle count");
             string battleWhere = "";
@@ -85,12 +85,12 @@ namespace WinApp.Forms
             string records = "";
             if (_forBattleId != 0)
                 battleWhere = "WHERE battle.id = " + _forBattleId.ToString() + " ";
-            else 
+            else
             {
                 if (_autoRun)
                     records = _forPlayerPosition ? "100" : "1000";
                 else if (!chkLimit.Checked)
-                    records= "1000";
+                    records = "1000";
             }
             if (records != "")
             {
@@ -105,22 +105,26 @@ namespace WinApp.Forms
                 battleWhere +
                 "ORDER BY battle.id DESC " +
                 limit;
-			DataTable dt = await DB.FetchData(sql);
-			int tot = dt.Rows.Count;
-			badProgressBar.ValueMax = tot + 1;
-			sql = "";
-			foreach (DataRow dr in dt.Rows)
-			{
+            DataTable dt = await DB.FetchData(sql);
+
+            int tot = dt.Rows.Count;
+            badProgressBar.ValueMax = tot + 1;
+            sql = "";
+            int loopCount = 0;
+
+            UpdateProgressBar("Starting updates...");
+            foreach (DataRow dr in dt.Rows)
+            {
                 int battleId = Convert.ToInt32(dr["id"]);
                 UpdateProgressBar("Calc for battle " + badProgressBar.Value + "/" + tot.ToString() + " " + dr["battleTime"].ToString());
-				int tankId = Convert.ToInt32(dr["tankId"]);
+                int tankId = Convert.ToInt32(dr["tankId"]);
                 Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
-				rp.BATTLES = Convert.ToDouble(dr["battlesCount"]);
-				rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
-				rp.SPOT = Convert.ToDouble(dr["spotted"]);
-				rp.FRAGS = Convert.ToDouble(dr["frags"]);
-				rp.DEF = Convert.ToDouble(dr["def"]);
-				rp.WINS = Convert.ToDouble(dr["victory"]);
+                rp.BATTLES = Convert.ToDouble(dr["battlesCount"]);
+                rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
+                rp.SPOT = Convert.ToDouble(dr["spotted"]);
+                rp.FRAGS = Convert.ToDouble(dr["frags"]);
+                rp.DEF = Convert.ToDouble(dr["def"]);
+                rp.WINS = Convert.ToDouble(dr["victory"]);
                 // Create sql and get ratings
                 string newSQL = "update battle set ";
                 if (_forWN9)
@@ -145,7 +149,7 @@ namespace WinApp.Forms
                 if (_forWN7)
                 {
                     rp.TIER = await Code.Rating.WNHelper.GetAverageTier();
-                    double WN7 = Math.Round(Code.Rating.WN7.WN7battle(rp, true), 0); 
+                    double WN7 = Math.Round(Code.Rating.WN7.WN7battle(rp, true), 0);
                     newSQL += "wn7=@wn7, ";
                     DB.AddWithValue(ref newSQL, "@wn7", WN7, DB.SqlDataType.Int);
                 }
@@ -158,36 +162,40 @@ namespace WinApp.Forms
                 }
                 newSQL = newSQL.Substring(0, newSQL.Length - 2);
                 newSQL += " where id=@id;";
-				DB.AddWithValue(ref newSQL, "@id", battleId, DB.SqlDataType.Int);
-				sql += newSQL;
-				if (sql.Length >= 4000) // Approx 100 updates
-				{
-					lblProgressStatus.Text = "Saving to database...";
-                    await DB.ExecuteNonQuery(sql,Config.Settings.showDBErrors,true);
-					sql = "";
-				}
-			}
-			if (sql != "") // Update last batch of sql's
-			{
+                DB.AddWithValue(ref newSQL, "@id", battleId, DB.SqlDataType.Int);
+                sql += newSQL;
+
+                loopCount++;
+                if (loopCount >= Constants.RecalcDataBatchSize)
+                {
+                    lblProgressStatus.Text = "Saving to database...";
+                    await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+                    
+                    loopCount = 0;
+                    sql = "";
+                }
+            }
+            if (sql != "") // Update last batch of sql's
+            {
                 await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
-				sql = "";
-			}
+                sql = "";
+            }
 
             // Done
             UpdateProgressBar("");
-			lblProgressStatus.Text = "Update finished: " + DateTime.Now.ToString();
-			btnStart.Enabled = true;
+            lblProgressStatus.Text = "Update finished: " + DateTime.Now.ToString();
+            btnStart.Enabled = true;
 
-			// Done
-			this.Cursor = Cursors.Default;
-			this.Close();
-		}
+            // Done
+            this.Cursor = Cursors.Default;
+            this.Close();
+        }
 
-		private async void btnStart_Click(object sender, EventArgs e)
-		{
+        private async void btnStart_Click(object sender, EventArgs e)
+        {
             await RunNow();
-		}
+        }
 
-		
-	}
+
+    }
 }

@@ -572,18 +572,23 @@ namespace WinApp.Code
 			return battleSave;
 		}
 
-		public async static Task SaveNewPlayerTank(int tankId)
+		public async static Task SaveNewPlayerTank(int tankId, int playerId)
 		{
 			// Check if this tank exists
 			if (!TankHelper.TankExists(tankId))
-                await TankHelper.CreateUnknownTank(tankId, "Unknown_" + tankId.ToString());
+				await TankHelper.CreateUnknownTank(tankId, "Unknown_" + tankId.ToString());
 
 			// Add to database
 			string sql = "INSERT INTO PlayerTank (tankId, playerId) VALUES (@tankId, @playerId); ";
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@playerId", playerId, DB.SqlDataType.Int);
 			await DB.ExecuteNonQuery(sql);
 			newTank = true;
+		}
+
+		public async static Task SaveNewPlayerTank(int tankId)
+		{
+			await SaveNewPlayerTank(tankId, Config.Settings.playerId);
 		}
 
 		private async static Task<List<AchItem>> UpdatePlayerTankAch(int tankId, int playerTankId, List<AchItem> achList)
