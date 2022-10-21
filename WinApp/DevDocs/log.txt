@@ -1,5 +1,6 @@
-﻿20-Oct-2022
-Update wotbr2j script to accept new WoT 1.18.1.1 battle dat files.
+﻿21-Oct-2022
+Unify Recalc classes to make the code look similar on all the processes.
+Implmentation of orphan battles retrieval + Select battle vide mode.
 
 18-Oct-2022
 Fix "Check For New Update" to retrieve last version information from GitHUB.
