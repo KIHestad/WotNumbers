@@ -293,26 +293,11 @@ namespace WinApp.Code
                                     int grindXP = Convert.ToInt32(dt.Rows[0]["gGrindXP"]);
                                     int playerAccountId = (int)token_private["account"].SelectToken("accountDBID");
 
-                                    if (playerAccountId != Config.Settings.playerAccountId)
-                                    {
-                                        // Dossier2json changed player and the new player has not playerAccountId setup.
-                                        Config.Settings.playerAccountId = playerAccountId;
-                                        await Config.SaveConfig();
-
-                                        // update database
-                                        sql = "UPDATE player SET accountId = @accountId WHERE name = @name;";
-
-                                        // DB.AddWithValue(ref sql, "@accountId", playerAccountId, DB.SqlDataType.VarChar);
-                                        DB.AddWithValue(ref sql, "@name", Config.Settings.playerNameAndServer, DB.SqlDataType.VarChar);
-
-                                        await DB.ExecuteNonQuery(sql);
-                                    }
-
                                     // Get values
                                     List<BattleValue> battleValues = new List<BattleValue>
                                     {
                                         // common initial valuesIx
-                                        new BattleValue() { colname = "accountId", value = playerAccountId },
+                                        // new BattleValue() { colname = "accountId", value = playerAccountId },
                                         new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") }
                                     };
 

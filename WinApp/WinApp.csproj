@@ -152,6 +152,7 @@
     <Compile Include="Code\BattleCountFilterHelper.cs" />
     <Compile Include="Code\BattleHelper.cs" />
     <Compile Include="Code\BattleResultRetriever.cs" />
+    <Compile Include="Code\BonusType.cs" />
     <Compile Include="Code\Constants.cs" />
     <Compile Include="Code\CursorHelper.cs" />
     <Compile Include="Code\CustomFileCopier.cs" />
@@ -165,6 +166,12 @@
     </Compile>
     <Compile Include="Forms\BattleDetail\BattleDetailMap.Designer.cs">
       <DependentUpon>BattleDetailMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\RecalcPlayerAccountId.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\RecalcPlayerAccountId.designer.cs">
+      <DependentUpon>RecalcPlayerAccountId.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\AppBattleUpload.cs" />
     <Compile Include="Services\AppNewVersion.cs" />
@@ -794,6 +801,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GrindingSetup.resx">
       <DependentUpon>GrindingSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\RecalcPlayerAccountId.resx">
+      <DependentUpon>RecalcPlayerAccountId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\UpdateFromApi.resx">
       <DependentUpon>UpdateFromApi.cs</DependentUpon>

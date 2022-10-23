@@ -23,13 +23,14 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleCreditPerTank = false;
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 		public static bool RunRecalcBattleMaxTier = false;
-		public static bool RunRecalcBattleMinTier = false;
+		public static bool RunRecalcBattleMinTier = false; 
+		public static bool RunRecalcPlayerAccountId = false;
 		public static bool RunInstallNewBrrVersion = false;
 		public static bool RunUploadAllToWotNumWeb = false;
 		public static bool CopyAdminDB = false;
 
-		// The current databaseversion
-		public static int ExpectedNumber = 544; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+	// The current databaseversion
+	public static int ExpectedNumber = 544; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -46,6 +47,7 @@ namespace WinApp.Code
 						// Add column for orphan Dat files.
 						"ALTER TABLE battle ADD orphanDat bit NOT NULL default 0;";
 					sqlite = mssql;
+					RunRecalcPlayerAccountId = true;
 					break;
 				case 543:
 					mssql = "UPDATE map SET description = 'The dense central structures in the center of the map are the key point for the location. Controlling this area allows you to hold an all - around defense by firing across the vast fields around the town.Beyond the walls of the fortifications, you should take advantage of terrain irregularities, as most of the area is very exposed to enemy fire.'" +
