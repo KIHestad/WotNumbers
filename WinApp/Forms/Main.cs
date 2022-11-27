@@ -652,7 +652,7 @@ namespace WinApp.Forms
 				if (!websiteVersionCheck.DownloadSettings.Active)
 				{
 					// Not available
-					Log.AddToLogBuffer("Website providing new version for download is in maintanace mode.");
+					Log.AddToLogBuffer("Website providing new version for download is in maintenace mode.");
 					Log.AddToLogBuffer("Message returned from website: " + websiteVersionCheck.DownloadSettings.InactiveMessage);
 					await Log.WriteLogBuffer(true);
 					if (manualVersionCheck)
@@ -733,9 +733,11 @@ namespace WinApp.Forms
 
 		private async Task RunAppStartupActions(string message)
 		{
+
 			// Debug option - avoid init dossier file check after startup
 			// if (false)
 			{
+				// await DBVersion.FixBattleTable();
 				if (DBVersion.RunDownloadAndUpdateTanks)
 					await RunWotApi(true);
 				if (DBVersion.RunRecalcBattleWN8 || DBVersion.RunRecalcBattleWN9 || DBVersion.RunRecalcBattlePos)

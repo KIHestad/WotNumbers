@@ -309,13 +309,13 @@ namespace WinApp.Code
                                     battleValues.Add(new BattleValue() { colname = "bonusType", value = Convert.ToInt32(bonusType) });
 
                                     // Get platoon
-                                    bool getPlatoon = bonusType.GetPlatoon();
+                                    bool getPlatoon = bonusType.ShouldGetPlatoon();
                                     
                                     // Get Industrial Resource
-                                    bool getFortResource = bonusType.GetFortResource();
+                                    bool getFortResource = bonusType.ShouldGetFortResource();
 
                                     // Get battle mode as text from bonus type, also set flag for get clan for spesific battle types
-                                    bool getEnemyClan = bonusType.GetEnemyClan();
+                                    bool getEnemyClan = bonusType.ShouldGetEnemyClan();
                                     string battleResultMode = bonusType.GetBattleResultMode();
 
                                     battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = Convert.ToString(token_common.SelectToken("bonusTypeName")) });
@@ -1237,9 +1237,9 @@ namespace WinApp.Code
             battleValues.Add(new BattleValue() { colname = "battleMode", value = BattleMode.GetItemFromType(battleMode).SqlName });
 
             // Calculate battle result
-            battleValues.Add(new BattleValue() { colname = "battleResultId", value = (winnerTeam == playerTeam) ? 1 : (winnerTeam == -1) ? 3 : 2 });
+            battleValues.Add(new BattleValue() { colname = "battleResultId", value = (winnerTeam == playerTeam) ? 1 : (winnerTeam == 0) ? 2 : 3 });
             battleValues.Add(new BattleValue() { colname = "victory", value = (winnerTeam == playerTeam) ? 1 : 0 });
-            battleValues.Add(new BattleValue() { colname = "draw", value = (winnerTeam == -1) ? 1 : 0 });
+            battleValues.Add(new BattleValue() { colname = "draw", value = (winnerTeam == 0) ? 1 : 0 });
             battleValues.Add(new BattleValue() { colname = "defeat", value = (winnerTeam != playerTeam) ? 1 : 0 });
 
             // Calculate battle survive

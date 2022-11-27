@@ -1025,9 +1025,12 @@ namespace WinApp.Code
 				// Get the battle end time, subtract lifetime to estimate start time - will be overwritten with actual start time from battle result
 				DateTime battleEndTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(battleNewRow["battletime"]));
 				int lifetime = Convert.ToInt32(battleNewRow["battleLifeTime"]);
-				if (lifetime > 180)
-					lifetime -= 120; // Normally lifetime is more than actually lifetime, probably because of loading time is included?
+				
+				// This is not valid since it depends on hardware loading time SSD or physical disc.
+				// if (lifetime > 180)
+				//	lifetime -= 120; // Normally lifetime is more than actually lifetime, probably because of loading time is included?
 
+				// battleStartTime is equivalent to arenaCreationTime, the moment after the MM is created.
 				DateTime battleStartTime = battleEndTime.AddSeconds(-lifetime);
 				sqlValues += ", '" + battleStartTime.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'";
 
@@ -1035,7 +1038,7 @@ namespace WinApp.Code
 				if (sqlFields.Length > 0)
 				{
 					// look if the battle was already added
-					int battleId = await FindOrphanBattle(battleStartTime, tankId);
+					int battleId = await FindOrphanBattle(battleStartTime, tankId, battleNewRow);
 
 					bool battleExists = battleId != -1;
 					if (battleExists)
@@ -1104,27 +1107,115 @@ namespace WinApp.Code
 			}
 
 		}
-		private async static Task<int> FindOrphanBattle(DateTime battleStartTime, int tankId)
+		private static bool SameValue(DataRow src, DataRow dst, string field)
 		{
-			DataTable dt;
+			object srcValue = src[field];
+			object dstValue = dst[field];
+			bool result = true;
+
+			if (srcValue.GetType() == typeof(System.DateTime))
+			{
+				DateTime srcTime = Convert.ToDateTime(srcValue);
+				DateTime dstTime = Convert.ToDateTime(dstValue);
+				const int threshold = 10;
+
+				result = (srcTime >= dstTime.AddSeconds(-threshold)) && (srcTime <= dstTime.AddSeconds(threshold));
+			}
+			else if (srcValue.GetType() == typeof(System.String))
+			{
+				string srcString = Convert.ToString(srcValue);
+				string dstString = Convert.ToString(dstValue);
+				result = srcString == dstString;
+			}
+			else if (srcValue.GetType() == typeof(System.Int64))
+			{
+				Int32 srcInt = Convert.ToInt32(srcValue);
+				Int32 dstInt = Convert.ToInt32(dstValue);
+				result = srcInt == dstInt;
+			}
+			else if (srcValue.GetType() == typeof(System.Double))
+			{
+				double srcDouble = Convert.ToDouble(srcValue);
+				double dstDouble = Convert.ToDouble(dstValue);
+				result = srcDouble == dstDouble;
+			}
+			else if (srcValue.GetType() == typeof(System.Boolean))
+			{
+				bool srcBool = Convert.ToBoolean(srcValue);
+				bool dstBool = Convert.ToBoolean(dstValue);
+				result = srcBool == dstBool;
+			}
+			else
+			{
+				result = srcValue == dstValue;
+				result = src[field] == dst[field];
+			}
+
+			return result;
+		}
+		private static bool SameBattle(DataRow src, DataRow dst)
+		{
+			bool same = SameValue(src, dst, "playerTankId")
+					&& SameValue(src, dst, "battleTime")
+					&& SameValue(src, dst, "battleLifeTime")
+
+					&& SameValue(src, dst, "battleSurviveId")
+					&& SameValue(src, dst, "frags")
+					&& SameValue(src, dst, "dmg")
+					&& SameValue(src, dst, "dmgReceived")
+					&& SameValue(src, dst, "assistSpot")
+					&& SameValue(src, dst, "assistTrack")
+
+					// Need more ?
+					&& SameValue(src, dst, "cap")
+					&& SameValue(src, dst, "def")
+					&& SameValue(src, dst, "shots")
+					&& SameValue(src, dst, "hits")
+					&& SameValue(src, dst, "shotsReceived")
+					&& SameValue(src, dst, "pierced")
+					&& SameValue(src, dst, "piercedReceived")
+					&& SameValue(src, dst, "spotted")
+					&& SameValue(src, dst, "mileage")
+					// && SameValue(src, dst, "treesCut")
+					// && SameValue(src, dst, "xp")
+					&& SameValue(src, dst, "wn8")
+					&& SameValue(src, dst, "eff")
+					&& SameValue(src, dst, "battleMode")
+					&& SameValue(src, dst, "heHitsReceived")
+					&& SameValue(src, dst, "noDmgShotsReceived")
+					&& SameValue(src, dst, "heHits")
+					&& SameValue(src, dst, "wn7")
+					&& SameValue(src, dst, "dmgBlocked")
+					&& SameValue(src, dst, "potentialDmgReceived")
+					&& SameValue(src, dst, "xpOriginal")
+					;
+
+			return same;
+		}
+
+		private async static Task<int> FindOrphanBattle(DateTime battleStartTime, int tankId, DataRow battleRow)
+		{
 			string sql =
 				"select b.id as battleId " +
 				"from battle b left join playerTank pt on b.playerTankId = pt.id " +
 				"where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1 and b.orphanDat=1; ";
 
+			const int k_timeThreshold = 90;
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@battleTimeFrom", battleStartTime.AddSeconds(-30), DB.SqlDataType.DateTime);
-			DB.AddWithValue(ref sql, "@battleTimeTo", battleStartTime.AddSeconds(30), DB.SqlDataType.DateTime);
-
-			dt = await DB.FetchData(sql);
+			DB.AddWithValue(ref sql, "@battleTimeFrom", battleStartTime.AddSeconds(-k_timeThreshold), DB.SqlDataType.DateTime);
+			DB.AddWithValue(ref sql, "@battleTimeTo", battleStartTime.AddSeconds(k_timeThreshold), DB.SqlDataType.DateTime);
 
 			int battleId = -1;
-
-			if (dt.Rows.Count > 0)
+			
+			DataTable dt = await DB.FetchData(sql);
+			foreach(DataRow row in dt.Rows)
 			{
-				battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
+				if (SameBattle(row, battleRow))
+				{
+					battleId = Convert.ToInt32(row["battleId"]);
+					break;
+				}
 			}
-
 			return battleId;
 		}
 	}

@@ -20,17 +20,17 @@ namespace WinApp.Code
         public static bool operator ==(BonusType a, BonusType b) => a.bonusType == b.bonusType;
         public static bool operator !=(BonusType a, BonusType b) => a.bonusType != b.bonusType;
 
-        public bool GetPlatoon()
+        public bool ShouldGetPlatoon()
         {
             return bonusType == 1;
         }
 
-        public bool GetFortResource()
+        public bool ShouldGetFortResource()
         {
             return bonusType == 10;
         }
 
-        public bool GetEnemyClan()
+        public bool ShouldGetEnemyClan()
         {
             switch (bonusType)
             {
