@@ -30,7 +30,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 544; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 545; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -42,6 +42,11 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
+				case 545:
+					mssql = "UPDATE columnSelection SET colName = 'playerTank.skillRecon' " + 
+							"WHERE id = 69; "; 
+					sqlite = mssql;
+					break;
 				case 544:
 					mssql =
 						// Add column for orphan Dat files.
