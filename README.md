@@ -10,7 +10,7 @@ System for tracking World of Tanks performance and progress
 
 How to update the application after a new WoT patch/update
 
-- Most times we'll have to deal changing the battle2json files.
+- Most times we'll have to deal changing the battle2json files. (Remember to update the parser[version] in wotbr2j.py to the one of the game) 	
 - There could be something new that need to be added to the user data base, like when a new map is added.
 Add these to DbVersion.cs, increase version number in the ExpectedNumber field.
 - If new tanks are added to the game, we can use the Admin tool to download and update the Admin.db database.

@@ -1,7 +1,15 @@
-﻿17-Oct-2022
+﻿20-Oct-2022
+v1.0.4
+Update wotbr2j script to accept new WoT 1.18.1.1 battle dat files.
+
+18-Oct-2022
+v1.0.4
+Fix "Check For New Update" to retrieve last version information from GitHUB.
+
+17-Oct-2022
 v1.0.3
 - Fix app crash when creating DB from scratch.
-- Fixed battle results to display proper team for the players.
+- Fixed detailed battle results window to display proper team for the players.
 
 16 Oct 2022
 v1.0.3
