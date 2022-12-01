@@ -29,7 +29,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 543; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 544; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -41,6 +41,11 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
+				case 544:
+					mssql = "UPDATE columnSelection SET colName = 'playerTank.skillRecon' " +
+							"WHERE id = 69; ";
+					sqlite = mssql;
+					break;
 				case 543:
 					mssql = "UPDATE map SET description = 'The dense central structures in the center of the map are the key point for the location. Controlling this area allows you to hold an all - around defense by firing across the vast fields around the town.Beyond the walls of the fortifications, you should take advantage of terrain irregularities, as most of the area is very exposed to enemy fire.'" +
 							"WHERE id = 206;" +
