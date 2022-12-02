@@ -1,4 +1,9 @@
-﻿20-Oct-2022
+﻿02-Dec-202
+Updated Battle2Json and Dossier2Json scripts to WoT 1.19.0.0 (thanks to God Lemmy)
+Fix column name playerTank.skillRecon in table columnSelection 
+Added new tanks in Admin.db (Tank_Unknown_37889)
+
+20-Oct-2022
 Update wotbr2j script to accept new WoT 1.18.1.1 battle dat files.
 
 18-Oct-2022
