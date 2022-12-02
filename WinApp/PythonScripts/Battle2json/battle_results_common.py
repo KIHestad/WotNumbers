@@ -13,7 +13,7 @@ class FLAG_ACTION:
     LOST = 3
     RANGE = (
      PICKED_UP_FROM_BASE, PICKED_UP_FROM_GROUND, CAPTURED, LOST)
-     
+
 from DictPackers import DictPacker, MergeDictPacker, SimpleDictPacker, DeltaPacker, ValueReplayPacker, roundToInt
 #Modified for WotNumbers
 #from items.vehicles import VEHICLE_DEVICE_TYPE_NAMES, VEHICLE_TANKMAN_TYPE_NAMES
@@ -504,7 +504,7 @@ BATTLE_RESULTS = [
  (
   'winnerIfDraw', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
-  'isPrematureLeave', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
+  'isPrematureLeave', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
  (
   'watchedBattleToTheEnd', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
