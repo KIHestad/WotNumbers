@@ -12,7 +12,8 @@ from battle_results_constants import BATTLE_RESULT_ENTRY_TYPE as ENTRY_TYPE
 import battle_results_common, battle_results_random
 
 parser = dict()
-parser['version'] = "1.18.1.1"
+parser['version'] = "1.19.0.0"
+
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
 
@@ -78,9 +79,11 @@ def main():
         legacyBattleResultVersion, brAllDataRaw = cPickle.load(cachefile)
     except Exception, e: 
         exitwitherror('Error occured reading battle file:' + filename_source + ' - Error Message:' + e.message) 
+
+    printmessage('Battle file binary content read, found legacy battle result version: ' + str(legacyBattleResultVersion), False)
+
     if not 'brAllDataRaw' in locals(): 
         exitwitherror('Battle Result file read, but main data object is missing.')
-    printmessage('Battle file binary content read, found legacy battle result version: ' + str(legacyBattleResultVersion), False)
 
     # Read raw binary data from battle file
     arenaUniqueID, brAccount, brVehicleRaw, brOtherDataRaw = brAllDataRaw
