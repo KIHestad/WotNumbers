@@ -1151,9 +1151,15 @@ namespace WinApp.Code
 				result = src[field] == dst[field];
 			}
 
+			if (result != true)
+			{
+				Log.AddToLogBuffer($"Warning: field (" + field + ") in battles src=" + src["id"] + " and dst= " + dst["id"] + 
+					" has different values (" + Convert.ToString(srcValue) + "  / " + Convert.ToString(dstValue) + " )");
+			}
 			return result;
 		}
-		private static bool SameBattle(DataRow src, DataRow dst)
+
+		public static bool SameBattle(DataRow src, DataRow dst)
 		{
 			bool same = SameValue(src, dst, "playerTankId")
 					&& SameValue(src, dst, "battleTime")
@@ -1170,14 +1176,14 @@ namespace WinApp.Code
 					&& SameValue(src, dst, "cap")
 					&& SameValue(src, dst, "def")
 					&& SameValue(src, dst, "shots")
-					&& SameValue(src, dst, "hits")
+					// && SameValue(src, dst, "hits")			// some battles differ! Check addOrphanBattle for possible bug
 					&& SameValue(src, dst, "shotsReceived")
 					&& SameValue(src, dst, "pierced")
 					&& SameValue(src, dst, "piercedReceived")
 					&& SameValue(src, dst, "spotted")
 					&& SameValue(src, dst, "mileage")
-					// && SameValue(src, dst, "treesCut")
-					// && SameValue(src, dst, "xp")
+					// && SameValue(src, dst, "treesCut")		// some battles differ!
+					// && SameValue(src, dst, "xp")				// some battles differ! Check addOrphanBattle for possible bug
 					&& SameValue(src, dst, "wn8")
 					&& SameValue(src, dst, "eff")
 					&& SameValue(src, dst, "battleMode")

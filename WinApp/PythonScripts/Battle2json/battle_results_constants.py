@@ -1,9 +1,9 @@
 # uncompyle6 version 3.7.4
 # Python bytecode 2.7 (62211)
-# Decompiled from: Python 2.7.8 (default, Jun 30 2014, 16:08:48) [MSC v.1500 64 bit (AMD64)]
+# Decompiled from: Python 2.7.17 (default, Sep 30 2020, 13:38:04) 
+# [GCC 7.5.0]
 # Embedded file name: scripts/common/battle_results/battle_results_constants.py
-#Modified for WotNumbers
-#from constants import ARENA_BONUS_TYPE
+# from constants import ARENA_BONUS_TYPE
 class ARENA_BONUS_TYPE:
     UNKNOWN = 0
     REGULAR = 1
@@ -65,10 +65,6 @@ class ARENA_BONUS_TYPE:
     EXTERNAL_RANGE = (
      SORTIE_2, FORT_BATTLE_2, GLOBAL_MAP,
      TOURNAMENT, TOURNAMENT_CLAN, TOURNAMENT_REGULAR, TOURNAMENT_EVENT)
-    NOT_IMMEDIATE_BATTLE_RESULTS = BATTLE_ROYALE_RANGE + (
-     MAPS_TRAINING,
-     EVENT_BATTLES,
-     EVENT_BATTLES_2)
 
 PATH_TO_CONFIG = {ARENA_BONUS_TYPE.REGULAR: 'random', 
    ARENA_BONUS_TYPE.EPIC_RANDOM: 'random', 
@@ -82,8 +78,6 @@ PATH_TO_CONFIG = {ARENA_BONUS_TYPE.REGULAR: 'random',
    ARENA_BONUS_TYPE.BATTLE_ROYALE_TRN_SQUAD: 'battle_royale', 
    ARENA_BONUS_TYPE.MAPBOX: 'random', 
    ARENA_BONUS_TYPE.MAPS_TRAINING: 'maps_training', 
-   ARENA_BONUS_TYPE.EVENT_BATTLES: 'event', 
-   ARENA_BONUS_TYPE.EVENT_BATTLES_2: 'event', 
    ARENA_BONUS_TYPE.FUN_RANDOM: 'random', 
    ARENA_BONUS_TYPE.COMP7: 'comp7'}
 POSSIBLE_TYPES = (

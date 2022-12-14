@@ -685,11 +685,15 @@ namespace WinApp.Forms
 						await Log.WriteLogBuffer(true);
 						string msg =
 							"New version is available: " + websiteVersionCheck.DownloadSettings.Version + Environment.NewLine + Environment.NewLine +
-							"Click OK to go to the download site." + Environment.NewLine + Environment.NewLine;
-						MsgBox.Show(msg, "Website version check", MsgBox.Type.OK, this);
-						Process.Start(Constants.WotNumDownloadUrl());
-						this.Close();
-						Application.Exit();
+							"	Do you want to go to the download site?" + Environment.NewLine + Environment.NewLine;
+
+						MsgBox.Button answer = MsgBox.Show(msg, "Website version check", MsgBox.Type.YesNo, this);
+						if (answer == MsgBox.Button.Yes)
+						{
+							Process.Start(Constants.WotNumDownloadUrl());
+							this.Close();
+							Application.Exit();
+						}
 					}
 					else
 					{
@@ -728,6 +732,7 @@ namespace WinApp.Forms
 			mRecalcBattlePos.Enabled = true;
 			mRecalcBattleAllRatings.Enabled = true;
 			mRecalcBattleCreditsPerTank.Enabled = true;
+			mFixBattleTable.Enabled = true;
 			mAppSettings.Enabled = true;
 		}
 
@@ -738,6 +743,7 @@ namespace WinApp.Forms
 			// if (false)
 			{
 				// await DBVersion.FixBattleTable();
+
 				if (DBVersion.RunDownloadAndUpdateTanks)
 					await RunWotApi(true);
 				if (DBVersion.RunRecalcBattleWN8 || DBVersion.RunRecalcBattleWN9 || DBVersion.RunRecalcBattlePos)
@@ -5754,5 +5760,12 @@ namespace WinApp.Forms
 			Process.Start("explorer.exe", Config.AppDataHomeViewFolder);
 		}
 		#endregion
+
+		private async void mFixBattleTable_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.FixBattleTable(true);
+			frm.ShowDialog(this);
+			await ShowView("Refreshed view");
+		}
 	}
 }

@@ -1,6 +1,7 @@
 # uncompyle6 version 3.7.4
 # Python bytecode 2.7 (62211)
-# Decompiled from: Python 2.7.8 (default, Jun 30 2014, 16:08:48) [MSC v.1500 64 bit (AMD64)]
+# Decompiled from: Python 2.7.17 (default, Sep 30 2020, 13:38:04) 
+# [GCC 7.5.0]
 # Embedded file name: scripts/common/battle_results/battle_results_common.py
 from battle_results_constants import BATTLE_RESULT_ENTRY_TYPE as ENTRY_TYPE
 #Modified for WotNumbers 
@@ -12,7 +13,7 @@ class FLAG_ACTION:
     LOST = 3
     RANGE = (
      PICKED_UP_FROM_BASE, PICKED_UP_FROM_GROUND, CAPTURED, LOST)
-
+     
 from DictPackers import DictPacker, MergeDictPacker, SimpleDictPacker, DeltaPacker, ValueReplayPacker, roundToInt
 #Modified for WotNumbers
 #from items.vehicles import VEHICLE_DEVICE_TYPE_NAMES, VEHICLE_TANKMAN_TYPE_NAMES
@@ -219,6 +220,8 @@ BATTLE_RESULTS = [
  (
   'bpcoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
+  'equipCoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
+ (
   'piggyBank', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventCredits', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
@@ -236,6 +239,8 @@ BATTLE_RESULTS = [
   'eventEventCoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventBpcoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
+ (
+  'eventEquipCoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
   'originalCredits', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
@@ -269,9 +274,13 @@ BATTLE_RESULTS = [
  (
   'originalBpcoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
+  'originalEquipCoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
+ (
   'eventCoinReplay', str, '', ValueReplayPacker(), 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'bpcoinReplay', str, '', ValueReplayPacker(), 'skip', ENTRY_TYPE.VEHICLE_SELF),
+ (
+  'equipCoinReplay', str, '', ValueReplayPacker(), 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'factualXP', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
@@ -295,6 +304,8 @@ BATTLE_RESULTS = [
  (
   'subtotalBpcoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
  (
+  'subtotalEquipCoin', int, 0, None, 'sum', ENTRY_TYPE.VEHICLE_SELF),
+ (
   'eventCreditsList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventXPList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
@@ -311,9 +322,11 @@ BATTLE_RESULTS = [
  (
   'eventBpcoinList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
-  'eventCreditsFactor100List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
+  'eventEquipCoinList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
-  'eventXPFactor100List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
+  'eventCreditsFactor1000List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
+ (
+  'eventXPFactor1000List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventFreeXPFactor100List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
@@ -491,7 +504,7 @@ BATTLE_RESULTS = [
  (
   'winnerIfDraw', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
-  'isPrematureLeave', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+  'isPrematureLeave', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
   'watchedBattleToTheEnd', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
@@ -534,6 +547,8 @@ BATTLE_RESULTS = [
   'eventEventCoin', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
  (
   'eventBpcoin', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
+ (
+  'eventEquipCoin', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
  (
   'credits', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
  (

@@ -375,6 +375,12 @@
     <Compile Include="Forms\Settings\RecalcBattleMinTier.Designer.cs">
       <DependentUpon>RecalcBattleMinTier.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Settings\FixBattleTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\FixBattleTable.Designer.cs">
+      <DependentUpon>FixBattleTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Settings\RecalcBattleKDratioCRdmg.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -759,6 +765,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleMinTier.resx">
       <DependentUpon>RecalcBattleMinTier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\FixBattleTable.resx">
+      <DependentUpon>FixBattleTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleKDratioCRdmg.resx">
       <DependentUpon>RecalcBattleKDratioCRdmg.cs</DependentUpon>
@@ -2322,7 +2331,6 @@ xcopy "$(ProjectDir)/PythonScripts/Dossier2json" "$(TargetDir)Dossier2json" /y /
 md "$(TargetDir)Battle2json"
 del "$(TargetDir)Battle2json" /q /s 
 xcopy "$(ProjectDir)/PythonScripts/Battle2json" "$(TargetDir)Battle2json" /y /s
-xcopy "$(ProjectDir)/PythonScripts/Dossier2json" "$(TargetDir)Battle2json" /y /s
 md "$(TargetDir)Docs"
 md "$(TargetDir)Docs/Database"
 del "$(TargetDir)Docs" /q /s 

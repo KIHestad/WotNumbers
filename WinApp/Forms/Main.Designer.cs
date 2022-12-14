@@ -252,7 +252,7 @@
             this.toolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
             this.mRecalcBattleAllRatings = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleCreditsPerTank = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
+            this.mFixBattleTable = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsShowLogFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.mShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -273,6 +273,7 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.fswDossier)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fswBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
@@ -2290,7 +2291,8 @@
             this.mRecalcTankStatistics,
             this.mRecalcBattleRatings,
             this.mRecalcBattleCreditsPerTank,
-            this.toolStripSeparator25,
+            this.mFixBattleTable,
+            this.toolStripSeparator16,
             this.mSettingsShowLogFiles,
             this.mShowDbTables,
             this.toolStripSeparator1,
@@ -2441,10 +2443,14 @@
             this.mRecalcBattleCreditsPerTank.Text = "Recalculate Battle Credits per Tank...";
             this.mRecalcBattleCreditsPerTank.Click += new System.EventHandler(this.mRecalcBattleCreditsPerTank_Click);
             // 
-            // toolStripSeparator25
+            // mFixBattleTable
             // 
-            this.toolStripSeparator25.Name = "toolStripSeparator25";
-            this.toolStripSeparator25.Size = new System.Drawing.Size(260, 6);
+            this.mFixBattleTable.Enabled = false;
+            this.mFixBattleTable.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFixBattleTable.Name = "mFixBattleTable";
+            this.mFixBattleTable.Size = new System.Drawing.Size(263, 22);
+            this.mFixBattleTable.Text = "Fix Battle Table";
+            this.mFixBattleTable.Click += new System.EventHandler(this.mFixBattleTable_Click);
             // 
             // mSettingsShowLogFiles
             // 
@@ -2705,6 +2711,11 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(260, 6);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2847,7 +2858,6 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator24;
         private System.Windows.Forms.ToolStripMenuItem mUpdateDataFromAPI;
 		private System.Windows.Forms.ToolStripMenuItem mShowDbTables;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
 		private System.Windows.Forms.ToolStripButton mViewChart;
 		private System.Windows.Forms.ToolStripDropDownButton mHelp;
 		private System.Windows.Forms.ToolStripMenuItem mHelpCheckVersion;
@@ -2979,6 +2989,8 @@
         private System.IO.FileSystemWatcher fswBattle;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountryItaly;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattlePos;
+        private System.Windows.Forms.ToolStripMenuItem mFixBattleTable;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
     }
 }
 
