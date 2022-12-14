@@ -29,7 +29,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 544; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 545; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -41,7 +41,15 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
-				case 544:
+                case 545:
+                    mssql = "INSERT INTO columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) VALUES (923, 11, 13, 50);" +
+							"INSERT INTO columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) VALUES (923, 13, 20, 50);" +
+                            "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, " +
+                            "colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) " +
+                            "VALUES (923, 2, 8, 'SP', 'Team', 'Teamseite', 'Battle', 50, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
+                    sqlite = mssql;
+                    break;
+                case 544:
 					mssql = "UPDATE columnSelection SET colName = 'playerTank.skillRecon' " +
 							"WHERE id = 69; ";
 					sqlite = mssql;
