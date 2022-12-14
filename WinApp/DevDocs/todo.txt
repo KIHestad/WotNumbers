@@ -1,1 +1,6 @@
-﻿
+﻿Unify log files:
+Currently there are 2 log.txt files. Initially it's purpose was to keep an internal log file 
+with more technical info for developers, and another more generic and feature based for the users.
+After updating the application once a month it looks a bit confusing why there are those 2, so better
+to unify them even including some technical information there like "added a new Column in the Batte 
+Table in the SQL database" which at first glance may look uninteresting for the general user.
