@@ -1,4 +1,7 @@
-﻿02-Dec-202
+﻿14-Dev-2022
+Add team value into the columnSelection table.
+
+02-Dec-2022
 Updated Battle2Json and Dossier2Json scripts to WoT 1.19.0.0 (thanks to God Lemmy)
 Fix column name playerTank.skillRecon in table columnSelection 
 Added new tanks in Admin.db (Tank_Unknown_37889)

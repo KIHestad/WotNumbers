@@ -910,9 +910,9 @@ namespace WinApp.Forms
 				Config.Settings.databaseBackupFilePath.Trim().Length > 0
 			)
 			{
-				// If a database backup has not occured yet, set the last backup date to be 10 days
-				// before today so that the backup is guaranteed to happen (because max period is 7 days).
-				DateTime lastBackup = Config.Settings.databaseBackupLastPerformed ?? (DateTime.Now.AddDays(-10));
+                // If a database backup has not occured yet, set the last backup date to be 10 days
+                // before today so that the backup is guaranteed to happen (because max period is 7 days).
+                DateTime lastBackup = Config.Settings.databaseBackupLastPerformed ?? (DateTime.Now.AddDays(-10));
 				if (lastBackup.AddDays(Config.Settings.databaseBackupPeriod).CompareTo(DateTime.Now) < 0)
 				{
 					Form frm = new DatabaseBackup(true);
@@ -2445,8 +2445,8 @@ namespace WinApp.Forms
 			}
 			else
 			{
-				// Battle time filter
-				DateTime dateFilter = new DateTime();
+                // Battle time filter
+                DateTime dateFilter = new DateTime();
 				if (!mBattlesCustomUse.Checked)
 				{
 					// Normal predefined battle time filters
@@ -2465,7 +2465,7 @@ namespace WinApp.Forms
 					else if (mBattles2y.Checked) dateFilter = dateFilter.AddYears(-2);
 					else if (mBattlesYesterday.Checked)
 					{
-						DateTime dateFromYesterdayFilter = dateFilter;
+                        DateTime dateFromYesterdayFilter = dateFilter;
 						dateFilter = dateFilter.AddDays(-1);
 						battleTimeFilter = " AND battleTime>=@battleTime AND battleTime<=@battleFromTime ";
 						battleTimeReadable = "@battleTime  -> <- " + dateFromYesterdayFilter.ToString();
@@ -2706,7 +2706,7 @@ namespace WinApp.Forms
 				{
 					// Create battle time filter for today
 					string battleTimeFilter = " AND battleTime>=@battleTime ";
-					DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
+                    DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
 					DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 					// Calc here
 					foreach (DataRow dr in dtTankData.Rows)
@@ -2870,16 +2870,16 @@ namespace WinApp.Forms
 				Tankfilter(out string tankFilter, out string tankJoin, out string tankFilterMessage);
 
 				// Create where part, and check for battle count filter
-				string from =
-					" FROM   battle INNER JOIN " +
-					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
-					"        tank ON playerTank.tankId = tank.id INNER JOIN " +
-					"        tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
-					"        country ON tank.countryId = country.Id INNER JOIN " +
-					"        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
-					"        map on battle.mapId = map.id INNER JOIN " +
-					"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin + " ";
-				string where = "WHERE playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + " ";
+				string from = "FROM (((((((battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id) " +
+						"INNER JOIN tank ON playerTank.tankId = tank.id) " +
+                        "INNER JOIN tankType ON tank.tankTypeId = tankType.Id) " +
+                        "INNER JOIN country ON tank.countryId = country.Id) " +
+                        "INNER JOIN battleResult ON battle.battleResultId = battleResult.id) " +
+                        "LEFT JOIN map on battle.mapId = map.id) " +
+                        "INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id) SB " +
+						"INNER JOIN (select *, PL.id as PID, BP.accountId as AId, BP.team as SP from battlePlayer BP " +
+                        "INNER JOIN player PL on AId = PL.accountId) P on battle.id = P.battleId " + tankJoin + " ";
+                string where = "WHERE playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + " ";
 				DB.AddWithValue(ref where, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				if (battleCountFilter)
 				{
@@ -2983,7 +2983,7 @@ namespace WinApp.Forms
 					rowAverage["killedCountToolTip"] = 0;
 					IEnumerable<string> nonAvgCols = new List<string>
 					{
-						"ID", "Premium", "Mastery Badge", "Mastery Badge ID", "Battle Count" , "Platoon", "Killed By Player ID", "Enemy Clan ID"
+						"ID", "Premium", "Mastery Badge", "Mastery Badge ID", "Battle Count" , "Platoon", "Killed By Player ID", "Enemy Clan ID", "SP", "Team"
 					};
 					foreach (ColListHelper.ColListItem colListItem in selectedColList.ColListItems.ColListItemList)
 					{
@@ -3039,6 +3039,7 @@ namespace WinApp.Forms
 								case "Tank": s = "Average"; break;
 								case "Result": s = Math.Round(totalWinRate, 1).ToString() + "%"; break;
 								case "Survived": s = Math.Round(totalSurvivedRate, 1).ToString() + "%"; break;
+								case "SP": s = ""; break;
 							}
 							rowAverage[colListItem.name] = s;
 						}
@@ -3058,8 +3059,8 @@ namespace WinApp.Forms
 					IEnumerable<string> nonTotalsCols = new List<string>
 					{
 						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "WN9", "Hit Rate", "Min Tier", "Max Tier", "Dmg Rank",
-						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %", "Platoon", "Killed By Player ID", "Enemy Clan ID", "Dmg C/R"
-					};
+						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %", "Platoon", "Killed By Player ID", "Enemy Clan ID", "Dmg C/R", "SP", "Team"
+                    };
 					IEnumerable<string> countCols = new List<string>
 					{
 						"Killed Count", "Victory" ,"Draw","Defeat","Survival Count","Clan","Company","Battle Count"
@@ -3245,7 +3246,11 @@ namespace WinApp.Forms
 									dataGridMain.Rows[rowAverageIndex].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
 									dataGridMain.Rows[rowTotalsIndex].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
 									break;
-							}
+                                case "SP":
+                                    dataGridMain.Rows[rowAverageIndex].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
+                                    dataGridMain.Rows[rowTotalsIndex].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
+                                    break;
+                            }
 						}
 					}
 				}
@@ -3847,7 +3852,7 @@ namespace WinApp.Forms
 								// Add background color if victory
 								// Create battle time filter for today
 								string battleTimeFilter = " AND battleTime>=@battleTime ";
-								DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
+                                DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
 								DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 								// Get values
 								int playerTankId = Convert.ToInt32(dataGridMain["player_Tank_Id", e.RowIndex].Value);
@@ -4087,7 +4092,7 @@ namespace WinApp.Forms
 			DataTable dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
-				DateTime battleTime = Convert.ToDateTime(dt.Rows[0]["battleTime"]);
+                DateTime battleTime = Convert.ToDateTime(dt.Rows[0]["battleTime"]);
 				string tankName = dt.Rows[0]["name"].ToString();
 				Code.MsgBox.Button answer = Code.MsgBox.Show("Do you really want to delete this battle:" + Environment.NewLine + Environment.NewLine +
 					"  Battle: " + battleTime + Environment.NewLine +
