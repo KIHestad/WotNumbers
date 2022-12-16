@@ -30,7 +30,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 545; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 546; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -42,17 +42,25 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
-				case 545:
-					mssql = "UPDATE columnSelection SET colName = 'playerTank.skillRecon' " + 
-							"WHERE id = 69; "; 
-					sqlite = mssql;
-					break;
-				case 544:
+				case 546:
 					mssql =
 						// Add column for orphan Dat files.
 						"ALTER TABLE battle ADD orphanDat bit NOT NULL default 0;";
 					sqlite = mssql;
 					RunRecalcPlayerAccountId = true;
+					break;
+				case 545:
+                    mssql = "INSERT INTO columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) VALUES (923, 11, 13, 50);" +
+							"INSERT INTO columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) VALUES (923, 13, 20, 50);" +
+                            "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, " +
+                            "colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) " +
+                            "VALUES (923, 2, 8, 'SP', 'Team', 'Teamseite', 'Battle', 50, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
+                    sqlite = mssql;
+                    break;
+                case 544:
+					mssql = "UPDATE columnSelection SET colName = 'playerTank.skillRecon' " +
+							"WHERE id = 69; ";
+					sqlite = mssql;
 					break;
 				case 543:
 					mssql = "UPDATE map SET description = 'The dense central structures in the center of the map are the key point for the location. Controlling this area allows you to hold an all - around defense by firing across the vast fields around the town.Beyond the walls of the fortifications, you should take advantage of terrain irregularities, as most of the area is very exposed to enemy fire.'" +
