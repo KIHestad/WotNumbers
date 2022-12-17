@@ -1,5 +1,11 @@
-﻿14-Dev-2022
-Add team value into the columnSelection table.
+﻿17-Dev-2022
+- Add means to recalculate Min tier value of last 1000 battles. Same for MaxTier just in case.
+- Add failure prevention on wotbr2j.py when the number of players retrieved is less than the number of vehicles retrieved.
+- Include cancel option in popup appearing when a WotNumbers application update has been detected.
+- Add orphan battle into battle table, anticipating future update.
+
+14-Dev-2022
+Add team value into the columnSelection table. This allows to view the team number/map side in the battle view.
 
 02-Dec-2022
 Updated Battle2Json and Dossier2Json scripts to WoT 1.19.0.0 (thanks to God Lemmy)

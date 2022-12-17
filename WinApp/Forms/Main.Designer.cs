@@ -252,7 +252,6 @@
             this.toolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
             this.mRecalcBattleAllRatings = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleCreditsPerTank = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.mSettingsShowLogFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.mShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -273,6 +272,9 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.mRecalcBattleStats = new System.Windows.Forms.ToolStripMenuItem();
+            this.mRecalcBattleMinTier = new System.Windows.Forms.ToolStripMenuItem();
+            this.mRecalcBattleMaxTier = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fswDossier)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fswBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
@@ -2288,9 +2290,9 @@
             this.mUpdateDataFromAPI,
             this.toolStripSeparator18,
             this.mRecalcTankStatistics,
-            this.mRecalcBattleRatings,
             this.mRecalcBattleCreditsPerTank,
-            this.toolStripSeparator25,
+            this.mRecalcBattleRatings,
+            this.mRecalcBattleStats,
             this.mSettingsShowLogFiles,
             this.mShowDbTables,
             this.toolStripSeparator1,
@@ -2440,11 +2442,6 @@
             this.mRecalcBattleCreditsPerTank.Size = new System.Drawing.Size(263, 22);
             this.mRecalcBattleCreditsPerTank.Text = "Recalculate Battle Credits per Tank...";
             this.mRecalcBattleCreditsPerTank.Click += new System.EventHandler(this.mRecalcBattleCreditsPerTank_Click);
-            // 
-            // toolStripSeparator25
-            // 
-            this.toolStripSeparator25.Name = "toolStripSeparator25";
-            this.toolStripSeparator25.Size = new System.Drawing.Size(260, 6);
             // 
             // mSettingsShowLogFiles
             // 
@@ -2705,6 +2702,35 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // mRecalcBattleStats
+            // 
+            this.mRecalcBattleStats.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mRecalcBattleMinTier,
+            this.mRecalcBattleMaxTier});
+            this.mRecalcBattleStats.Enabled = false;
+            this.mRecalcBattleStats.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mRecalcBattleStats.Name = "mRecalcBattleStats";
+            this.mRecalcBattleStats.Size = new System.Drawing.Size(263, 22);
+            this.mRecalcBattleStats.Text = "Recalculate Battle Values";
+            // 
+            // mRecalcBattleMinTier
+            // 
+            this.mRecalcBattleMinTier.Enabled = false;
+            this.mRecalcBattleMinTier.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mRecalcBattleMinTier.Name = "mRecalcBattleMinTier";
+            this.mRecalcBattleMinTier.Size = new System.Drawing.Size(218, 22);
+            this.mRecalcBattleMinTier.Text = "Recalculate Min Tier Values";
+            this.mRecalcBattleMinTier.Click += new System.EventHandler(this.mRecalcMinTierValues_Click);
+            // 
+            // mRecalcBattleMaxTier
+            // 
+            this.mRecalcBattleMaxTier.Enabled = false;
+            this.mRecalcBattleMaxTier.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mRecalcBattleMaxTier.Name = "mRecalcBattleMaxTier";
+            this.mRecalcBattleMaxTier.Size = new System.Drawing.Size(218, 22);
+            this.mRecalcBattleMaxTier.Text = "Recalculate Max Tier values";
+            this.mRecalcBattleMaxTier.Click += new System.EventHandler(this.mRecalcMaxTierValues_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2847,7 +2873,6 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator24;
         private System.Windows.Forms.ToolStripMenuItem mUpdateDataFromAPI;
 		private System.Windows.Forms.ToolStripMenuItem mShowDbTables;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
 		private System.Windows.Forms.ToolStripButton mViewChart;
 		private System.Windows.Forms.ToolStripDropDownButton mHelp;
 		private System.Windows.Forms.ToolStripMenuItem mHelpCheckVersion;
@@ -2979,6 +3004,9 @@
         private System.IO.FileSystemWatcher fswBattle;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountryItaly;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattlePos;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleStats;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleMinTier;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleMaxTier;
     }
 }
 
