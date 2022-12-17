@@ -13,7 +13,6 @@ import battle_results_common, battle_results_random
 
 parser = dict()
 parser['version'] = "1.19.0.0"
-
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
 
@@ -93,6 +92,9 @@ def main():
     brVehicle = Unpickler.loads(zlib.decompress(brVehicleRaw))
     brCommon, brPlayersInfo, brPlayersVehicle, brPlayersResult = Unpickler.loads(zlib.decompress(brOtherDataRaw))
 
+    if len(brPlayersInfo) != len(brPlayersVehicle):
+        printmessage('Warning: Found less players than vehicles in this battle. Probably remaining vehicles were bots', True)
+
     # Drill down in to battle result vehicle and get spesific data
     brVehicle = brVehicle.items()[0]
     tankId = brVehicle[0]
@@ -159,7 +161,7 @@ def main():
                 validatedPlayer = True
             jsonPlayers[accountDBID]['result'] = BR_ACCOUNT_ALL.unpack(player)
 
-        # Validate and unpack vehicles data, this is a list of all vechicles participated in battle, validate first item 
+        # Validate and unpack vehicls data, this is a list of all vechicles participated in battle, validate first item 
         validatedVehicle = False
         for vehicleId, vehicles in brPlayersVehicle.iteritems():
             for vehTypeCompDescr, vehicle in vehicles.iteritems():
@@ -169,8 +171,11 @@ def main():
                 playerVehicle = BR_VEHICLE_ALL.unpack(vehicle)
                 if 'accountDBID' in playerVehicle:
                     accountDBID = playerVehicle['accountDBID']
-                    jsonPlayers[accountDBID]['vehicle'] = playerVehicle
-                    jsonPlayers[accountDBID]['vehicle']['vehicleId'] = vehicleId
+                    if accountDBID in jsonPlayers:
+                        jsonPlayers[accountDBID]['vehicle'] = playerVehicle
+                        jsonPlayers[accountDBID]['vehicle']['vehicleId'] = vehicleId
+                    else:
+                        printmessage('Warning: Found vehicle data but could not map to player due to invalid accountDBID {} or bot player. TankId: {}'.format(accountDBID, vehTypeCompDescr), True)
                 else:
                     printmessage('Warning: Found vehicle data but could not map to player. TankId: {}'.format(vehTypeCompDescr), True)
         
@@ -195,15 +200,15 @@ def main():
         cachefile.close()
 
     except IndexError, e:
-        printmessage('Index error during data unpacking: ' + e.message, True)
+        printmessage('Index error during data unpacking: ' + str(e.message), True)
         printmessage(traceback.format_exc(e), False)
         exitwitherror('Battle result cannot be read')
     except KeyError, e:
-        printmessage('Key error during data unpacking: ' + e.message, True)
+        printmessage('Key error during data unpacking: ' + str(e.message), True)
         printmessage(traceback.format_exc(e), False)
         exitwitherror('Battle result cannot be read')
     except Exception, e:
-        printmessage('Exception error during data unpacking: ' + e.message, True)
+        printmessage('Exception error during data unpacking: ' + str(e.message), True)
         printmessage(traceback.format_exc(e), False)
         exitwitherror('Battle result cannot be read')
 

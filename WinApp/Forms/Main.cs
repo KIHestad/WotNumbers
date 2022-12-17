@@ -652,7 +652,7 @@ namespace WinApp.Forms
 				if (!websiteVersionCheck.DownloadSettings.Active)
 				{
 					// Not available
-					Log.AddToLogBuffer("Website providing new version for download is in maintanace mode.");
+					Log.AddToLogBuffer("Website providing new version for download is in maintenace mode.");
 					Log.AddToLogBuffer("Message returned from website: " + websiteVersionCheck.DownloadSettings.InactiveMessage);
 					await Log.WriteLogBuffer(true);
 					if (manualVersionCheck)
@@ -685,11 +685,15 @@ namespace WinApp.Forms
 						await Log.WriteLogBuffer(true);
 						string msg =
 							"New version is available: " + websiteVersionCheck.DownloadSettings.Version + Environment.NewLine + Environment.NewLine +
-							"Click OK to go to the download site." + Environment.NewLine + Environment.NewLine;
-						MsgBox.Show(msg, "Website version check", MsgBox.Type.OK, this);
-						Process.Start(Constants.WotNumDownloadUrl());
-						this.Close();
-						Application.Exit();
+							"	Do you want to go to the download site?" + Environment.NewLine + Environment.NewLine;
+
+						MsgBox.Button answer = MsgBox.Show(msg, "Website version check", MsgBox.Type.YesNo, this);
+						if (answer == MsgBox.Button.Yes)
+						{
+							Process.Start(Constants.WotNumDownloadUrl());
+							this.Close();
+							Application.Exit();
+						}
 					}
 					else
 					{
@@ -728,6 +732,9 @@ namespace WinApp.Forms
 			mRecalcBattlePos.Enabled = true;
 			mRecalcBattleAllRatings.Enabled = true;
 			mRecalcBattleCreditsPerTank.Enabled = true;
+			mRecalcBattleStats.Enabled = true;
+			mRecalcBattleMinTier.Enabled = true;
+			mRecalcBattleMaxTier.Enabled = true;
 			mAppSettings.Enabled = true;
 		}
 
@@ -4744,6 +4751,20 @@ namespace WinApp.Forms
 			await RunDossierFileCheck("Recalculate Tank Stats...", true);
 		}
 
+		private async void mRecalcMinTierValues_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.RecalcBattleMinTier(false, true);
+			frm.ShowDialog(this);
+			await ShowView("Refreshed grid");
+		}
+
+		private async void mRecalcMaxTierValues_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.RecalcBattleMaxTier(false, true);
+			frm.ShowDialog(this);
+			await ShowView("Refreshed grid");
+		}
+
 		private async Task RunDossierFileCheck(string message, bool forceUpdate)
 		{
 			if (Dossier2db.Running)
@@ -5726,5 +5747,6 @@ namespace WinApp.Forms
 			Process.Start("explorer.exe", Config.AppDataHomeViewFolder);
 		}
 		#endregion
+
 	}
 }

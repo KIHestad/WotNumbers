@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
@@ -12,18 +7,20 @@ using WinApp.Code;
 namespace WinApp.Forms
 {
 	public partial class RecalcBattleMinTier : FormCloseOnEsc
-    {
+	{
 		private static bool _autoRun = false;
-        public RecalcBattleMinTier(bool autoRun = false)
+		private static bool _processOnlyLastEntries = false; 
+		public RecalcBattleMinTier(bool autoRun = false, bool processOnlyLastEntries = false)
 		{
 			InitializeComponent();
-			_autoRun = autoRun; 
+			_autoRun = autoRun;
+			_processOnlyLastEntries = processOnlyLastEntries;
 		}
 
-        private async void RecalcBattleMinTier_Shown(object sender, EventArgs e)
+		private async void RecalcBattleMinTier_Shown(object sender, EventArgs e)
 		{
 			if (_autoRun)
-                await RunNow();
+				await RunNow();
 		}
 
 		private void UpdateProgressBar(string statusText, int count)
@@ -43,26 +40,33 @@ namespace WinApp.Forms
 			btnStart.Enabled = false;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
-            // Get battles
+			// Get battles
 			UpdateProgressBar("Getting battle count", 0);
-            // Credits = total income
-            // CreditsNet = total income - all cost pre calculated
-            string sql =
-                "SELECT battle.id as battleId, battle.battleTime as battleTime, min(tank.tier) as battleMinTier " +
-                "from battle " +  
-                " inner join battlePlayer on battle.id = battlePlayer.battleId  " +
-                " inner join tank on battlePlayer.tankId = tank.id " +
-                "group by battle.id, battle.battleTime " +
-                "ORDER BY battle.id";
-				
+			// Credits = total income
+			// CreditsNet = total income - all cost pre calculated
+			string sql =
+				"SELECT battle.id as battleId, battle.battleTime as battleTime, min(tank.tier) as battleMinTier " +
+				"from battle " +
+				" inner join battlePlayer on battle.id = battlePlayer.battleId  " +
+				" inner join tank on battlePlayer.tankId = tank.id " +
+				"group by battle.id, battle.battleTime " +
+				"ORDER BY battle.id";
+
+			if (_processOnlyLastEntries)
+			{
+				const int k_numberOfLastEntries = 1000;
+				sql += " DESC " +
+					   "LIMIT " + Convert.ToString(k_numberOfLastEntries);
+			}
+
 			DataTable dt = await DB.FetchData(sql);
 			int tot = dt.Rows.Count;
+
 			badProgressBar.ValueMax = tot + 2;
-			sql = "";
-            int loopCount = 0;
-            string updateSQL = "";
-            string battleTime = "";
-            UpdateProgressBar("Starting updates...", 1);
+			int loopCount = 0;
+			string updateSQL = "";
+			string battleTime = "";
+			UpdateProgressBar("Starting updates...", 1);
 
 			foreach (DataRow dr in dt.Rows)
 			{
@@ -71,8 +75,6 @@ namespace WinApp.Forms
 				loopCount++;
 				if (loopCount >= 20)
 				{
-					sql = updateSQL;
-
 					battleTime = dr["battleTime"].ToString();
 					UpdateProgressBar("Calc Min Tier " + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
 					await DB.ExecuteNonQuery(updateSQL, Config.Settings.showDBErrors, true);
@@ -83,18 +85,14 @@ namespace WinApp.Forms
 			}
 			if (updateSQL != "") // Update last batch of sql's
 			{
-				sql = updateSQL;
-
 				UpdateProgressBar("Calc Min Tier " + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
 				await DB.ExecuteNonQuery(updateSQL, Config.Settings.showDBErrors, true);
 
 				updateSQL = "";
 			}
 
-
-
 			// Done
-			UpdateProgressBar("",0);
+			UpdateProgressBar("", 0);
 			lblProgressStatus.Text = "Update finished: " + DateTime.Now.ToString();
 			btnStart.Enabled = true;
 
@@ -105,9 +103,9 @@ namespace WinApp.Forms
 
 		private async void btnStart_Click(object sender, EventArgs e)
 		{
-            await RunNow();
+			await RunNow();
 		}
 
-		
+
 	}
 }
