@@ -135,7 +135,7 @@ namespace WinApp.Code
 				string playerName = dfi.PlayerName;
 				string playerServer = dfi.ServerRealmName;
 				string playerNameAndServer = playerName + " (" + playerServer + ")";
-                int playerAccountId = 0;
+                uint playerAccountId = 0;
 
                 // Get player ID
                 int playerId = 0;
@@ -147,7 +147,7 @@ namespace WinApp.Code
                 if (dt.Rows.Count > 0)
                 {
                     playerId = Convert.ToInt32(dt.Rows[0][0]);
-                    playerAccountId = Convert.ToInt32(dt.Rows[0][1]);
+                    playerAccountId = Convert.ToUInt32(dt.Rows[0][1]);
                     playerExists = true;
                 }
 				
@@ -156,7 +156,7 @@ namespace WinApp.Code
 				{
                     playerAccountId = await ImportWotApi2DB.ImportPlayerAccountId(null, playerNameAndServer);
 
-                    if (playerAccountId != -1)
+                    if (playerAccountId != 0)
                     {
                         // Create new player now
                         sql = "INSERT INTO player (name, playerName, playerServer, accountId) VALUES (@name, @playerName, @playerServer @playerAccountId)";

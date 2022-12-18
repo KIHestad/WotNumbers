@@ -558,6 +558,14 @@ namespace WinApp.Code
 				return defaultValue;
 		}
 
+		public static uint SafeConvertToUInt(object value, uint defaultValue = 0)
+		{
+			if (value != DBNull.Value)
+				return Convert.ToUInt32(value);
+			else
+				return defaultValue;
+		}
+
 		public static double SafeConvertToDouble(object value, double defaultValue = 0)
 		{
 			if (value != DBNull.Value)

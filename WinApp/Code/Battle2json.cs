@@ -29,7 +29,7 @@ namespace WinApp.Code
 
         private class BattlePlayer
         {
-            public int accountDBID;
+            public uint accountDBID;
             public string clanAbbrev;
             public int clanDBID;
             public string name;
@@ -291,7 +291,7 @@ namespace WinApp.Code
                                     int playerTankId = Convert.ToInt32(dt.Rows[0]["playerTankId"]);
                                     //string battleMode = dt.Rows[0]["battleMode"].ToString();
                                     int grindXP = Convert.ToInt32(dt.Rows[0]["gGrindXP"]);
-                                    int playerAccountId = (int)token_private["account"].SelectToken("accountDBID");
+                                    uint playerAccountId = (uint)token_private["account"].SelectToken("accountDBID");
 
                                     // Get values
                                     List<BattleValue> battleValues = new List<BattleValue>
@@ -440,7 +440,7 @@ namespace WinApp.Code
                                     List<Platoon> platoon = new List<Platoon>();
                                     int playerPlatoonId = 0;
                                     int playerPlatoonParticipants = 0;
-                                    int killedByAccountId = 0;
+                                    uint killedByAccountId = 0;
                                     string killedByPlayerName = "";
                                     List<ClanInfo> clanCount = new List<ClanInfo>();
 
@@ -449,7 +449,7 @@ namespace WinApp.Code
                                     {
                                         BattlePlayer newPlayer = new BattlePlayer();
                                         JProperty playerProperty = (JProperty)player;
-                                        newPlayer.accountDBID = Convert.ToInt32(playerProperty.Name);
+                                        newPlayer.accountDBID = Convert.ToUInt32(playerProperty.Name);
                                         JToken playerInfo = player.First;
                                         newPlayer.clanDBID = (int)playerInfo.SelectToken("clanDBID");
                                         newPlayer.clanAbbrev = (string)playerInfo.SelectToken("clanAbbrev");
@@ -1022,7 +1022,7 @@ namespace WinApp.Code
             return dt.Rows.Count > 0;
         }
 
-        private async static Task<int> GetPlayerIdFromAccountId(int accountId)
+        private async static Task<int> GetPlayerIdFromAccountId(uint accountId)
         {
             string sql = "SELECT id FROM player WHERE accountId = @accountId;";
 
@@ -1150,7 +1150,7 @@ namespace WinApp.Code
             JToken token_private = token_root["private"];
             JToken token_account = token_private["account"];
 
-            int accountId = Convert.ToInt32(token_account.SelectToken("accountDBID"));
+            uint accountId = Convert.ToUInt32(token_account.SelectToken("accountDBID"));
 
             // Get the player ID from the player table using the accountDBID
             int playerId = await GetPlayerIdFromAccountId(accountId);
@@ -1342,7 +1342,7 @@ namespace WinApp.Code
                 JToken playerInfo = playerToken.First;
 
                 BattlePlayer player = new BattlePlayer();
-                player.accountDBID = Convert.ToInt32(playerToken.Name);
+                player.accountDBID = Convert.ToUInt32(playerToken.Name);
                 player.name = Convert.ToString(playerInfo.SelectToken("name"));
 
                 JToken token_vehicle = playerInfo["vehicle"];
@@ -1367,7 +1367,7 @@ namespace WinApp.Code
                 new BattleValue() { colname = "battleId", value = battleId }
             };
 
-            battleValues.Add(new BattleValue() { colname = "accountId", value = Convert.ToInt32(token_vehicle.SelectToken("accountDBID")) });
+            battleValues.Add(new BattleValue() { colname = "accountId", value = Convert.ToUInt32(token_vehicle.SelectToken("accountDBID")) });
             battleValues.Add(new BattleValue() { colname = "name", value = Convert.ToString(playerToken.SelectToken("name")) });
 
             int team = Convert.ToInt32(token_vehicle.SelectToken("team"));

@@ -1273,9 +1273,9 @@ namespace WinApp.Code
 
 		#region importPlayerAccountId
 
-		public async static Task<int> ImportPlayerAccountId(Form parentForm, string playerName)
+		public async static Task<uint> ImportPlayerAccountId(Form parentForm, string playerName)
 		{
-			int playerAccountId = -1;
+			uint playerAccountId = 0;
 
 			string json = await FetchFromAPI(WotApiType.PlayerAccountId, playerName, parentForm);
 			if (json != "")
@@ -1290,7 +1290,7 @@ namespace WinApp.Code
 					if ((Convert.ToString(statusToken) == "ok") && (Convert.ToInt32(metaToken.SelectToken("count")) == 1))
 					{
 						JToken dataToken = rootToken["data"][0];
-						playerAccountId = Convert.ToInt32(dataToken.SelectToken("account_id"));
+						playerAccountId = Convert.ToUInt32(dataToken.SelectToken("account_id"));
 						
 						Log.AddToLogBuffer("// Found: " + playerName + " account is "+ playerAccountId.ToString() + " ."); 
 						await Log.WriteLogBuffer();

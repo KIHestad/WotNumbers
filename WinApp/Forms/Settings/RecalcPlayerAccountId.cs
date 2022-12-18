@@ -60,9 +60,9 @@ namespace WinApp.Forms
 			foreach (DataRow dr in dt.Rows)
 			{
 				string playerNameAndServer = Convert.ToString(dr["name"]);
-				int playerAccountId = await ImportWotApi2DB.ImportPlayerAccountId(this, playerNameAndServer);
+				uint playerAccountId = await ImportWotApi2DB.ImportPlayerAccountId(this, playerNameAndServer);
 
-				if (playerAccountId != -1)
+				if (playerAccountId != 0)
 				{
 					int playerId = Convert.ToInt32(dr["id"]);
 

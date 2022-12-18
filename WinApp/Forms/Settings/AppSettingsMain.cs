@@ -94,7 +94,7 @@ namespace WinApp.Forms.Settings
             if (dt.Rows.Count > 0)
             {
                 int playerId = DB.SafeConvertToInt(dt.Rows[0][0]);
-                int playerAccountId = DB.SafeConvertToInt(dt.Rows[0][1]);
+                uint playerAccountId = DB.SafeConvertToUInt(dt.Rows[0][1]);
 
                 Config.Settings.playerId = playerId;
                 Config.Settings.playerAccountId = playerAccountId;
@@ -169,7 +169,7 @@ namespace WinApp.Forms.Settings
                 DataTable dt = await DB.FetchData("SELECT accountId FROM player WHERE name='" + cboSelectPlayer.Text + "'", false);
                 if (dt.Rows.Count > 0)
                 {
-                    int playerAccountId = DB.SafeConvertToInt(dt.Rows[0][0]);
+                    uint playerAccountId = DB.SafeConvertToUInt(dt.Rows[0][0]);
                     lblWargamingId.Text = Convert.ToString(playerAccountId);
                 }
                 EditChangesApply(true);

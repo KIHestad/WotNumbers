@@ -8,7 +8,7 @@ Added new tanks in Admin.db (Tank_Unknown_37889)
 
 21-Oct-2022
 Unify Recalc classes to make the code look similar on all the processes.
-Implmentation of orphan battles retrieval + Select battle vide mode.
+Implmentation of orphan battles retrieval + Select battle video mode.
 
 20-Oct-2022
 Update wotbr2j script to accept new WoT 1.18.1.1 battle dat files.

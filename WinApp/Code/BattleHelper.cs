@@ -56,7 +56,7 @@ namespace WinApp.Code
         public async static Task<PosOnTeamLeaderboard> GetPlayerPositionInTeamLeaderboard(int battleId)
         {
             PosOnTeamLeaderboard posOnTeamLeaderboard = new PosOnTeamLeaderboard();
-            int playerAccountId = Config.Settings.playerAccountId;
+            uint playerAccountId = Config.Settings.playerAccountId;
             // Get players team
             int playersTeam = 0;
             string sql = @"
