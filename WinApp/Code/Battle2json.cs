@@ -22,18 +22,18 @@ namespace WinApp.Code
 
         private class ClanInfo
         {
-            public int ClanDBID { get; set; }
+            public int ClanId { get; set; }
             public string ClanAbbrev { get; set; }
             public int Count { get; set; }
         }
 
         private class BattlePlayer
         {
-            public int accountDBID;
+            public uint accountId;
             public string clanAbbrev;
-            public int clanDBID;
+            public int clanId;
             public string name;
-            public int platoonID;
+            public int platoonId;
             public int team;
             public int vehicleid;
             public int playerTeam = 0; // default value = false -> 0=false, 1=true
@@ -128,7 +128,8 @@ namespace WinApp.Code
                         Log.AddToLogBuffer(" > > Start converting " + totFilesDat.ToString() + " battle DAT-files to json");
                         foreach (string file in filesDatCopied)
                         {
-                            try {
+                            try
+                            {
                                 // Convert file to json
                                 var result = await ConvertBattleUsingPython(file);
                                 if (result.DeleteFile)
@@ -283,7 +284,7 @@ namespace WinApp.Code
                                     new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") }
                                 };
 
-                                int playerAccountId = (int)token_private["account"].SelectToken("accountDBID");
+                                uint playerAccountId = (uint)token_private["account"].SelectToken("accountDBID");
 
                                 if (playerAccountId != Config.Settings.playerAccountId)
                                 {
@@ -462,7 +463,7 @@ namespace WinApp.Code
                                 List<Platoon> platoon = new List<Platoon>();
                                 int playerPlatoonId = 0;
                                 int playerPlatoonParticipants = 0;
-                                int killedByAccountId = 0;
+                                uint killedByAccountId = 0;
                                 string killedByPlayerName = "";
                                 List<ClanInfo> clanCount = new List<ClanInfo>();
 
@@ -471,12 +472,12 @@ namespace WinApp.Code
                                 {
                                     BattlePlayer newPlayer = new BattlePlayer();
                                     JProperty playerProperty = (JProperty)player;
-                                    newPlayer.accountDBID = Convert.ToInt32(playerProperty.Name);
+                                    newPlayer.accountId = Convert.ToUInt32(playerProperty.Name);
                                     JToken playerInfo = player.First;
-                                    newPlayer.clanDBID = (int)playerInfo.SelectToken("clanDBID");
+                                    newPlayer.clanId = (int)playerInfo.SelectToken("clanDBID");
                                     newPlayer.clanAbbrev = (string)playerInfo.SelectToken("clanAbbrev");
                                     newPlayer.name = (string)playerInfo.SelectToken("name");
-                                    newPlayer.platoonID = (int)playerInfo.SelectToken("prebattleID");
+                                    newPlayer.platoonId = (int)playerInfo.SelectToken("prebattleID");
                                     newPlayer.vehicleid = 0; // NEW METHOD NOT SUPPORTED FOR NEW FILE STRUCT YET ->
                                     newPlayer.team = (int)playerInfo.SelectToken("team");
                                     if (newPlayer.team == playerTeam)
@@ -486,13 +487,13 @@ namespace WinApp.Code
                                     battlePlayers.Add(newPlayer);
 
                                     // Get values for saving to battle
-                                    if (getEnemyClan && newPlayer.clanDBID > 0 && newPlayer.team == enemyTeam) // Get enemy clan
+                                    if (getEnemyClan && newPlayer.clanId > 0 && newPlayer.team == enemyTeam) // Get enemy clan
                                     {
                                         // Found player with clan, add to clan count
                                         bool foundPlayerClan = false;
                                         foreach (ClanInfo item in clanCount)
                                         {
-                                            if (item.ClanDBID == newPlayer.clanDBID)
+                                            if (item.ClanId == newPlayer.clanId)
                                             {
                                                 item.Count++;
                                                 foundPlayerClan = true;
@@ -501,17 +502,17 @@ namespace WinApp.Code
                                         if (!foundPlayerClan)
                                         {
                                             clanCount.Add(new ClanInfo() {
-                                                ClanDBID = newPlayer.clanDBID,
+                                                ClanId = newPlayer.clanId,
                                                 ClanAbbrev = newPlayer.clanAbbrev,
                                                 Count = 1
                                             });
                                         }
                                     }
-                                    if (getPlatoon && newPlayer.platoonID > 0) // Get platoon info
+                                    if (getPlatoon && newPlayer.platoonId > 0) // Get platoon info
                                     {
                                         Platoon p = new Platoon
                                         {
-                                            platoonID = newPlayer.platoonID,
+                                            platoonID = newPlayer.platoonId,
                                             team = newPlayer.team,
                                             platoonNum = 0
                                         };
@@ -523,11 +524,11 @@ namespace WinApp.Code
                                     string values = battleId.ToString();
                                     // Get values from player section
                                     fields += ", accountId, clanAbbrev, clanDBID, name, platoonID, team, playerTeam";
-                                    values += ", " + newPlayer.accountDBID.ToString();
+                                    values += ", " + newPlayer.accountId.ToString();
                                     values += ", '" + newPlayer.clanAbbrev + "'";
-                                    values += ", " + newPlayer.clanDBID.ToString();
+                                    values += ", " + newPlayer.clanId.ToString();
                                     values += ", '" + newPlayer.name + "'";
-                                    values += ", " + newPlayer.platoonID.ToString();
+                                    values += ", " + newPlayer.platoonId.ToString();
                                     values += ", " + newPlayer.team.ToString();
                                     values += ", " + newPlayer.playerTeam.ToString();
                                     // Get values from vehicles section
@@ -584,7 +585,7 @@ namespace WinApp.Code
                                     int playerKillerId = Convert.ToInt32(vechicleInfo.SelectToken("killerID"));
                                     BattlePlayer killer = battlePlayers.Find(k => k.vehicleid == playerKillerId);
                                     if (killer != null)
-                                        values += ", " + killer.accountDBID;
+                                        values += ", " + killer.accountId;
                                     else
                                         values += ", 0";
                                     if (killer != null)
@@ -606,7 +607,7 @@ namespace WinApp.Code
                                         if (getFortResource && fortResource != null && fortResource.Value != null)
                                             playerFortResources = Convert.ToInt32(fortResource.Value);
                                         killerID = playerKillerId;
-                                        playerPlatoonId = newPlayer.platoonID;
+                                        playerPlatoonId = newPlayer.platoonId;
                                     }
                                     // Count sum frag/survival team/enemy remember for later save to battle
                                     if (playerDeathReason == "-1") // if player survived
@@ -639,7 +640,7 @@ namespace WinApp.Code
                                     BattlePlayer killer = battlePlayers.Find(k => k.vehicleid == killerID);
                                     if (killer != null)
                                     {
-                                        killedByAccountId = killer.accountDBID;
+                                        killedByAccountId = killer.accountId;
                                         killedByPlayerName = killer.name;
                                     }
                                 }
@@ -683,7 +684,7 @@ namespace WinApp.Code
                                 if (getEnemyClan && maxClanCount > 0)
                                 {
                                     DB.AddWithValue(ref sql, "@enemyClanAbbrev", foundClan.ClanAbbrev, DB.SqlDataType.VarChar);
-                                    DB.AddWithValue(ref sql, "@enemyClanDBID", foundClan.ClanDBID, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@enemyClanDBID", foundClan.ClanId, DB.SqlDataType.Int);
                                 }
                                 else
                                 {

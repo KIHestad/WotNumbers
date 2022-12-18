@@ -56,7 +56,7 @@ namespace WinApp.Code
         public async static Task<PosOnTeamLeaderboard> GetPlayerPositionInTeamLeaderboard(int battleId)
         {
             PosOnTeamLeaderboard posOnTeamLeaderboard = new PosOnTeamLeaderboard();
-            int playerAccountId = Config.Settings.playerAccountId;
+            uint playerAccountId = Config.Settings.playerAccountId;
             // Get players team
             int playersTeam = 0;
             string sql = @"
@@ -84,7 +84,7 @@ namespace WinApp.Code
             if (dt.Rows.Count > 1)
             {
                 int pos = 1;
-                while (dt.Rows.Count > pos && Convert.ToInt32(dt.Rows[pos -1]["teamPlayerAccountId"]) != Config.Settings.playerAccountId)
+                while (dt.Rows.Count > pos && Convert.ToUInt32(dt.Rows[pos -1]["teamPlayerAccountId"]) != Config.Settings.playerAccountId)
                     pos++;
                 posOnTeamLeaderboard.PosByXp = pos;
             }
@@ -100,7 +100,7 @@ namespace WinApp.Code
             if (dt.Rows.Count > 1)
             {
                 int pos = 1;
-                while (dt.Rows.Count > pos && Convert.ToInt32(dt.Rows[pos - 1]["teamPlayerAccountId"]) != Config.Settings.playerAccountId)
+                while (dt.Rows.Count > pos && Convert.ToUInt32(dt.Rows[pos - 1]["teamPlayerAccountId"]) != Config.Settings.playerAccountId)
                     pos++;
                 posOnTeamLeaderboard.PosByDmg = pos;
             }

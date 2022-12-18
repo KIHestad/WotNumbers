@@ -42,8 +42,9 @@ namespace WinApp.Code
 			switch (version)
 			{
 				case 546:
-					// Add column for orphan Dat files.
-					mssql = "ALTER TABLE battle ADD orphanDat bit NOT NULL default 0;";
+					mssql =
+						// Add column for orphan Dat files.
+						"ALTER TABLE battle ADD orphanDat bit NOT NULL default 0;";
 					sqlite = mssql;
 					break;
                 case 545:
