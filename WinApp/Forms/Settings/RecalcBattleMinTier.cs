@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
@@ -14,10 +9,12 @@ namespace WinApp.Forms
 	public partial class RecalcBattleMinTier : FormCloseOnEsc
 	{
 		private static bool _autoRun = false;
-		public RecalcBattleMinTier(bool autoRun = false)
+		private static bool _processOnlyLastEntries = false; 
+		public RecalcBattleMinTier(bool autoRun = false, bool processOnlyLastEntries = false)
 		{
 			InitializeComponent();
 			_autoRun = autoRun;
+			_processOnlyLastEntries = processOnlyLastEntries;
 		}
 
 		private async void RecalcBattleMinTier_Shown(object sender, EventArgs e)
@@ -50,42 +47,52 @@ namespace WinApp.Forms
 			// Get battles
 			UpdateProgressBar("Getting battle count", 0);
 
-			string sql = 
+			string sql =
 				"SELECT battle.id as battleId, battle.battleTime as battleTime, min(tank.tier) as battleMinTier " +
 				"from battle " +
 				" inner join battlePlayer on battle.id = battlePlayer.battleId  " +
 				" inner join tank on battlePlayer.tankId = tank.id " +
+				"where tank.tier>0 " +
 				"group by battle.id, battle.battleTime " +
 				"ORDER BY battle.id";
+
+			if (_processOnlyLastEntries)
+			{
+				sql += " DESC " +
+					   "LIMIT " + Convert.ToString(Constants.LastEntriesSize);
+			}
+
 			DataTable dt = await DB.FetchData(sql);
 
 			int tot = dt.Rows.Count;
 			badProgressBar.ValueMax = tot + 2;
-			sql = "";
+
 			int loopCount = 0;
+			string updateSQL = "";
 			string battleTime = "";
 
 			UpdateProgressBar("Starting updates...", 1);
 			foreach (DataRow dr in dt.Rows)
 			{
 				// Build SQL
-				sql += "UPDATE battle SET minBattleTier=" + dr["battleMinTier"].ToString() + " WHERE id=" + dr["battleId"].ToString() + "; " + Environment.NewLine;
+				updateSQL += "UPDATE battle SET minBattleTier=" + dr["battleMinTier"].ToString() + " WHERE id=" + dr["battleId"].ToString() + "; " + Environment.NewLine;
 				loopCount++;
+
 				if (loopCount >= Constants.RecalcDataBatchSize)
 				{
 					battleTime = dr["battleTime"].ToString();
 					UpdateProgressBar(GetProcessingString() + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
-					await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+					await DB.ExecuteNonQuery(updateSQL, Config.Settings.showDBErrors, true);
 
 					loopCount = 0;
-					sql = "";
+					updateSQL = "";
 				}
 			}
-			if (sql != "") // Update last batch of sql's
+
+			if (updateSQL != "") // Update last batch of sql's
 			{
 				UpdateProgressBar(GetProcessingString() + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
-				await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
-				sql = "";
+				await DB.ExecuteNonQuery(updateSQL, Config.Settings.showDBErrors, true);
 			}
 
 			// Done

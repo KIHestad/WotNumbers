@@ -732,6 +732,9 @@ namespace WinApp.Forms
 			mRecalcBattlePos.Enabled = true;
 			mRecalcBattleAllRatings.Enabled = true;
 			mRecalcBattleCreditsPerTank.Enabled = true;
+			mRecalcBattleStats.Enabled = true;
+			mRecalcBattleMinTier.Enabled = true;
+			mRecalcBattleMaxTier.Enabled = true;
 			mFixBattleTable.Enabled = true;
 			mAppSettings.Enabled = true;
 		}
@@ -4780,6 +4783,20 @@ namespace WinApp.Forms
 		{
 			// Immediate run dossier file check with force update
 			await RunDossierFileCheck("Recalculate Tank Stats...", true);
+		}
+
+		private async void mRecalcMinTierValues_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.RecalcBattleMinTier(false, true);
+			frm.ShowDialog(this);
+			await ShowView("Refreshed grid");
+		}
+
+		private async void mRecalcMaxTierValues_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.RecalcBattleMaxTier(false, true);
+			frm.ShowDialog(this);
+			await ShowView("Refreshed grid");
 		}
 
 		private async Task RunDossierFileCheck(string message, bool forceUpdate)
