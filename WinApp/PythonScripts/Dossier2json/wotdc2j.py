@@ -21,7 +21,7 @@ def main():
 	import struct, json, time, sys, os, shutil, datetime, base64, cPickle
 
 	parserversion = "1.9.0"
-	wotversion = "1.18.1.0"
+	wotversion = "1.19.0.1"
 	
 	global rawdata, tupledata, data, structures, numoffrags, working_directory
 	global filename_source, filename_target
