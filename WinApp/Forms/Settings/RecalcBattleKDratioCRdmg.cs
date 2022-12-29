@@ -71,7 +71,7 @@ namespace WinApp.Forms
 
 			int tot = dt.Rows.Count; 
 			badProgressBar.ValueMax = tot;	// Progress
-			sql = "";
+			string updateSql = "";
 			int loopCount = 0;
 
 			UpdateProgressBar("Starting updates...");
@@ -106,9 +106,9 @@ namespace WinApp.Forms
 				int fragsTeam = battlePlayers.Select("deathReason <> '-1' and team=" + enemyTeam).Length;
 				// Find frags count for enemy team
 				int fragsEnemy = battlePlayers.Select("deathReason <> '-1' and team=" + playerTeam).Length;
-				
+
 				// Create update sql
-				sql +=
+				updateSql +=
 					"UPDATE battle " +
 					"SET survivedteam=" + survivedTeam.ToString() + ", survivedenemy=" + survivedEnemy.ToString() + ", " +
 					" fragsteam=" + fragsTeam.ToString() + ", fragsenemy=" + fragsEnemy.ToString() + " " +
@@ -117,16 +117,15 @@ namespace WinApp.Forms
 				loopCount++;
 				if (loopCount >= Constants.RecalcDataBatchSize)
 				{
-					await DB.ExecuteNonQuery(sql, RunInBatch: true);
+					await DB.ExecuteNonQuery(updateSql, RunInBatch: true);
 					loopCount = 0;
-					sql = "";
+					updateSql = "";
 				}
 			}
 
-			if (sql != "")
+			if (updateSql != "")
 			{
-				await DB.ExecuteNonQuery(sql, RunInBatch: true);
-				sql = "";
+				await DB.ExecuteNonQuery(updateSql, RunInBatch: true);
 			}
 		}
 	}

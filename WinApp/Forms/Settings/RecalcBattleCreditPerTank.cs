@@ -79,7 +79,7 @@ namespace WinApp.Forms
 
             int tot = dt.Rows.Count;
             badProgressBar.ValueMax = tot + 2;
-            sql = "";
+            string updateSql = "";
             int loopCount = 0;
 
             UpdateProgressBar("Starting updates...");
@@ -100,23 +100,22 @@ namespace WinApp.Forms
                     tci.maxcreditsNet = Convert.ToDouble(dr["maxcreditsNet"]);
                     tci.battleLifeTime = Convert.ToDouble(dr["battleLifeTime"]);
                     string newSQL = TankCreditCalculation.CreateSQL(tci);
-                    sql += newSQL;
+                    updateSql += newSQL;
                     loopCount++;
 
                     if (loopCount >= Constants.RecalcDataBatchSize)
                     {
                         lblProgressStatus.Text = "Saving to database...";
-                        await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+                        await DB.ExecuteNonQuery(updateSql, Config.Settings.showDBErrors, true);
 
                         loopCount = 0;
-                        sql = "";
+                        updateSql = "";
                     }
                 }
             }
-            if (sql != "") // Update last batch of sql's
+            if (updateSql != "") // Update last batch of sql's
             {
-                await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
-                sql = "";
+                await DB.ExecuteNonQuery(updateSql, Config.Settings.showDBErrors, true);
             }
 
             // Done
