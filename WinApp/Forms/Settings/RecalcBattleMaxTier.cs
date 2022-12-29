@@ -14,10 +14,12 @@ namespace WinApp.Forms
 	public partial class RecalcBattleMaxTier : FormCloseOnEsc
 	{
 		private static bool _autoRun = false;
-		public RecalcBattleMaxTier(bool autoRun = false)
+		private static bool _processOnlyLastEntries = false; 
+		public RecalcBattleMaxTier(bool autoRun = false, bool processOnlyLastEntries = false)
 		{
 			InitializeComponent();
 			_autoRun = autoRun;
+			_processOnlyLastEntries = processOnlyLastEntries;
 		}
 
 		private async void RecalcBattleMaxTier_Shown(object sender, EventArgs e)
@@ -57,19 +59,28 @@ namespace WinApp.Forms
 				" inner join tank on battlePlayer.tankId = tank.id " +
 				"group by battle.id, battle.battleTime " +
 				"ORDER BY battle.id";
+
+			if (_processOnlyLastEntries)
+			{
+				const int k_numberOfLastEntries = 1000;
+				sql += " DESC " +
+					   "LIMIT " + Convert.ToString(k_numberOfLastEntries);
+			}
+
 			DataTable dt = await DB.FetchData(sql);
 
 			int tot = dt.Rows.Count;
+
 			badProgressBar.ValueMax = tot + 2;
-			sql = "";
 			int loopCount = 0;
+			string updateSQL = "";
 			string battleTime = "";
 
 			UpdateProgressBar("Starting updates...", 1);
 			foreach (DataRow dr in dt.Rows)
 			{
 				// Build SQL
-				sql += "UPDATE battle SET maxBattleTier=" + dr["battleMaxTier"].ToString() + " WHERE id=" + dr["battleId"].ToString() + "; " + Environment.NewLine;
+				updateSQL += "UPDATE battle SET maxBattleTier=" + dr["battleMaxTier"].ToString() + " WHERE id=" + dr["battleId"].ToString() + "; " + Environment.NewLine;
 				loopCount++;
 				if (loopCount >= Constants.RecalcDataBatchSize)
 				{
@@ -78,14 +89,15 @@ namespace WinApp.Forms
 					await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
 
 					loopCount = 0;
-					sql = "";
+					updateSQL = "";
 				}
 			}
-			if (sql != "") // Update last batch of sql's
+			if (updateSQL != "") // Update last batch of sql's
 			{
-				UpdateProgressBar(GetProcessingString() + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
-				await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
-				sql = "";
+				UpdateProgressBar("Calc Max Tier " + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
+				await DB.ExecuteNonQuery(updateSQL, Config.Settings.showDBErrors, true);
+
+				updateSQL = "";
 			}
 
 			// Done

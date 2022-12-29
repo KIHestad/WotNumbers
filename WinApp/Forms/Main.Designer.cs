@@ -273,6 +273,9 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.mRecalcBattleStats = new System.Windows.Forms.ToolStripMenuItem();
+            this.mRecalcBattleMinTier = new System.Windows.Forms.ToolStripMenuItem();
+            this.mRecalcBattleMaxTier = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.fswDossier)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fswBattle)).BeginInit();
@@ -2289,7 +2292,9 @@
             this.mUpdateDataFromAPI,
             this.toolStripSeparator18,
             this.mRecalcTankStatistics,
+            this.mRecalcBattleCreditsPerTank,
             this.mRecalcBattleRatings,
+            this.mRecalcBattleStats,
             this.mRecalcBattleCreditsPerTank,
             this.mFixBattleTable,
             this.toolStripSeparator16,
@@ -2711,6 +2716,35 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // mRecalcBattleStats
+            // 
+            this.mRecalcBattleStats.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mRecalcBattleMinTier,
+            this.mRecalcBattleMaxTier});
+            this.mRecalcBattleStats.Enabled = false;
+            this.mRecalcBattleStats.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mRecalcBattleStats.Name = "mRecalcBattleStats";
+            this.mRecalcBattleStats.Size = new System.Drawing.Size(263, 22);
+            this.mRecalcBattleStats.Text = "Recalculate Battle Values";
+            // 
+            // mRecalcBattleMinTier
+            // 
+            this.mRecalcBattleMinTier.Enabled = false;
+            this.mRecalcBattleMinTier.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mRecalcBattleMinTier.Name = "mRecalcBattleMinTier";
+            this.mRecalcBattleMinTier.Size = new System.Drawing.Size(218, 22);
+            this.mRecalcBattleMinTier.Text = "Recalculate Min Tier Values";
+            this.mRecalcBattleMinTier.Click += new System.EventHandler(this.mRecalcMinTierValues_Click);
+            // 
+            // mRecalcBattleMaxTier
+            // 
+            this.mRecalcBattleMaxTier.Enabled = false;
+            this.mRecalcBattleMaxTier.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mRecalcBattleMaxTier.Name = "mRecalcBattleMaxTier";
+            this.mRecalcBattleMaxTier.Size = new System.Drawing.Size(218, 22);
+            this.mRecalcBattleMaxTier.Text = "Recalculate Max Tier values";
+            this.mRecalcBattleMaxTier.Click += new System.EventHandler(this.mRecalcMaxTierValues_Click);
+            // 
             // toolStripSeparator16
             // 
             this.toolStripSeparator16.Name = "toolStripSeparator16";
@@ -2989,6 +3023,9 @@
         private System.IO.FileSystemWatcher fswBattle;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountryItaly;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattlePos;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleStats;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleMinTier;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleMaxTier;
         private System.Windows.Forms.ToolStripMenuItem mFixBattleTable;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
     }
