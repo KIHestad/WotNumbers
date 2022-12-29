@@ -1107,7 +1107,7 @@ namespace WinApp.Code
 			}
 
 		}
-		private static bool SameValue(DataRow src, DataRow dst, string field)
+		private static bool SameValue(DataRow src, DataRow dst, string field, object threshold)
 		{
 			object srcValue = src[field];
 			object dstValue = dst[field];
@@ -1117,9 +1117,9 @@ namespace WinApp.Code
 			{
 				DateTime srcTime = Convert.ToDateTime(srcValue);
 				DateTime dstTime = Convert.ToDateTime(dstValue);
-				const int threshold = 10;
+				Int32 thrInt = Convert.ToInt32(threshold);
 
-				result = (srcTime >= dstTime.AddSeconds(-threshold)) && (srcTime <= dstTime.AddSeconds(threshold));
+				result = (srcTime >= dstTime.AddSeconds(-thrInt)) && (srcTime <= dstTime.AddSeconds(thrInt));
 			}
 			else if (srcValue.GetType() == typeof(System.String))
 			{
@@ -1131,13 +1131,17 @@ namespace WinApp.Code
 			{
 				Int32 srcInt = Convert.ToInt32(srcValue);
 				Int32 dstInt = Convert.ToInt32(dstValue);
-				result = srcInt == dstInt;
+				Int32 thrInt = Convert.ToInt32(threshold);
+
+				result = (srcInt >= (dstInt - thrInt)) && (srcInt <= (dstInt + thrInt));
 			}
 			else if (srcValue.GetType() == typeof(System.Double))
 			{
 				double srcDouble = Convert.ToDouble(srcValue);
 				double dstDouble = Convert.ToDouble(dstValue);
-				result = srcDouble == dstDouble;
+				double thrDouble = Convert.ToDouble(threshold);
+
+				result = (srcDouble >= (dstDouble - thrDouble)) && (srcDouble <= (dstDouble + thrDouble));
 			}
 			else if (srcValue.GetType() == typeof(System.Boolean))
 			{
@@ -1161,39 +1165,39 @@ namespace WinApp.Code
 
 		public static bool SameBattle(DataRow src, DataRow dst)
 		{
-			bool same = SameValue(src, dst, "playerTankId")
-					&& SameValue(src, dst, "battleTime")
-					&& SameValue(src, dst, "battleLifeTime")
+			bool same = SameValue(src, dst, "playerTankId", 0)
+					&& SameValue(src, dst, "battleTime", 10)
+					&& SameValue(src, dst, "battleLifeTime", 0)
 
-					&& SameValue(src, dst, "battleSurviveId")
-					&& SameValue(src, dst, "frags")
-					&& SameValue(src, dst, "dmg")
-					&& SameValue(src, dst, "dmgReceived")
-					&& SameValue(src, dst, "assistSpot")
-					&& SameValue(src, dst, "assistTrack")
+					&& SameValue(src, dst, "battleSurviveId", 0)
+					&& SameValue(src, dst, "frags", 0)
+					&& SameValue(src, dst, "dmg", 0)
+					&& SameValue(src, dst, "dmgReceived", 0)
+					&& SameValue(src, dst, "assistSpot", 0)
+					&& SameValue(src, dst, "assistTrack", 0)
 
 					// Need more ?
-					&& SameValue(src, dst, "cap")
-					&& SameValue(src, dst, "def")
-					&& SameValue(src, dst, "shots")
-					// && SameValue(src, dst, "hits")			// some battles differ! Check addOrphanBattle for possible bug
-					&& SameValue(src, dst, "shotsReceived")
-					&& SameValue(src, dst, "pierced")
-					&& SameValue(src, dst, "piercedReceived")
-					&& SameValue(src, dst, "spotted")
-					&& SameValue(src, dst, "mileage")
-					// && SameValue(src, dst, "treesCut")		// some battles differ!
-					// && SameValue(src, dst, "xp")				// some battles differ! Check addOrphanBattle for possible bug
-					&& SameValue(src, dst, "wn8")
-					&& SameValue(src, dst, "eff")
-					&& SameValue(src, dst, "battleMode")
-					&& SameValue(src, dst, "heHitsReceived")
-					&& SameValue(src, dst, "noDmgShotsReceived")
-					&& SameValue(src, dst, "heHits")
-					&& SameValue(src, dst, "wn7")
-					&& SameValue(src, dst, "dmgBlocked")
-					&& SameValue(src, dst, "potentialDmgReceived")
-					&& SameValue(src, dst, "xpOriginal")
+					&& SameValue(src, dst, "cap", 0)
+					&& SameValue(src, dst, "def", 0)
+					&& SameValue(src, dst, "shots", 0)
+					// && SameValue(src, dst, "hits", 0)			// some battles differ! Check addOrphanBattle for possible bug
+					&& SameValue(src, dst, "shotsReceived", 0)
+					&& SameValue(src, dst, "pierced", 0)
+					&& SameValue(src, dst, "piercedReceived", 0)
+					&& SameValue(src, dst, "spotted", 0)
+					&& SameValue(src, dst, "mileage", 0)
+					// && SameValue(src, dst, "treesCut", 0)		// some battles differ!
+					// && SameValue(src, dst, "xp", 0)				// some battles differ! Check addOrphanBattle for possible bug
+					&& SameValue(src, dst, "wn8", 2)
+					&& SameValue(src, dst, "eff", 0)
+					&& SameValue(src, dst, "battleMode", 0)
+					&& SameValue(src, dst, "heHitsReceived", 0)
+					&& SameValue(src, dst, "noDmgShotsReceived", 0)
+					&& SameValue(src, dst, "heHits", 0)
+					&& SameValue(src, dst, "wn7", 2)
+					&& SameValue(src, dst, "dmgBlocked", 0)
+					&& SameValue(src, dst, "potentialDmgReceived", 0)
+					&& SameValue(src, dst, "xpOriginal", 0)
 					;
 
 			return same;

@@ -319,7 +319,6 @@ namespace WinApp.Code
                                     bool getEnemyClan = bonusType.ShouldGetEnemyClan();
                                     string battleResultMode = bonusType.GetBattleResultMode();
 
-                                }
                                 
                                 battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
                                 battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
@@ -365,6 +364,7 @@ namespace WinApp.Code
                                 // dayly double
                                 int dailyXPFactor = (int)token_private["vehicle"].SelectToken("dailyXPFactor10") / 10;
                                 battleValues.Add(new BattleValue() { colname = "dailyXPFactorTxt", value = "'" + dailyXPFactor.ToString() + " X'" });
+
                                 // Special fields: death reason, convert to string
                                 int deathReasonId = (int)token_private["vehicle"].SelectToken("deathReason");
                                 string deathReason = "Unknown";
@@ -635,10 +635,10 @@ namespace WinApp.Code
                                         updateSql += "UPDATE battlePlayer SET killerName=@killerName, KillerId=@killerId " +
                                                     "WHERE battleId=@battleId AND accountId=@accountId;";
 
-                                        DB.AddWithValue(ref sql, "@killerName", killer.name, DB.SqlDataType.VarChar);
-                                        DB.AddWithValue(ref sql, "@killerId", killer.accountId, DB.SqlDataType.Int);
-                                        DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-                                        DB.AddWithValue(ref sql, "@accountId", player.accountId, DB.SqlDataType.Int);
+                                        DB.AddWithValue(ref updateSql, "@killerName", killer.name, DB.SqlDataType.VarChar);
+                                        DB.AddWithValue(ref updateSql, "@killerId", killer.accountId, DB.SqlDataType.Int);
+                                        DB.AddWithValue(ref updateSql, "@battleId", battleId, DB.SqlDataType.Int);
+                                        DB.AddWithValue(ref updateSql, "@accountId", player.accountId, DB.SqlDataType.Int);
 
                                         if (player.accountId == Config.Settings.playerAccountId)
                                         {
@@ -1378,7 +1378,7 @@ namespace WinApp.Code
                 player.name = Convert.ToString(playerInfo.SelectToken("name"));
 
                 JToken token_vehicle = playerInfo["vehicle"];
-                player.vehicleid = Convert.ToInt32(token_vehicle.SelectToken("vehicleId"));
+                player.vehicleId = Convert.ToInt32(token_vehicle.SelectToken("vehicleId"));
 
                 battlePlayers.Add(player);
             }
@@ -1441,11 +1441,10 @@ namespace WinApp.Code
             battleValues.Add(new BattleValue() { colname = "isTeamKiller", value = Convert.ToInt32(token_vehicle.SelectToken("isTeamKiller")) });
 
             int killerId = Convert.ToInt32(token_vehicle.SelectToken("killerID"));
-            battleValues.Add(new BattleValue() { colname = "killerID", value = killerId });
-
-            int idx = battlePlayers.FindIndex(p => p.vehicleid == killerId);
+            int idx = battlePlayers.FindIndex(p => p.vehicleId == killerId);
             if (idx != -1)
             {
+                battleValues.Add(new BattleValue() { colname = "killerID", value = battlePlayers[idx].accountId });
                 battleValues.Add(new BattleValue() { colname = "killerName", value = battlePlayers[idx].name });
             }
 

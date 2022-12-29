@@ -42,12 +42,14 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
+				case 547:
+					RunRecalcPlayerAccountId = true;
+					break;
 				case 546:
-					mssql =
+						mssql =
 						// Add column for orphan Dat files.
 						"ALTER TABLE battle ADD orphanDat bit NOT NULL default 0;";
 					sqlite = mssql;
-					RunRecalcPlayerAccountId = true;
 					break;
 				case 545:
                     mssql = "INSERT INTO columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) VALUES (923, 11, 13, 50);" +
@@ -3391,11 +3393,8 @@ namespace WinApp.Code
 					mssql = "INSERT INTO map (id, name, arena_id) VALUES (85, 'Empires Border', '59_asia_great_wall'); ";
 					sqlite = mssql;
 					break;
-
-
-
-
 			}
+
 			string sql = "";
 			// get sql for correct dbtype
 			if (dbType == ConfigData.dbType.MSSQLserver)
