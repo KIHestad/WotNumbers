@@ -1,4 +1,10 @@
-﻿17-Dev-2022
+﻿29-Dec-2022
+-Unify Recalc classes to make the code look similar on all the processes.
+-Fix killer name in battle details.
+-Fix Min tier calculation when Unknown vehicles are found in battle.
+-Fix battle loading for Asian server battles due big WargamingIDs overflowing integer variables.
+
+17-Dec-2022
 - Add means to recalculate Min tier value of last 1000 battles. Same for MaxTier just in case.
 - Add failure prevention on wotbr2j.py when the number of players retrieved is less than the number of vehicles retrieved.
 - Include cancel option in popup appearing when a WotNumbers application update has been detected.

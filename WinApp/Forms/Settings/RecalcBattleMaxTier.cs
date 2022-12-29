@@ -27,6 +27,10 @@ namespace WinApp.Forms
 			if (_autoRun)
 				await RunNow();
 		}
+		private string GetProcessingString()
+		{
+			return "Recalc Max Tier ";
+		}
 
 		private void UpdateProgressBar(string statusText, int count)
 		{
@@ -45,10 +49,10 @@ namespace WinApp.Forms
 			btnStart.Enabled = false;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
+
 			// Get battles
 			UpdateProgressBar("Getting battle count", 0);
-			// Credits = total income
-			// CreditsNet = total income - all cost pre calculated
+
 			string sql =
 				"SELECT battle.id as battleId, battle.battleTime as battleTime, max(tank.tier) as battleMaxTier " +
 				"from battle " +
@@ -59,15 +63,15 @@ namespace WinApp.Forms
 
 			if (_processOnlyLastEntries)
 			{
-				const int k_numberOfLastEntries = 1000;
 				sql += " DESC " +
-					   "LIMIT " + Convert.ToString(k_numberOfLastEntries);
+					   "LIMIT " + Convert.ToString(Constants.LastEntriesSize);
 			}
 
 			DataTable dt = await DB.FetchData(sql);
-			int tot = dt.Rows.Count;
 
+			int tot = dt.Rows.Count;
 			badProgressBar.ValueMax = tot + 2;
+
 			int loopCount = 0;
 			string updateSQL = "";
 			string battleTime = "";
@@ -78,22 +82,22 @@ namespace WinApp.Forms
 				// Build SQL
 				updateSQL += "UPDATE battle SET maxBattleTier=" + dr["battleMaxTier"].ToString() + " WHERE id=" + dr["battleId"].ToString() + "; " + Environment.NewLine;
 				loopCount++;
-				if (loopCount >= 20)
+
+				if (loopCount >= Constants.RecalcDataBatchSize)
 				{
 					battleTime = dr["battleTime"].ToString();
-					UpdateProgressBar("Calc Max Tier " + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
+					UpdateProgressBar(GetProcessingString() + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
 					await DB.ExecuteNonQuery(updateSQL, Config.Settings.showDBErrors, true);
 
 					loopCount = 0;
 					updateSQL = "";
 				}
 			}
+
 			if (updateSQL != "") // Update last batch of sql's
 			{
-				UpdateProgressBar("Calc Max Tier " + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
+				UpdateProgressBar(GetProcessingString() + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
 				await DB.ExecuteNonQuery(updateSQL, Config.Settings.showDBErrors, true);
-
-				updateSQL = "";
 			}
 
 			// Done
