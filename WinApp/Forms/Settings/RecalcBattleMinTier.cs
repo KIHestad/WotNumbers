@@ -49,6 +49,7 @@ namespace WinApp.Forms
 				"from battle " +
 				" inner join battlePlayer on battle.id = battlePlayer.battleId  " +
 				" inner join tank on battlePlayer.tankId = tank.id " +
+				"where tank.tier>0 " +
 				"group by battle.id, battle.battleTime " +
 				"ORDER BY battle.id";
 
