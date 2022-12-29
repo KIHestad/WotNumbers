@@ -1341,7 +1341,7 @@ namespace WinApp.Code
                 JToken playerInfo = playerToken.First;
 
                 BattlePlayer player = new BattlePlayer();
-                player.accountDBID = Convert.ToUInt32(playerToken.Name);
+                player.accountId = Convert.ToUInt32(playerToken.Name);
                 player.name = Convert.ToString(playerInfo.SelectToken("name"));
 
                 JToken token_vehicle = playerInfo["vehicle"];

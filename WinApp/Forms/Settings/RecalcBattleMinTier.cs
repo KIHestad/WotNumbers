@@ -58,20 +58,18 @@ namespace WinApp.Forms
 
 			if (_processOnlyLastEntries)
 			{
-				const int k_numberOfLastEntries = 1000;
 				sql += " DESC " +
-					   "LIMIT " + Convert.ToString(k_numberOfLastEntries);
+					   "LIMIT " + Convert.ToString(Constants.LastEntriesSize);
 			}
 
 			DataTable dt = await DB.FetchData(sql);
 
 			int tot = dt.Rows.Count;
-
 			badProgressBar.ValueMax = tot + 2;
+
 			int loopCount = 0;
 			string updateSQL = "";
 			string battleTime = "";
-			UpdateProgressBar("Starting updates...", 1);
 
 			UpdateProgressBar("Starting updates...", 1);
 			foreach (DataRow dr in dt.Rows)
@@ -79,20 +77,22 @@ namespace WinApp.Forms
 				// Build SQL
 				updateSQL += "UPDATE battle SET minBattleTier=" + dr["battleMinTier"].ToString() + " WHERE id=" + dr["battleId"].ToString() + "; " + Environment.NewLine;
 				loopCount++;
+
 				if (loopCount >= Constants.RecalcDataBatchSize)
 				{
 					battleTime = dr["battleTime"].ToString();
 					UpdateProgressBar(GetProcessingString() + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
-					await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+					await DB.ExecuteNonQuery(updateSQL, Config.Settings.showDBErrors, true);
 
 					loopCount = 0;
 					updateSQL = "";
 				}
 			}
+
 			if (updateSQL != "") // Update last batch of sql's
 			{
 				UpdateProgressBar(GetProcessingString() + badProgressBar.Value + "/" + tot.ToString() + " " + battleTime, loopCount);
-				await DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+				await DB.ExecuteNonQuery(updateSQL, Config.Settings.showDBErrors, true);
 			}
 
 			// Done
