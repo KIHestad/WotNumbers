@@ -202,7 +202,7 @@ namespace WinApp.Code
 		// New method: "Vehicles" gets enhanced tank data, problem not as updated as old "List of vehicles"
 		public async static Task<string> ImportTanks(Form parentForm, bool overwriteCustomTankDetails = false)
 		{
-			string json = await FetchFromAPI(WotApiType.Tank, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Tank, null, parentForm);
 			if (json == "")
 			{
 				return "Could not find any data using Wargaming API. No data imported.";
@@ -362,7 +362,7 @@ namespace WinApp.Code
 		// Old method "List of vehicles", only get if tank is missing
 		public async static Task<string> ImportTanksOldAPI(Form parentForm, bool overwriteCustomTankDetails = false)
 		{
-			string json = await FetchFromAPI(WotApiType.TankList, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.TankList, null, parentForm);
 			if (json == "")
 			{
 				return "Could not find any data using Wargaming API (old method). No data imported.";
@@ -600,7 +600,7 @@ namespace WinApp.Code
 
 		public async static Task<String> ImportTurrets(Form parentForm)
 		{
-			string json = await FetchFromAPI(WotApiType.Turret, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Turret, null, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -701,7 +701,7 @@ namespace WinApp.Code
 
 		public async static Task<String> ImportGuns(Form parentForm)
 		{
-			string json = await FetchFromAPI(WotApiType.Gun, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Gun, null, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -845,7 +845,7 @@ namespace WinApp.Code
 
 		public async static Task<String> ImportRadios(Form parentForm)
 		{
-			string json = await FetchFromAPI(WotApiType.Radio, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Radio, null, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -948,7 +948,7 @@ namespace WinApp.Code
 
 		public async static Task<String> ImportMaps(Form parentForm)
 		{
-			string json = await FetchFromAPI(WotApiType.Maps, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Maps, null, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -1055,7 +1055,7 @@ namespace WinApp.Code
 
 		public async static Task ImportAchievements(Form parentForm)
 		{
-			string json = await FetchFromAPI(WotApiType.Achievement, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.Achievement, null, parentForm);
 			if (json == "")
 			{
 				// no action, no data found
@@ -1232,7 +1232,7 @@ namespace WinApp.Code
 		public async static Task<List<int>> ImportPlayersInGarageVehicles(Form parentForm)
 		{
 			List<int> tanksInGarage = new List<int>();
-			string json = await FetchFromAPI(WotApiType.PlayersInGarageVehicles, 0, parentForm);
+			string json = await FetchFromAPI(WotApiType.PlayersInGarageVehicles, null, parentForm);
 			if (json != "")
 			{
 				Log.AddToLogBuffer("// Start checking players tanks in garage (" + DateTime.Now.ToString() + ")");
