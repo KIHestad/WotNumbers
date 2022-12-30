@@ -150,6 +150,8 @@ namespace WinApp.Code
 		public string currentHomeView { get; set; }                 // The last used home view menu name, to show on restart
 		public string currentChartFavourite { get; set; }           // The last used chart favourite, to show on restart
 		public string res_mods_subfolder { get; set; }              // Current res_mods folder
+		public bool allowMultipleInstances { get; set; }            // Allow multiple instances of the WoT Numbers application
+
 	}
 
 	// Settings for session, resets on each startup
@@ -335,6 +337,7 @@ namespace WinApp.Code
 			Config.Settings.currentHomeView = "Default";
 			Config.Settings.currentChartFavourite = "";
 			Config.Settings.res_mods_subfolder = "";
+			Config.Settings.allowMultipleInstances = false;
 			Config.Settings.battleViewMode = ConfigData.BattleViewMode.Old;
 		}
 
