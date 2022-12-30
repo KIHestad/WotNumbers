@@ -3,7 +3,7 @@
 # Initial version by Phalynx www.vbaddict.net/wot #
 #                                                 #
 # Modified to run from c# using IronPhyton        #
-# Edited version by BadButton -> 2015-11-20      #
+# Edited version by BadButton -> 2015-11-20       #
 ###################################################
 
 import struct, json, time, sys, os

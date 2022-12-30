@@ -29,7 +29,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 546; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 547; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -41,21 +41,24 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
+				case 547:
+					RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
+					break;
 				case 546:
 					mssql =
 						// Add column for orphan Dat files.
 						"ALTER TABLE battle ADD orphanDat bit NOT NULL default 0;";
 					sqlite = mssql;
 					break;
-                case 545:
-                    mssql = "INSERT INTO columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) VALUES (923, 11, 13, 50);" +
+				case 545:
+					mssql = "INSERT INTO columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) VALUES (923, 11, 13, 50);" +
 							"INSERT INTO columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) VALUES (923, 13, 20, 50);" +
-                            "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, " +
-                            "colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) " +
-                            "VALUES (923, 2, 8, 'SP', 'Team', 'Teamseite', 'Battle', 50, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
-                    sqlite = mssql;
-                    break;
-                case 544:
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, " +
+							"colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) " +
+							"VALUES (923, 2, 8, 'SP', 'Team', 'Teamseite', 'Battle', 50, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
+					sqlite = mssql;
+					break;
+				case 544:
 					mssql = "UPDATE columnSelection SET colName = 'playerTank.skillRecon' " +
 							"WHERE id = 69; ";
 					sqlite = mssql;

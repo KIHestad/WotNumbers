@@ -199,16 +199,16 @@ def main():
         printmessage('', False) 
         cachefile.close()
 
-    except IndexError, e:
-        printmessage('Index error during data unpacking: ' + str(e.message), True)
+    except IndexError as e:
+        printmessage('Index error during data unpacking: {e=}, {type(e)=}', True)
         printmessage(traceback.format_exc(e), False)
         exitwitherror('Battle result cannot be read')
-    except KeyError, e:
-        printmessage('Key error during data unpacking: ' + str(e.message), True)
+    except KeyError as e:
+        printmessage('Key error during data unpacking: {e=}, {type(e)=}', True)
         printmessage(traceback.format_exc(e), False)
         exitwitherror('Battle result cannot be read')
-    except Exception, e:
-        printmessage('Exception error during data unpacking: ' + str(e.message), True)
+    except Exception as e:
+        printmessage('Exception error during data unpacking: {e=}, {type(e)=}', True)
         printmessage(traceback.format_exc(e), False)
         exitwitherror('Battle result cannot be read')
 

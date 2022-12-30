@@ -35,8 +35,9 @@ namespace WinApp.Code
             public string name;
             public int platoonId;
             public int team;
-            public int vehicleid;
+            public int vehicleId;
             public int playerTeam = 0; // default value = false -> 0=false, 1=true
+            public int killerVehicleId;
         }
 
         private class BattleValue
@@ -459,12 +460,9 @@ namespace WinApp.Code
                                 survivedCount[2] = 0;
                                 fragsCount[1] = 0;
                                 fragsCount[2] = 0;
-                                int killerID = 0;
                                 List<Platoon> platoon = new List<Platoon>();
                                 int playerPlatoonId = 0;
                                 int playerPlatoonParticipants = 0;
-                                uint killedByAccountId = 0;
-                                string killedByPlayerName = "";
                                 List<ClanInfo> clanCount = new List<ClanInfo>();
 
                                 // Iterate over all battles players and get data
@@ -478,13 +476,10 @@ namespace WinApp.Code
                                     newPlayer.clanAbbrev = (string)playerInfo.SelectToken("clanAbbrev");
                                     newPlayer.name = (string)playerInfo.SelectToken("name");
                                     newPlayer.platoonId = (int)playerInfo.SelectToken("prebattleID");
-                                    newPlayer.vehicleid = 0; // NEW METHOD NOT SUPPORTED FOR NEW FILE STRUCT YET ->
                                     newPlayer.team = (int)playerInfo.SelectToken("team");
+
                                     if (newPlayer.team == playerTeam)
                                         newPlayer.playerTeam = 1;
-
-                                    // Save for use later, to find killer info
-                                    battlePlayers.Add(newPlayer);
 
                                     // Get values for saving to battle
                                     if (getEnemyClan && newPlayer.clanId > 0 && newPlayer.team == enemyTeam) // Get enemy clan
@@ -518,8 +513,9 @@ namespace WinApp.Code
                                         };
                                         platoon.Add(p);
                                     }
+                                    
                                     // Get fields and values, init adding battle id
-                                    JToken vechicleInfo = playerInfo["vehicle"];
+                                    JToken vehicleInfo = playerInfo["vehicle"];
                                     fields = "battleID";
                                     string values = battleId.ToString();
                                     // Get values from player section
@@ -534,81 +530,82 @@ namespace WinApp.Code
                                     // Get values from vehicles section
                                     fields += ", tankId, xp , damageDealt, credits, capturePoints, damageReceived, deathReason, directHits";
                                     // typeCompDescr = tankId, might be missing in clan wars if player not spoddet
-                                    string checkPlayerTankId = vechicleInfo.SelectToken("typeCompDescr").ToString();
+                                    string checkPlayerTankId = vehicleInfo.SelectToken("typeCompDescr").ToString();
                                     if (checkPlayerTankId == "" || checkPlayerTankId == "0")
                                         values += ", -1";
                                     else
                                         values += ", " + checkPlayerTankId;
-                                    values += ", " + vechicleInfo.SelectToken("xp");
-                                    values += ", " + vechicleInfo.SelectToken("damageDealt");
-                                    values += ", " + vechicleInfo.SelectToken("credits");
-                                    values += ", " + vechicleInfo.SelectToken("capturePoints");
-                                    values += ", " + vechicleInfo.SelectToken("damageReceived");
-                                    string playerDeathReason = vechicleInfo.SelectToken("deathReason").ToString();
+                                    values += ", " + vehicleInfo.SelectToken("xp");
+                                    values += ", " + vehicleInfo.SelectToken("damageDealt");
+                                    values += ", " + vehicleInfo.SelectToken("credits");
+                                    values += ", " + vehicleInfo.SelectToken("capturePoints");
+                                    values += ", " + vehicleInfo.SelectToken("damageReceived");
+                                    string playerDeathReason = vehicleInfo.SelectToken("deathReason").ToString();
                                     values += ", " + playerDeathReason;
-                                    values += ", " + vechicleInfo.SelectToken("directHits");
+                                    values += ", " + vehicleInfo.SelectToken("directHits");
                                     fields += ", directHitsReceived, droppedCapturePoints, hits, kills, shots, shotsReceived, spotted, tkills, fortResource";
-                                    values += ", " + vechicleInfo.SelectToken("directHitsReceived");
-                                    values += ", " + vechicleInfo.SelectToken("droppedCapturePoints");
-                                    values += ", " + vechicleInfo.SelectToken("directHits");
-                                    values += ", " + vechicleInfo.SelectToken("kills");
-                                    values += ", " + vechicleInfo.SelectToken("shots");
-                                    values += ", " + vechicleInfo.SelectToken("directHitsReceived");
-                                    values += ", " + vechicleInfo.SelectToken("spotted");
-                                    values += ", " + vechicleInfo.SelectToken("tkills");
+                                    values += ", " + vehicleInfo.SelectToken("directHitsReceived");
+                                    values += ", " + vehicleInfo.SelectToken("droppedCapturePoints");
+                                    values += ", " + vehicleInfo.SelectToken("directHits");
+                                    values += ", " + vehicleInfo.SelectToken("kills");
+                                    values += ", " + vehicleInfo.SelectToken("shots");
+                                    values += ", " + vehicleInfo.SelectToken("directHitsReceived");
+                                    values += ", " + vehicleInfo.SelectToken("spotted");
+                                    values += ", " + vehicleInfo.SelectToken("tkills");
                                     // TODO: no longer in use?
                                     JValue fortResource = null;
                                     int fortResourceValue = 0;
                                     if (getFortResource)
                                     {
-                                        fortResource = (JValue)vechicleInfo.SelectToken("fortResource");
+                                        fortResource = (JValue)vehicleInfo.SelectToken("fortResource");
                                         if (fortResource != null && fortResource.Value != null)
                                             fortResourceValue = Convert.ToInt32(fortResource.Value);
                                     }
                                     values += ", " + fortResourceValue.ToString();
+
                                     // Added more
                                     fields += ", potentialDamageReceived, noDamageShotsReceived, sniperDamageDealt, piercingsReceived, pierced, isTeamKiller";
-                                    values += ", " + vechicleInfo.SelectToken("potentialDamageReceived");
-                                    values += ", " + vechicleInfo.SelectToken("noDamageDirectHitsReceived");
-                                    values += ", " + vechicleInfo.SelectToken("sniperDamageDealt");
-                                    values += ", " + vechicleInfo.SelectToken("piercingsReceived");
-                                    values += ", " + vechicleInfo.SelectToken("piercings");
+                                    values += ", " + vehicleInfo.SelectToken("potentialDamageReceived");
+                                    values += ", " + vehicleInfo.SelectToken("noDamageDirectHitsReceived");
+                                    values += ", " + vehicleInfo.SelectToken("sniperDamageDealt");
+                                    values += ", " + vehicleInfo.SelectToken("piercingsReceived");
+                                    values += ", " + vehicleInfo.SelectToken("piercings");
 
                                     // Is Team Killer
-                                    bool isTeamKiller = Convert.ToBoolean(vechicleInfo.SelectToken("isTeamKiller"));
+                                    bool isTeamKiller = Convert.ToBoolean(vehicleInfo.SelectToken("isTeamKiller"));
                                     if (isTeamKiller) values += ", 1"; else values += ", 0";
+
                                     // Added more
                                     fields += ", mileage, lifeTime, killerID, killerName, isPrematureLeave, explosionHits, explosionHitsReceived, damageBlockedByArmor, damageAssistedTrack, damageAssistedRadio ";
-                                    values += ", " + vechicleInfo.SelectToken("mileage");
-                                    values += ", " + vechicleInfo.SelectToken("lifeTime");
-                                    // Killed by account id
-                                    int playerKillerId = Convert.ToInt32(vechicleInfo.SelectToken("killerID"));
-                                    BattlePlayer killer = battlePlayers.Find(k => k.vehicleid == playerKillerId);
-                                    if (killer != null)
-                                        values += ", " + killer.accountId;
-                                    else
-                                        values += ", 0";
-                                    if (killer != null)
-                                        values += ", '" + killer.name + "'";
-                                    else
-                                        values += ", NULL";
+                                    values += ", " + vehicleInfo.SelectToken("mileage");
+                                    values += ", " + vehicleInfo.SelectToken("lifeTime");
+
+                                    // Killed by vehicle id
+                                    newPlayer.vehicleId = Convert.ToInt32(vehicleInfo.SelectToken("vehicleId"));
+                                    newPlayer.killerVehicleId = Convert.ToInt32(vehicleInfo.SelectToken("killerID"));
+                                    values += ", " + vehicleInfo.SelectToken("killerID");
+                                    values += ", NULL";
+
                                     // Premature Leave
-                                    bool isPrematureLeave = Convert.ToBoolean(vechicleInfo.SelectToken("isPrematureLeave"));
+                                    bool isPrematureLeave = Convert.ToBoolean(vehicleInfo.SelectToken("isPrematureLeave"));
                                     if (isPrematureLeave) values += ", 1"; else values += ", 0";
+
                                     // More fields
-                                    values += ", " + vechicleInfo.SelectToken("explosionHits");
-                                    values += ", " + vechicleInfo.SelectToken("explosionHitsReceived");
-                                    values += ", " + vechicleInfo.SelectToken("damageBlockedByArmor");
-                                    values += ", " + vechicleInfo.SelectToken("damageAssistedTrack");
-                                    values += ", " + vechicleInfo.SelectToken("damageAssistedRadio");
+                                    values += ", " + vehicleInfo.SelectToken("explosionHits");
+                                    values += ", " + vehicleInfo.SelectToken("explosionHitsReceived");
+                                    values += ", " + vehicleInfo.SelectToken("damageBlockedByArmor");
+                                    values += ", " + vehicleInfo.SelectToken("damageAssistedTrack");
+                                    values += ", " + vehicleInfo.SelectToken("damageAssistedRadio");
+
                                     // If this is current player remember for later save to battle
-                                    if (newPlayer.name == Config.Settings.playerName)
+                                    if (newPlayer.accountId == Config.Settings.playerAccountId)
                                     {
                                         if (getFortResource && fortResource != null && fortResource.Value != null)
                                             playerFortResources = Convert.ToInt32(fortResource.Value);
-                                        killerID = playerKillerId;
+
                                         playerPlatoonId = newPlayer.platoonId;
                                     }
+
                                     // Count sum frag/survival team/enemy remember for later save to battle
                                     if (playerDeathReason == "-1") // if player survived
                                         survivedCount[newPlayer.team]++;
@@ -620,6 +617,10 @@ namespace WinApp.Code
                                     }
                                     // Add sum for team IR
                                     teamFortResources[newPlayer.team] += fortResourceValue;
+
+                                    // Save for use later, to find killer info
+                                    battlePlayers.Add(newPlayer);
+
                                     // Create SQL and update db
                                     sql = "insert into battlePlayer (" + fields + ") values (" + values + ")";
                                     bool success = await DB.ExecuteNonQuery(sql, false);
@@ -634,21 +635,45 @@ namespace WinApp.Code
                                         }
                                     }
                                 }
-                                // Get killer info from players
-                                if (killerID > 0)
+
+                                // All Player information has been gathered time to retrieve proper killers and update
+                                uint killedByAccountId = 0;
+                                string killedByPlayerName = "";
+                                string updateSql = "";
+
+                                foreach (BattlePlayer player in battlePlayers)
                                 {
-                                    BattlePlayer killer = battlePlayers.Find(k => k.vehicleid == killerID);
+                                    BattlePlayer killer = battlePlayers.Find(k => k.vehicleId == player.killerVehicleId);
+
                                     if (killer != null)
                                     {
-                                        killedByAccountId = killer.accountId;
-                                        killedByPlayerName = killer.name;
+                                        updateSql += "UPDATE battlePlayer SET killerName=@killerName, KillerId=@killerId " +
+                                                    "WHERE battleId=@battleId AND accountId=@accountId;";
+
+                                        DB.AddWithValue(ref sql, "@killerName", killer.name, DB.SqlDataType.VarChar);
+                                        DB.AddWithValue(ref sql, "@killerId", killer.accountId, DB.SqlDataType.Int);
+                                        DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+                                        DB.AddWithValue(ref sql, "@accountId", player.accountId, DB.SqlDataType.Int);
+
+                                        if (player.accountId == Config.Settings.playerAccountId)
+                                        {
+                                            killedByAccountId = killer.accountId;
+                                            killedByPlayerName = killer.name;
+                                        }
                                     }
                                 }
+                                
+                                if (updateSql != "")
+                                {
+                                    await DB.ExecuteNonQuery(updateSql, false);
+                                }
+
                                 // Get player platoon participants
                                 if (getPlatoon && playerPlatoonId > 0)
                                 {
                                     playerPlatoonParticipants = platoon.FindAll(p => p.platoonID == playerPlatoonId).Count;
                                 }
+
                                 // Update battle with enhanced values from players veicle section
                                 sql =
                                     "update battle set " +

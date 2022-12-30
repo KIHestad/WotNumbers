@@ -68,10 +68,13 @@ namespace WinApp.Forms
 				"  player ON playerTank.playerId = player.id " +
 				"GROUP BY battle.id, battle.battleTime, player.name;";
 			DataTable dt = await DB.FetchData(sql);
-			string updatesql = "";
-			// Progress
-			badProgressBar.ValueMax = dt.Rows.Count;
-			// Loop through all battles
+
+			int tot = dt.Rows.Count; 
+			badProgressBar.ValueMax = tot;	// Progress
+			string updateSql = "";
+			int loopCount = 0;
+
+			UpdateProgressBar("Starting updates...");
 			foreach (DataRow dr in dt.Rows)
 			{
 				// Current battle to check
@@ -80,17 +83,17 @@ namespace WinApp.Forms
 				// Show progress
 				UpdateProgressBar("Battle #" + battleId + " - " + Convert.ToDateTime(dr["battleTime"]));
 				// Get all battlePlayers
-				sql = "SELECT team, deathReason, name FROM battlePlayer WHERE battleId=" + battleId;
-				DataTable battlePlayers = await DB.FetchData(sql);
+				string selectSql = "SELECT team, deathReason, name FROM battlePlayer WHERE battleId=" + battleId;
+				DataTable battlePlayers = await DB.FetchData(selectSql);
 				// Find players team (1/2) and enemy team (1/2) for battle
 				DataRow[] drTemp = battlePlayers.Select("name = '" + playerName + "'");
 				int playerTeam = 1;
 				if (drTemp.Length > 0)
 					playerTeam = Convert.ToInt32(drTemp[0]["team"]);
 
-				//sql = "SELECT team FROM battlePlayer WHERE battleid=" + battleId + " AND name=@playerName";
+				//selectSql = "SELECT team FROM battlePlayer WHERE battleid=" + battleId + " AND name=@playerName";
 				//DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
-				//dtTemp = await DB.FetchData(sql);
+				//dtTemp = await DB.FetchData(selectSql);
 				//if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
 				//	playerTeam = Convert.ToInt32(dtTemp.Rows[0][0]);
 				int enemyTeam = 1;
@@ -103,16 +106,27 @@ namespace WinApp.Forms
 				int fragsTeam = battlePlayers.Select("deathReason <> '-1' and team=" + enemyTeam).Length;
 				// Find frags count for enemy team
 				int fragsEnemy = battlePlayers.Select("deathReason <> '-1' and team=" + playerTeam).Length;
-				
+
 				// Create update sql
-				updatesql +=
+				updateSql +=
 					"UPDATE battle " +
 					"SET survivedteam=" + survivedTeam.ToString() + ", survivedenemy=" + survivedEnemy.ToString() + ", " +
 					" fragsteam=" + fragsTeam.ToString() + ", fragsenemy=" + fragsEnemy.ToString() + " " +
 					"WHERE id = " + dr["battleId"].ToString() + ";";
+
+				loopCount++;
+				if (loopCount >= Constants.RecalcDataBatchSize)
+				{
+					await DB.ExecuteNonQuery(updateSql, RunInBatch: true);
+					loopCount = 0;
+					updateSql = "";
+				}
 			}
-			if (updatesql != "")
-                await DB.ExecuteNonQuery(updatesql, RunInBatch: true);
+
+			if (updateSql != "")
+			{
+				await DB.ExecuteNonQuery(updateSql, RunInBatch: true);
+			}
 		}
 	}
 }
