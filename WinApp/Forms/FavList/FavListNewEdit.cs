@@ -135,7 +135,8 @@ namespace WinApp.Forms
                             await FavListHelper.TankSort(favListId);
 						}
 					}
-					this.Close();
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                     await FavListHelper.FavListSort();
 				}
 			}
@@ -143,6 +144,7 @@ namespace WinApp.Forms
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
+			this.DialogResult = DialogResult.Cancel;
 			this.Close();
 		}
 
