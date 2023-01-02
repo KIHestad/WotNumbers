@@ -49,7 +49,6 @@ namespace WinApp.Forms
 			badProgressBar.Visible = true;
 			badProgressBar.ValueMax = 2;
 
-			string sql = "select id, name, accountId from player";
 			UpdateProgressBar("Starting updates...", 1);
 
 			FixBattleTableFunc();
@@ -94,7 +93,7 @@ namespace WinApp.Forms
 		public async static Task FixBattleTableFunc()
 		{
 			// sql string = todas las entries dela teabla battle antes de la fecha de introducción de orphan battles
-			string sql = "SELECT * FROM battle WHERE battleTime>@battleTimeFrom";
+			string sql = "SELECT * FROM battle WHERE battleTime>@battleTimeFrom ORDER BY battleTime, id";
 			DateTime battleTimeFrom = new DateTime(2022, 10, 1, 0, 0, 0);
 			DB.AddWithValue(ref sql, "@battleTimeFrom", battleTimeFrom, DB.SqlDataType.DateTime);
 

@@ -1020,25 +1020,14 @@ namespace WinApp.Code
 					sqlFields += ", damageRating ";
 					sqlValues += ", " + rankDmg.ToString().Replace(",", ".");
 				}
-				// Calc battle start time
-				sqlFields += ", battleTimeStart ";
-				// Get the battle end time, subtract lifetime to estimate start time - will be overwritten with actual start time from battle result
-				DateTime battleEndTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(battleNewRow["battletime"]));
-				int lifetime = Convert.ToInt32(battleNewRow["battleLifeTime"]);
-				
-				// This is not valid since it depends on hardware loading time SSD or physical disc.
-				// if (lifetime > 180)
-				//	lifetime -= 120; // Normally lifetime is more than actually lifetime, probably because of loading time is included?
-
-				// battleStartTime is equivalent to arenaCreationTime, the moment after the MM is created.
-				DateTime battleStartTime = battleEndTime.AddSeconds(-lifetime);
-				sqlValues += ", '" + battleStartTime.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'";
 
 				// Update database
 				if (sqlFields.Length > 0)
 				{
+					DateTime battleEndTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(battleNewRow["battletime"]));
+
 					// look if the battle was already added
-					int battleId = await FindOrphanBattle(battleStartTime, tankId, battleNewRow);
+					int battleId = await FindOrphanBattle(battleEndTime, tankId, battleNewRow);
 
 					bool battleExists = battleId != -1;
 					if (battleExists)
@@ -1203,17 +1192,16 @@ namespace WinApp.Code
 			return same;
 		}
 
-		private async static Task<int> FindOrphanBattle(DateTime battleStartTime, int tankId, DataRow battleRow)
+		private async static Task<int> FindOrphanBattle(DateTime battleEndTime, int tankId, DataRow battleRow)
 		{
 			string sql =
-				"select b.id as battleId " +
+				"select * " +
 				"from battle b left join playerTank pt on b.playerTankId = pt.id " +
-				"where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1 and b.orphanDat=1; ";
+				"where pt.tankId=@tankId and b.battleTime>@battleEndTimeFrom and b.battleTime<@battleEndTimeTo and b.battlesCount=1 and b.orphanDat=1; ";
 
-			const int k_timeThreshold = 90;
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@battleTimeFrom", battleStartTime.AddSeconds(-k_timeThreshold), DB.SqlDataType.DateTime);
-			DB.AddWithValue(ref sql, "@battleTimeTo", battleStartTime.AddSeconds(k_timeThreshold), DB.SqlDataType.DateTime);
+			DB.AddWithValue(ref sql, "@battleEndTimeFrom", battleEndTime.AddSeconds(-Constants.BattleEndTimeThreshold), DB.SqlDataType.DateTime);
+			DB.AddWithValue(ref sql, "@battleEndTimeTo", battleEndTime.AddSeconds(Constants.BattleEndTimeThreshold), DB.SqlDataType.DateTime);
 
 			int battleId = -1;
 			
@@ -1226,6 +1214,16 @@ namespace WinApp.Code
 					break;
 				}
 			}
+
+			if (battleId != -1)
+			{
+				Log.AddToLogBuffer("Orphan battle found: " + sql);
+			}
+			else
+			{
+				Log.AddToLogBuffer("Orphan battle NOT found: " + sql);
+			}
+
 			return battleId;
 		}
 	}

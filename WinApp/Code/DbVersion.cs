@@ -44,8 +44,6 @@ namespace WinApp.Code
 			{
 				case 547:
 					RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
-					break;
-				case 547:
 					RunRecalcPlayerAccountId = true;
 					break;
 				case 546:
