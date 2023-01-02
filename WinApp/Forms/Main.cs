@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -4016,12 +4016,18 @@ namespace WinApp.Forms
 				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 				Form frm = new Forms.GrindingSetup(playerTankId);
 				frm.ShowDialog(this);
-				if (MainSettings.View == GridView.Views.Tank)
-					await ShowView("Refreshed grid");
-			}
-		}
+                if (MainSettings.View == GridView.Views.Tank)
+                    await ShowView("Refreshed grid");
+            }
+            else
+            {
+                // Grinding setup requires the playerTank record to exist.
+                // Added feedback to clarify requirements to the user.
+                MsgBox.Show("Complete a battle before running the grinding setup.", "Cannot Open Grinding Setup", this);
+            }
+        }
 
-		private async void dataGridMainPopup_GrindingSetupRecalculate_Click(object sender, EventArgs e)
+        private async void dataGridMainPopup_GrindingSetupRecalculate_Click(object sender, EventArgs e)
 		{
 			await GrindingHelper.RecalculateGrindingProgress();
 			if (MainSettings.View == GridView.Views.Tank)
@@ -4264,55 +4270,94 @@ namespace WinApp.Forms
 			CreateDataGridContextMenu(); // Recreate context menu
 		}
 
-		private async void dataGridMainPopup_FavListCreateNew_Click(object sender, EventArgs e)
-		{
-			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
-			{
-				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-				int tankId = await TankHelper.GetTankID(playerTankId);
-				Form frm = new Forms.FavListNewEdit(0, "", tankId);
-				frm.ShowDialog(this);
-				// After fav list changes reload menu
-				await SetFavListMenu(); // Reload fav list items
-			}
-		}
+        private async void dataGridMainPopup_FavListCreateNew_Click(object sender, EventArgs e)
+        {
+            int tankId = -1;
+            // Add a tank to a new favorite list which the player has completed a battle in
+            if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
+            {
+                int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+                tankId = await TankHelper.GetTankID(playerTankId);
+            }
 
-		private async void dataGridMainPopup_FavListAddTank_Click(object sender, EventArgs e)
-		{
-			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
-			{
-				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-				int tankId = await TankHelper.GetTankID(playerTankId);
-				if (tankId != 0 && await FavListHelper.CheckIfAnyFavList(this, tankId, true))
-				{
-					Form frm = new Forms.FavListAddRemoveTank(tankId, true);
-					frm.ShowDialog(this);
-				}
-			}
-		}
+            // Add a tank to a new favorite list that the player has not completed a battle in
+            else if (dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value != DBNull.Value)
+            {
+                tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value);
+            }
+            if (tankId != -1)
+            {
+                using (Form frm = new Forms.FavListNewEdit(0, "", tankId))
+                {
+                    // Only update the favorites list if something was actually added/modified.
+                    // This was causing the menu item to display the incorrect list.
+                    if (frm.ShowDialog(this) == DialogResult.OK)
+                        // After fav list changes reload menu
+                        await SetFavListMenu(); // Reload fav list items
+                }
+            }
+        }
 
-		private async void dataGridMainPopup_FavListRemoveTank_Click(object sender, EventArgs e)
-		{
-			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
-			{
-				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-				int tankId = await TankHelper.GetTankID(playerTankId);
-				if (tankId != 0 && await FavListHelper.CheckIfAnyFavList(this, tankId, false))
-				{
-					Form frm = new FavListAddRemoveTank(tankId, false);
-					frm.ShowDialog(this);
-					// refresh if tank removed
-					if (FavListHelper.refreshGridAfterAddRemove)
+        private async void dataGridMainPopup_FavListAddTank_Click(object sender, EventArgs e)
+        {
+            int tankId = -1;
+
+            // Add a tank to the favorite list which the player has completed a battle in
+            if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
+            {
+                int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+                tankId = await TankHelper.GetTankID(playerTankId);
+            }
+            // Add a tank to the favorite list that the player has not completed a battle in
+            else if (dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value != DBNull.Value)
+            {
+                tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value);
+            }
+
+            if (tankId != -1 && await FavListHelper.CheckIfAnyFavList(this, tankId, true))
+            {
+                using (Form frm = new Forms.FavListAddRemoveTank(tankId, true))
+                {
+                    frm.ShowDialog(this);
+                }
+            }
+        }
+
+        private async void dataGridMainPopup_FavListRemoveTank_Click(object sender, EventArgs e)
+        {
+            int tankId = -1;
+            // Remove a tank to the favorite list which the player has completed a battle in
+            if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
+            {
+                int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+                tankId = await TankHelper.GetTankID(playerTankId);
+            }
+            // Remove a tank to the favorite list that the player has not completed a battle in
+            else if (dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value != DBNull.Value)
+            {
+                tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value);
+            }
+
+            if (tankId != -1 && await FavListHelper.CheckIfAnyFavList(this, tankId, false))
+            {
+                using (Form frm = new FavListAddRemoveTank(tankId, false))
+                    frm.ShowDialog(this);
+                // refresh if tank removed
+                if (FavListHelper.refreshGridAfterAddRemove)
 					{
 						try
 						{
-							int pos = dataGridMain.FirstDisplayedScrollingRowIndex;
-							dataGridMain.Visible = false;
-							await ShowView("Refresh after removed tank from favourite tank list");
-							dataGridMain.FirstDisplayedScrollingRowIndex = pos;
-							MoveScrollBar();
-							dataGridMain.Visible = true;
-							dataGridMain.Focus();
+                        int pos = dataGridMain.FirstDisplayedScrollingRowIndex;
+                        dataGridMain.Visible = false;
+                        await ShowView("Refresh after removed tank from favourite tank list");
+                        // Don't attempt to scroll an empty list
+                        if (dataGridMain.FirstDisplayedScrollingRowIndex >= pos)
+                        {
+                            dataGridMain.FirstDisplayedScrollingRowIndex = pos;
+                        }
+                        MoveScrollBar();
+                        dataGridMain.Visible = true;
+                        dataGridMain.Focus();
 							FavListHelper.refreshGridAfterAddRemove = false;
 						}
 						catch (Exception)
