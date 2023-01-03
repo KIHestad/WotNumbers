@@ -1,4 +1,8 @@
-﻿29-Dec-2022
+﻿03-Jan-2023
+- Fix killername using patch from another branch
+- Add Pull Request: Added ability to add/remove tanks yet to be seen in battle to favorite lists. By Stevoni.
+
+29-Dec-2022
 -Unify Recalc classes to make the code look similar on all the processes.
 -Fix killer name in battle details.
 -Fix Min tier calculation when Unknown vehicles are found in battle.
