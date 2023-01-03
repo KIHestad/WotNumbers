@@ -650,10 +650,10 @@ namespace WinApp.Code
                                         updateSql += "UPDATE battlePlayer SET killerName=@killerName, KillerId=@killerId " +
                                                     "WHERE battleId=@battleId AND accountId=@accountId;";
 
-                                        DB.AddWithValue(ref sql, "@killerName", killer.name, DB.SqlDataType.VarChar);
-                                        DB.AddWithValue(ref sql, "@killerId", killer.accountId, DB.SqlDataType.Int);
-                                        DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-                                        DB.AddWithValue(ref sql, "@accountId", player.accountId, DB.SqlDataType.Int);
+                                            DB.AddWithValue(ref updateSql, "@killerName", killer.name, DB.SqlDataType.VarChar);
+                                            DB.AddWithValue(ref updateSql, "@killerId", killer.accountId, DB.SqlDataType.Int);
+                                            DB.AddWithValue(ref updateSql, "@battleId", battleId, DB.SqlDataType.Int);
+                                            DB.AddWithValue(ref updateSql, "@accountId", player.accountId, DB.SqlDataType.Int);
 
                                         if (player.accountId == Config.Settings.playerAccountId)
                                         {
