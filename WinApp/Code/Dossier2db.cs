@@ -941,21 +941,37 @@ namespace WinApp.Code
 				rp.CAP = Rating.WNHelper.ConvertDbVal2Double(battleNewRow["cap"]);
 				rp.WINS = Rating.WNHelper.ConvertDbVal2Double(battleNewRow["victory"]);
 				rp.BATTLES = battlesCount;
+
+				Log.AddToLogBuffer("Dossier2db::AddBattle: RatingParameters: " +
+					"dmg(" + Convert.ToString(rp.DAMAGE) + "), " +
+					"spot(" + Convert.ToString(rp.SPOT) + "), " +
+					"frag(" + Convert.ToString(rp.FRAGS) + "), " +
+					"def(" + Convert.ToString(rp.DEF) + "), " +
+					"cap(" + Convert.ToString(rp.CAP) + "), " +
+					"wins(" + Convert.ToString(rp.WINS) + "), " +
+					"btls(" + Convert.ToString(rp.BATTLES) + "), " +
+					"tier(" + Convert.ToString(rp.TIER) + "), ");
+
 				// Calculate WN9
+				uint wn9 = Convert.ToUInt32(Math.Round((await Rating.WN9.CalcBattle(tankId, rp)).WN9, 0));
 				sqlFields += ", wn9";
-				sqlValues += ", " + Math.Round((await Rating.WN9.CalcBattle(tankId, rp)).WN9, 0).ToString();
+				sqlValues += ", " + Convert.ToString(wn9);
 
 				// Calculate WN8
+				uint wn8 = Convert.ToUInt32(Math.Round(Rating.WN8.CalcBattle(tankId, rp), 0));
 				sqlFields += ", wn8";
-				sqlValues += ", " + Math.Round(Rating.WN8.CalcBattle(tankId, rp), 0).ToString();
+				sqlValues += ", " + Convert.ToString(wn8);
+
 				// Calc Eff
+				uint eff = Convert.ToUInt32(Math.Round(Rating.EFF.EffBattle(tankId, rp), 0));
 				sqlFields += ", eff";
-				sqlValues += ", " + Math.Round(Rating.EFF.EffBattle(tankId, rp), 0).ToString();
+				sqlValues += ", " + Convert.ToString(eff);
+
 				// Calculate WN7
-				// Special tier calc
+				rp.TIER = await Rating.WNHelper.GetAverageTier(BattleMode.GetItemFromType(battleMode).SqlName); // Special tier calc
+				uint wn7 = Convert.ToUInt32(Math.Round(Rating.WN7.WN7battle(rp, true), 0));
 				sqlFields += ", wn7";
-				rp.TIER = await Rating.WNHelper.GetAverageTier(BattleMode.GetItemFromType(battleMode).SqlName);
-				sqlValues += ", " + Math.Round(Rating.WN7.WN7battle(rp, true), 0).ToString();
+				sqlValues += ", " + Convert.ToString(wn7);
 
 				// Add battle mode
 				sqlFields += ", battleMode";
@@ -1001,6 +1017,9 @@ namespace WinApp.Code
 				sqlFields += ", killed ";
 				sqlValues += ", " + killedcount.ToString();
 				// Rank by avg damage and progress (delta value), only for random battles
+				double damageRating = 0;
+				double damageRatingTotal = 0;
+
 				if (battleMode == BattleMode.TypeEnum.ModeRandom_TC)
 				{
 					// Get damageRank new and old values
@@ -1013,31 +1032,52 @@ namespace WinApp.Code
 					else
 						rankDmg = rankDmgOld; // If not able to fetch damageRank for new battle, use previous one - special fix for tankversion99 with problem getting this value 
 											  // Total
+					
+					damageRatingTotal = rankDmg;
 					sqlFields += ", damageRatingTotal ";
-					sqlValues += ", " + rankDmg.ToString().Replace(",", ".");
+					sqlValues += ", " + damageRatingTotal.ToString().Replace(",", ".");
 					// Progress
-					rankDmg -= rankDmgOld;
+
+					damageRating = rankDmg - rankDmgOld;
 					sqlFields += ", damageRating ";
-					sqlValues += ", " + rankDmg.ToString().Replace(",", ".");
+					sqlValues += ", " + damageRating.ToString().Replace(",", ".");
 				}
 
 				// Update database
 				if (sqlFields.Length > 0)
 				{
-					DateTime battleEndTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(battleNewRow["battletime"]));
+					bool battleExists = false;
 
-					// look if the battle was already added
-					int battleId = await FindOrphanBattle(battleEndTime, tankId, battleNewRow);
-
-					bool battleExists = battleId != -1;
-					if (battleExists)
+					if (battlesCount == 1)
 					{
-						string sql = "UPDATE battle set (orphanDat = 0) where id = " + battleId.ToString();
+						DateTime battleEndTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(battleNewRow["battletime"]));
 
-						Log.AddToLogBuffer("Modifying existing battle into db: " + sql);
-						await DB.ExecuteNonQuery(sql);
-					}
-					else
+						// These values are not in the battleNewRow, so we have to add them so
+						// they can be used in FindOrphanBattle.
+						battleNewRow["battletime"] = battleEndTime;     // rewrite battleEndTime this time with time adjusted to time zone
+						battleNewRow["wn8"] = wn8;
+						battleNewRow["eff"] = eff;
+						battleNewRow["wn7"] = wn7;
+						battleNewRow["playerTankId"] = playerTankId;
+						battleNewRow["battleMode"] = BattleMode.GetItemFromType(battleMode).SqlName;
+						battleNewRow["battleSurviveId"] = battleSurvive.ToString();
+
+						// look if the battle was already added	
+						int battleId = await FindOrphanBattle(battleEndTime, tankId, battleNewRow);
+						battleExists = battleId != -1;
+
+						if (battleExists)
+						{
+							string sql = "UPDATE battle set orphanDat=0, damageRating=@damageRating, damageRatingTotal=@damageRatingTotal where id=" + battleId.ToString();
+							DB.AddWithValue(ref sql, "@damageRating", damageRating, DB.SqlDataType.Float);
+							DB.AddWithValue(ref sql, "@damageRatingTotal", damageRatingTotal, DB.SqlDataType.Float);
+
+							Log.AddToLogBuffer("Modifying existing battle into db: " + sql);
+							await DB.ExecuteNonQuery(sql);
+						}
+					} // fallthrough
+
+					if (! battleExists)
 					{
 						// Insert Battle
 						string sql = "INSERT INTO battle (playerTankId " + sqlFields + ") VALUES (@playerTankId " + sqlValues + "); ";
@@ -1045,50 +1085,11 @@ namespace WinApp.Code
 
 						Log.AddToLogBuffer("Adding battle to db: " + sql);
 						await DB.ExecuteNonQuery(sql);
-
-						// No longer in use
-
-						// Get the last battle id
-						// DataTable dt;
-						// sql = "select max(id) as battleId from battle";
-						// dt = await DB.FetchData(sql);
-						// if (dt.Rows.Count > 0)
-						//		battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
-
-						// Insert Battle Frags
-						//if (battleFragList.Count > 0)
-						//{
-						//	// Loop through new frags
-						//	string battleFragSQL = "";
-						//	foreach (var newFragItem in battleFragList)
-						//	{
-						//		battleFragSQL += "INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) " +
-						//						 "VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); ";
-						//	}
-						//	// Add to database
-						//	DB.ExecuteNonQuery(battleFragSQL);
-						//}
-						// Insert battle Achievements
-						//if (battleAchList.Count > 0)
-						//{
-						//	// Loop through new frags
-						//	string battleAchSQL = "";
-						//	foreach (var newAchItem in battleAchList)
-						//	{
-						//		battleAchSQL += "INSERT INTO battleAch (battleId, achId, achCount) " +
-						//						"VALUES (" + battleId + ", " + newAchItem.achId.ToString() + ", " + newAchItem.count.ToString() + "); ";
-						//	}
-						//  // Add to database
-						//  await DB.ExecuteNonQuery(battleAchSQL);
-						//}
-
-						// dt.Dispose();
-						// dt.Clear();
 					}
 				}
+
 				battleTableNew.Dispose();
 				battleTableNew.Clear();
-
 			}
 			catch (Exception ex)
 			{
@@ -1102,7 +1103,11 @@ namespace WinApp.Code
 			object dstValue = dst[field];
 			bool result = true;
 
-			if (srcValue.GetType() == typeof(System.DateTime))
+			if ((srcValue == null) || (dstValue == null))
+			{
+				result = (srcValue == null) && (dstValue == null);
+			}
+			else if (srcValue.GetType() == typeof(System.DateTime))
 			{
 				DateTime srcTime = Convert.ToDateTime(srcValue);
 				DateTime dstTime = Convert.ToDateTime(dstValue);
@@ -1146,9 +1151,18 @@ namespace WinApp.Code
 
 			if (result != true)
 			{
-				Log.AddToLogBuffer($"Warning: field (" + field + ") in battles src=" + src["id"] + " and dst= " + dst["id"] + 
-					" has different values (" + Convert.ToString(srcValue) + "  / " + Convert.ToString(dstValue) + " )");
+				if ((srcValue == null) || (dstValue == null))
+				{
+					Log.AddToLogBuffer($"Warning: field (" + field + ") in battles src=" + src["id"] + " and dst= " + dst["id"] +
+										" has different values. Src or Dst value is null and the other not.");
+				}
+				else
+				{
+					Log.AddToLogBuffer($"Warning: field (" + field + ") in battles src=" + src["id"] + " and dst= " + dst["id"] +
+									  " has different values (" + Convert.ToString(srcValue) + "  / " + Convert.ToString(dstValue) + " )");
+				}
 			}
+
 			return result;
 		}
 
@@ -1156,7 +1170,6 @@ namespace WinApp.Code
 		{
 			bool same = SameValue(src, dst, "playerTankId", 0)
 					&& SameValue(src, dst, "battleTime", 10)
-					&& SameValue(src, dst, "battleLifeTime", 0)
 
 					&& SameValue(src, dst, "battleSurviveId", 0)
 					&& SameValue(src, dst, "frags", 0)
@@ -1186,7 +1199,7 @@ namespace WinApp.Code
 					&& SameValue(src, dst, "wn7", 2)
 					&& SameValue(src, dst, "dmgBlocked", 0)
 					&& SameValue(src, dst, "potentialDmgReceived", 0)
-					&& SameValue(src, dst, "xpOriginal", 0)
+					// && SameValue(src, dst, "xpOriginal", 0)
 					;
 
 			return same;
@@ -1204,13 +1217,12 @@ namespace WinApp.Code
 			DB.AddWithValue(ref sql, "@battleEndTimeTo", battleEndTime.AddSeconds(Constants.BattleEndTimeThreshold), DB.SqlDataType.DateTime);
 
 			int battleId = -1;
-			
 			DataTable dt = await DB.FetchData(sql);
 			foreach(DataRow row in dt.Rows)
 			{
 				if (SameBattle(row, battleRow))
 				{
-					battleId = Convert.ToInt32(row["battleId"]);
+					battleId = Convert.ToInt32(row["id"]);
 					break;
 				}
 			}

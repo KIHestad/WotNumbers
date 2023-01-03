@@ -1384,7 +1384,7 @@ namespace WinApp.Forms
 				await Log.LogToFile("// Battle file listener detected new battle file");
 				int battlesUpdated = await Battle2json.RunBattleResultRead();
 				// Refresh and display result
-				if (battlesUpdated > 0)
+					if (battlesUpdated > 0)
 					await GridViewRefresh("Battle files updated");
 				fswBattle.EnableRaisingEvents = true;
 			}

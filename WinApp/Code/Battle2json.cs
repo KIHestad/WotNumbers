@@ -1078,15 +1078,15 @@ namespace WinApp.Code
 
         private async static Task<bool> IsOrphanBattle(DateTime battleTime, int tankId)
         {
-            DataTable dt;
+         DataTable dt;
             string sql =
                 "select b.id as battleId, pt.id as playerTankId " +
                 "from battle b left join playerTank pt on b.playerTankId = pt.id " +
                 "where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1;";
 
             DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-            DB.AddWithValue(ref sql, "@battleTimeFrom", battleTime.AddSeconds(-30), DB.SqlDataType.DateTime);
-            DB.AddWithValue(ref sql, "@battleTimeTo", battleTime.AddSeconds(30), DB.SqlDataType.DateTime);
+            DB.AddWithValue(ref sql, "@battleTimeFrom", battleTime.AddSeconds(-Constants.BattleEndTimeThreshold), DB.SqlDataType.DateTime);
+            DB.AddWithValue(ref sql, "@battleTimeTo", battleTime.AddSeconds(Constants.BattleEndTimeThreshold), DB.SqlDataType.DateTime);
 
             dt = await DB.FetchData(sql);
 
@@ -1240,6 +1240,16 @@ namespace WinApp.Code
             int playerTeam = Convert.ToInt32(token_vehicle.SelectToken("team"));
             rp.WINS = (winnerTeam == playerTeam) ? 1.0 : 0.0;
             rp.BATTLES = 1.0f;
+
+            Log.AddToLogBuffer("Battle2json::CreateOrphanBattleFromJSON: RatingParameters: " +
+                "dmg(" + Convert.ToString(rp.DAMAGE) + "), " +
+                "spot(" + Convert.ToString(rp.SPOT) + "), " +
+                "frag(" + Convert.ToString(rp.FRAGS) + "), " +
+                "def(" + Convert.ToString(rp.DEF) + "), " +
+                "cap(" + Convert.ToString(rp.CAP) + "), " +
+                "wins(" + Convert.ToString(rp.WINS) + "), " +
+                "btls(" + Convert.ToString(rp.BATTLES) + "), " +
+                "tier(" + Convert.ToString(rp.TIER) + ")");
 
             // Calculate WN9
             battleValues.Add(new BattleValue()
