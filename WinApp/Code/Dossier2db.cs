@@ -1169,7 +1169,7 @@ namespace WinApp.Code
 		public static bool SameBattle(DataRow src, DataRow dst)
 		{
 			bool same = SameValue(src, dst, "playerTankId", 0)
-					&& SameValue(src, dst, "battleTime", 10)
+					&& SameValue(src, dst, "battleTime", 30)
 
 					&& SameValue(src, dst, "battleSurviveId", 0)
 					&& SameValue(src, dst, "frags", 0)
@@ -1178,24 +1178,23 @@ namespace WinApp.Code
 					&& SameValue(src, dst, "assistSpot", 0)
 					&& SameValue(src, dst, "assistTrack", 0)
 
-					// Need more ?
 					&& SameValue(src, dst, "cap", 0)
-					&& SameValue(src, dst, "def", 0)
+					// && SameValue(src, dst, "def", 0)				// def may differ between dossierData and battleData
 					&& SameValue(src, dst, "shots", 0)
-					// && SameValue(src, dst, "hits", 0)			// some battles differ! Check addOrphanBattle for possible bug
+					// && SameValue(src, dst, "hits", 0)			// hits may differ between dossierData and battleData
 					&& SameValue(src, dst, "shotsReceived", 0)
 					&& SameValue(src, dst, "pierced", 0)
 					&& SameValue(src, dst, "piercedReceived", 0)
 					&& SameValue(src, dst, "spotted", 0)
 					&& SameValue(src, dst, "mileage", 0)
-					// && SameValue(src, dst, "treesCut", 0)		// some battles differ!
-					// && SameValue(src, dst, "xp", 0)				// some battles differ! Check addOrphanBattle for possible bug
-					&& SameValue(src, dst, "wn8", 2)
+					// && SameValue(src, dst, "treesCut", 0)		// treesCut may differ between dossierData and battleData!
+					// && SameValue(src, dst, "xp", 0)				// xp may differ between dossierData and battleData
+					// && SameValue(src, dst, "wn8", 2)				// def points may differ and they're taken in consideration to create wn8
 					&& SameValue(src, dst, "eff", 0)
 					&& SameValue(src, dst, "battleMode", 0)
 					&& SameValue(src, dst, "heHitsReceived", 0)
 					&& SameValue(src, dst, "noDmgShotsReceived", 0)
-					&& SameValue(src, dst, "heHits", 0)
+					// && SameValue(src, dst, "heHits", 0)
 					&& SameValue(src, dst, "wn7", 2)
 					&& SameValue(src, dst, "dmgBlocked", 0)
 					&& SameValue(src, dst, "potentialDmgReceived", 0)
