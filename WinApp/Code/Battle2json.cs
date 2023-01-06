@@ -1012,7 +1012,8 @@ namespace WinApp.Code
                 string sql =
                     "select min(tank.tier) " +
                     "from battlePlayer left join tank on battleplayer.tankid=tank.id " +
-                    "where battleid=" + battleId;
+                    "where battleid=" + battleId + " and tank.tier > 0";
+
                 DataTable dt = await DB.FetchData(sql);
                 if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
                     minBattleTier = Convert.ToInt32(dt.Rows[0][0]);

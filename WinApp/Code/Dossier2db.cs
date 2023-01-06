@@ -1068,9 +1068,14 @@ namespace WinApp.Code
 
 						if (battleExists)
 						{
-							string sql = "UPDATE battle set orphanDat=0, damageRating=@damageRating, damageRatingTotal=@damageRatingTotal where id=" + battleId.ToString();
+							string sql = "UPDATE battle set orphanDat=0, def=@def, damageRating=@damageRating, damageRatingTotal=@damageRatingTotal, wn9=@wn9, wn8=@wn8, wn7=@wn7, eff=@eff where id=" + battleId.ToString();
+							DB.AddWithValue(ref sql, "@def", rp.DEF, DB.SqlDataType.Int);
 							DB.AddWithValue(ref sql, "@damageRating", damageRating, DB.SqlDataType.Float);
 							DB.AddWithValue(ref sql, "@damageRatingTotal", damageRatingTotal, DB.SqlDataType.Float);
+							DB.AddWithValue(ref sql, "@wn9", wn9, DB.SqlDataType.Int);
+							DB.AddWithValue(ref sql, "@wn8", wn8, DB.SqlDataType.Int);
+							DB.AddWithValue(ref sql, "@wn7", wn7, DB.SqlDataType.Int);
+							DB.AddWithValue(ref sql, "@eff", eff, DB.SqlDataType.Int);
 
 							Log.AddToLogBuffer("Modifying existing battle into db: " + sql);
 							await DB.ExecuteNonQuery(sql);
@@ -1169,7 +1174,7 @@ namespace WinApp.Code
 		public static bool SameBattle(DataRow src, DataRow dst)
 		{
 			bool same = SameValue(src, dst, "playerTankId", 0)
-					&& SameValue(src, dst, "battleTime", 30)
+					&& SameValue(src, dst, "battleTime", Constants.BattleEndTimeThreshold)
 
 					&& SameValue(src, dst, "battleSurviveId", 0)
 					&& SameValue(src, dst, "frags", 0)

@@ -1,4 +1,8 @@
-﻿29-Dec-2022
+﻿03-Jan-2023
+- Fix killername using patch from another branch
+- Add Pull Request: Added ability to add/remove tanks yet to be seen in battle to favorite lists. By Stevoni.
+
+29-Dec-2022
 -Unify Recalc classes to make the code look similar on all the processes.
 -Fix killer name in battle details.
 -Fix Min tier calculation when Unknown vehicles are found in battle.
@@ -17,10 +21,6 @@ Add team value into the columnSelection table. This allows to view the team numb
 Updated Battle2Json and Dossier2Json scripts to WoT 1.19.0.0 (thanks to God Lemmy)
 Fix column name playerTank.skillRecon in table columnSelection 
 Added new tanks in Admin.db (Tank_Unknown_37889)
-
-21-Oct-2022
-Unify Recalc classes to make the code look similar on all the processes.
-Implmentation of orphan battles retrieval + Select battle video mode.
 
 20-Oct-2022
 Update wotbr2j script to accept new WoT 1.18.1.1 battle dat files.
