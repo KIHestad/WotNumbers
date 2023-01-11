@@ -1,4 +1,7 @@
-﻿03-Jan-2023
+﻿11-Jan-2023
+- Updated Battle2Json wotbr2j script to support WoT 1.19.1.0 battle dat files.
+
+03-Jan-2023
 - Fix killername using patch from another branch
 - Add Pull Request: Added ability to add/remove tanks yet to be seen in battle to favorite lists. By Stevoni.
 

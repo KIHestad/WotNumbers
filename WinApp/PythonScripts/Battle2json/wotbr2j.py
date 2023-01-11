@@ -12,7 +12,7 @@ from battle_results_constants import BATTLE_RESULT_ENTRY_TYPE as ENTRY_TYPE
 import battle_results_common, battle_results_random
 
 parser = dict()
-parser['version'] = "1.19.0.0"
+parser['version'] = "1.19.1.0"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
 
