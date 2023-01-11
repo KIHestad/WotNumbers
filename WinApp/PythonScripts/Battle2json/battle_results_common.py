@@ -1,7 +1,6 @@
 # uncompyle6 version 3.7.4
 # Python bytecode 2.7 (62211)
-# Decompiled from: Python 2.7.17 (default, Sep 30 2020, 13:38:04) 
-# [GCC 7.5.0]
+# Decompiled from: Python 2.7.8 (default, Jun 30 2014, 16:08:48) [MSC v.1500 64 bit (AMD64)]
 # Embedded file name: scripts/common/battle_results/battle_results_common.py
 from battle_results_constants import BATTLE_RESULT_ENTRY_TYPE as ENTRY_TYPE
 #Modified for WotNumbers 
@@ -324,9 +323,9 @@ BATTLE_RESULTS = [
  (
   'eventEquipCoinList', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
-  'eventCreditsFactor1000List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
+  'eventCreditsFactor100List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
-  'eventXPFactor1000List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
+  'eventXPFactor100List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (
   'eventFreeXPFactor100List', list, [], None, 'skip', ENTRY_TYPE.VEHICLE_SELF),
  (

@@ -4348,24 +4348,24 @@ namespace WinApp.Forms
 				{
 					try
 					{
-                    int pos = dataGridMain.FirstDisplayedScrollingRowIndex;
-                    dataGridMain.Visible = false;
-                    await ShowView("Refresh after removed tank from favourite tank list");
-                    // Don't attempt to scroll an empty list
-                    if (dataGridMain.FirstDisplayedScrollingRowIndex >= pos)
-                    {
-                        dataGridMain.FirstDisplayedScrollingRowIndex = pos;
-                    }
-                    MoveScrollBar();
-                    dataGridMain.Visible = true;
-                    dataGridMain.Focus();
+	                    int pos = dataGridMain.FirstDisplayedScrollingRowIndex;
+	                    dataGridMain.Visible = false;
+	                    await ShowView("Refresh after removed tank from favourite tank list");
+	                    // Don't attempt to scroll an empty list
+	                    if (dataGridMain.FirstDisplayedScrollingRowIndex >= pos)
+	                    {
+	                        dataGridMain.FirstDisplayedScrollingRowIndex = pos;
+	                    }
+	                    MoveScrollBar();
+	                    dataGridMain.Visible = true;
+	                    dataGridMain.Focus();
+
 						FavListHelper.refreshGridAfterAddRemove = false;
 					}
 					catch (Exception)
 					{
 						// Do nothing, just optional scrolling and refresh event
 					}
-
 				}
 			}
 		}
