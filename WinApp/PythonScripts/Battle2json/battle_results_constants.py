@@ -1,7 +1,6 @@
 # uncompyle6 version 3.7.4
 # Python bytecode 2.7 (62211)
-# Decompiled from: Python 2.7.17 (default, Sep 30 2020, 13:38:04) 
-# [GCC 7.5.0]
+# Decompiled from: Python 2.7.8 (default, Jun 30 2014, 16:08:48) [MSC v.1500 64 bit (AMD64)]
 # Embedded file name: scripts/common/battle_results/battle_results_constants.py
 # from constants import ARENA_BONUS_TYPE
 class ARENA_BONUS_TYPE:
