@@ -2886,7 +2886,7 @@ namespace WinApp.Forms
                         "INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id) SB " +
 						"INNER JOIN (select *, PL.id as PID, BP.accountId as AId, BP.team as SP from battlePlayer BP " +
                         "INNER JOIN player PL on AId = PL.accountId) P on battle.id = P.battleId " + tankJoin + " ";
-                string where = "WHERE playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + " ";
+                string where = "WHERE playerTank.playerId=@playerid  AND PID=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + " ";
 				DB.AddWithValue(ref where, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				if (battleCountFilter)
 				{
