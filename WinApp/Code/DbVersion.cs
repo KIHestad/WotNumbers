@@ -29,7 +29,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 547; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 548; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -41,6 +41,10 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
+				case 548:
+					mssql = "UPDATE columnSelection SET colName = 'battlePlayer.team', description = 'Team Number. Also the side of the map where the player spawned.' WHERE id=923;";
+					sqlite = mssql;
+					break;
 				case 547:
 					RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
 					break;
@@ -55,7 +59,7 @@ namespace WinApp.Code
 							"INSERT INTO columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) VALUES (923, 13, 20, 50);" +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, " +
 							"colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) " +
-							"VALUES (923, 2, 8, 'SP', 'Team', 'Teamseite', 'Battle', 50, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
+							"VALUES (923, 2, 8, 'SP', 'Team', 'Team side', 'Battle', 50, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
 					sqlite = mssql;
 					break;
 				case 544:
