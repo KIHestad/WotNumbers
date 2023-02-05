@@ -1276,8 +1276,13 @@ namespace WinApp.Forms
 							await GridShowTank(Status2Message);
 							break;
 						case GridView.Views.Battle:
+							DateTime initialTime = DateTime.Now;
 							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Battle view selected";
 							await GridShowBattle(Status2Message);
+							DateTime finalTime = DateTime.Now;
+							TimeSpan duration = finalTime.Subtract(initialTime);
+
+							Log.AddToLogBuffer("[##] GridShowBattle duration " + duration.TotalSeconds.ToString() + " seconds.", true); 
 							break;
 						case GridView.Views.Map:
 							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Map view selected";
@@ -2876,25 +2881,39 @@ namespace WinApp.Forms
 				// Get Tank filter
 				Tankfilter(out string tankFilter, out string tankJoin, out string tankFilterMessage);
 
+				// Get team number filter
+				string battlePlayerJoin = "";
+				bool lookForTeamNumber = selectedColList.Contains("P.team");
+				if (lookForTeamNumber)
+				{
+					battlePlayerJoin = "INNER JOIN (SELECT *, PL.id AS PId, BP.accountId AS AId, BP.team AS SP FROM battlePlayer BP " +
+									   "INNER JOIN player PL ON AId = PL.accountId) P ON battle.id = P.battleId ";
+                }
+
+				// Create from part
+                string from = "FROM (((((((battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id) " +
+					"INNER JOIN tank ON playerTank.tankId = tank.id) " +
+					"INNER JOIN tankType ON tank.tankTypeId = tankType.Id) " +
+					"INNER JOIN country ON tank.countryId = country.Id) " +
+					"INNER JOIN battleResult ON battle.battleResultId = battleResult.id) " +
+					"LEFT JOIN map ON battle.mapId = map.id) " +
+					"INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id) " + battlePlayerJoin + tankJoin + " ";
+
 				// Create where part, and check for battle count filter
-				string from = "FROM (((((((battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id) " +
-						"INNER JOIN tank ON playerTank.tankId = tank.id) " +
-                        "INNER JOIN tankType ON tank.tankTypeId = tankType.Id) " +
-                        "INNER JOIN country ON tank.countryId = country.Id) " +
-                        "INNER JOIN battleResult ON battle.battleResultId = battleResult.id) " +
-                        "LEFT JOIN map on battle.mapId = map.id) " +
-                        "INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id) SB " +
-						"INNER JOIN (select *, PL.id as PID, BP.accountId as AId, BP.team as SP from battlePlayer BP " +
-                        "INNER JOIN player PL on AId = PL.accountId) P on battle.id = P.battleId " + tankJoin + " ";
-                string where = "WHERE playerTank.playerId=@playerid  AND PID=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + " ";
+				string where = "WHERE playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + " ";
+				if (lookForTeamNumber)
+				{
+					where += "AND PId=@playerid ";
+				}
 				DB.AddWithValue(ref where, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+
 				if (battleCountFilter)
 				{
 					await BattleCountFilterHelper.SetBattleFilter(from, where, await BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
 					where = " WHERE battlesCountTotal = 1 ";
 				}
 
-				// Create SQL
+				// Create SQL	
 				string sql =
 					"SELECT " + selectedColList.ColListItems.Select + " " + selectFixed + " " +
 					from +
@@ -2905,8 +2924,6 @@ namespace WinApp.Forms
 				// Get data
 				DataTable dt = new DataTable();
 				dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
-
-
 
 				// If images add cols in datatable containing the image
 				if (selectedColList.Contourimg + selectedColList.Smallimg + selectedColList.Img > -3)
