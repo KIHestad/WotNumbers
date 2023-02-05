@@ -42,7 +42,7 @@ namespace WinApp.Code
 			switch (version)
 			{
 				case 548:
-					mssql = "UPDATE columnSelection SET colName = 'battlePlayer.team', description = 'Team Number. Also the side of the map where the player spawned.' WHERE id=923;";
+					mssql = "UPDATE columnSelection SET colName = 'P.team', description = 'Team Number. Also the side of the map where the player spawned.' WHERE id=923;";
 					sqlite = mssql;
 					break;
 				case 547:
@@ -50,7 +50,7 @@ namespace WinApp.Code
 					break;
 				case 546:
 					mssql =
-						// Add column for orphan Dat files.
+						// Add column for orphan Dat files.	
 						"ALTER TABLE battle ADD orphanDat bit NOT NULL default 0;";
 					sqlite = mssql;
 					break;
@@ -59,7 +59,7 @@ namespace WinApp.Code
 							"INSERT INTO columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) VALUES (923, 13, 20, 50);" +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, " +
 							"colNameSQLite, colNameSort, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos) " +
-							"VALUES (923, 2, 8, 'SP', 'Team', 'Team side', 'Battle', 50, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
+							"VALUES (923, 2, 8, 'SP', 'Team', 'Teamseite', 'Battle', 50, 'Int', NULL, NULL, NULL, NULL, 0, NULL, 0);";
 					sqlite = mssql;
 					break;
 				case 544:

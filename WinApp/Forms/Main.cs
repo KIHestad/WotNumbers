@@ -2883,26 +2883,30 @@ namespace WinApp.Forms
 
 				// Get team number filter
 				string battlePlayerJoin = "";
-				bool lookForTeamNumber = selectedColList.Contains("battlePlayer.team");
+				bool lookForTeamNumber = selectedColList.Contains("P.team");
 				if (lookForTeamNumber)
 				{
-					battlePlayerJoin = "INNER JOIN (select *, PL.id as PID, BP.accountId as AId, BP.team as SP from battlePlayer BP " +
-									   "INNER JOIN player PL on AId = PL.accountId) P on battle.id = P.battleId ";
-				}
+					battlePlayerJoin = "INNER JOIN (SELECT *, PL.id AS PId, BP.accountId AS AId, BP.team AS SP FROM battlePlayer BP " +
+									   "INNER JOIN player PL ON AId = PL.accountId) P ON battle.id = P.battleId ";
+                }
 
 				// Create from part
-				string from = "FROM ((((((battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id " +
+                string from = "FROM (((((((battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id) " +
 					"INNER JOIN tank ON playerTank.tankId = tank.id) " +
 					"INNER JOIN tankType ON tank.tankTypeId = tankType.Id) " +
 					"INNER JOIN country ON tank.countryId = country.Id) " +
 					"INNER JOIN battleResult ON battle.battleResultId = battleResult.id) " +
-					"LEFT JOIN map on battle.mapId = map.id) " +
-					"INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id) SB " + battlePlayerJoin + tankJoin + " ";
+					"LEFT JOIN map ON battle.mapId = map.id) " +
+					"INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id) " + battlePlayerJoin + tankJoin + " ";
 
 				// Create where part, and check for battle count filter
 				string where = "WHERE playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + " ";
-
+				if (lookForTeamNumber)
+				{
+					where += "AND PId=@playerid ";
+				}
 				DB.AddWithValue(ref where, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+
 				if (battleCountFilter)
 				{
 					await BattleCountFilterHelper.SetBattleFilter(from, where, await BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
@@ -2920,8 +2924,6 @@ namespace WinApp.Forms
 				// Get data
 				DataTable dt = new DataTable();
 				dt = await DB.FetchData(sql, Config.Settings.showDBErrors);
-
-
 
 				// If images add cols in datatable containing the image
 				if (selectedColList.Contourimg + selectedColList.Smallimg + selectedColList.Img > -3)
