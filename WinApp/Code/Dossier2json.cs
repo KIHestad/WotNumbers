@@ -159,7 +159,7 @@ namespace WinApp.Code
                     if (playerAccountId != 0)
                     {
                         // Create new player now
-                        sql = "INSERT INTO player (name, playerName, playerServer, accountId) VALUES (@name, @playerName, @playerServer @playerAccountId)";
+                        sql = "INSERT INTO player (name, playerName, playerServer, accountId) VALUES (@name, @playerName, @playerServer, @playerAccountId)";
                         DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
                         DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
                         DB.AddWithValue(ref sql, "@playerServer", playerServer, DB.SqlDataType.VarChar);
