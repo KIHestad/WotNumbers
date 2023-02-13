@@ -30,7 +30,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 547; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 548; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -42,13 +42,17 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
+				case 548:
+					mssql = "UPDATE columnSelection SET colName = 'P.team', description = 'Team Number. Also the side of the map where the player spawned.' WHERE id=923;";
+					sqlite = mssql;
+					break;
 				case 547:
 					RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
 					RunRecalcPlayerAccountId = true;
 					break;
 				case 546:
-						mssql =
-						// Add column for orphan Dat files.
+					mssql =
+						// Add column for orphan Dat files.	
 						"ALTER TABLE battle ADD orphanDat bit NOT NULL default 0;";
 					sqlite = mssql;
 					break;

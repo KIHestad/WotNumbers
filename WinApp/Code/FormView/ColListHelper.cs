@@ -33,14 +33,24 @@ namespace WinApp.Code
             }
             public string Select { get; set; }
             public List<ColListItem> ColListItemList { get; set; }
-        }
+			public bool Contains(string columnName)
+			{
+				return ColListItemList.Find(c => c.colName == columnName) != null;
+			}
+
+			public int size()
+			{
+				return ColListItemList.Count;
+			}
+		}
 
         public class SelectedColumnList
         {
             public SelectedColumnList()
             {
                 ColListItems = new ColListItems();
-                Img = -1;
+        
+				Img = -1;
                 Smallimg = -1;
                 Contourimg = -1;
                 Masterybadgeimg = -1;
@@ -50,9 +60,13 @@ namespace WinApp.Code
             public int Smallimg { get; set; }
             public int Contourimg { get; set; }
             public int Masterybadgeimg { get; set; }
+			public bool Contains(string columnName)
+			{
+				return ColListItems.Contains(columnName);
+			}
         }
-        
-        public async static Task<int> GetColListId(string colListName)
+
+		public async static Task<int> GetColListId(string colListName)
 		{
 			int colListId = 0;
 			string sql = "select columnList.id as id " +

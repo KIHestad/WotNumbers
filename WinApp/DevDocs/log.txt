@@ -1,4 +1,8 @@
-﻿11-Jan-2023
+﻿05-Feb-2023
+- Optimize battle view query when team side column not selected.
+- Update .NET framework to 4.8
+
+11-Jan-2023
 - Updated Battle2Json wotbr2j script to support WoT 1.19.1.0 battle dat files.
 
 03-Jan-2023
