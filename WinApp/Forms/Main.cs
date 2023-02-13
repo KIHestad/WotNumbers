@@ -2920,7 +2920,7 @@ namespace WinApp.Forms
                 }
 
 				// Create from part
-        string from = "FROM (((((((battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id) " +
+        		string from = "FROM (((((((battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id) " +
 					"INNER JOIN tank ON playerTank.tankId = tank.id) " +
 					"INNER JOIN tankType ON tank.tankTypeId = tankType.Id) " +
 					"INNER JOIN country ON tank.countryId = country.Id) " +
@@ -2929,7 +2929,7 @@ namespace WinApp.Forms
 					"INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id) " + battlePlayerJoin + tankJoin + " ";
 
 				// Create where part, and check for battle count filter
-				string where = "WHERE playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + " ";
+				string where = "WHERE playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + battleViewModeFilter + " ";
 				if (lookForTeamNumber)
 				{
 					where += "AND PId=@playerid ";
