@@ -252,6 +252,7 @@
             this.toolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
             this.mRecalcBattleAllRatings = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleCreditsPerTank = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFixBattleTable = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsShowLogFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.mShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -275,6 +276,7 @@
             this.mRecalcBattleStats = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleMinTier = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleMaxTier = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.fswDossier)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fswBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
@@ -2293,6 +2295,9 @@
             this.mRecalcBattleCreditsPerTank,
             this.mRecalcBattleRatings,
             this.mRecalcBattleStats,
+            this.mRecalcBattleCreditsPerTank,
+            this.mFixBattleTable,
+            this.toolStripSeparator16,
             this.mSettingsShowLogFiles,
             this.mShowDbTables,
             this.toolStripSeparator1,
@@ -2442,6 +2447,15 @@
             this.mRecalcBattleCreditsPerTank.Size = new System.Drawing.Size(263, 22);
             this.mRecalcBattleCreditsPerTank.Text = "Recalculate Battle Credits per Tank...";
             this.mRecalcBattleCreditsPerTank.Click += new System.EventHandler(this.mRecalcBattleCreditsPerTank_Click);
+            // 
+            // mFixBattleTable
+            // 
+            this.mFixBattleTable.Enabled = false;
+            this.mFixBattleTable.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFixBattleTable.Name = "mFixBattleTable";
+            this.mFixBattleTable.Size = new System.Drawing.Size(263, 22);
+            this.mFixBattleTable.Text = "Fix Battle Table";
+            this.mFixBattleTable.Click += new System.EventHandler(this.mFixBattleTable_Click);
             // 
             // mSettingsShowLogFiles
             // 
@@ -2731,6 +2745,11 @@
             this.mRecalcBattleMaxTier.Text = "Recalculate Max Tier values";
             this.mRecalcBattleMaxTier.Click += new System.EventHandler(this.mRecalcMaxTierValues_Click);
             // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(260, 6);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3007,6 +3026,8 @@
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleStats;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleMinTier;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleMaxTier;
+        private System.Windows.Forms.ToolStripMenuItem mFixBattleTable;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
     }
 }
 

@@ -46,6 +46,10 @@ namespace WinApp.Forms
 			badProgressBar.Visible = true;
             bool overwriteCustom = (chkOverwriteCustom.Checked);
 
+			// Get achievements
+			UpdateProgressBar("Retrieves player account ids from Wargaming API");
+			await ImportWotApi2DB.ImportPlayerAccountId(this, Config.Settings.playerServer);
+
 			// Get tanks, remember to init tankList first
 			UpdateProgressBar("Retrieves tanks from Wargaming API");
 

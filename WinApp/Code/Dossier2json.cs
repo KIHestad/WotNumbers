@@ -144,29 +144,36 @@ namespace WinApp.Code
                 DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
 
                 DataTable dt = await DB.FetchData(sql);
-				if (dt.Rows.Count > 0)
+                if (dt.Rows.Count > 0)
                 {
                     playerId = Convert.ToInt32(dt.Rows[0][0]);
                     playerAccountId = Convert.ToUInt32(dt.Rows[0][1]);
                     playerExists = true;
                 }
-				// If no player found, create now
+				
+                // If no player found, create now
 				if (!playerExists)
 				{
-					// Create new player now
-					sql = "INSERT INTO player (name, playerName, playerServer) VALUES (@name, @playerName, @playerServer)";
-                    DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-                    DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
-                    DB.AddWithValue(ref sql, "@playerServer", playerServer, DB.SqlDataType.VarChar);
-                    // DB.AddWithValue(ref sql, "@playerAccountId", playerAccountId, DB.SqlDataType.Int); 
-                    
-                    await DB.ExecuteNonQuery(sql);
-					sql = "select id from player where name=@name";
-					DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-					dt = await DB.FetchData(sql);
-					if (dt.Rows.Count > 0)
-						playerId = Convert.ToInt32(dt.Rows[0][0]);
+                    playerAccountId = await ImportWotApi2DB.ImportPlayerAccountId(null, playerNameAndServer);
+
+                    if (playerAccountId != 0)
+                    {
+                        // Create new player now
+                        sql = "INSERT INTO player (name, playerName, playerServer, accountId) VALUES (@name, @playerName, @playerServer, @playerAccountId)";
+                        DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+                        DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
+                        DB.AddWithValue(ref sql, "@playerServer", playerServer, DB.SqlDataType.VarChar);
+                        DB.AddWithValue(ref sql, "@playerAccountId", playerAccountId, DB.SqlDataType.Int); 
+
+                        await DB.ExecuteNonQuery(sql);
+                        sql = "select id from player where name=@name";
+                        DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+                        dt = await DB.FetchData(sql);
+                        if (dt.Rows.Count > 0)
+                            playerId = Convert.ToInt32(dt.Rows[0][0]);
+                    }
 				}
+
                 // If still not identified player break with error
                 if (playerId == 0)
 				{

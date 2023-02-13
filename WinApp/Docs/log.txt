@@ -1,6 +1,12 @@
-﻿20-Oct-2022
+﻿21-Oct-2022
+Change explicit string castings to Convert.ToString in Battle2JSon.
+since SelectToken may return null value not convertible to string through casting
+like bonusTypeName and finishReasonName
+
+20-Oct-2022
 v1.0.4
 Update wotbr2j script to accept new WoT 1.18.1.1 battle dat files.
+
 
 18-Oct-2022
 v1.0.4

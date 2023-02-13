@@ -51,19 +51,25 @@ namespace WinApp.Code
 			public bool Success { get; set; }
 			public string Message { get; set; }
 		}
+		public enum BattleViewMode
+		{
+			Old = 0, // Show deduced battles / don't show orphan battles
+			New = 1 // Show orphan battles / don't show deduced battles
+		}
 
-		public dbType databaseType { get; set; }                // SQLite or MS SQL Server
-		public string databaseFileName { get; set; }            // SQLite Filename
-		public string databaseServer { get; set; }              // MSSQL Servername
-		public bool databaseWinAuth { get; set; }           // MSSQL Win (true) og SQL (false) authentication
-		public string databaseUid { get; set; }             // MSSQL Username (if SQL authentication)
-		public string databasePwd { get; set; }             // MSSQL Password (if SQL authentication)
-		public string databaseName { get; set; }                // MSSQL Databasename
-		public int playerId { get; set; }                   // Player ID selected
-		public uint playerAccountId { get; set; }            // Player Account Id
-		public string playerName { get; set; }                  // Player Name selected
-		public string playerServer { get; set; }                // Player Server selected
-		public string playerNameAndServer                       // Construct playername with servername as name used in player-table as unique playername
+		public BattleViewMode battleViewMode { get; set; }	// SQLite or MS SQL Server
+		public dbType databaseType { get; set; }			// SQLite or MS SQL Server
+		public string databaseFileName { get; set; }		// SQLite Filename
+		public string databaseServer { get; set; }			// MSSQL Servername
+		public bool databaseWinAuth { get; set; }			// MSSQL Win (true) og SQL (false) authentication
+		public string databaseUid { get; set; }				// MSSQL Username (if SQL authentication)
+		public string databasePwd { get; set; }				// MSSQL Password (if SQL authentication)
+		public string databaseName { get; set; }			// MSSQL Databasename
+		public int playerId { get; set; }					// Player ID selected
+		public uint playerAccountId { get; set; }			// Player Account Id
+		public string playerName { get; set; }				// Player Name selected
+		public string playerServer { get; set; }			// Player Server selected
+		public string playerNameAndServer					// Construct playername with servername as name used in player-table as unique playername
 		{
 			get
 			{
@@ -332,6 +338,7 @@ namespace WinApp.Code
 			Config.Settings.currentChartFavourite = "";
 			Config.Settings.res_mods_subfolder = "";
 			Config.Settings.allowMultipleInstances = false;
+			Config.Settings.battleViewMode = ConfigData.BattleViewMode.Old;
 		}
 
 

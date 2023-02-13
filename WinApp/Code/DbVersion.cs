@@ -24,6 +24,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 		public static bool RunRecalcBattleMaxTier = false;
 		public static bool RunRecalcBattleMinTier = false;
+		public static bool RunRecalcPlayerAccountId = false;
 		public static bool RunInstallNewBrrVersion = false;
 		public static bool RunUploadAllToWotNumWeb = false;
 		public static bool CopyAdminDB = false;
@@ -47,6 +48,7 @@ namespace WinApp.Code
 					break;
 				case 547:
 					RunDownloadAndUpdateTanks = true; // Force fetch tank data from API
+					RunRecalcPlayerAccountId = true;
 					break;
 				case 546:
 					mssql =
@@ -3396,11 +3398,8 @@ namespace WinApp.Code
 					mssql = "INSERT INTO map (id, name, arena_id) VALUES (85, 'Empires Border', '59_asia_great_wall'); ";
 					sqlite = mssql;
 					break;
-
-
-
-
 			}
+
 			string sql = "";
 			// get sql for correct dbtype
 			if (dbType == ConfigData.dbType.MSSQLserver)
@@ -3623,6 +3622,5 @@ namespace WinApp.Code
 				await DB.ExecuteNonQuery(sql);
 			}
 		}
-
 	}
 }

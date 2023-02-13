@@ -2425,9 +2425,7 @@ Explanation of key files below all the list of files.
 -------------------------------------------------------------------------------
 New files here:
 -------------------------------------------------------------------------------
-
-
-
+.\LatestRelease\VersionSettings.json
 
 -------------------------------------------------------------------------------
 Explanation of the files:
@@ -2444,3 +2442,7 @@ Database creation scripts. This file is uses when the application is installed f
 1568 insert_dbver488.txt
 ----------------------------
 Initial data inserted into the tables created according to createTableSQLite. Do not add data here if it is already added in DbVersion.cs
+
+2428 VersionSettings.json
+-------------------------
+This file holds the latest version of the application. This file is stored at a remote site too (for instance GitHub), On application startup the app will check the file in the remote site to see if a new version was deployed.
