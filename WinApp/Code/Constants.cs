@@ -45,5 +45,8 @@ namespace WinApp.Code
         }
         public static readonly int RecalcDataBatchSize = 100;
         public static readonly int LastEntriesSize = 1000;
+
+        public static readonly int ArenaCreationAndBattleStartTimeGap = 45;
+        public static readonly int BattleEndTimeThreshold = 30;
     }
 }

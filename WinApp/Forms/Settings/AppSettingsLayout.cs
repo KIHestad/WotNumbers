@@ -17,7 +17,8 @@ namespace WinApp.Forms.Settings
         private bool currentMasteryBadgeIcons;
         private static string currentValue = "";
         private static string currentRatingColorValue = "";
-        
+        private static string currentBattleViewMode = "";
+
         public AppSettingsLayout()
         {
             InitializeComponent();
@@ -39,6 +40,8 @@ namespace WinApp.Forms.Settings
             ddRatingColor.Text = Config.Settings.RatingColors.ToString().Replace("_", " ");
             currentMasteryBadgeIcons = Config.Settings.useSmallMasteryBadgeIcons;
             chkSmallMasteryBadgeIcons.Checked = currentMasteryBadgeIcons;
+            ddBattleViewMode.Text = Config.Settings.battleViewMode.ToString();
+
             EditChangesApply(false);
         }
 
@@ -61,10 +64,20 @@ namespace WinApp.Forms.Settings
             string ratingColorsEnumText = ddRatingColor.Text.Replace(" ", "_");
             Config.Settings.RatingColors = (ColorRangeScheme.RatingColorScheme)Enum.Parse(typeof(ColorRangeScheme.RatingColorScheme), ratingColorsEnumText);
             Config.Settings.useSmallMasteryBadgeIcons = chkSmallMasteryBadgeIcons.Checked;
+            if (ddBattleViewMode.Text == "Old")
+            {
+                Config.Settings.battleViewMode = ConfigData.BattleViewMode.Old;
+            }
+            else
+            {
+                Config.Settings.battleViewMode = ConfigData.BattleViewMode.New;
+            }
+
             await Config.SaveConfig();
             // Load new mastery badge icons if changed
             if (currentMasteryBadgeIcons != chkSmallMasteryBadgeIcons.Checked)
                 ImageHelper.CreateMasteryBageImageTable();
+
             EditChangesApply(false);
         }
 
@@ -108,9 +121,27 @@ namespace WinApp.Forms.Settings
                 EditChangesApply(true);
         }
 
-        private void ddRatingColor_TabStopChanged(object sender, EventArgs e)
+        private async void ddBattleViewMode_Click(object sender, EventArgs e)
         {
+            currentBattleViewMode = ddBattleViewMode.Text;
+            await Code.DropDownGrid.Show(ddBattleViewMode, Code.DropDownGrid.DropDownGridType.List, "Old, New");
+        }
 
+        private void ddBattleViewMode_TextChanged(object sender, EventArgs e)
+        {
+            if (currentBattleViewMode != ddBattleViewMode.Text)
+            {
+                if (ddBattleViewMode.Text == "Old")
+                {
+                    lblBattleViewMode.Text = "Show battles deduced from dossier files. Don't show battle file only deduced battles.";
+                }
+                else
+                {
+                    lblBattleViewMode.Text = "Show battles deduced from battle files. Don't show dossier file only deduced battles.";
+                }
+
+                EditChangesApply(true);
+            }
         }
 
     }

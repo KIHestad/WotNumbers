@@ -225,6 +225,7 @@
     <Compile Include="Code\BattleCountFilterHelper.cs" />
     <Compile Include="Code\BattleHelper.cs" />
     <Compile Include="Code\BattleResultRetriever.cs" />
+    <Compile Include="Code\BonusType.cs" />
     <Compile Include="Code\Constants.cs" />
     <Compile Include="Code\CursorHelper.cs" />
     <Compile Include="Code\CustomFileCopier.cs" />
@@ -238,6 +239,12 @@
     </Compile>
     <Compile Include="Forms\BattleDetail\BattleDetailMap.Designer.cs">
       <DependentUpon>BattleDetailMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\RecalcPlayerAccountId.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\RecalcPlayerAccountId.designer.cs">
+      <DependentUpon>RecalcPlayerAccountId.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\AppBattleUpload.cs" />
     <Compile Include="Services\AppNewVersion.cs" />
@@ -440,6 +447,12 @@
     </Compile>
     <Compile Include="Forms\Settings\RecalcBattleMinTier.Designer.cs">
       <DependentUpon>RecalcBattleMinTier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\FixBattleTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\FixBattleTable.Designer.cs">
+      <DependentUpon>FixBattleTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\RecalcBattleKDratioCRdmg.cs">
       <SubType>Form</SubType>
@@ -826,6 +839,9 @@
     <EmbeddedResource Include="Forms\Settings\RecalcBattleMinTier.resx">
       <DependentUpon>RecalcBattleMinTier.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\FixBattleTable.resx">
+      <DependentUpon>FixBattleTable.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleKDratioCRdmg.resx">
       <DependentUpon>RecalcBattleKDratioCRdmg.cs</DependentUpon>
     </EmbeddedResource>
@@ -867,6 +883,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GrindingSetup.resx">
       <DependentUpon>GrindingSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\RecalcPlayerAccountId.resx">
+      <DependentUpon>RecalcPlayerAccountId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\UpdateFromApi.resx">
       <DependentUpon>UpdateFromApi.cs</DependentUpon>
@@ -2383,7 +2402,6 @@ xcopy "$(ProjectDir)/PythonScripts/Dossier2json" "$(TargetDir)Dossier2json" /y /
 md "$(TargetDir)Battle2json"
 del "$(TargetDir)Battle2json" /q /s 
 xcopy "$(ProjectDir)/PythonScripts/Battle2json" "$(TargetDir)Battle2json" /y /s
-xcopy "$(ProjectDir)/PythonScripts/Dossier2json" "$(TargetDir)Battle2json" /y /s
 md "$(TargetDir)Docs"
 md "$(TargetDir)Docs/Database"
 del "$(TargetDir)Docs" /q /s 

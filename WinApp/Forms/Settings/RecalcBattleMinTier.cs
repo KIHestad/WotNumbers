@@ -50,8 +50,8 @@ namespace WinApp.Forms
 			string sql =
 				"SELECT battle.id as battleId, battle.battleTime as battleTime, min(tank.tier) as battleMinTier " +
 				"from battle " +
-				" inner join battlePlayer on battle.id = battlePlayer.battleId  " +
-				" inner join tank on battlePlayer.tankId = tank.id " +
+				"inner join battlePlayer on battle.id = battlePlayer.battleId " +
+				"inner join tank on battlePlayer.tankId = tank.id " +
 				"where tank.tier>0 " +
 				"group by battle.id, battle.battleTime " +
 				"ORDER BY battle.id";

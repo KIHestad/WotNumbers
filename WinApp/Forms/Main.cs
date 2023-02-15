@@ -735,14 +735,18 @@ namespace WinApp.Forms
 			mRecalcBattleStats.Enabled = true;
 			mRecalcBattleMinTier.Enabled = true;
 			mRecalcBattleMaxTier.Enabled = true;
+			mFixBattleTable.Enabled = true;
 			mAppSettings.Enabled = true;
 		}
 
 		private async Task RunAppStartupActions(string message)
 		{
+
 			// Debug option - avoid init dossier file check after startup
 			// if (false)
 			{
+				// await DBVersion.FixBattleTable();
+
 				if (DBVersion.RunDownloadAndUpdateTanks)
 					await RunWotApi(true);
 				if (DBVersion.RunRecalcBattleWN8 || DBVersion.RunRecalcBattleWN9 || DBVersion.RunRecalcBattlePos)
@@ -755,6 +759,8 @@ namespace WinApp.Forms
 					await RunRecalcBattleMinTier();
 				if (DBVersion.RunRecalcBattleMaxTier)
 					await RunRecalcBattleMaxTier();
+				if (DBVersion.RunRecalcPlayerAccountId)
+					await RunRecalcPlayerAccountId();
 
 				// Check for dossier update
 				StatusBarHelper.Message = message;
@@ -2439,6 +2445,26 @@ namespace WinApp.Forms
 			}
 		}
 
+		private void BattleViewModeFilter(out string battleViewModeFilter)
+		{
+			battleViewModeFilter = "";
+			// Normal predefined battle time filters
+			
+			switch (Config.Settings.battleViewMode)
+			{
+				 case ConfigData.BattleViewMode.Old:
+					{
+						battleViewModeFilter = " AND orphanDat = 0";
+					}
+					break;
+				case ConfigData.BattleViewMode.New:
+					{
+						battleViewModeFilter = " AND arenaUniqueID IS NOT NULL";
+					}
+					break;
+			}
+		}
+
 		private void BattleTimeAndCountFilter(out string battleTimeFilter, out string battleTimeReadable, out bool battleCountFilter)
 		{
 			battleTimeFilter = "";
@@ -2872,6 +2898,9 @@ namespace WinApp.Forms
 					sortOrder = "ORDER BY " + sorting.ColumnName + " " + sortDirection + " ";
 				}
 
+				// Get Battle View Mode filter
+				BattleViewModeFilter(out string battleViewModeFilter);
+
 				// Get Battle Time filer or battle count filter
 				BattleTimeAndCountFilter(out string battleTimeFilter, out string battleTimeReadable, out bool battleCountFilter);
 
@@ -2891,7 +2920,7 @@ namespace WinApp.Forms
                 }
 
 				// Create from part
-                string from = "FROM (((((((battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id) " +
+        string from = "FROM (((((((battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id) " +
 					"INNER JOIN tank ON playerTank.tankId = tank.id) " +
 					"INNER JOIN tankType ON tank.tankTypeId = tankType.Id) " +
 					"INNER JOIN country ON tank.countryId = country.Id) " +
@@ -4784,7 +4813,12 @@ namespace WinApp.Forms
 			await ShowView("Refreshed grid");
 		}
 
-
+		private async Task RunRecalcPlayerAccountId()
+		{
+			Form frm = new Forms.RecalcPlayerAccountId(true);
+			frm.ShowDialog(this);
+			await ShowView("Refreshed grid");
+		}
 		private async void toolItemSettingsRun_Click(object sender, EventArgs e)
 		{
 			mSettingsRun.Checked = !mSettingsRun.Checked;
@@ -5810,5 +5844,11 @@ namespace WinApp.Forms
 		}
 		#endregion
 
+		private async void mFixBattleTable_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.FixBattleTable(true);
+			frm.ShowDialog(this);
+			await ShowView("Refreshed view");
+		}
 	}
 }
