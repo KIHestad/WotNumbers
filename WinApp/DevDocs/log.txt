@@ -1,4 +1,7 @@
-﻿05-Feb-2023
+﻿13-Feb-2023
+- Merge orphan dat files branch
+
+05-Feb-2023
 - Optimize battle view query when team side column not selected.
 - Update .NET framework to 4.8
 
