@@ -1046,9 +1046,10 @@ namespace WinApp.Code
 				// Update database
 				if (sqlFields.Length > 0)
 				{
+					bool usingOldBattleViewMode = Config.Settings.battleViewMode == ConfigData.BattleViewMode.Old;
 					bool battleExists = false;
 
-					if (battlesCount == 1)
+					if ((battlesCount == 1) && (!usingOldBattleViewMode))
 					{
 						DateTime battleEndTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(battleNewRow["battletime"]));
 
@@ -1082,7 +1083,7 @@ namespace WinApp.Code
 						}
 					} // fallthrough
 
-					if (! battleExists)
+					if ((! battleExists) || usingOldBattleViewMode)
 					{
 						// Insert Battle
 						string sql = "INSERT INTO battle (playerTankId " + sqlFields + ") VALUES (@playerTankId " + sqlValues + "); ";
@@ -1126,15 +1127,16 @@ namespace WinApp.Code
 				string dstString = Convert.ToString(dstValue);
 				result = srcString == dstString;
 			}
-			else if (srcValue.GetType() == typeof(System.Int64))
-			{
-				Int32 srcInt = Convert.ToInt32(srcValue);
-				Int32 dstInt = Convert.ToInt32(dstValue);
-				Int32 thrInt = Convert.ToInt32(threshold);
+            else if ((srcValue.GetType() == typeof(System.Int64))
+				  || (srcValue.GetType() == typeof(System.Int32)))
+            {
+                Int32 srcInt = Convert.ToInt32(srcValue);
+                Int32 dstInt = Convert.ToInt32(dstValue);
+                Int32 thrInt = Convert.ToInt32(threshold);
 
-				result = (srcInt >= (dstInt - thrInt)) && (srcInt <= (dstInt + thrInt));
-			}
-			else if (srcValue.GetType() == typeof(System.Double))
+                result = (srcInt >= (dstInt - thrInt)) && (srcInt <= (dstInt + thrInt));
+            }
+            else if (srcValue.GetType() == typeof(System.Double))
 			{
 				double srcDouble = Convert.ToDouble(srcValue);
 				double dstDouble = Convert.ToDouble(dstValue);
@@ -1150,9 +1152,8 @@ namespace WinApp.Code
 			}
 			else
 			{
-				result = srcValue == dstValue;
-				result = src[field] == dst[field];
-			}
+				result = srcValue.Equals(dstValue);
+            }
 
 			if (result != true)
 			{

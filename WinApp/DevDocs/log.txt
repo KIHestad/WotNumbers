@@ -1,4 +1,9 @@
-﻿13-Feb-2023
+﻿20-Feb-2023
+- Rework how data is processed after retrieving battle data. Old battle view mode, should be exactly as before.
+- Fix comparison of battles for new battle view mode.
+- Force logging of information.
+
+13-Feb-2023
 - Merge orphan dat files branch
 
 05-Feb-2023

@@ -92,7 +92,8 @@
             // chkShowDBError
             // 
             this.chkShowDBError.BackColor = System.Drawing.Color.Transparent;
-            this.chkShowDBError.Checked = false;
+            this.chkShowDBError.Checked = true;
+            this.chkShowDBError.Enabled = false;
             this.chkShowDBError.Image = ((System.Drawing.Image)(resources.GetObject("chkShowDBError.Image")));
             this.chkShowDBError.Location = new System.Drawing.Point(16, 269);
             this.chkShowDBError.Name = "chkShowDBError";

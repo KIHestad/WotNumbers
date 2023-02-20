@@ -248,10 +248,11 @@ namespace WinApp.Code
                     // Check if ok
                     if (result == "ok")
                     {
+						bool usingOldBattleViewMode = Config.Settings.battleViewMode == ConfigData.BattleViewMode.Old;
                         Int64 arenaUniqueID = (Int64)token_root.SelectToken("arenaUniqueID"); // Find unique id
                         bool battleExists = await CheckIfBattleExists(arenaUniqueID);
 
-                        if (!battleExists) // we could also update values instead of skipping
+                        if ((!battleExists) || usingOldBattleViewMode) // we could also update values instead of skipping
                         {
                             int tankId = (int)token_root.SelectToken("tankId"); // tankId
                             double arenaCreateTime = (double)token_common.SelectToken("arenaCreateTime"); // Arena create time
@@ -260,11 +261,14 @@ namespace WinApp.Code
                             DateTime battleTime = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(battleFinishUnix));
                             DateTime battleTimeStart = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(arenaCreateTime));
 
-                            bool isOrphanBattle = await IsOrphanBattle(battleTime, tankId);
-                            if (isOrphanBattle)
-                            {
-                                await CreateOrphanBattleFromJSON(json);
-                            }
+							if(! usingOldBattleViewMode)
+							{
+	                            bool isOrphanBattle = await IsOrphanBattle(battleTime, tankId);
+	                            if (isOrphanBattle) 
+	                            {
+	                                await CreateOrphanBattleFromJSON(json);
+	                            }
+							}
 
                             // Private token
                             JToken token_private = token_root["private"];
@@ -776,8 +780,7 @@ namespace WinApp.Code
                                     battleListSuccess.Add(battleId);
                                 }
                             }
-                            /*
-                            else
+                            else if(usingOldBattleViewMode)
                             {
                                 Log.AddToLogBuffer(" > > New battle file not read, battle do not exists for JSON file: " + file);
                                 // Battle do not exists, delete if old file file
@@ -786,8 +789,7 @@ namespace WinApp.Code
                                 else
                                     deleteFileAfterRead = false; // keep file for a while, dossier file might be read later and then battle can be handled
                             }
-                            */
-                        } // if (! battleExists)
+                        } // if ((!battleExists) || usingOldBattleViewMode) 
                     }
                     else
                     {
