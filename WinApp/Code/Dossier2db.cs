@@ -1046,9 +1046,10 @@ namespace WinApp.Code
 				// Update database
 				if (sqlFields.Length > 0)
 				{
+					bool usingOldBattleViewMode = Config.Settings.battleViewMode == ConfigData.BattleViewMode.Old;
 					bool battleExists = false;
 
-					if (battlesCount == 1)
+					if ((battlesCount == 1) && (!usingOldBattleViewMode))
 					{
 						DateTime battleEndTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(battleNewRow["battletime"]));
 
@@ -1082,7 +1083,7 @@ namespace WinApp.Code
 						}
 					} // fallthrough
 
-					if (! battleExists)
+					if ((! battleExists) || usingOldBattleViewMode)
 					{
 						// Insert Battle
 						string sql = "INSERT INTO battle (playerTankId " + sqlFields + ") VALUES (@playerTankId " + sqlValues + "); ";

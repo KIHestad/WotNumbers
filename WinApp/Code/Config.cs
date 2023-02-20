@@ -296,7 +296,7 @@ namespace WinApp.Code
 			Config.Settings.playerServer = "";
 			Config.Settings.dossierFilePath = "";
 			Config.Settings.dossierFileWathcherRun = 0;
-			Config.Settings.showDBErrors = false;
+			Config.Settings.showDBErrors = true;
 			Config.Settings.posSize = new ConfigData.PosSize();
 			Config.Settings.readMessage = new DateTime(2014, 8, 1);
 			Config.Settings.doneRunForceDossierFileCheck = new DateTime(2014, 8, 1);
@@ -387,7 +387,8 @@ namespace WinApp.Code
 					string json = File.ReadAllText(Config.AppDataBaseFolder + configfile);
 					conf = JsonConvert.DeserializeObject<ConfigData>(json);
 					Config.Settings = conf;
-				}
+					Config.Settings.showDBErrors = true;
+                }
 				catch (Exception ex)
 				{
 					await Log.LogToFile(ex);
