@@ -12,7 +12,7 @@ from battle_results_constants import BATTLE_RESULT_ENTRY_TYPE as ENTRY_TYPE
 import battle_results_common, battle_results_random
 
 parser = dict()
-parser['version'] = "1.19.1.0"
+parser['version'] = "1.20.0.0"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
 
@@ -116,6 +116,9 @@ def main():
         # remove accountCompDescr since this is not needed in this result set, parsed separately
         if 'accountCompDescr' in jsonCommon:
             del jsonCommon['accountCompDescr']
+
+        # Split BATTLE_PASS_RESULTS struct into separate structs per ENTRY_TYPE
+        setBattleResult(battle_results_common.BATTLE_PASS_RESULTS)
 
         # Inspect result to find game mode
         bonusType = -1

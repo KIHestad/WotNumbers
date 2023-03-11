@@ -51,7 +51,7 @@ namespace WinApp.Forms
 
 			UpdateProgressBar("Starting updates...", 1);
 
-			FixBattleTableFunc();
+			await FixBattleTableFunc();
 
 			// Done
 			UpdateProgressBar("", 0);

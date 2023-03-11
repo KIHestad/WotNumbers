@@ -30,7 +30,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 548; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 549; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -42,7 +42,26 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
-				case 548:
+                case 549:
+                    // Id should be retrieved after playing a battle on that map. Look at the arenaTypeId in the entry for that battle inside the battle table
+                    // Name should be the name visible in World Of Tanks when you play that map.
+                    // arena_id, can be retrieved from the filename of map pictures, or it could be retrieved by inspecting the filename a replay in that map.
+                    // Description can be retrieved from the news article when the map is released.
+                    // Ideally it should be retrieved from https://developers.wargaming.net/reference/all/wot/encyclopedia/arenas but this absolutelly outdated.
+
+                    mssql = "INSERT INTO map (id, name, arena_id, description) VALUES (202, 'Oyster Bay', '121_lost_paradise_v', " +
+							"'For decades, the island was held by one of the adversaries, who had constructed an airbase on the land. " +
+							"However, several years ago, the other side drove their troops out and entrenched, building multiple coastal bunkers. " +
+							"Now, the first power is back for revenge. The locals to whom the island rightfully belongs haven’t benefited from the " +
+							"presence of either occupying force: the landscape is littered with various military structures, and it is not easy to " +
+							"find a place to grow food or set up an oyster farm. Adding to their woes, a massive volcano is about to erupt, " +
+							"sending billowing smoke into the beautiful blue sky. There are also additional bypass routes behind the bases " +
+							"and in the middle of the map, prompting you to be mobile and tactically aware. Here, smart maneuvering pays off " +
+							"even more than usual.');";
+					sqlite = mssql;
+                    CopyAdminDB = true;
+					break;
+                case 548:
 					mssql = "UPDATE columnSelection SET colName = 'P.team', description = 'Team Number. Also the side of the map where the player spawned.' WHERE id=923;";
 					sqlite = mssql;
 					break;
