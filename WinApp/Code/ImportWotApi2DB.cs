@@ -131,7 +131,7 @@ namespace WinApp.Code
 						if (GetPlayerNameAndServer(playerNameAndServer, out playerName, out playerServer))
 						{
 							url = WotServerApiUrl(playerServer);
-							url += "/wot/account/list/?application_id=" + applicationId + "&search=" + playerName;
+							url += "/wot/account/list/?application_id=" + applicationId + "&search=" + playerName + "&type=exact";
 						}
 						else
 						{

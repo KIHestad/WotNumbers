@@ -312,7 +312,7 @@ namespace WinAdmin
 			// Loop throug current images
 			result = new DB.DBResult();
 			string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Img\\Map\\";
-			string[] images = Directory.GetFiles(path, "*.jpg");
+			string[] images = Directory.GetFiles(path, "*.png");
 			foreach (string imageFile in images)
 			{
 				string name = Path.GetFileNameWithoutExtension(imageFile);

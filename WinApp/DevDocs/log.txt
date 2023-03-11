@@ -1,4 +1,11 @@
-﻿20-Feb-2023
+﻿11-Mar-2023
+- Update battle 2 json python scripts to 1.20.0.0 version.
+- Add Oyster Bay map information
+- Update Admin.db data base with latest map image data.
+- Modified WinAdmin to work with png files instead of jpg, since current source image files from World Of Tanks are pngs. This 
+eliminates the need to convert pngs to jpgs to introdcuce new images into WoT numbers.
+
+20-Feb-2023
 - Rework how data is processed after retrieving battle data. Old battle view mode, should be exactly as before.
 - Fix comparison of battles for new battle view mode.
 - Force logging of information.
