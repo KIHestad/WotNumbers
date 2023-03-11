@@ -12,7 +12,7 @@ class FLAG_ACTION:
     LOST = 3
     RANGE = (
      PICKED_UP_FROM_BASE, PICKED_UP_FROM_GROUND, CAPTURED, LOST)
-     
+
 from DictPackers import DictPacker, MergeDictPacker, SimpleDictPacker, DeltaPacker, ValueReplayPacker, roundToInt
 #Modified for WotNumbers
 #from items.vehicles import VEHICLE_DEVICE_TYPE_NAMES, VEHICLE_TANKMAN_TYPE_NAMES
@@ -756,4 +756,33 @@ BATTLE_RESULTS = [
  (
   'poiCapturedByOwnTeam', int, 0, None, 'skip', ENTRY_TYPE.VEHICLE_ALL),
  (
-  'isFirstBlood', bool, False, None, 'skip', ENTRY_TYPE.VEHICLE_ALL)]
+  'isFirstBlood', bool, False, None, 'skip', ENTRY_TYPE.VEHICLE_ALL),
+ (
+  'originalBattlePassPoints', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
+ (
+  'battlePassPointsReplay', str, '', ValueReplayPacker(), 'skip', ENTRY_TYPE.ACCOUNT_SELF),
+ (
+  'battlePassPoints', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
+ (
+  'eventBattlePassPointsList', list, [], None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
+ (
+  'eventBattlePassPoints', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
+ (
+  'finishAllPlayersLeft', bool, False, None, 'skip', ENTRY_TYPE.COMMON)]
+BATTLE_PASS_RESULTS = [
+ (
+  'bpChapter', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'bpTopPoints', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'bpBonusPoints', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'bpNonChapterPointsDiff', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'sumPoints', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'hasBattlePass', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'battlePassComplete', bool, False, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),
+ (
+  'availablePoints', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL)]

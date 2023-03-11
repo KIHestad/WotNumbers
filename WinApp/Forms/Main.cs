@@ -769,7 +769,7 @@ namespace WinApp.Forms
 					string msg = "Running initial battle fetch...";
 					if (DBVersion.RunDossierFileCheckWithForceUpdate)
 						msg = "Running initial battle fetch with force update all data...";
-					await RunDossierFileCheck(msg, DBVersion.RunDossierFileCheckWithForceUpdate);
+                    await RunDossierFileCheck(msg, DBVersion.RunDossierFileCheckWithForceUpdate);
 				}
 
 				// Discontinued
@@ -4654,7 +4654,7 @@ namespace WinApp.Forms
 			if (await DB.CheckConnection(true, this))
 			{
 				bool runDossier = false;
-				// If no player selected, or changed db type run dosser check
+				// If no player selected, or changed db type, run dosser check
 				runDossier = (Config.Settings.playerId == 0 || databateType != Config.Settings.databaseType || DBVersion.RunDossierFileCheckWithForceUpdate);
 				if (!runDossier)
 				{
@@ -4669,7 +4669,12 @@ namespace WinApp.Forms
 					MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBox.Type.OKCancel, this);
 					if (result == MsgBox.Button.OK)
 					{
+                        // bool checkWithForceUpdatePreviousValue = DBVersion.RunDossierFileCheckWithForceUpdate;
+                        // DBVersion.RunDossierFileCheckWithForceUpdate = true;
+						
 						await RunAppStartupActions("Running initial battle fetch for new database...");
+                        
+						// DBVersion.RunDossierFileCheckWithForceUpdate = checkWithForceUpdatePreviousValue; 
 					}
 				}
 			}
