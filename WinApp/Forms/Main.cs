@@ -3042,7 +3042,6 @@ namespace WinApp.Forms
 					{
 						if (colListItem.colType == "Int" || colListItem.colType == "Float")
 						{
-
 							if (!nonAvgCols.Contains(colListItem.name))
 							{
 								double count = 0;
@@ -3249,7 +3248,10 @@ namespace WinApp.Forms
 						}
 					}
 					else
+					{
 						dataGridMain.Columns[colListItem.name].MinimumWidth = 25;
+					}
+
 					// Width and sorting
 					dataGridMain.Columns[colListItem.name].Width = colListItem.colWidth;
 					dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
@@ -3272,7 +3274,9 @@ namespace WinApp.Forms
 							showFloatValues.Add("Max Tier");
 							showFloatValues.Add("Frags");
 							showFloatValues.Add("Spot");
-						}
+                            showFloatValues.Add("Survived");
+                            showFloatValues.Add("Result");
+                        }
 						if (!showFloatValues.Contains(colListItem.name)) // Decimals
 							dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
 						else

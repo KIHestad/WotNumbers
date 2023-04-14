@@ -229,18 +229,50 @@ namespace WinApp.Code
 					}
 					else if (colDataType == "DateTime" || colDataType == "VarChar")
 					{
-						if (!grouping)
-                            selectedColumnList.ColListItems.Select += colName + " as '" + colAlias + "', "; // return value
-						else
+						if (! grouping)
+						{
+                            selectedColumnList.ColListItems.Select += colName + " as '" + colAlias + "', ";
+                        }
+                        else
 						{
 							if (colName == "tank.name" || colName == "tank.short_name")
-                                selectedColumnList.ColListItems.Select += colName + " as '" + colAlias + "', "; // return value
+							{
+								selectedColumnList.ColListItems.Select += colName + " as '" + colAlias + "', "; // return value
+							}
+                            else if (colName == "battleResult.name" || colName == "battleSurvive.name") // || colName == "battle.draw" || colName == "battle.survived")
+                            {
+								if (colName == "battleResult.name")
+								{
+									colName = "battle.victory";
+								}
+								else
+								{
+									colName = "battle.survived";
+								}
+
+								if (groupingSum)
+                                {
+                                    colListItem.colNameSelect = "SUM(" + colName + ")";
+                                    colListItem.colType = "Int";
+                                }
+                                else
+                                {
+                                    colListItem.colNameSelect = "100 * CAST(SUM(" + colName + ") AS FLOAT) / CAST(SUM(battle.battlesCount) AS FLOAT)";
+                                    colListItem.colType = "Float";
+                                }
+
+                                colListItem.colNameSort = colName;
+                                colListItem.colName = colName; 
+                                
+                                selectedColumnList.ColListItems.Select += colListItem.colNameSelect + " as '" + colAlias + "', ";
+                            }
                             else
 							{
 								if (colDataType == "DateTime")
 									colListItem.colNameSelect = "NULL";
 								else if (colDataType == "VarChar")
 									colListItem.colNameSelect = "''";
+
                                 selectedColumnList.ColListItems.Select += colListItem.colNameSelect + " as '" + colAlias + "', "; 
 							}
 						}
@@ -248,7 +280,9 @@ namespace WinApp.Code
 					else // Numbers
 					{
 						if (!grouping)
-                            selectedColumnList.ColListItems.Select += colName + " as '" + colAlias + "', "; // return value
+						{
+							selectedColumnList.ColListItems.Select += colName + " as '" + colAlias + "', "; // return value
+						}
 						else
 						{
 							if (colName == "battle.battlesCount")
@@ -268,10 +302,12 @@ namespace WinApp.Code
 								else
 									colListItem.colNameSelect = "AVG(" + colName + ")"; // else avg value
 							}
-                            selectedColumnList.ColListItems.Select += colListItem.colNameSelect + " as '" + colAlias + "', "; 
+
+							selectedColumnList.ColListItems.Select += colListItem.colNameSelect + " as '" + colAlias + "', ";
 						}
 					}
 					colNum++;
+
                     // Check for adding calculated column "Battles today" after column "Battles Day"
                     if (colAlias == "Battles Day")
                     {
