@@ -1720,7 +1720,7 @@ namespace WinApp.Forms
 			tankFilterNation = 0;
 			tankFilterTier = 0;
 			tankFilterType = 0;
-			if (tier)
+            if (tier)
 			{
 				mTankFilter_Tier1.Checked = false;
 				mTankFilter_Tier2.Checked = false;
@@ -1758,8 +1758,8 @@ namespace WinApp.Forms
 				mTankFilter_TypeTD.Checked = false;
 				mTankFilter_Type.Text = "Tank Type";
 			}
-			// Count selected menu items
-			if (mTankFilter_CountryChina.Checked) tankFilterNation++;
+            // Count selected menu items
+            if (mTankFilter_CountryChina.Checked) tankFilterNation++;
 			if (mTankFilter_CountryFrance.Checked) tankFilterNation++;
 			if (mTankFilter_CountryGermany.Checked) tankFilterNation++;
 			if (mTankFilter_CountryUK.Checked) tankFilterNation++;
@@ -2118,7 +2118,7 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-
+			
 		#region Menu Items: Battle Mode
 
 		private async void toolItemMode_Click(object sender, EventArgs e)
@@ -2236,9 +2236,9 @@ namespace WinApp.Forms
 
 		private int tankFilterNation = 0;
 		private int tankFilterType = 0;
-		private int tankFilterTier = 0;
-
-		private void Tankfilter(out string whereSQL, out string joinSQL, out string status2Message, bool onlyTankFilter = false, bool onlyPlayerTankFilter = false)
+        private int tankFilterTier = 0;
+	
+        private void Tankfilter(out string whereSQL, out string joinSQL, out string status2Message, bool onlyTankFilter = false, bool onlyPlayerTankFilter = false)
 		{
 			string tier = "";
 			string nation = "";
@@ -3123,7 +3123,6 @@ namespace WinApp.Forms
 						// Format column
 						if (colListItem.colType == "Int" || colListItem.colType == "Float")
 						{
-
 							if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
 							{
 								// looping through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
@@ -3849,19 +3848,11 @@ namespace WinApp.Forms
 					{
 						if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
 						{
-							int percentage = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
+							double percentage = Convert.ToDouble(dataGridMain[col, e.RowIndex].Value);
 							if (percentage > 0)
 							{
-								Color color = ColorTheme.Rating_very_bad;
-								color = ColorTheme.Rating_very_bad;
-								if (percentage >= 99) color = ColorTheme.Rating_super_uniqum;
-								else if (percentage >= 95) color = ColorTheme.Rating_uniqum;
-								else if (percentage >= 90) color = ColorTheme.Rating_very_great;
-								else if (percentage >= 80) color = ColorTheme.Rating_very_good;
-								else if (percentage >= 65) color = ColorTheme.Rating_good;
-								else if (percentage >= 50) color = ColorTheme.Rating_average;
-								else if (percentage >= 35) color = ColorTheme.Rating_below_average;
-								else if (percentage >= 20) color = ColorTheme.Rating_bad;
+								Color color = ColorRangeScheme.PercentageColor(percentage);
+
 								cell.Style.ForeColor = color;
 								cell.Style.SelectionForeColor = cell.Style.ForeColor;
 							}
@@ -3961,10 +3952,27 @@ namespace WinApp.Forms
 						// Battle Result color color
 						else if (col.Equals("Result"))
 						{
-							string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
-							cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-							cell.Style.SelectionForeColor = cell.Style.ForeColor;
-							int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
+                            bool groupingActive = (!mBattleGroup_No.Checked);
+                            if (groupingActive)
+                            {
+                                bool groupingSum = (mBattleGroup_TankSum.Checked);
+                                if (!groupingSum)
+                                {
+                                    uint percentage = Convert.ToUInt32(dataGridMain[col, e.RowIndex].Value);
+                                    Color color = ColorRangeScheme.WinRateColor(percentage);
+
+                                    cell.Style.ForeColor = color;
+                                    cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                                }
+                            }
+                            else
+                            {
+                                string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
+                                cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+                                cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            }
+
+                            int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
 							if (battlesCount > 1)
 							{
 								cell.ToolTipText = "Victory: " + dataGridMain["victoryToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
@@ -3975,10 +3983,27 @@ namespace WinApp.Forms
 						// Survived color and formatting
 						else if (col.Equals("Survived"))
 						{
-							string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
-							cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-							cell.Style.SelectionForeColor = cell.Style.ForeColor;
-							int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
+                            bool groupingActive = (!mBattleGroup_No.Checked);
+                            if (groupingActive)
+                            {
+                                bool groupingSum = (mBattleGroup_TankSum.Checked);
+								if (!groupingSum)
+								{
+                                    uint percentage = Convert.ToUInt32(dataGridMain[col, e.RowIndex].Value);
+                                    Color color = ColorRangeScheme.WinRateColor(percentage);
+
+                                    cell.Style.ForeColor = color;
+                                    cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                                }
+                            }
+                            else
+                            {
+                                string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
+                                cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+                                cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            }
+
+                            int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
 							if (battlesCount > 1)
 							{
 								cell.ToolTipText = "Survived: " + dataGridMain["survivedCountToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
@@ -5859,5 +5884,5 @@ namespace WinApp.Forms
 			frm.ShowDialog(this);
 			await ShowView("Refreshed view");
 		}
-	}
+    }
 }
