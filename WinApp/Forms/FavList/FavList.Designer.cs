@@ -175,7 +175,6 @@
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 19;
             this.btnClose.Text = "Close";
-            this.btnClose.ToolTipContainer = null;
             this.btnClose.ToolTipText = "";
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -353,7 +352,6 @@
             this.btnFavListCancel.Size = new System.Drawing.Size(80, 23);
             this.btnFavListCancel.TabIndex = 18;
             this.btnFavListCancel.Text = "Revert";
-            this.btnFavListCancel.ToolTipContainer = null;
             this.btnFavListCancel.ToolTipText = "";
             this.btnFavListCancel.Click += new System.EventHandler(this.btnFavListCancel_Click);
             // 
@@ -369,7 +367,6 @@
             this.btnFavListSave.Size = new System.Drawing.Size(80, 23);
             this.btnFavListSave.TabIndex = 17;
             this.btnFavListSave.Text = "Save";
-            this.btnFavListSave.ToolTipContainer = null;
             this.btnFavListSave.ToolTipText = "";
             this.btnFavListSave.Click += new System.EventHandler(this.btnFavListSave_Click);
             // 
@@ -652,7 +649,7 @@
             // 
             this.toolAllTanks_Type1.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type1.Image")));
             this.toolAllTanks_Type1.Name = "toolAllTanks_Type1";
-            this.toolAllTanks_Type1.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Type1.Size = new System.Drawing.Size(156, 22);
             this.toolAllTanks_Type1.Text = "Light Tanks";
             this.toolAllTanks_Type1.Click += new System.EventHandler(this.toolAllTanks_Type_Click);
             this.toolAllTanks_Type1.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -661,7 +658,7 @@
             // 
             this.toolAllTanks_Type2.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type2.Image")));
             this.toolAllTanks_Type2.Name = "toolAllTanks_Type2";
-            this.toolAllTanks_Type2.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Type2.Size = new System.Drawing.Size(156, 22);
             this.toolAllTanks_Type2.Text = "Medium Tanks";
             this.toolAllTanks_Type2.Click += new System.EventHandler(this.toolAllTanks_Type_Click);
             this.toolAllTanks_Type2.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -670,7 +667,7 @@
             // 
             this.toolAllTanks_Type3.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type3.Image")));
             this.toolAllTanks_Type3.Name = "toolAllTanks_Type3";
-            this.toolAllTanks_Type3.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Type3.Size = new System.Drawing.Size(156, 22);
             this.toolAllTanks_Type3.Text = "Heavy Tanks";
             this.toolAllTanks_Type3.Click += new System.EventHandler(this.toolAllTanks_Type_Click);
             this.toolAllTanks_Type3.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -679,7 +676,7 @@
             // 
             this.toolAllTanks_Type4.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type4.Image")));
             this.toolAllTanks_Type4.Name = "toolAllTanks_Type4";
-            this.toolAllTanks_Type4.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Type4.Size = new System.Drawing.Size(156, 22);
             this.toolAllTanks_Type4.Text = "Tank Destroyers";
             this.toolAllTanks_Type4.Click += new System.EventHandler(this.toolAllTanks_Type_Click);
             this.toolAllTanks_Type4.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -688,7 +685,7 @@
             // 
             this.toolAllTanks_Type5.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type5.Image")));
             this.toolAllTanks_Type5.Name = "toolAllTanks_Type5";
-            this.toolAllTanks_Type5.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Type5.Size = new System.Drawing.Size(156, 22);
             this.toolAllTanks_Type5.Text = "SPGs";
             this.toolAllTanks_Type5.Click += new System.EventHandler(this.toolAllTanks_Type_Click);
             this.toolAllTanks_Type5.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -717,7 +714,7 @@
             // 
             this.toolAllTanks_Tier01.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier01.Image")));
             this.toolAllTanks_Tier01.Name = "toolAllTanks_Tier01";
-            this.toolAllTanks_Tier01.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Tier01.Size = new System.Drawing.Size(86, 22);
             this.toolAllTanks_Tier01.Text = "1";
             this.toolAllTanks_Tier01.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
             this.toolAllTanks_Tier01.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -726,7 +723,7 @@
             // 
             this.toolAllTanks_Tier02.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier02.Image")));
             this.toolAllTanks_Tier02.Name = "toolAllTanks_Tier02";
-            this.toolAllTanks_Tier02.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Tier02.Size = new System.Drawing.Size(86, 22);
             this.toolAllTanks_Tier02.Text = "2";
             this.toolAllTanks_Tier02.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
             this.toolAllTanks_Tier02.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -735,7 +732,7 @@
             // 
             this.toolAllTanks_Tier03.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier03.Image")));
             this.toolAllTanks_Tier03.Name = "toolAllTanks_Tier03";
-            this.toolAllTanks_Tier03.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Tier03.Size = new System.Drawing.Size(86, 22);
             this.toolAllTanks_Tier03.Text = "3";
             this.toolAllTanks_Tier03.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
             this.toolAllTanks_Tier03.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -744,7 +741,7 @@
             // 
             this.toolAllTanks_Tier04.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier04.Image")));
             this.toolAllTanks_Tier04.Name = "toolAllTanks_Tier04";
-            this.toolAllTanks_Tier04.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Tier04.Size = new System.Drawing.Size(86, 22);
             this.toolAllTanks_Tier04.Text = "4";
             this.toolAllTanks_Tier04.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
             this.toolAllTanks_Tier04.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -753,7 +750,7 @@
             // 
             this.toolAllTanks_Tier05.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier05.Image")));
             this.toolAllTanks_Tier05.Name = "toolAllTanks_Tier05";
-            this.toolAllTanks_Tier05.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Tier05.Size = new System.Drawing.Size(86, 22);
             this.toolAllTanks_Tier05.Text = "5";
             this.toolAllTanks_Tier05.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
             this.toolAllTanks_Tier05.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -762,7 +759,7 @@
             // 
             this.toolAllTanks_Tier06.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier06.Image")));
             this.toolAllTanks_Tier06.Name = "toolAllTanks_Tier06";
-            this.toolAllTanks_Tier06.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Tier06.Size = new System.Drawing.Size(86, 22);
             this.toolAllTanks_Tier06.Text = "6";
             this.toolAllTanks_Tier06.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
             this.toolAllTanks_Tier06.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -771,7 +768,7 @@
             // 
             this.toolAllTanks_Tier07.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier07.Image")));
             this.toolAllTanks_Tier07.Name = "toolAllTanks_Tier07";
-            this.toolAllTanks_Tier07.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Tier07.Size = new System.Drawing.Size(86, 22);
             this.toolAllTanks_Tier07.Text = "7";
             this.toolAllTanks_Tier07.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
             this.toolAllTanks_Tier07.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -780,7 +777,7 @@
             // 
             this.toolAllTanks_Tier08.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier08.Image")));
             this.toolAllTanks_Tier08.Name = "toolAllTanks_Tier08";
-            this.toolAllTanks_Tier08.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Tier08.Size = new System.Drawing.Size(86, 22);
             this.toolAllTanks_Tier08.Text = "8";
             this.toolAllTanks_Tier08.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
             this.toolAllTanks_Tier08.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -789,7 +786,7 @@
             // 
             this.toolAllTanks_Tier09.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier09.Image")));
             this.toolAllTanks_Tier09.Name = "toolAllTanks_Tier09";
-            this.toolAllTanks_Tier09.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Tier09.Size = new System.Drawing.Size(86, 22);
             this.toolAllTanks_Tier09.Text = "9";
             this.toolAllTanks_Tier09.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
             this.toolAllTanks_Tier09.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -798,7 +795,7 @@
             // 
             this.toolAllTanks_Tier10.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier10.Image")));
             this.toolAllTanks_Tier10.Name = "toolAllTanks_Tier10";
-            this.toolAllTanks_Tier10.Size = new System.Drawing.Size(180, 22);
+            this.toolAllTanks_Tier10.Size = new System.Drawing.Size(86, 22);
             this.toolAllTanks_Tier10.Text = "10";
             this.toolAllTanks_Tier10.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
             this.toolAllTanks_Tier10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -812,16 +809,15 @@
             this.toolAllTanks_Economy.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Economy.Image")));
             this.toolAllTanks_Economy.Name = "toolAllTanks_Economy";
             this.toolAllTanks_Economy.Size = new System.Drawing.Size(28, 25);
-            this.toolAllTanks_Economy.Text = "Tank Economy";
             this.toolAllTanks_Economy.ToolTipText = "Filter on type of tank economy";
             // 
             // toolAllTanks_Economy_Regular
             // 
             this.toolAllTanks_Economy_Regular.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Economy_Regular.Image")));
             this.toolAllTanks_Economy_Regular.Name = "toolAllTanks_Economy_Regular";
-            this.toolAllTanks_Economy_Regular.Size = new System.Drawing.Size(201, 22);
+            this.toolAllTanks_Economy_Regular.Size = new System.Drawing.Size(180, 22);
             this.toolAllTanks_Economy_Regular.Tag = "0";
-            this.toolAllTanks_Economy_Regular.Text = "Tank Economy";
+            this.toolAllTanks_Economy_Regular.Text = "Regular Tanks";
             this.toolAllTanks_Economy_Regular.Click += new System.EventHandler(this.toolAllTanks_Economy_Click);
             this.toolAllTanks_Economy_Regular.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
@@ -829,7 +825,7 @@
             // 
             this.toolAllTanks_Economy_Premium.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Economy_Premium.Image")));
             this.toolAllTanks_Economy_Premium.Name = "toolAllTanks_Economy_Premium";
-            this.toolAllTanks_Economy_Premium.Size = new System.Drawing.Size(201, 22);
+            this.toolAllTanks_Economy_Premium.Size = new System.Drawing.Size(180, 22);
             this.toolAllTanks_Economy_Premium.Tag = "1";
             this.toolAllTanks_Economy_Premium.Text = "Premium Tanks";
             this.toolAllTanks_Economy_Premium.Click += new System.EventHandler(this.toolAllTanks_Economy_Click);
