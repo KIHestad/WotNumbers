@@ -293,7 +293,7 @@ namespace WinApp.Forms
 		private async Task GetSelectedTanksFromFavList()
 		{
 			string sql =
-				"SELECT favListTank.sortorder AS '#', tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, tank.id as ID " +
+                "SELECT favListTank.sortorder AS '#', tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, tank.premium AS Premium, tank.id as ID " +
 				"FROM   favListTank INNER JOIN " +
 				"		tank ON favListTank.tankId = tank.id INNER JOIN " +
 				"		country ON tank.countryId = country.id INNER JOIN " +
@@ -312,8 +312,9 @@ namespace WinApp.Forms
 				dataGridSelectedTanks.Columns["Tier"].Width = 30;
 				dataGridSelectedTanks.Columns["Tier"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				dataGridSelectedTanks.Columns["Type"].Width = 40;
-				dataGridSelectedTanks.Columns["Nation"].Width = 60;
-				dataGridSelectedTanks.Columns["ID"].Visible = false;
+                dataGridSelectedTanks.Columns["Nation"].Width = 60;
+                dataGridSelectedTanks.Columns["Premium"].Width = 60;
+                dataGridSelectedTanks.Columns["ID"].Visible = false;
 			}
 		}
 
@@ -382,8 +383,9 @@ namespace WinApp.Forms
 							dr["Tier"] = Convert.ToInt32(dataGridAllTanks.Rows[i].Cells["Tier"].Value);
 							dr["Tank"] = dataGridAllTanks.Rows[i].Cells["Tank"].Value;
 							dr["Type"] = dataGridAllTanks.Rows[i].Cells["Type"].Value;
-							dr["Nation"] = dataGridAllTanks.Rows[i].Cells["Nation"].Value;
-							dr["#"] = sortOrder;
+                            dr["Nation"] = dataGridAllTanks.Rows[i].Cells["Nation"].Value;
+                            dr["Premium"] = dataGridAllTanks.Rows[i].Cells["Premium"].Value;
+                            dr["#"] = sortOrder;
 							dtFavListTank.Rows.Add(dr);
 							sortOrder++;
 						}
@@ -553,8 +555,15 @@ namespace WinApp.Forms
 			sortTierASC = !sortTierASC;
 			SortFavList("Tier", sortTierASC);
 		}
+        
+		private bool sortEconomyASC = false;
+        private void toolSelectedTanks_SortEconomy_Click(object sender, EventArgs e)
+        {
+            sortEconomyASC = !sortEconomyASC;
+            SortFavList("Premium", sortEconomyASC);
+        }
 
-		private void dataGridSelectedTanks_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridSelectedTanks_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
 			if (e.RowIndex > 0)
 				RemoveTankFromFavList();
@@ -574,7 +583,6 @@ namespace WinApp.Forms
 		{
 			AddTankToFavList();
 		}
-
 		private void btnSelectAll_Click(object sender, EventArgs e)
 		{
 			AddTankToFavList(true);
@@ -671,12 +679,13 @@ namespace WinApp.Forms
 		private async Task ShowAllTanks()
 		{
 			string sql =
-				"SELECT   tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, playerTank.lastBattleTime AS 'Last Battle', tank.id AS ID " +
+				"SELECT   tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, tank.premium AS Premium, playerTank.lastBattleTime AS 'Last Battle', tank.id AS ID " +
 				"FROM     country INNER JOIN " +
 				"		tank ON country.id = tank.countryId INNER JOIN " +
 				"		tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
 				"		playerTank ON tank.id = playerTank.tankId AND playerTank.playerId=@playerid";
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+
 			// Check filter
 			string nationFilter = "";
 			foreach (ToolStripMenuItem menu in toolAllTanks_Nation.DropDown.Items)
@@ -687,17 +696,24 @@ namespace WinApp.Forms
 			string typeFilter = "";
 			foreach (ToolStripMenuItem menu in toolAllTanks_Type.DropDown.Items)
 				if (menu.Checked) typeFilter += menu.Name.Substring(menu.Name.Length - 1, 1) + ",";
-			string filter = "";
+            string economyFilter = "";
+            foreach (ToolStripMenuItem menu in toolAllTanks_Economy.DropDown.Items)
+                if (menu.Checked) economyFilter += menu.Tag + ",";
+
+            string filter = "";
 			if (nationFilter.Length > 0)
 				filter = AddAndToWhere(filter,"tank.countryId IN (" + nationFilter.Substring(0,nationFilter.Length - 1) + ")");
 			if (tierFilter.Length > 0)
 				filter = AddAndToWhere(filter,"tank.tier IN (" + tierFilter.Substring(0,tierFilter.Length - 1) + ")"); 
 			if (typeFilter.Length > 0)
 				filter = AddAndToWhere(filter,"tank.tankTypeId IN (" + typeFilter.Substring(0,typeFilter.Length - 1) + ")");
-			if (toolAllTanks_Used.Checked)
+            if (economyFilter.Length > 0)
+                filter = AddAndToWhere(filter, "tank.premium IN (" + economyFilter.Substring(0, economyFilter.Length - 1) + ")");
+            if (toolAllTanks_Used.Checked)
 				filter = AddAndToWhere(filter,"playerTank.lastBattleTime is not null");
 			if (filter.Length > 0)
 				filter = " WHERE " + filter;
+
 			DataTable dt = await DB.FetchData(sql + filter);
 			dataGridAllTanks.DataSource = dt;
 			if (!allTanksColumnSetupDone)
@@ -707,8 +723,10 @@ namespace WinApp.Forms
 				dataGridAllTanks.Columns["Tier"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				dataGridAllTanks.Columns["Type"].Width = 40;
 				dataGridAllTanks.Columns["Nation"].Width = 60;
-				dataGridAllTanks.Columns["ID"].Visible = false;
+                dataGridAllTanks.Columns["Premium"].Width = 60;
+                dataGridAllTanks.Columns["ID"].Visible = false;
 			}
+
 			// Connect to scrollbar
 			scrollAllTanks.ScrollElementsTotals = dt.Rows.Count;
 			scrollAllTanks.ScrollElementsVisible = dataGridAllTanks.DisplayedRowCount(false);
@@ -742,8 +760,14 @@ namespace WinApp.Forms
 			menu.Checked = !menu.Checked;
             await ShowAllTanks();
 		}
+        private async void toolAllTanks_Economy_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            menu.Checked = !menu.Checked;
+            await ShowAllTanks();
+        }
 
-		private async void toolAllTanks_Used_Click(object sender, EventArgs e)
+        private async void toolAllTanks_Used_Click(object sender, EventArgs e)
 		{
 			ToolStripButton menu = (ToolStripButton)sender;
 			menu.Checked = !menu.Checked;
@@ -1004,5 +1028,14 @@ namespace WinApp.Forms
 			}
 		}
 
-	}
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FavTanksTheme_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
 }

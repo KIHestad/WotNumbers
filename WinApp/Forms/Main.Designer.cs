@@ -110,9 +110,9 @@
             this.mTankFilter_Tier8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_Tier9 = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_Tier10 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mTankFilter_Premium = new System.Windows.Forms.ToolStripMenuItem();
-            this.mTankFilter_Premium_Regular = new System.Windows.Forms.ToolStripMenuItem();
-            this.mTankFilter_Premium_Premium = new System.Windows.Forms.ToolStripMenuItem();
+            this.mTankFilter_Economy = new System.Windows.Forms.ToolStripMenuItem();
+            this.mTankFilter_Economy_Regular = new System.Windows.Forms.ToolStripMenuItem();
+            this.mTankFilter_Economy_Premium = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_All = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.mTankFilter_Search = new System.Windows.Forms.ToolStripMenuItem();
@@ -760,7 +760,7 @@
             this.mTankFilter_Country,
             this.mTankFilter_Type,
             this.mTankFilter_Tier,
-            this.mTankFilter_Premium,
+            this.mTankFilter_Economy,
             this.mTankFilter_All,
             this.toolStripSeparator25,
             this.mTankFilter_Search,
@@ -951,7 +951,7 @@
             this.mTankFilter_TypeLT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_TypeLT.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_TypeLT.Image")));
             this.mTankFilter_TypeLT.Name = "mTankFilter_TypeLT";
-            this.mTankFilter_TypeLT.Size = new System.Drawing.Size(180, 22);
+            this.mTankFilter_TypeLT.Size = new System.Drawing.Size(156, 22);
             this.mTankFilter_TypeLT.Text = "Light Tanks";
             this.mTankFilter_TypeLT.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
             this.mTankFilter_TypeLT.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
@@ -962,7 +962,7 @@
             this.mTankFilter_TypeMT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_TypeMT.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_TypeMT.Image")));
             this.mTankFilter_TypeMT.Name = "mTankFilter_TypeMT";
-            this.mTankFilter_TypeMT.Size = new System.Drawing.Size(180, 22);
+            this.mTankFilter_TypeMT.Size = new System.Drawing.Size(156, 22);
             this.mTankFilter_TypeMT.Text = "Medium Tanks";
             this.mTankFilter_TypeMT.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
             this.mTankFilter_TypeMT.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
@@ -973,7 +973,7 @@
             this.mTankFilter_TypeHT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_TypeHT.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_TypeHT.Image")));
             this.mTankFilter_TypeHT.Name = "mTankFilter_TypeHT";
-            this.mTankFilter_TypeHT.Size = new System.Drawing.Size(180, 22);
+            this.mTankFilter_TypeHT.Size = new System.Drawing.Size(156, 22);
             this.mTankFilter_TypeHT.Text = "Heavy Tanks";
             this.mTankFilter_TypeHT.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
             this.mTankFilter_TypeHT.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
@@ -984,7 +984,7 @@
             this.mTankFilter_TypeTD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_TypeTD.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_TypeTD.Image")));
             this.mTankFilter_TypeTD.Name = "mTankFilter_TypeTD";
-            this.mTankFilter_TypeTD.Size = new System.Drawing.Size(180, 22);
+            this.mTankFilter_TypeTD.Size = new System.Drawing.Size(156, 22);
             this.mTankFilter_TypeTD.Text = "Tank Destroyers";
             this.mTankFilter_TypeTD.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
             this.mTankFilter_TypeTD.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
@@ -995,7 +995,7 @@
             this.mTankFilter_TypeSPG.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_TypeSPG.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_TypeSPG.Image")));
             this.mTankFilter_TypeSPG.Name = "mTankFilter_TypeSPG";
-            this.mTankFilter_TypeSPG.Size = new System.Drawing.Size(180, 22);
+            this.mTankFilter_TypeSPG.Size = new System.Drawing.Size(156, 22);
             this.mTankFilter_TypeSPG.Text = "SPGs";
             this.mTankFilter_TypeSPG.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
             this.mTankFilter_TypeSPG.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
@@ -1130,35 +1130,38 @@
             this.mTankFilter_Tier10.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
             this.mTankFilter_Tier10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
-            // mTankFilter_Premium
+            // mTankFilter_Economy
             // 
-            this.mTankFilter_Premium.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mTankFilter_Premium_Regular,
-            this.mTankFilter_Premium_Premium});
-            this.mTankFilter_Premium.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mTankFilter_Premium.Name = "mTankFilter_Premium";
-            this.mTankFilter_Premium.Size = new System.Drawing.Size(203, 22);
-            this.mTankFilter_Premium.Text = "Regular && Premium";
+            this.mTankFilter_Economy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mTankFilter_Economy_Regular,
+            this.mTankFilter_Economy_Premium});
+            this.mTankFilter_Economy.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mTankFilter_Economy.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Economy.Image")));
+            this.mTankFilter_Economy.Name = "mTankFilter_Economy";
+            this.mTankFilter_Economy.Size = new System.Drawing.Size(203, 22);
+            this.mTankFilter_Economy.Text = "Regular && Premium";
             // 
-            // mTankFilter_Premium_Regular
+            // mTankFilter_Economy_Regular
             // 
-            this.mTankFilter_Premium_Regular.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mTankFilter_Premium_Regular.Name = "mTankFilter_Premium_Regular";
-            this.mTankFilter_Premium_Regular.Size = new System.Drawing.Size(196, 22);
-            this.mTankFilter_Premium_Regular.Text = "Regular or Reward tank";
-            this.mTankFilter_Premium_Regular.Click += new System.EventHandler(this.toolItemTankFilter_RegularAndPremium_Click);
-            this.mTankFilter_Premium_Regular.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_RegularAndPremium_MouseDown);
-            this.mTankFilter_Premium_Regular.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            this.mTankFilter_Economy_Regular.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mTankFilter_Economy_Regular.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Economy_Regular.Image")));
+            this.mTankFilter_Economy_Regular.Name = "mTankFilter_Economy_Regular";
+            this.mTankFilter_Economy_Regular.Size = new System.Drawing.Size(196, 22);
+            this.mTankFilter_Economy_Regular.Text = "Regular or Reward tank";
+            this.mTankFilter_Economy_Regular.Click += new System.EventHandler(this.toolItemTankFilter_RegularAndPremium_Click);
+            this.mTankFilter_Economy_Regular.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_RegularAndPremium_MouseDown);
+            this.mTankFilter_Economy_Regular.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
-            // mTankFilter_Premium_Premium
+            // mTankFilter_Economy_Premium
             // 
-            this.mTankFilter_Premium_Premium.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mTankFilter_Premium_Premium.Name = "mTankFilter_Premium_Premium";
-            this.mTankFilter_Premium_Premium.Size = new System.Drawing.Size(196, 22);
-            this.mTankFilter_Premium_Premium.Text = "Premium";
-            this.mTankFilter_Premium_Premium.Click += new System.EventHandler(this.toolItemTankFilter_RegularAndPremium_Click);
-            this.mTankFilter_Premium_Premium.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_RegularAndPremium_MouseDown);
-            this.mTankFilter_Premium_Premium.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            this.mTankFilter_Economy_Premium.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mTankFilter_Economy_Premium.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Economy_Premium.Image")));
+            this.mTankFilter_Economy_Premium.Name = "mTankFilter_Economy_Premium";
+            this.mTankFilter_Economy_Premium.Size = new System.Drawing.Size(196, 22);
+            this.mTankFilter_Economy_Premium.Text = "Premium";
+            this.mTankFilter_Economy_Premium.Click += new System.EventHandler(this.toolItemTankFilter_RegularAndPremium_Click);
+            this.mTankFilter_Economy_Premium.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_RegularAndPremium_MouseDown);
+            this.mTankFilter_Economy_Premium.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
             // mTankFilter_All
             // 
@@ -3079,9 +3082,9 @@
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleMaxTier;
         private System.Windows.Forms.ToolStripMenuItem mFixBattleTable;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
-        private System.Windows.Forms.ToolStripMenuItem mTankFilter_Premium;
-        private System.Windows.Forms.ToolStripMenuItem mTankFilter_Premium_Regular;
-        private System.Windows.Forms.ToolStripMenuItem mTankFilter_Premium_Premium;
+        private System.Windows.Forms.ToolStripMenuItem mTankFilter_Economy;
+        private System.Windows.Forms.ToolStripMenuItem mTankFilter_Economy_Regular;
+        private System.Windows.Forms.ToolStripMenuItem mTankFilter_Economy_Premium;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
     }
 }

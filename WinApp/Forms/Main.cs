@@ -1761,9 +1761,9 @@ namespace WinApp.Forms
 			}
             if (premium)
             {
-                mTankFilter_Premium_Premium.Checked = false;
-                mTankFilter_Premium_Regular.Checked = false;
-                mTankFilter_Type.Text = "Regular && Premium";
+                mTankFilter_Economy.Checked = false;
+                mTankFilter_Economy_Regular.Checked = false;
+                mTankFilter_Type.Text = "Tank Economy";
             }
 			// Count selected menu items
             if (mTankFilter_CountryChina.Checked) tankFilterNation++;
@@ -1795,8 +1795,8 @@ namespace WinApp.Forms
 			if (mTankFilter_Tier9.Checked) tankFilterTier++;
 			if (mTankFilter_Tier10.Checked) tankFilterTier++;
 
-            if (mTankFilter_Premium_Regular.Checked) tankFilterPremium++;
-            if (mTankFilter_Premium_Premium.Checked) tankFilterPremium++;
+            if (mTankFilter_Economy_Regular.Checked) tankFilterPremium++;
+            if (mTankFilter_Economy.Checked) tankFilterPremium++;
 
             // Add text for manual filters
             if (tankFilterNation > 0)
@@ -1806,7 +1806,7 @@ namespace WinApp.Forms
             if (tankFilterTier > 0)
                 mTankFilter_Tier.Text = "Tier (filtered: " + tankFilterTier + ")";
             if (tankFilterPremium > 0)
-                mTankFilter_Premium.Text = "Regular && Premium (filtered: " + tankFilterPremium + ")";
+                mTankFilter_Economy.Text = "Tank Economy (filtered: " + tankFilterPremium + ")";
 
             // Reopen menu item exept for "all tanks"
             if (reopenMenu) this.mTankFilter.ShowDropDown();
@@ -1901,17 +1901,24 @@ namespace WinApp.Forms
                 tankFilterPremium--;
 
             if (tankFilterPremium > 0)
-                mTankFilter_Premium.Text = "Regular && Premium (filtered: " + tankFilterPremium + ")";
+                mTankFilter_Economy.Text = "Tank Economy (filtered: " + tankFilterPremium + ")";
             else
-                mTankFilter_Premium.Text = "Regular && Premium";
+                mTankFilter_Economy.Text = "Tank Economy";
 
-            await TankFilterMenuSelect(menuItem, mTankFilter_Premium);
+            await TankFilterMenuSelect(menuItem, mTankFilter_Economy);
         }
 
-        private void toolItemTankFilter_RegularAndPremium_MouseDown(object sender, MouseEventArgs e)
+        private async void toolItemTankFilter_RegularAndPremium_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                TankFilterMenuUncheck(false, false, false, true);
+                ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 
+                await TankFilterMenuSelect(menuItem, mTankFilter_Economy);
+            }
         }
+
         private async void toolItemTankFilter_Country_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
@@ -2281,8 +2288,8 @@ namespace WinApp.Forms
 			string nationId = "";
 			string type = "";
 			string typeId = "";
-			string premium = "";
-            string premiumId = ""; 
+			string economy = "";
+            string economyId = ""; 
 			string message = "";
 			string newJoinSQL = "";
 			string tankWhereSQL = "";
@@ -2351,8 +2358,8 @@ namespace WinApp.Forms
 				if (mTankFilter_TypeTD.Checked) { type += "TD,"; typeId += "4,"; manualFilterCount++; }
 				if (mTankFilter_TypeSPG.Checked) { type += "SPG,"; typeId += "5,"; manualFilterCount++; }
 
-                if (mTankFilter_Premium_Regular.Checked) { premium += "Regular,"; premiumId += "0,"; manualFilterCount++; }
-                if (mTankFilter_Premium_Premium.Checked) { premium += "Premium,"; premiumId += "1,"; manualFilterCount++; }
+                if (mTankFilter_Economy_Regular.Checked) { economy += "Regular,"; economyId += "0,"; manualFilterCount++; }
+                if (mTankFilter_Economy_Premium.Checked) { economy += "Premium,"; economyId += "1,"; manualFilterCount++; }
 
                 // create tank filter
                 if (tier.Length > 0)
@@ -2374,11 +2381,11 @@ namespace WinApp.Forms
                     if (tankWhereSQL != "") tankWhereSQL += " AND ";
                     tankWhereSQL += " tank.tankTypeId IN (" + typeId.Substring(0, typeId.Length - 1) + ") ";
                 }
-                if (premium.Length > 0)
+                if (economy.Length > 0)
                 {
-                    premium = premium.Substring(0, premium.Length - 1);
+                    economy = economy.Substring(0, economy.Length - 1);
                     if (tankWhereSQL != "") tankWhereSQL += " AND ";
-                    tankWhereSQL += " tank.premium IN (" + premiumId.Substring(0, premiumId.Length - 1) + ") ";
+                    tankWhereSQL += " tank.premium IN (" + economyId.Substring(0, economyId.Length - 1) + ") ";
                 }
                 if (tankWhereSQL != "") tankWhereSQL = " AND (" + tankWhereSQL + ") ";
 
@@ -2390,28 +2397,19 @@ namespace WinApp.Forms
 						if (tier.Length > 0)
 							tankFilterManualFilter = "Tier " + tier;
 						else
-							tankFilterManualFilter = tier + nation + type + premium;
+							tankFilterManualFilter = tier + nation + type + economy;
 					else
 						tankFilterManualFilter = "Filtered";
 
-					// Statusbar text
+					// Statusbar textº
 					if (tier.Length > 0)
 						message += " - Tier: " + tier;
 					if (type.Length > 0)
 						message += " - Type: " + type;
                     if (nation.Length > 0)
                         message += " - Nation: " + nation;
-                    if (premium.Length > 0)
-					{
-						if (premium.Length == 1)
-						{
-							message += " - " + premium + " only.";
-                        }
-						else
-						{
-							message += " - Regular && Premium";
-						}
-					}
+                    if (economy.Length > 0)
+                        message += " - Economy: " + economy;
                 }
                 else
 				{
