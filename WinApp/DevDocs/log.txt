@@ -1,4 +1,12 @@
-﻿11-Mar-2023
+﻿16-Apr-2023
+- Created 1.0.15 version
+- Add filter by tank economy (regular / premium). Including support for this new filtering in the Favourite Tank List UI.
+- Implement win rate and survivability by tank while grouping, using colouring.
+- Add new graphs for victory, suvivability, and EMAi equivalents.
+- Add support for zooming in/out in chart.
+- Updated Admin.db.
+
+11-Mar-2023
 - Update battle 2 json python scripts to 1.20.0.0 version.
 - Add Oyster Bay map information
 - Update Admin.db data base with latest map image data.
