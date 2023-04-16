@@ -95,6 +95,10 @@
             this.lblFooter = new System.Windows.Forms.Label();
             this.ChartingMain = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.mBattleTime2D = new System.Windows.Forms.ToolStripMenuItem();
+            this.mBattleTime3D = new System.Windows.Forms.ToolStripMenuItem();
+            this.mBattleTime1D = new System.Windows.Forms.ToolStripMenuItem();
             this.BattleChartTheme.SuspendLayout();
             this.mMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChartingMain)).BeginInit();
@@ -447,7 +451,7 @@
             // 
             this.mBattleModesAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleModesAll.Name = "mBattleModesAll";
-            this.mBattleModesAll.Size = new System.Drawing.Size(160, 22);
+            this.mBattleModesAll.Size = new System.Drawing.Size(159, 22);
             this.mBattleModesAll.Tag = "ALL";
             this.mBattleModesAll.Text = "All Modes";
             this.mBattleModesAll.Click += new System.EventHandler(this.mBattleModesChanged_Click);
@@ -456,13 +460,13 @@
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(157, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(156, 6);
             // 
             // mBattleModesRandom
             // 
             this.mBattleModesRandom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleModesRandom.Name = "mBattleModesRandom";
-            this.mBattleModesRandom.Size = new System.Drawing.Size(160, 22);
+            this.mBattleModesRandom.Size = new System.Drawing.Size(159, 22);
             this.mBattleModesRandom.Tag = "15";
             this.mBattleModesRandom.Text = "Random";
             this.mBattleModesRandom.Click += new System.EventHandler(this.mBattleModesChanged_Click);
@@ -472,7 +476,7 @@
             // 
             this.mBattleModesHistorical.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleModesHistorical.Name = "mBattleModesHistorical";
-            this.mBattleModesHistorical.Size = new System.Drawing.Size(160, 22);
+            this.mBattleModesHistorical.Size = new System.Drawing.Size(159, 22);
             this.mBattleModesHistorical.Tag = "Historical";
             this.mBattleModesHistorical.Text = "Historical";
             this.mBattleModesHistorical.Click += new System.EventHandler(this.mBattleModesChanged_Click);
@@ -482,7 +486,7 @@
             // 
             this.mBattleModesTeamUnranked.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleModesTeamUnranked.Name = "mBattleModesTeamUnranked";
-            this.mBattleModesTeamUnranked.Size = new System.Drawing.Size(160, 22);
+            this.mBattleModesTeamUnranked.Size = new System.Drawing.Size(159, 22);
             this.mBattleModesTeamUnranked.Tag = "7";
             this.mBattleModesTeamUnranked.Text = "Team: Unranked";
             this.mBattleModesTeamUnranked.Click += new System.EventHandler(this.mBattleModesChanged_Click);
@@ -492,7 +496,7 @@
             // 
             this.mBattleModesTeamRanked.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleModesTeamRanked.Name = "mBattleModesTeamRanked";
-            this.mBattleModesTeamRanked.Size = new System.Drawing.Size(160, 22);
+            this.mBattleModesTeamRanked.Size = new System.Drawing.Size(159, 22);
             this.mBattleModesTeamRanked.Tag = "7Ranked";
             this.mBattleModesTeamRanked.Text = "Team: Ranked";
             this.mBattleModesTeamRanked.Click += new System.EventHandler(this.mBattleModesChanged_Click);
@@ -501,13 +505,13 @@
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(157, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(156, 6);
             // 
             // mBattleModesGlobalMap
             // 
             this.mBattleModesGlobalMap.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleModesGlobalMap.Name = "mBattleModesGlobalMap";
-            this.mBattleModesGlobalMap.Size = new System.Drawing.Size(160, 22);
+            this.mBattleModesGlobalMap.Size = new System.Drawing.Size(159, 22);
             this.mBattleModesGlobalMap.Tag = "GlobalMap";
             this.mBattleModesGlobalMap.Text = "Global Map";
             this.mBattleModesGlobalMap.Click += new System.EventHandler(this.mBattleModesChanged_Click);
@@ -517,7 +521,7 @@
             // 
             this.mBattleModesSkirmishes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleModesSkirmishes.Name = "mBattleModesSkirmishes";
-            this.mBattleModesSkirmishes.Size = new System.Drawing.Size(160, 22);
+            this.mBattleModesSkirmishes.Size = new System.Drawing.Size(159, 22);
             this.mBattleModesSkirmishes.Tag = "Skirmishes";
             this.mBattleModesSkirmishes.Text = "Skirmishes";
             this.mBattleModesSkirmishes.Click += new System.EventHandler(this.mBattleModesChanged_Click);
@@ -527,7 +531,7 @@
             // 
             this.mBattleModesStronghold.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleModesStronghold.Name = "mBattleModesStronghold";
-            this.mBattleModesStronghold.Size = new System.Drawing.Size(160, 22);
+            this.mBattleModesStronghold.Size = new System.Drawing.Size(159, 22);
             this.mBattleModesStronghold.Tag = "Stronghold";
             this.mBattleModesStronghold.Text = "Stronghold";
             this.mBattleModesStronghold.Click += new System.EventHandler(this.mBattleModesChanged_Click);
@@ -536,13 +540,13 @@
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(157, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(156, 6);
             // 
             // mBattleModesSpecial
             // 
             this.mBattleModesSpecial.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleModesSpecial.Name = "mBattleModesSpecial";
-            this.mBattleModesSpecial.Size = new System.Drawing.Size(160, 22);
+            this.mBattleModesSpecial.Size = new System.Drawing.Size(159, 22);
             this.mBattleModesSpecial.Tag = "Special";
             this.mBattleModesSpecial.Text = "Special Events";
             this.mBattleModesSpecial.Click += new System.EventHandler(this.mBattleModesChanged_Click);
@@ -559,9 +563,13 @@
             this.mBattleTime6M,
             this.mBattleTime3M,
             this.mBattleTime1M,
-            this.toolStripSeparator4,
+            this.toolStripSeparator12,
             this.mBattleTime2W,
-            this.mBattleTime1W});
+            this.mBattleTime1W,
+            this.toolStripSeparator4,
+            this.mBattleTime3D,
+            this.mBattleTime2D,
+            this.mBattleTime1D});
             this.mBattleTimeFilter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleTimeFilter.Image = ((System.Drawing.Image)(resources.GetObject("mBattleTimeFilter.Image")));
             this.mBattleTimeFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -676,7 +684,7 @@
             // 
             this.toolStripLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(43, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(44, 22);
             this.toolStripLabel1.Text = "X-Axis:";
             // 
             // mXaxisDate
@@ -805,6 +813,41 @@
             this.imageListToolStrip.Images.SetKeyName(0, "save.png");
             this.imageListToolStrip.Images.SetKeyName(1, "saveUnsaved.png");
             // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(183, 6);
+            // 
+            // mBattleTime2D
+            // 
+            this.mBattleTime2D.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattleTime2D.Name = "mBattleTime2D";
+            this.mBattleTime2D.Size = new System.Drawing.Size(186, 22);
+            this.mBattleTime2D.Tag = "D2";
+            this.mBattleTime2D.Text = "Battles Last 2 Days";
+            this.mBattleTime2D.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.mBattleTime2D.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mBattleTime3D
+            // 
+            this.mBattleTime3D.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattleTime3D.Name = "mBattleTime3D";
+            this.mBattleTime3D.Size = new System.Drawing.Size(186, 22);
+            this.mBattleTime3D.Tag = "D3";
+            this.mBattleTime3D.Text = "Battles Last 3 Days";
+            this.mBattleTime3D.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.mBattleTime3D.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mBattleTime1D
+            // 
+            this.mBattleTime1D.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattleTime1D.Name = "mBattleTime1D";
+            this.mBattleTime1D.Size = new System.Drawing.Size(186, 22);
+            this.mBattleTime1D.Tag = "D1";
+            this.mBattleTime1D.Text = "Battles Last Day";
+            this.mBattleTime1D.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.mBattleTime1D.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
             // BattleChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -896,5 +939,9 @@
         private System.Windows.Forms.ToolStripButton mFavouriteSave;
         private System.Windows.Forms.ImageList imageListToolStrip;
         private System.Windows.Forms.ToolStripButton mFavouriteRemove;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+        private System.Windows.Forms.ToolStripMenuItem mBattleTime3D;
+        private System.Windows.Forms.ToolStripMenuItem mBattleTime2D;
+        private System.Windows.Forms.ToolStripMenuItem mBattleTime1D;
     }
 }

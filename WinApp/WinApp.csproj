@@ -795,6 +795,7 @@
     <Compile Include="Services\Models\AppStartypModels.cs" />
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BadThemeControls\MessageInput.resx">
       <DependentUpon>MessageInput.cs</DependentUpon>

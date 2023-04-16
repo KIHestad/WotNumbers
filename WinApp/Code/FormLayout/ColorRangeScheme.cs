@@ -206,7 +206,20 @@ namespace WinApp.Code.FormLayout
             else if (value >= RangeRWR[1]) col = ColorTheme.Rating_1_red;
             return col;
         }
+        public static Color PercentageColor(double percentage)
+        {
+            Color color = ColorTheme.Rating_very_bad;
+            if (percentage >= 99) color = ColorTheme.Rating_super_uniqum;
+            else if (percentage >= 95) color = ColorTheme.Rating_uniqum;
+            else if (percentage >= 90) color = ColorTheme.Rating_very_great;
+            else if (percentage >= 80) color = ColorTheme.Rating_very_good;
+            else if (percentage >= 65) color = ColorTheme.Rating_good;
+            else if (percentage >= 50) color = ColorTheme.Rating_average;
+            else if (percentage >= 35) color = ColorTheme.Rating_below_average;
+            else if (percentage >= 20) color = ColorTheme.Rating_bad;
 
+            return color;
+        }
 
     }
 }
