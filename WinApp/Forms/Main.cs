@@ -1715,12 +1715,13 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void TankFilterMenuUncheck(bool tier, bool country, bool type, bool reopenMenu = true)
-		{
-			tankFilterNation = 0;
-			tankFilterTier = 0;
-			tankFilterType = 0;
-			if (tier)
+        private void TankFilterMenuUncheck(bool tier, bool country, bool type, bool premium, bool reopenMenu = true)
+        {
+            tankFilterNation = 0;
+            tankFilterTier = 0;
+            tankFilterType = 0;
+            tankFilterPremium = 0;
+            if (tier)
 			{
 				mTankFilter_Tier1.Checked = false;
 				mTankFilter_Tier2.Checked = false;
@@ -1758,8 +1759,14 @@ namespace WinApp.Forms
 				mTankFilter_TypeTD.Checked = false;
 				mTankFilter_Type.Text = "Tank Type";
 			}
+            if (premium)
+            {
+                mTankFilter_Economy.Checked = false;
+                mTankFilter_Economy_Regular.Checked = false;
+                mTankFilter_Type.Text = "Tank Economy";
+            }
 			// Count selected menu items
-			if (mTankFilter_CountryChina.Checked) tankFilterNation++;
+            if (mTankFilter_CountryChina.Checked) tankFilterNation++;
 			if (mTankFilter_CountryFrance.Checked) tankFilterNation++;
 			if (mTankFilter_CountryGermany.Checked) tankFilterNation++;
 			if (mTankFilter_CountryUK.Checked) tankFilterNation++;
@@ -1788,16 +1795,21 @@ namespace WinApp.Forms
 			if (mTankFilter_Tier9.Checked) tankFilterTier++;
 			if (mTankFilter_Tier10.Checked) tankFilterTier++;
 
-			// Add text for manual filters
-			if (tankFilterNation > 0)
+            if (mTankFilter_Economy_Regular.Checked) tankFilterPremium++;
+            if (mTankFilter_Economy.Checked) tankFilterPremium++;
+
+            // Add text for manual filters
+            if (tankFilterNation > 0)
 				mTankFilter_Country.Text = "Nation (filtered: " + tankFilterNation + ")";
 			if (tankFilterType > 0)
 				mTankFilter_Type.Text = "Tank Type (filtered: " + tankFilterType + ")";
-			if (tankFilterTier > 0)
-				mTankFilter_Tier.Text = "Tier (filtered: " + tankFilterTier + ")";
+            if (tankFilterTier > 0)
+                mTankFilter_Tier.Text = "Tier (filtered: " + tankFilterTier + ")";
+            if (tankFilterPremium > 0)
+                mTankFilter_Economy.Text = "Tank Economy (filtered: " + tankFilterPremium + ")";
 
-			// Reopen menu item exept for "all tanks"
-			if (reopenMenu) this.mTankFilter.ShowDropDown();
+            // Reopen menu item exept for "all tanks"
+            if (reopenMenu) this.mTankFilter.ShowDropDown();
 		}
 
 		private async Task TankFilterMenuSelect(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem)
@@ -1877,7 +1889,37 @@ namespace WinApp.Forms
 			await TankFilterMenuSelect(menuItem, mTankFilter_Country);
 		}
 
-		private async void toolItemTankFilter_Country_MouseDown(object sender, MouseEventArgs e)
+        private async	void toolItemTankFilter_RegularAndPremium_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+
+            // Update menu item
+            menuItem.Checked = !menuItem.Checked;
+            if (menuItem.Checked)
+                tankFilterPremium++;
+            else
+                tankFilterPremium--;
+
+            if (tankFilterPremium > 0)
+                mTankFilter_Economy.Text = "Tank Economy (filtered: " + tankFilterPremium + ")";
+            else
+                mTankFilter_Economy.Text = "Tank Economy";
+
+            await TankFilterMenuSelect(menuItem, mTankFilter_Economy);
+        }
+
+        private async void toolItemTankFilter_RegularAndPremium_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                TankFilterMenuUncheck(false, false, false, true);
+                ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+
+                await TankFilterMenuSelect(menuItem, mTankFilter_Economy);
+            }
+        }
+
+        private async void toolItemTankFilter_Country_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
@@ -2118,7 +2160,7 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-
+			
 		#region Menu Items: Battle Mode
 
 		private async void toolItemMode_Click(object sender, EventArgs e)
@@ -2236,19 +2278,23 @@ namespace WinApp.Forms
 
 		private int tankFilterNation = 0;
 		private int tankFilterType = 0;
-		private int tankFilterTier = 0;
+        private int tankFilterTier = 0;
+        private int tankFilterPremium = 0;
 
-		private void Tankfilter(out string whereSQL, out string joinSQL, out string status2Message, bool onlyTankFilter = false, bool onlyPlayerTankFilter = false)
+        private void Tankfilter(out string whereSQL, out string joinSQL, out string status2Message, bool onlyTankFilter = false, bool onlyPlayerTankFilter = false)
 		{
 			string tier = "";
 			string nation = "";
 			string nationId = "";
 			string type = "";
 			string typeId = "";
+			string economy = "";
+            string economyId = ""; 
 			string message = "";
 			string newJoinSQL = "";
 			string tankWhereSQL = "";
 			string playerTankWhereSQL_Owned = "";
+
 			// Check favlist
 			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.FavList)
 			{
@@ -2311,8 +2357,12 @@ namespace WinApp.Forms
 				if (mTankFilter_TypeHT.Checked) { type += "Heavy,"; typeId += "3,"; manualFilterCount++; }
 				if (mTankFilter_TypeTD.Checked) { type += "TD,"; typeId += "4,"; manualFilterCount++; }
 				if (mTankFilter_TypeSPG.Checked) { type += "SPG,"; typeId += "5,"; manualFilterCount++; }
-				// create tank filter
-				if (tier.Length > 0)
+
+                if (mTankFilter_Economy_Regular.Checked) { economy += "Regular,"; economyId += "0,"; manualFilterCount++; }
+                if (mTankFilter_Economy_Premium.Checked) { economy += "Premium,"; economyId += "1,"; manualFilterCount++; }
+
+                // create tank filter
+                if (tier.Length > 0)
 				{
 					string tierId = tier;
 					tier = tier.Substring(0, tier.Length - 1);
@@ -2325,13 +2375,20 @@ namespace WinApp.Forms
 					if (tankWhereSQL != "") tankWhereSQL += " AND ";
 					tankWhereSQL += " tank.countryId IN (" + nationId.Substring(0, nationId.Length - 1) + ") ";
 				}
-				if (type.Length > 0)
-				{
-					type = type.Substring(0, type.Length - 1);
-					if (tankWhereSQL != "") tankWhereSQL += " AND ";
-					tankWhereSQL += " tank.tankTypeId IN (" + typeId.Substring(0, typeId.Length - 1) + ") ";
-				}
-				if (tankWhereSQL != "") tankWhereSQL = " AND (" + tankWhereSQL + ") ";
+                if (type.Length > 0)
+                {
+                    type = type.Substring(0, type.Length - 1);
+                    if (tankWhereSQL != "") tankWhereSQL += " AND ";
+                    tankWhereSQL += " tank.tankTypeId IN (" + typeId.Substring(0, typeId.Length - 1) + ") ";
+                }
+                if (economy.Length > 0)
+                {
+                    economy = economy.Substring(0, economy.Length - 1);
+                    if (tankWhereSQL != "") tankWhereSQL += " AND ";
+                    tankWhereSQL += " tank.premium IN (" + economyId.Substring(0, economyId.Length - 1) + ") ";
+                }
+                if (tankWhereSQL != "") tankWhereSQL = " AND (" + tankWhereSQL + ") ";
+
 				// Check if manual filter is selected, show in statusbar and as menu name
 				if (manualFilterCount > 0)
 				{
@@ -2340,24 +2397,28 @@ namespace WinApp.Forms
 						if (tier.Length > 0)
 							tankFilterManualFilter = "Tier " + tier;
 						else
-							tankFilterManualFilter = tier + nation + type;
+							tankFilterManualFilter = tier + nation + type + economy;
 					else
 						tankFilterManualFilter = "Filtered";
-					// Statusbar text
+
+					// Statusbar textº
 					if (tier.Length > 0)
 						message += " - Tier: " + tier;
 					if (type.Length > 0)
 						message += " - Type: " + type;
-					if (nation.Length > 0)
-						message += " - Nation: " + nation;
-				}
-				else
+                    if (nation.Length > 0)
+                        message += " - Nation: " + nation;
+                    if (economy.Length > 0)
+                        message += " - Economy: " + economy;
+                }
+                else
 				{
 					tankFilterManualFilter = "";
 				}
 			}
 			// Show filtername in menu
 			SetTankFilterMenuName();
+
 			// Return correct where sql part
 			if (onlyPlayerTankFilter)
 				whereSQL = playerTankWhereSQL_Owned;
@@ -3042,7 +3103,6 @@ namespace WinApp.Forms
 					{
 						if (colListItem.colType == "Int" || colListItem.colType == "Float")
 						{
-
 							if (!nonAvgCols.Contains(colListItem.name))
 							{
 								double count = 0;
@@ -3124,7 +3184,6 @@ namespace WinApp.Forms
 						// Format column
 						if (colListItem.colType == "Int" || colListItem.colType == "Float")
 						{
-
 							if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
 							{
 								// looping through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
@@ -3249,7 +3308,10 @@ namespace WinApp.Forms
 						}
 					}
 					else
+					{
 						dataGridMain.Columns[colListItem.name].MinimumWidth = 25;
+					}
+
 					// Width and sorting
 					dataGridMain.Columns[colListItem.name].Width = colListItem.colWidth;
 					dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
@@ -3272,7 +3334,9 @@ namespace WinApp.Forms
 							showFloatValues.Add("Max Tier");
 							showFloatValues.Add("Frags");
 							showFloatValues.Add("Spot");
-						}
+                            showFloatValues.Add("Survived");
+                            showFloatValues.Add("Result");
+                        }
 						if (!showFloatValues.Contains(colListItem.name)) // Decimals
 							dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
 						else
@@ -3845,19 +3909,11 @@ namespace WinApp.Forms
 					{
 						if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
 						{
-							int percentage = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
+							double percentage = Convert.ToDouble(dataGridMain[col, e.RowIndex].Value);
 							if (percentage > 0)
 							{
-								Color color = ColorTheme.Rating_very_bad;
-								color = ColorTheme.Rating_very_bad;
-								if (percentage >= 99) color = ColorTheme.Rating_super_uniqum;
-								else if (percentage >= 95) color = ColorTheme.Rating_uniqum;
-								else if (percentage >= 90) color = ColorTheme.Rating_very_great;
-								else if (percentage >= 80) color = ColorTheme.Rating_very_good;
-								else if (percentage >= 65) color = ColorTheme.Rating_good;
-								else if (percentage >= 50) color = ColorTheme.Rating_average;
-								else if (percentage >= 35) color = ColorTheme.Rating_below_average;
-								else if (percentage >= 20) color = ColorTheme.Rating_bad;
+								Color color = ColorRangeScheme.PercentageColor(percentage);
+
 								cell.Style.ForeColor = color;
 								cell.Style.SelectionForeColor = cell.Style.ForeColor;
 							}
@@ -3957,10 +4013,27 @@ namespace WinApp.Forms
 						// Battle Result color color
 						else if (col.Equals("Result"))
 						{
-							string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
-							cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-							cell.Style.SelectionForeColor = cell.Style.ForeColor;
-							int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
+                            bool groupingActive = (!mBattleGroup_No.Checked);
+                            if (groupingActive)
+                            {
+                                bool groupingSum = (mBattleGroup_TankSum.Checked);
+                                if (!groupingSum)
+                                {
+                                    uint percentage = Convert.ToUInt32(dataGridMain[col, e.RowIndex].Value);
+                                    Color color = ColorRangeScheme.WinRateColor(percentage);
+
+                                    cell.Style.ForeColor = color;
+                                    cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                                }
+                            }
+                            else
+                            {
+                                string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
+                                cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+                                cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            }
+
+                            int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
 							if (battlesCount > 1)
 							{
 								cell.ToolTipText = "Victory: " + dataGridMain["victoryToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
@@ -3971,10 +4044,27 @@ namespace WinApp.Forms
 						// Survived color and formatting
 						else if (col.Equals("Survived"))
 						{
-							string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
-							cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-							cell.Style.SelectionForeColor = cell.Style.ForeColor;
-							int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
+                            bool groupingActive = (!mBattleGroup_No.Checked);
+                            if (groupingActive)
+                            {
+                                bool groupingSum = (mBattleGroup_TankSum.Checked);
+								if (!groupingSum)
+								{
+                                    uint percentage = Convert.ToUInt32(dataGridMain[col, e.RowIndex].Value);
+                                    Color color = ColorRangeScheme.WinRateColor(percentage);
+
+                                    cell.Style.ForeColor = color;
+                                    cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                                }
+                            }
+                            else
+                            {
+                                string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
+                                cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+                                cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            }
+
+                            int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
 							if (battlesCount > 1)
 							{
 								cell.ToolTipText = "Survived: " + dataGridMain["survivedCountToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
@@ -5855,5 +5945,10 @@ namespace WinApp.Forms
 			frm.ShowDialog(this);
 			await ShowView("Refreshed view");
 		}
-	}
+
+        private void dataGridMain_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+    }
 }
