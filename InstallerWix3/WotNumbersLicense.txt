@@ -1,0 +1,96 @@
+Thank you for installing Wot Numbers version 1.15.1
+The online statistics and forum pages has been discontinued, so no data is uploaded to web. This makes the application a bit faster though.
+The web site is also simplified, but you can still find it here:
+https://wotnumbers.com
+
+
+
+Summary of changes:
+
+19-Apr-2023
+- Created 1.15.1 version.
+- Change version naming convention. 
+	- major version number for major changes which may introduce breaking changes.
+	- minor version number for new features added.
+	- revision number for bug fixing on previous minor version.
+- Fixed chart bug.
+- Fixed SameBattle function to not take into account Eff, Wn7 values since they are computed with parameters which may differ between dossier deduced data and battle deduced data.
+
+16-Apr-2023
+- Created 1.0.15 version
+- Add filter by tank economy (regular / premium). Including support for this new filtering in the Favourite Tank List UI.
+- Implement win rate and survivability by tank while grouping, using colouring.
+- Add new graphs for victory, suvivability, and EMAi equivalents.
+- Add support for zooming in/out in chart.
+- Updated Admin.db.
+
+11-Mar-2023
+- Update battle 2 json python scripts to 1.20.0.0 version.
+- Add Oyster Bay map information
+- Update Admin.db data base with latest map image data.
+- Modified WinAdmin to work with png files instead of jpg, since current source image files from World Of Tanks are pngs. This 
+eliminates the need to convert pngs to jpgs to introdcuce new images into WoT numbers.
+
+20-Feb-2023
+- Rework how data is processed after retrieving battle data. Old battle view mode, should be exactly as before.
+- Fix comparison of battles for new battle view mode.
+- Force logging of information.
+
+13-Feb-2023
+- Merge orphan dat files branch
+
+05-Feb-2023
+- Optimize battle view query when team side column not selected.
+- Update .NET framework to 4.8
+
+11-Jan-2023
+- Updated Battle2Json wotbr2j script to support WoT 1.19.1.0 battle dat files.
+
+03-Jan-2023
+- Fix killername using patch from another branch
+- Add Pull Request: Added ability to add/remove tanks yet to be seen in battle to favorite lists. By Stevoni.
+
+29-Dec-2022
+-Unify Recalc classes to make the code look similar on all the processes.
+-Fix killer name in battle details.
+-Fix Min tier calculation when Unknown vehicles are found in battle.
+-Fix battle loading for Asian server battles due big WargamingIDs overflowing integer variables.
+
+17-Dec-2022
+- Add means to recalculate Min tier value of last 1000 battles. Same for MaxTier just in case.
+- Add failure prevention on wotbr2j.py when the number of players retrieved is less than the number of vehicles retrieved.
+- Include cancel option in popup appearing when a WotNumbers application update has been detected.
+- Add orphan battle into battle table, anticipating future update.
+
+14-Dev-2022
+Add team value into the columnSelection table. This allows to view the team number/map side in the battle view.
+
+02-Dec-2022
+Updated Battle2Json and Dossier2Json scripts to WoT 1.19.0.0 (thanks to God Lemmy)
+Fix column name playerTank.skillRecon in table columnSelection 
+Added new tanks in Admin.db (Tank_Unknown_37889)
+
+20-Oct-2022
+Update wotbr2j script to accept new WoT 1.18.1.1 battle dat files.
+
+18-Oct-2022
+Fix "Check For New Update" to retrieve last version information from GitHUB.
+
+17-Oct-2022
+Fix app crash when creating DB from scratch (Revert changes in Database creation scripts in Docs folder)
+Fixed battle results to display proper team for the players. It was relying on playerName instead of accountId, so this was failing for anonymized players.
+
+16 Oct 2022
+Add missing Description for map last_frontier.
+Add firmulfir map into DB.
+Include latest tank data into AdminDB.
+
+14 Oct 2022
+Updated Battle2Json and Dossier2Json scripts to WoT 1.18.1
+Added LOG.txt to keep track of changes introduced in the project
+Added TODO.txt to store ideas or tasks still not implemented. Once they're implemented they should be removed and passed to log.txt.
+Added Bugs.txt to store known bugs. Once a bug is fixed it should be removed and passed to log.txt
+Removed unused deployed files
+
+Move BattleResults python files from DossierJSON to its own directory. And make the application work with the changes.
+Modify Product.wxs to reflect new distribution.

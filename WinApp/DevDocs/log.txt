@@ -1,4 +1,13 @@
-﻿16-Apr-2023
+﻿19-Apr-2023
+- Change version naming convention. 
+	- major version number for major changes which may introduce breaking changes.
+	- minor version number for new features added.
+	- revision number for bug fixing on previous minor version.
+- Created 1.15.1 Version.
+- Fixed chart bug.
+- Fixed SameBattle function to not take into account Eff, Wn7 values since they are computed with parameters which may differ between dossier deduced data and battle deduced data.
+
+16-Apr-2023
 - Created 1.0.15 version
 - Add filter by tank economy (regular / premium). Including support for this new filtering in the Favourite Tank List UI.
 - Implement win rate and survivability by tank while grouping, using colouring.
