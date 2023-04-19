@@ -665,7 +665,6 @@ namespace WinApp.Forms
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 
 			DataTable dtChart = await DB.FetchData(sql);
-			double chartVal = 0;
 
 			// Special actions / Calculations for special charts
 			double defaultTier = 0;
@@ -733,11 +732,10 @@ namespace WinApp.Forms
 		private double totalsFuncIncrementValues(DataRow dr, List<double> computationValues, CalculationType calcType, double defaultTier)
 		{
 			double battleValue = Math.Round(CalcChartSeriesPointValue(computationValues, calcType, defaultTier), decimals);
-			double rowBattleCount = Math.Max(1.0, SafeConvertToDouble(dr["battles_Count"]));
 
 			for (int i = 0; i < computationValues.Count; i++)
 			{
-				computationValues[i] += SafeConvertToDouble(dr[i]) / rowBattleCount;
+				computationValues[i] += SafeConvertToDouble(dr[i]);
 			}
 
 			return battleValue;
@@ -783,7 +781,7 @@ namespace WinApp.Forms
 				double battleValue = battleValueFunc(dr);
 
 				value += battleValue;
-				count += rowBattleCount;
+				count ++;
 
 				if (step % stepMod == 0)
 				{
@@ -817,7 +815,7 @@ namespace WinApp.Forms
 				double battleValue = battleValueFunc(dr);
 
 				value += battleValue;
-				count += rowBattleCount;
+				count ++;
 
 				if (thisDate <= chartDate)
 				{

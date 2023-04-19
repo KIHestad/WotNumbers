@@ -1193,15 +1193,17 @@ namespace WinApp.Code
 					&& SameValue(src, dst, "piercedReceived", 0)
 					&& SameValue(src, dst, "spotted", 0)
 					&& SameValue(src, dst, "mileage", 0)
-					// && SameValue(src, dst, "treesCut", 0)		// treesCut may differ between dossierData and battleData!
-					// && SameValue(src, dst, "xp", 0)				// xp may differ between dossierData and battleData
-					// && SameValue(src, dst, "wn8", 2)				// def points may differ and they're taken in consideration to create wn8
-					&& SameValue(src, dst, "eff", 0)
-					&& SameValue(src, dst, "battleMode", 0)
+                    // && SameValue(src, dst, "treesCut", 0)		// treesCut may differ between dossierData and battleData!
+
+                    // && SameValue(src, dst, "xp", 0)				// xp may differ between dossierData and battleData
+                    // && SameValue(src, dst, "wn8", 2)				// def points may differ and they're taken in consideration 
+                    // && SameValue(src, dst, "wn7", 2)				// to create wn8, wn7, eff
+                    // && SameValue(src, dst, "eff", 0)				
+
+                    && SameValue(src, dst, "battleMode", 0)
 					&& SameValue(src, dst, "heHitsReceived", 0)
 					&& SameValue(src, dst, "noDmgShotsReceived", 0)
 					// && SameValue(src, dst, "heHits", 0)
-					&& SameValue(src, dst, "wn7", 2)
 					&& SameValue(src, dst, "dmgBlocked", 0)
 					&& SameValue(src, dst, "potentialDmgReceived", 0)
 					// && SameValue(src, dst, "xpOriginal", 0)
