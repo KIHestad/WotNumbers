@@ -13,7 +13,7 @@ Go to InstallerWix3 project, open WotNumbersLicense.rtf and modify version numbe
 - Rebuild the solution in Release.
 - Copy InstallerWix3/bin/Release/WotNumbersSetup.msi to LatestRelease directory
 - Rename WotNumbersSetup.msi to WotNumbersSetup_VERSION_DATE.msi
-if VERSION is 1.0.4 and DATE is 20-Oct-2022 the name would become WotNumbersSetup
+if VERSION is 1.0.4 and DATE is 20-Oct-2022 the name would become WotNumbersSetup_1.0.4_20-Oct_2022.msi
 
 - You can create an MD5 from this file. It's not mandatory  but good praxis.
 - Update date and version number in VersionSettings.json file. (Date is in YYYY-MM-DD format)
