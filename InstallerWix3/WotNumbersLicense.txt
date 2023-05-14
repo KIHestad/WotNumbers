@@ -1,4 +1,4 @@
-Thank you for installing Wot Numbers version 1.15.1
+Thank you for installing Wot Numbers version 1.16.0
 The online statistics and forum pages has been discontinued, so no data is uploaded to web. This makes the application a bit faster though.
 The web site is also simplified, but you can still find it here:
 https://wotnumbers.com
@@ -7,12 +7,17 @@ https://wotnumbers.com
 
 Summary of changes:
 
+13-May-2023
+- Updated Battle2Json and Dossier2Json script to support WoT 1.20.1.0 battle dat files.
+- Updated Admin.db.
+- Fix fetching tanks through wot api changing is_Economy by is_premium.
+
 19-Apr-2023
-- Created 1.15.1 version.
 - Change version naming convention. 
 	- major version number for major changes which may introduce breaking changes.
 	- minor version number for new features added.
 	- revision number for bug fixing on previous minor version.
+- Created 1.15.1 Version.
 - Fixed chart bug.
 - Fixed SameBattle function to not take into account Eff, Wn7 values since they are computed with parameters which may differ between dossier deduced data and battle deduced data.
 

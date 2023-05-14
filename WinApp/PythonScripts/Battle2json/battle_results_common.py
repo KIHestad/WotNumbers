@@ -21,7 +21,7 @@ VEHICLE_DEVICE_TYPE_NAMES = (
  'wheel')
 VEHICLE_TANKMAN_TYPE_NAMES = (
  'commander', 'driver', 'radioman', 'gunner', 'loader')
- 
+
 #Modified for WotNumbers
 #from items.badges_common import BadgesCommon
 class BadgesCommon(object):
@@ -758,6 +758,8 @@ BATTLE_RESULTS = [
  (
   'isFirstBlood', bool, False, None, 'skip', ENTRY_TYPE.VEHICLE_ALL),
  (
+  'finishAllPlayersLeft', bool, False, None, 'skip', ENTRY_TYPE.COMMON),
+ (
   'originalBattlePassPoints', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
  (
   'battlePassPointsReplay', str, '', ValueReplayPacker(), 'skip', ENTRY_TYPE.ACCOUNT_SELF),
@@ -766,9 +768,7 @@ BATTLE_RESULTS = [
  (
   'eventBattlePassPointsList', list, [], None, 'skip', ENTRY_TYPE.ACCOUNT_SELF),
  (
-  'eventBattlePassPoints', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF),
- (
-  'finishAllPlayersLeft', bool, False, None, 'skip', ENTRY_TYPE.COMMON)]
+  'eventBattlePassPoints', int, 0, None, 'sum', ENTRY_TYPE.ACCOUNT_SELF)]
 BATTLE_PASS_RESULTS = [
  (
   'bpChapter', int, 0, None, 'skip', ENTRY_TYPE.ACCOUNT_ALL),

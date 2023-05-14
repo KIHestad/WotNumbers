@@ -92,8 +92,8 @@ namespace WinApp.Code
 				switch (WotAPi)
 				{
 					case WotApiType.Tank:
-						// NEW - get these fields: tank_id,name,short_name,is_Economy_igr,type,nation,tier,description,price_credit,images
-						url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=tank_id%2Cname%2Cshort_name%2Cis_Economy%2Ctype%2Cnation%2Ctier%2Cdescription%2Cprice_credit%2Cimages%2Cdefault_profile.hp";
+                        // NEW - get these fields: tank_id,name,short_name,is_premium,type,nation,tier,description,price_credit,images
+                        url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=tank_id%2Cname%2Cshort_name%2Cis_premium%2Ctype%2Cnation%2Ctier%2Cdescription%2Cprice_credit%2Cimages%2Cdefault_profile.hp";
 						if (variableValueToLookFor != null)
 							url += "&tank_id=" + Convert.ToInt32(variableValueToLookFor);
 						break;
@@ -283,7 +283,7 @@ namespace WinApp.Code
 								int tier = Int32.Parse(itemToken["tier"].ToString());
 
 								// premium
-								bool isPremium = Convert.ToBoolean(itemToken["is_Economy"]);
+								bool isPremium = Convert.ToBoolean(itemToken["is_premium"]);
 								premium = 0;
 								if (isPremium) premium = 1;
 

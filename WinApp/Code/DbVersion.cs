@@ -30,7 +30,7 @@ namespace WinApp.Code
 		public static bool CopyAdminDB = false;
 
 		// The current databaseversion
-		public static int ExpectedNumber = 549; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+		public static int ExpectedNumber = 550; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private async static Task<string> UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -42,6 +42,11 @@ namespace WinApp.Code
 			// Check version and perform changes
 			switch (version)
 			{
+				case 550:
+					// Force update AdminDB due to the addition of new Japanese tank destroyers.
+                    CopyAdminDB = true;
+                    break;
+
                 case 549:
                     // Id should be retrieved after playing a battle on that map. Look at the arenaTypeId in the entry for that battle inside the battle table
                     // Name should be the name visible in World Of Tanks when you play that map.
