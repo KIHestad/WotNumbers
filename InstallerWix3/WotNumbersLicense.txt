@@ -1,4 +1,4 @@
-Thank you for installing Wot Numbers version 1.16.0
+Thank you for installing Wot Numbers version 1.16.1
 The online statistics and forum pages has been discontinued, so no data is uploaded to web. This makes the application a bit faster though.
 The web site is also simplified, but you can still find it here:
 https://wotnumbers.com

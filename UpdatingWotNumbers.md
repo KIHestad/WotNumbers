@@ -5,6 +5,13 @@ How to update the application after a new WoT patch/update
 Add these to DbVersion.cs, increase version number in the ExpectedNumber field.
 
 - If new tanks are added to the game, we can use the Admin tool to download and update the Admin.db database.
+In this case increase ExpectedNumber field in DbVersion.cs too, and set CopyAdminDB to true.
+
+- If Dossier format changes, we'll need to change Dossier2json files. Change version number in the parser in wotdc2j.py (like we do in wotbr2j.py).
+Most probably a new structures_xxx.json will be necessary, and we must ensure we deploy this file in the installer. 
+We have to add a new entry into the Product.wxs file. Look for structures_108.json and add where necessary. We will need to create a Guid for every new entry.
+Use Tools\Create GUID -> use 4th option (windows registry format)
+
 - Increase application version number (we need this to deploy a new binary and let the users know there is a new updated version)
 Go to assembly info and update AssemblyVersion / AssemblyFileVersion.
 Go to InstallerWix3 project, open WotNumbersLicense.rtf and modify version number there.
