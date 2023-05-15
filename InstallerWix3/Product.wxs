@@ -345,6 +345,9 @@
 			<Component Id="cmpstructures107" Directory="INSTALLFOLDER_Dossier2json" Guid="{74E19490-DB88-4523-81E3-9DFBCC61A11C}">
 				<File Id="filstructures107" KeyPath="yes" Source="$(var.D2jSource)\structures_107.json" />
 			</Component>
+			<Component Id="cmpstructures108" Directory="INSTALLFOLDER_Dossier2json" Guid="{7324475C-3000-4995-B163-3C90110BBBDF}">
+				<File Id="filstructures108" KeyPath="yes" Source="$(var.D2jSource)\structures_108.json" />
+			</Component>
 		</ComponentGroup>
 	</Fragment>
 
