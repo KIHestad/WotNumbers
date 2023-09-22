@@ -1,11 +1,15 @@
-Thank you for installing Wot Numbers version 1.16.1
+Thank you for installing Wot Numbers version 1.17.0
 The online statistics and forum pages has been discontinued, so no data is uploaded to web. This makes the application a bit faster though.
 The web site is also simplified, but you can still find it here:
 https://wotnumbers.com
 
 
 
-Summary of changes:
+22-Sep-2023
+- Updated Dossier2json script to support WoT 1.22.0.0 dossier files.
+- Update maps.
+- Updated Admin.db
+- Created 1.17.0 Version.
 
 13-May-2023
 - Updated Battle2Json and Dossier2Json script to support WoT 1.20.1.0 battle dat files.
